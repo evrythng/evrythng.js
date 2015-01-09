@@ -1,6 +1,6 @@
-// EVRYTHNG JS SDK v2.0.8
+// EVRYTHNG JS SDK v2.1.0
 
-// (c) 2012-2014 EVRYTHNG Ltd. London / New York / Zurich.
+// (c) 2012-2015 EVRYTHNG Ltd. London / New York / Zurich.
 // Released under the Apache Software License, Version 2.0.
 // For all details and usage:
 // https://github.com/evrythng/evrythng-js-sdk.
@@ -954,7 +954,7 @@ define('core',[
   
 
   // Version is updated from package.json using `grunt-version` on build.
-  var version = '2.0.8';
+  var version = '2.1.0';
 
 
   // Setup default settings:
@@ -977,7 +977,7 @@ define('core',[
   // - ***quiet**: Boolean - set to true if you don't want EVT.js to write anything to the console*
   // - ***geolocation**: Boolean - set to true to ask for Geolocation when needed*
   // - ***fetchCascade**: Boolean - set to true to automagically fetch nested entities
-  // (e.g. thng.product is an EVT.Product instead of string id)*
+  // (e.g. thng.product is an EVT.Entity.Product instead of string id)*
   // - ***onStartRequest**: Function - run before each HTTP call (e.g. start Spinner)*
   // - ***onFinishRequest**: Function - run after each HTTP call*
   var defaultSettings = {
@@ -997,6 +997,9 @@ define('core',[
     version: version,
 
     settings: defaultSettings,
+
+    //
+    Entity: {},
 
     // Setup method allows the developer to change overall settings for every
     // subsequent request. However, these can be overriden for each request as well.
@@ -1606,6 +1609,21 @@ define('resource',[
 
     }
 
+    // Use current scope's API key to perform the request.
+    requestOptions.authorization = this.scope.apiKey;
+
+    // If parentScope is set to account scope, use the operator API key.
+    if (EVT.Account && this.scope.parentScope instanceof EVT.Account) {
+      requestOptions.authorization = this.scope.parentScope.apiKey;
+
+      // If we're working in application scope as an operator,
+      // we need to send the application id as a parameter.
+      if (this.scope instanceof EVT.App) {
+        requestOptions.params = requestOptions.params || {};
+        requestOptions.params.app = this.scope.id;
+      }
+    }
+
     // Actually make the request and handle its response, by forwarding to
     // the raw `EVT.api()` method.
     request = EVT.api(requestOptions, successCb, errorCb);
@@ -1741,7 +1759,6 @@ define('resource',[
     var requestOptions = {
       url: this.path,
       method: 'post',
-      authorization: this.scope.apiKey,
       data: this.jsonify(data)
     };
 
@@ -1762,8 +1779,7 @@ define('resource',[
   Resource.prototype.read = function (options, successCallback, errorCallback) {
 
     var requestOptions = {
-      url: this.path,
-      authorization: this.scope.apiKey
+      url: this.path
     };
 
     return _request.call(this, requestOptions, options, successCallback, errorCallback);
@@ -1784,7 +1800,6 @@ define('resource',[
 
     var requestOptions = {
       url: this.path,
-      authorization: this.scope.apiKey,
       fullResponse: true,
       params: {
         perPage: 1,
@@ -1819,7 +1834,6 @@ define('resource',[
     var requestOptions = {
       url: this.path,
       method: 'put',
-      authorization: this.scope.apiKey,
       data: this.jsonify(data)
     };
 
@@ -1838,8 +1852,7 @@ define('resource',[
 
     var requestOptions = {
       url: this.path,
-      method: 'delete',
-      authorization: this.scope.apiKey
+      method: 'delete'
     };
 
     return _request.call(this, requestOptions, options, successCallback, errorCallback);
@@ -1898,7 +1911,7 @@ define('entity/entity',[
   // 'payload' instead of JSON.*
 
   // ```js
-  //  var prod = new EVT.Product({ foo: 'bar' };
+  //  var prod = new EVT.Entity.Product({ foo: 'bar' };
   //  // prod.update() // throws error
   //  app.product().create(prod); // create product
   // ```
@@ -1932,7 +1945,7 @@ define('entity/entity',[
   };
 
   // Every entity can update itself via its resource reference. It does so by
-  // passing its JSON representation to the *resouce.update()*.
+  // passing its JSON representation to the *resource.update()*.
 
   // An entity update, as every request, returns a Promise. Although it also
   // allows callbacks as:
@@ -2064,7 +2077,7 @@ define('entity/property',[
 
 
   // Attach class to EVT module.
-  EVT.Property = Property;
+  EVT.Entity.Property = Property;
 
 
   return {
@@ -2086,7 +2099,7 @@ define('entity/property',[
         }
       }
 
-      resource = new Resource(this.resource.scope, path, EVT.Property);
+      resource = new Resource(this.resource.scope, path, EVT.Entity.Property);
 
       // Override property resource update to allow custom values params.
       // See *_normalizeArguments()*.
@@ -2099,6 +2112,7 @@ define('entity/property',[
 
   };
 });
+
 // ## ACTION.JS
 
 // **The Action Entity represents an action in the Engine. It inherits
@@ -2140,9 +2154,9 @@ define('entity/action',[
 
   // Add the given entity identifier to an object (params or data).
   function _addEntityIdentifier(entity, obj) {
-    if(entity.constructor === EVT.Product){
+    if(entity.constructor === EVT.Entity.Product){
       obj.product = entity.id;
-    }else if(entity.constructor === EVT.Thng){
+    }else if(entity.constructor === EVT.Entity.Thng){
       obj.thng = entity.id;
     }
 
@@ -2167,7 +2181,7 @@ define('entity/action',[
 
 
   // Attach class to EVT module.
-  EVT.Action = Action;
+  EVT.Entity.Action = Action;
 
 
   // Return the resource factory function. Actions have a custom *resource
@@ -2180,7 +2194,7 @@ define('entity/action',[
     resourceConstructor: function (actionType, id) {
       var path, resource,
         context = this,
-        scope = this instanceof Scope? this : this.resource.scope;
+        scope = this instanceof Scope ? this : this.resource.scope;
 
       if(actionType){
         if(Utils.isString(actionType)){
@@ -2194,7 +2208,7 @@ define('entity/action',[
 
       // Create a resource constructor dynamically and call it with this
       // action's ID.
-      resource = Resource.constructorFactory(path, EVT.Action).call(scope, id);
+      resource = Resource.constructorFactory(path, EVT.Entity.Action).call(scope, id);
 
       // Overload Action resource *create()* method to allow empty object.
       resource.create = function () {
@@ -2252,6 +2266,7 @@ define('entity/action',[
 
   };
 });
+
 // ## PRODUCT.JS
 
 // **The Product is a simple Entity subclass that provides a nested
@@ -2284,18 +2299,19 @@ define('entity/product',[
     property: Property.resourceConstructor,
 
     action: Action.resourceConstructor
-  
+
   }, true);
 
 
   // Attach class to EVT module.
-  EVT.Product = Product;
+  EVT.Entity.Product = Product;
 
 
   return {
-    resourceConstructor: Resource.constructorFactory('/products', EVT.Product)
+    resourceConstructor: Resource.constructorFactory('/products', EVT.Entity.Product)
   };
 });
+
 // ## APPUSER.JS
 
 // **The App User entity represents the app users stored in the Engine.
@@ -2399,7 +2415,7 @@ define('entity/appUser',[
 
 
   // Attach class to EVT module.
-  EVT.AppUser = AppUser;
+  EVT.Entity.AppUser = AppUser;
 
 
   // The AppUser resource constructor is a custom constructor that
@@ -2416,7 +2432,7 @@ define('entity/appUser',[
       // Return the factory function.
       return function (id) {
 
-        var resource = Resource.constructorFactory(path, EVT.AppUser).call(this, id);
+        var resource = Resource.constructorFactory(path, EVT.Entity.AppUser).call(this, id);
 
         // Add *validate()* method to the resource as well
         resource.validate = function () {
@@ -2917,7 +2933,7 @@ define('scope/application',[
   // and optionally `facebook` boolean. Passing `facebook: true` automatically
   // initializes Facebook SDK with this application's FB App Id - setup in
   // EVRYTHNG's Dashboard Project Preferences.*
-  var ApplicationScope = function(obj){
+  var ApplicationScope = function(obj, parentScope){
 
     var $this = this;
 
@@ -2928,20 +2944,25 @@ define('scope/application',[
       Scope.call(this, obj);
     }
 
+    // Set parent scope
+    if (parentScope instanceof Scope) {
+      this.parentScope = parentScope;
+    }
+
     // Get app information asynchronously from the Engine using already
     // defined scope. Use **new EVT.App('apiKey').$init.then(success)** if need
     // to wait for app information.
     this.$init = EVT.api({
-      url: '/applications',
+      url: '/applications/me',
       authorization: this.apiKey
-    }).then(function (apps) {
+    }).then(function (application) {
 
-      // Apps return array of a single application that matches this
+      // Apps/me returns of a single application that matches this
       // API Key. The response's API Key is defined in property `appApiKey`
       // instead of `apiKey`, so remove it to prevent redundant apiKey
       // properties in the scope. Also, attach app details into the scope.
-      delete apps[0].appApiKey;
-      return Utils.extend($this, apps[0], true);
+      delete application.appApiKey;
+      return Utils.extend($this, application, true);
 
     }, function () {
       Logger.error('There is no application with this API Key.');
@@ -2999,6 +3020,7 @@ define('scope/application',[
       }
 
     });
+
   };
 
   // Setup Scope inheritance.
@@ -3094,13 +3116,58 @@ define('entity/thng',[
 
 
   // Attach class to EVT module.
-  EVT.Thng = Thng;
+  EVT.Entity.Thng = Thng;
 
 
   return {
-    resourceConstructor: Resource.constructorFactory('/thngs', EVT.Thng)
+    resourceConstructor: Resource.constructorFactory('/thngs', EVT.Entity.Thng)
   };
 });
+
+// ## ACTIONTYPE.JS
+
+// **The ActionType Entity represents an action type in the Engine. It inherits
+// from Entity and overload the resource's *create()* method to allow
+// empty parameters (no payload).**
+
+define('entity/actionType',[
+  'core',
+  './entity',
+  'scope/scope',
+  'resource',
+  'utils'
+], function (EVT, Entity, Scope, Resource, Utils) {
+  
+
+  // Setup Action inheritance from Entity.
+  var ActionType = function () {
+    Entity.apply(this, arguments);
+  };
+
+  ActionType.prototype = Object.create(Entity.prototype);
+  ActionType.prototype.constructor = ActionType;
+
+  // Attach class to EVT module.
+  EVT.Entity.ActionType = ActionType;
+
+  return {
+    resourceConstructor: function () {
+      var scope = this instanceof Scope ? this : this.resource.scope;
+
+      // This endpoint is a bit special, does not allow getting action types by ID
+      var args = arguments[0];
+      if (Utils.isString(args) ||
+          Utils.isObject(args) && Utils.isString(args.id)) {
+        throw new TypeError('IDs not allowed here');
+      }
+
+      return Resource.constructorFactory('/actions', EVT.Entity.ActionType).call(scope);
+
+    }
+
+  };
+});
+
 // ## COLLECTION.JS
 
 // **The Collection is a simple Entity subclass that provides a nested
@@ -3133,7 +3200,7 @@ define('entity/collection',[
 
     var path = this.resource.path + '/thngs';
 
-    return Resource.constructorFactory(path, EVT.Thng)
+    return Resource.constructorFactory(path, EVT.Entity.Thng)
       .call(this.resource.scope, id);
   }
 
@@ -3146,13 +3213,14 @@ define('entity/collection',[
 
 
   // Attach class to EVT module.
-  EVT.Collection = Collection;
+  EVT.Entity.Collection = Collection;
 
 
   return {
-    resourceConstructor: Resource.constructorFactory('/collections', EVT.Collection)
+    resourceConstructor: Resource.constructorFactory('/collections', EVT.Entity.Collection)
   };
 });
+
 // ## MULTIMEDIA.JS
 
 // **The Multimedia is a simple Entity subclass representing the REST API
@@ -3175,13 +3243,14 @@ define('entity/multimedia',[
 
 
   // Attach class to EVT module.
-  EVT.Multimedia = Multimedia;
+  EVT.Entity.Multimedia = Multimedia;
 
 
   return {
-    resourceConstructor: Resource.constructorFactory('/contents/multimedia', EVT.Multimedia)
+    resourceConstructor: Resource.constructorFactory('/contents/multimedia', EVT.Entity.Multimedia)
   };
 });
+
 // ## USER.JS
 
 // **Here it is defined the UserScope or `EVT.User`. EVT.User
@@ -3192,6 +3261,7 @@ define('entity/multimedia',[
 
 // - Product resource (`C`, `R`, `U`)
 // - Thng resource (`C`, `R`, `U`)
+// - ActionType resource (`R`)
 // - Action resource (`C`, `R`)
 // - Collection resource (`C`, `R`, `U`)
 // - Multimedia resource (`R`)
@@ -3206,12 +3276,13 @@ define('scope/user',[
   'entity/product',
   'entity/thng',
   'entity/appUser',
+  'entity/actionType',
   'entity/action',
   'entity/collection',
   'entity/multimedia',
   'authentication',
   'utils'
-], function (EVT, Scope, Product, Thng, AppUser, Action, Collection,
+], function (EVT, Scope, Product, Thng, AppUser, ActionType, Action, Collection,
              Multimedia, Authentication, Utils) {
   
 
@@ -3248,7 +3319,7 @@ define('scope/user',[
 
 
   // Wrap the search API call in the search() method. Check the
-  // [search API in Evrythng Documentation](https://dev.evrythng.com/documentation/api#search).
+  // [search API in Evrythng Documentation](https://dashboard.evrythng.com/developers/apidoc#search).
   // .search() allows the following parameters:
 
   // - ***search(queryString, options)** - ?q=queryString. Options object represent
@@ -3326,6 +3397,8 @@ define('scope/user',[
     product: Product.resourceConstructor,
 
     thng: Thng.resourceConstructor,
+
+    actionType: ActionType.resourceConstructor,
 
     action: Action.resourceConstructor,
 

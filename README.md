@@ -14,7 +14,7 @@ Use `Bower`:
 
 Or include the script from our CDN in your HTML file using:
 
-    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-2.0.8.min.js"></script>
+    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-2.1.0.min.js"></script>
  
 Or always get the last stable release:
 
@@ -23,7 +23,7 @@ Or always get the last stable release:
     
 For HTTPs you'll have to use:
 
-    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-2.0.8.min.js"></script>
+    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-2.1.0.min.js"></script>
 
 respectively
 
@@ -36,15 +36,28 @@ evrythng.js is also available as an NPM package. Install it using:
     npm install evrythng
 
 
+## Additional tools
+
+### `scanthng.js`
+
+[`scanthng.js`](https://github.com/evrythng/scanthng.js) is an additional module that lets you identify Products and Thngs
+right from your browser, without using a standalone QR Code scanning app. It also supports [image recognition](https://dashboard.evrythng.com/developers/quickstart#quickstart-ir).
+It's available from our CDN or as a Bower module. Please refer to [`scanthng.js` README](https://github.com/evrythng/scanthng.js) for details.
+
+### `evrythng-extended.js`
+
+[`evrythng-extended.js`](https://github.com/evrythng/evrythng-extended.js) is an extended version of `evrythng.js` which includes operator access to the API.
+It's available as a Node module. Please refer to [`evrythng-extended.js` README](https://github.com/evrythng/evrythng-extended.js) for details.
+
 ## Usage
 
 evrythng.js uses UMD, which makes it available in every environment running Javascript.
 
 For advanced usage and options, see the [Documentation section](#documentation) below and the API 
-documentation on [EVRYTHNG's Developer Portal](https://dev.evrythng.com/documentation). 
+documentation on [EVRYTHNG's Developer Portal](https://dashboard.evrythng.com/developers/apidoc). 
 
 **Note:** Be sure to only include your EVRYTHNG App API key and **not** your Operator or User
-App key in any public application code (read more [here](https://dev.evrythng.com/documentation/api#users)).
+App key in any public application code (read more [here](https://dashboard.evrythng.com/developers/apidoc#appusers)).
 
 ### With RequireJS (AMD)
 
@@ -105,16 +118,18 @@ require(['evrythng'], function (EVT) {
       console.log('thng updated');
             
     });
-    
+
+    // Update existing thng
     user.thng('123').update({
       description: 'new desc'
     });
     
-    var newThng = new EVT.Thng();
-    newThng.name = 'name';
-    newThng.description = 'desc';
-    
-    user.thng().create(newThng);
+    // Create a thng
+    user.thng().create({
+      name: 'name',
+      description: 'desc'
+    });
+
     
     
     // Actions
@@ -201,7 +216,7 @@ var app = new EVT.App('apiKey');
 
 ### Node.js
 
-Note: the Node.js version is currently experiemental.
+Note: the Node.js version is currently experimental.
 
 ```javascript
 var EVT = require('evrythng');
@@ -265,7 +280,7 @@ var anonymousUser = new EVT.User({
 
 ```
 
-### Log an EVRYTHNG user it and get his Thngs
+### Log an EVRYTHNG user in and get their Thngs
 
 ```javascript
 app.login({
@@ -282,34 +297,13 @@ app.login({
 
 ## Documentation
 
-For in-depth documentation beyond the one provided here, we encourage you please have a look at the 
-[Annotated Source Code](https://evrythng.github.io/evrythng-js-sdk).
-
-The [EVRYTHNG API is documented here](https://dev.evrythng.com/documentation/api).
+The [EVRYTHNG API is documented here](https://dashboard.evrythng.com/developers/apidoc).
 
 ## Source Maps
 
 Source Maps are available, which means that when using the minified version, if a developer 
-opens the Developer Tools, .map files will be downloaded to help him debug code using the original 
+opens the Developer Tools, .map files will be downloaded to help them debug code using the original 
 uncompressed version of the library.
-
-### Size
-
-22.08 kB (min) → 4.4 kB (gzip)
-
-## Development
-
-Check the Development Notes in [`DEVELOPMENT.md`](./DEVELOPMENT.md).
-
-### Testing
-
-Run tests by:
-
-    grunt test // unit testing with Karma + PhantomJS
-    
-    grunt test:dist // test UMD in Chrome (AMD + browser globals) and Node
-    
-    grunt test:sauce // browser globals test in multiple browsers in SauceLabs
 
 ## License
 
