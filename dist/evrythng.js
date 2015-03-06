@@ -1,4 +1,4 @@
-// EVRYTHNG JS SDK v2.1.0
+// EVRYTHNG JS SDK v2.1.1
 
 // (c) 2012-2015 EVRYTHNG Ltd. London / New York / Zurich.
 // Released under the Apache Software License, Version 2.0.
@@ -954,7 +954,7 @@ define('core',[
   
 
   // Version is updated from package.json using `grunt-version` on build.
-  var version = '2.1.0';
+  var version = '2.1.1';
 
 
   // Setup default settings:
@@ -1112,33 +1112,44 @@ define('ajax/cors',[
   // or in this particular request. *200 OK* responses without data,
   // return *null*.
   function _buildResponse(xhr, fullResponse){
+    // XMLHttpRequest returns a not very usable single big string with all headers
+    var _parseHeaders = function(headers) {
+      headers = headers.trim().split("\n");
 
-    var response = xhr.responseText? JSON.parse(xhr.responseText) : null;
-
-    if(fullResponse){
-
-      // XMLHttpRequest returns a not very usable single big string with all headers
-      // It's much easier to use
-      var _parseHeaders = function(headers) {
-        headers = headers.trim().split("\n");
-
-        var parsed = {};
-        var _camelCase = function(s) {
-          return (s||'').toLowerCase().replace(/(\b|-)\w/g, function(m) {
-            return m.toUpperCase();
-          });
-        };
-
-        for (var h in headers) {
-          var header = headers[h].match(/([^:]+):(.*)/);
-          parsed[_camelCase(header[1]).trim()] = header[2].trim();
-        }
-        return parsed;
+      var parsed = {};
+      var _camelCase = function(s) {
+        return (s||'').toLowerCase().replace(/(\b|-)\w/g, function(m) {
+          return m.toUpperCase();
+        });
       };
 
+      for (var h in headers) {
+        var header = headers[h].match(/([^:]+):(.*)/);
+        parsed[_camelCase(header[1]).trim()] = header[2].trim();
+      }
+      return parsed;
+    };
+
+    var headers = _parseHeaders(xhr.getAllResponseHeaders()),
+        response = null;
+
+    if (xhr.responseText){
+      if (headers['Content-Type'] === 'application/json'){
+        // try to parse the response if looks like json
+        try {
+          response = JSON.parse(xhr.responseText);
+        } catch(e) {
+          response = xhr.responseText;
+        }
+      } else {
+        response = xhr.responseText;
+      }
+    }
+
+    if(fullResponse){
       response = {
         data: response,
-        headers: _parseHeaders(xhr.getAllResponseHeaders()),
+        headers: headers,
         status: xhr.status
       };
 
@@ -1181,6 +1192,8 @@ define('ajax/cors',[
 
     // Setup headers, including the *Authorization* that holds the Api Key.
     xhr.setRequestHeader('Content-Type', 'application/json');
+    // Some browsers don't set the right default Accept header
+    xhr.setRequestHeader("Accept", options.accepts ? options.accepts : "*/*");
     if(options.authorization) {
       xhr.setRequestHeader('Authorization', options.authorization);
     }
@@ -1203,9 +1216,10 @@ define('ajax/cors',[
     options = options || {};
 
     var method = options.method || 'get',
-      url = Utils.buildUrl(options),
-      async = options.async !== undefined ? options.async : true,
-      xhr = _createXhr(method, url, async, options);
+        url = Utils.buildUrl(options),
+        async = options.async !== undefined ? options.async : true;
+
+    var xhr = _createXhr(method, url, async, options);
 
     // Serialise JSON data before sending.
     var data = options.data ? JSON.stringify(options.data) : null;
@@ -1334,7 +1348,7 @@ define('ajax/jsonp',[
 
   // Making the request is as simple as appending a new script tag
   // to the document. The URL has the *callback* parameter with the
-  // function that will be called with the repsonse data and *async* flag
+  // function that will be called with the response data and *async* flag
   // tells if the request should be synchronous and block the UI or not.
   function _load(url, async) {
 
@@ -1411,8 +1425,12 @@ define('ajax/jsonp',[
         }else {
 
           if(successCallback) { successCallback(response); }
-          resolve(response);
 
+          try {
+            response = JSON.parse(response);
+          } catch(e){}
+
+          resolve(response);
         }
 
         // Remove callback from window.
@@ -1620,7 +1638,7 @@ define('resource',[
       // we need to send the application id as a parameter.
       if (this.scope instanceof EVT.App) {
         requestOptions.params = requestOptions.params || {};
-        requestOptions.params.app = this.scope.id;
+        requestOptions.params.project = this.scope.project;
       }
     }
 
@@ -1669,58 +1687,61 @@ define('resource',[
 
   // #### Parse
 
-  // Parse a given JSON data or object into an instance of this resource's
+  // Parse a given response into an instance of this resource's
   // class/entity, if possible. An entity always keeps a reference to its
   // mother resource, in order to alias methods (e.g. the *entity.update()*
   // method calls the mother *resource.update(entity.toJSON())* ).
-  Resource.prototype.parse = function (jsonData) {
-    if (this['class'] && jsonData){
-      // We expect the response to be one of these:
-      // * an object containing results (array of or single object) in "data",
-      // * an array of results
-      // * a single result object
+  // We expect the response to be one of these:
+  // * an object containing results (array of or single object) in "data",
+  // * an array of results
+  // * a single result object
+  Resource.prototype.parse = function (response) {
+    var parsedResponse = null;
+
+    if (this['class'] && response) {
 
       var  resource = this;
 
-      if (Utils.isObject(jsonData) && jsonData.hasOwnProperty('data')) {
-        // Full response - it is an object and includes "data", parse just the data.
-        jsonData.data = resource.parse(jsonData.data);
+      if (Utils.isArray(response)) {
+        // Response is array of results, parse to an array of entities.
+        parsedResponse = [];
+        for (var i in response){
+          if (response.hasOwnProperty(i)){
+            var objId = response[i].id;
 
-        // If response contains results count header, add a shortcut to it
-        if (Utils.isObject(jsonData.headers) && Utils.isString(jsonData.headers['X-Result-Count'])) {
-          jsonData.count = parseInt(jsonData.headers['X-Result-Count']);
-        }
-
-        return jsonData;
-      } else {
-        // We got bare response, just parse it now.
-
-        if (Utils.isArray(jsonData)) {
-          // Response is array of results, parse to an array of entities.
-          var ret = [];
-          for (var i in jsonData){
-            if (jsonData.hasOwnProperty(i)){
-              var objId = jsonData[i].id;
-
-              if (objId){
-                resource = new Resource(resource.scope, resource.path + '/' + objId, resource['class']);
-              }
-
-              ret.push(new resource['class'](jsonData[i], resource));
+            if (objId){
+              resource = new Resource(resource.scope, resource.path + '/' + objId, resource['class']);
             }
+
+            parsedResponse.push(new resource['class'](response[i], resource));
           }
-          return ret;
+        }
+      } else if (Utils.isObject(response)){
+        if (response.hasOwnProperty('data')) {
+          // Full response - it is an object and includes "data", parse just the data.
+
+          parsedResponse = response;
+          parsedResponse.data = resource.parse(parsedResponse.data);
+
+          // If response contains results count header, add a shortcut to it
+          if (Utils.isObject(parsedResponse.headers) && Utils.isString(parsedResponse.headers['X-Result-Count'])) {
+            parsedResponse.count = parseInt(parsedResponse.headers['X-Result-Count']);
+          }
+
         } else {
           // Response is a single result, parse to single entity.
-          return new this['class'](jsonData, this);
+          parsedResponse = new this['class'](response, this);
         }
+      } else {
+        // Response is most likely a string, just forward it
+        parsedResponse = response;
       }
 
     } else {
       // We don't have enough information to parse the response, so just forward it.
-      return jsonData;
+      parsedResponse = response;
     }
-
+    return parsedResponse;
   };
 
 

@@ -14,7 +14,7 @@ Use `Bower`:
 
 Or include the script from our CDN in your HTML file using:
 
-    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-2.1.0.min.js"></script>
+    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-2.1.1.min.js"></script>
  
 Or always get the last stable release:
 
@@ -23,7 +23,7 @@ Or always get the last stable release:
     
 For HTTPs you'll have to use:
 
-    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-2.1.0.min.js"></script>
+    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-2.1.1.min.js"></script>
 
 respectively
 
