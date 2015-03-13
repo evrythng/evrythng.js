@@ -290,7 +290,7 @@ app.login({
 }).then(function(authResponse){
   var user = authResponse.user;
   user.thng().read().then(function(thngs){
-    console.log('thngs: ' thngs);
+    console.log('thngs: ' + thngs);
   });
 });
 ```
