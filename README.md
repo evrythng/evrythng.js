@@ -31,9 +31,10 @@ respectively
     
 ### Node.js
 
-evrythng.js is also available as an NPM package. Install it using:
+If you are working on a Node.js app then you should take the advantage of using [`evrythng-extended.js`](https://github.com/evrythng/evrythng-extended.js) which allows you to perform more operations. If you don't need more then evrythng.js is also available as an NPM package. Install it using:
 
     npm install evrythng
+
 
 
 ## Additional tools
