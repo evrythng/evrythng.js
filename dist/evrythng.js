@@ -1,4 +1,4 @@
-// EVRYTHNG JS SDK v2.1.1
+// EVRYTHNG JS SDK v2.1.2
 
 // (c) 2012-2015 EVRYTHNG Ltd. London / New York / Zurich.
 // Released under the Apache Software License, Version 2.0.
@@ -7,22 +7,30 @@
 
 (function (root, factory) {
 
-  // AMD. Register as an anonymous module.
-  if (typeof define === 'function' && define.amd) {
-    define(factory(XMLHttpRequest));
+  // If environment looks like node, try to load the request module
+  var xhr = typeof XMLHttpRequest !== 'undefined'? XMLHttpRequest : null;
+  var request = null;
+  try {
+   request = (typeof window === 'undefined' && typeof process !== 'undefined') ? require('request') : null;
+  } catch(err) {}
 
-  // Node.js (CommonJS)
+  // AMD. Usually browsers but could be node too...
+  if (typeof define === 'function' && define.amd) {
+    define(factory(xhr, request));
+
+  // CommonJS. Usually node but could be browserify...
   } else if (typeof exports === 'object') {
-    module.exports = factory(require('w3c-xmlhttprequest').XMLHttpRequest);
+
+    module.exports = factory(xhr, request);
 
   // Browser globals
   } else {
-    root.EVT = root.Evrythng = factory(XMLHttpRequest);
+    root.EVT = root.Evrythng = factory(xhr, null);
   }
 
-}(this, function (XMLHttpRequest) {
+}(this, function (XMLHttpRequest, request) {
 /**
- * @license almond 0.3.0 Copyright (c) 2011-2014, The Dojo Foundation All Rights Reserved.
+ * @license almond 0.3.1 Copyright (c) 2011-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
  * see: http://github.com/jrburke/almond for details
  */
@@ -67,12 +75,6 @@ var requirejs, require, define;
             //otherwise, assume it is a top-level require that will
             //be relative to baseUrl in the end.
             if (baseName) {
-                //Convert baseName to array, and lop off the last part,
-                //so that . matches that "directory" and not name of the baseName's
-                //module. For instance, baseName of "one/two/three", maps to
-                //"one/two/three.js", but we want the directory, "one/two" for
-                //this normalization.
-                baseParts = baseParts.slice(0, baseParts.length - 1);
                 name = name.split('/');
                 lastIndex = name.length - 1;
 
@@ -81,7 +83,11 @@ var requirejs, require, define;
                     name[lastIndex] = name[lastIndex].replace(jsSuffixRegExp, '');
                 }
 
-                name = baseParts.concat(name);
+                //Lop off the last part of baseParts, so that . matches the
+                //"directory" and not name of the baseName's module. For instance,
+                //baseName of "one/two/three", maps to "one/two/three.js", but we
+                //want the directory, "one/two" for this normalization.
+                name = baseParts.slice(0, baseParts.length - 1).concat(name);
 
                 //start trimDots
                 for (i = 0; i < name.length; i += 1) {
@@ -431,6 +437,9 @@ var requirejs, require, define;
     requirejs._defined = defined;
 
     define = function (name, deps, callback) {
+        if (typeof name !== 'string') {
+            throw new Error('See almond README: incorrect module build, no module name');
+        }
 
         //This module may not have dependencies
         if (!deps.splice) {
@@ -886,8 +895,8 @@ define('utils',['npo'], function (Promise) {
     },
 
     // Build full URL from a base url and params, if there are any.
-    buildUrl: function(options){
-      var url = options.url || '';
+    buildUrl: function(host, options){
+      var url = host + (options.url ? options.url : '');
 
       if(options.params) {
         url += (url.indexOf('?') === -1 ? '?' : '&') + this.buildParams(options.params);
@@ -942,6 +951,7 @@ define('utils',['npo'], function (Promise) {
   };
 
 });
+
 // ## CORE.JS
 
 // **The Core module specifies the core EVT module and the client
@@ -954,7 +964,7 @@ define('core',[
   
 
   // Version is updated from package.json using `grunt-version` on build.
-  var version = '2.1.1';
+  var version = '2.1.2';
 
 
   // Setup default settings:
@@ -1086,6 +1096,138 @@ define('logger',[
 
 });
 
+// ## Node request
+
+/*global request */
+define('ajax/node',[
+  '../core',
+  'npo',
+  '../utils',
+  '../logger'
+], function (EVT, Promise, Utils) {
+  
+
+  // Helper method used to build the returned response. It wraps the 'status' and 'headers' in an object in
+  // case the flag `fullResponse` is enabled as a global in `EVT.settings` or in this particular request.
+  // *200 OK* responses without data, return *null*.
+  function _buildResponse(res, fullResponse) {
+    var headers = res.headers,
+        response = res.body || null;
+
+    if (response) {
+      if (headers['content-type'] === 'application/json'){
+        // try to parse the response if looks like json
+        try {
+          response = JSON.parse(response);
+        } catch(e) {}
+      }
+    }
+
+    if (fullResponse) {
+      response = {
+        data: response,
+        headers: headers,
+        status: res.statusCode
+      };
+
+      // If any errors received, pull them to top level
+      if (response.data && response.data.errors) {
+        response.errors = response.data.errors;
+        delete response.data.errors;
+      }
+    }
+
+    return response;
+  }
+
+  // Helper method that builds a custom Error object providing some extra
+  // information on a request error.
+  function _buildError(req, url, method, response) {
+    var errorData = {
+      status: req.statusCode,
+      type: 'request',
+      message: 'Server responded with an error for the request',
+      url: url,
+      method: method
+    };
+
+    // Evrythng's API return an array of errors in the response. Add them
+    // if available.
+    if (response) {
+      errorData.errors = response.errors;
+      errorData.moreInfo = response.moreInfo;
+    }
+
+    return errorData;
+  }
+
+
+  function node(options, successCallback, errorCallback){
+    options = options || {};
+
+    var url = Utils.buildUrl(EVT.settings.apiUrl, options),
+        method = options.method || 'get';
+
+    var requestOptions = {
+      url: url,
+      method: method
+    };
+
+    requestOptions.body = options.data ? JSON.stringify(options.data) : null;
+
+    // Setup headers, including the *authorization* that holds the Api Key.
+    requestOptions.headers = {
+      'content-type': 'application/json',
+      'accept': options.accepts ? options.accepts : "*/*"
+    };
+
+    if(options.authorization) {
+      requestOptions.headers['authorization'] = options.authorization;
+    }
+
+    // Set timeout.
+    if (options.timeout > 0) {
+      requestOptions.timeout = options.timeout;
+    }
+
+    return new Promise(function(resolve, reject){
+
+      try {
+        request(requestOptions, function (error, response) {
+          if (error) {
+            // Request failed
+            reject(error);
+          } else {
+            // Request successful
+            var data = _buildResponse(response, options.fullResponse);
+
+            if (response.statusCode >= 200 && response.statusCode < 300) {
+              // Valid response
+              if (successCallback) {
+                successCallback(data);
+              }
+              resolve(data);
+            } else {
+
+              // API error - forward it
+              var errorData = _buildError(response, url, method, data);
+
+              if (errorCallback) {
+                errorCallback(errorData);
+              }
+              reject(errorData);
+            }
+          }
+        });
+      } catch(e){
+        reject(e);
+      }
+    });
+
+  }
+  return node;
+});
+
 // ## CORS.JS
 
 // **The CORS module implements a simple CORS request using *XmlHttpRequest*.
@@ -1117,15 +1259,10 @@ define('ajax/cors',[
       headers = headers.trim().split("\n");
 
       var parsed = {};
-      var _camelCase = function(s) {
-        return (s||'').toLowerCase().replace(/(\b|-)\w/g, function(m) {
-          return m.toUpperCase();
-        });
-      };
 
       for (var h in headers) {
-        var header = headers[h].match(/([^:]+):(.*)/);
-        parsed[_camelCase(header[1]).trim()] = header[2].trim();
+        var header = headers[h].toLowerCase().match(/([^:]+):(.*)/);
+        parsed[header[1].trim()] = header[2].trim();
       }
       return parsed;
     };
@@ -1133,8 +1270,8 @@ define('ajax/cors',[
     var headers = _parseHeaders(xhr.getAllResponseHeaders()),
         response = null;
 
-    if (xhr.responseText){
-      if (headers['Content-Type'] === 'application/json'){
+    if (xhr.responseText) {
+      if (headers['content-type'] === 'application/json') {
         // try to parse the response if looks like json
         try {
           response = JSON.parse(xhr.responseText);
@@ -1176,7 +1313,10 @@ define('ajax/cors',[
 
     // Evrythng's API return an array of errors in the response. Add them
     // if available.
-    if(response) { errorData.errors = response.errors; }
+    if (response) {
+      errorData.errors = response.errors;
+      errorData.moreInfo = response.moreInfo;
+    }
 
     return errorData;
   }
@@ -1191,11 +1331,11 @@ define('ajax/cors',[
     xhr.open(method, url, async);
 
     // Setup headers, including the *Authorization* that holds the Api Key.
-    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('content-type', 'application/json');
     // Some browsers don't set the right default Accept header
-    xhr.setRequestHeader("Accept", options.accepts ? options.accepts : "*/*");
-    if(options.authorization) {
-      xhr.setRequestHeader('Authorization', options.authorization);
+    xhr.setRequestHeader("accept", options.accepts ? options.accepts : "*/*");
+    if (options.authorization) {
+      xhr.setRequestHeader('authorization', options.authorization);
     }
 
     // Set timeout.
@@ -1216,7 +1356,7 @@ define('ajax/cors',[
     options = options || {};
 
     var method = options.method || 'get',
-        url = Utils.buildUrl(options),
+        url = Utils.buildUrl(EVT.settings.apiUrl, options),
         async = options.async !== undefined ? options.async : true;
 
     var xhr = _createXhr(method, url, async, options);
@@ -1341,7 +1481,10 @@ define('ajax/jsonp',[
       method: method
     };
 
-    if(response) { errorData.errors = response.errors; }
+    if (response) {
+      errorData.errors = response.errors;
+      errorData.moreInfo = response.moreInfo;
+    }
 
     return errorData;
   }
@@ -1384,15 +1527,8 @@ define('ajax/jsonp',[
 
     options = options || {};
 
-    // Evrythng REST API default endpoint does not provide JSON-P
-    // support, which '//js-api.evrythng.com' does.
-    if(options.url) {
-      options.url = options.url.replace('//api', '//js-api');
-    }
-
     // Define unique callback name.
     var uniqueName = 'callback_json' + (++counter);
-
 
     // Send all data (including method, api key and data) via GET
     // request params.
@@ -1404,8 +1540,9 @@ define('ajax/jsonp',[
     options.params = params;
 
     var async = options.async !== undefined ? options.async : true,
-      url = Utils.buildUrl(options);
-
+        // Evrythng REST API default endpoint does not provide JSON-P
+        // support, which '//js-api.evrythng.com' does.
+        url = Utils.buildUrl(EVT.settings.apiUrl.replace('//api', '//js-api'), options);
 
     // Return a promise and resolve/reject it in the callback function.
     return new Promise(function(resolve, reject) {
@@ -1455,13 +1592,15 @@ define('ajax/jsonp',[
 // It controls the raw request to the API, first by trying a CORS
 // request and if it fails, continuing with JSON-P.**
 
+/*global request */
 define('ajax',[
   'core',
+  'ajax/node',
   'ajax/cors',
   'ajax/jsonp',
   'utils',
   'logger'
-], function (EVT, cors, jsonp, Utils, Logger) {
+], function (EVT, node, cors, jsonp, Utils, Logger) {
   
 
   // The ajax() method or EVT.api() returns a **Promise**. Nevertheless,
@@ -1486,42 +1625,43 @@ define('ajax',[
 
     // Merge options with defaults setup in `EVT.settings`.
     var requestOptions = Utils.extend({
+      url: '/',
       async: EVT.settings.async,
       fullResponse: EVT.settings.fullResponse,
       authorization: EVT.settings.apiKey,
       timeout: EVT.settings.timeout
     }, options);
 
-    requestOptions.url = EVT.settings.apiUrl + requestOptions.url;
-
-
     // Setup callbacks giving priority to parameters.
     var successCb, errorCb;
 
     if(Utils.isFunction(successCallback)){
       successCb = successCallback;
-    }else if(Utils.isFunction(options.success)){
+    }else if(options && Utils.isFunction(options.success)){
       successCb = options.success;
     }
 
     if(Utils.isFunction(errorCallback)){
       errorCb = errorCallback;
-    }else if(Utils.isFunction(options.error)){
+    }else if(options && Utils.isFunction(options.error)){
       errorCb = options.error;
     }
 
+    // Detect what is available.
+    // Returns a promise or - in browser - immediate response if async = false.
+    if (typeof request === 'function'){
+      return node(requestOptions, successCb, errorCb);
+    } else if (XMLHttpRequest) {
+      // *withCredentials* only exists on XmlHttpRequest2 objects.
+      var isXHR2 = typeof new XMLHttpRequest().withCredentials === 'boolean';
 
-    // Detect if XMLHttpRequest 2 is available.
-    // *withCredentials* only exists on XmlHttpRequest2 objects.
-    var isXHR2 = typeof new XMLHttpRequest().withCredentials === 'boolean';
-
-    // Use XmlHttpRequest with CORS if available, otherwise fall back to JSON-P.
-    // Returns a promise or immediate response if async = false.
-    if (isXHR2){
-      return cors(requestOptions, successCb, errorCb);
-    } else {
-      Logger.info('CORS not supported, falling back to JSONP.');
-      return jsonp(requestOptions, successCb, errorCb);
+      // Use XmlHttpRequest with CORS if available, otherwise fall back to JSON-P.
+      if (isXHR2){
+        return cors(requestOptions, successCb, errorCb);
+      } else {
+        Logger.info('CORS not supported, falling back to JSONP.');
+        return jsonp(requestOptions, successCb, errorCb);
+      }
     }
   }
 
@@ -1724,8 +1864,8 @@ define('resource',[
           parsedResponse.data = resource.parse(parsedResponse.data);
 
           // If response contains results count header, add a shortcut to it
-          if (Utils.isObject(parsedResponse.headers) && Utils.isString(parsedResponse.headers['X-Result-Count'])) {
-            parsedResponse.count = parseInt(parsedResponse.headers['X-Result-Count']);
+          if (Utils.isObject(parsedResponse.headers) && Utils.isString(parsedResponse.headers['x-result-count'])) {
+            parsedResponse.count = parseInt(parsedResponse.headers['x-result-count']);
           }
 
         } else {

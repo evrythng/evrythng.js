@@ -14,7 +14,7 @@ Use `Bower`:
 
 Or include the script from our CDN in your HTML file using:
 
-    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-2.1.1.min.js"></script>
+    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-2.1.2.min.js"></script>
  
 Or always get the last stable release:
 
@@ -23,7 +23,7 @@ Or always get the last stable release:
     
 For HTTPs you'll have to use:
 
-    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-2.1.1.min.js"></script>
+    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-2.1.2.min.js"></script>
 
 respectively
 
@@ -31,10 +31,9 @@ respectively
     
 ### Node.js
 
-If you are working on a Node.js app then you should take the advantage of using [`evrythng-extended.js`](https://github.com/evrythng/evrythng-extended.js) which allows you to perform more operations. If you don't need more then evrythng.js is also available as an NPM package. Install it using:
+evrythng.js is also available as an NPM package. Install it using:
 
     npm install evrythng
-
 
 
 ## Additional tools
@@ -290,7 +289,7 @@ app.login({
 }).then(function(authResponse){
   var user = authResponse.user;
   user.thng().read().then(function(thngs){
-    console.log('thngs: ' + thngs);
+    console.log('thngs: ' thngs);
   });
 });
 ```

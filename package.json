@@ -1,6 +1,6 @@
 {
   "name": "evrythng",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "main": "dist/evrythng.js",
   "description": "Javascript SDK to communicate with EVRYTHNG REST API",
   "repository": {
@@ -28,6 +28,6 @@
   ],
   "readmeFilename": "README.md",
   "dependencies": {
-    "w3c-xmlhttprequest": "ykzts/node-xmlhttprequest"
+    "request": "^2.53.0"
   }
 }
