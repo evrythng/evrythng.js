@@ -1,7 +1,7 @@
 {
   "name": "evrythng",
-  "version": "2.1.2",
-  "main": "dist/evrythng.js",
+  "version": "3.0.0",
+  "main": "lib/evrythng.js",
   "description": "Javascript SDK to communicate with EVRYTHNG REST API",
   "repository": {
     "type": "git",
@@ -29,5 +29,8 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "request": "^2.53.0"
-  }
+  },
+  "ignore": [
+    "dist"
+  ]
 }

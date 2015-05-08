@@ -1,20 +1,41 @@
 # [EVRYTHNG](https://www.evrythng.com) Client JavaScript SDK
 
-
-evrythng.js is a Javascript library making it a breeze to interact with the EVRYTHNG API thanks to its fluent API. Because of its [UMD](https://github.com/umdjs/umd)-compatibility it can be used for your Web (mobile, desktop or hybrid) apps as well as directly embedded in Node.js apps.
-
+**evrythng.js** is a Javascript library making it a breeze to interact with the EVRYTHNG API thanks to its fluent API. 
+We provide two environment-specific versions: AMD and CommonJS to utilise the best of both browser and Node.js.
 
 ## Installation
 
-### Browser
+**Note**: `evrythng.js` uses [promises](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise). Not all browsers support that natively; we include [Native Promise Only](https://github.com/getify/native-promise-only) polyfill and suggest loading it before evrythng.js.
 
-Use `Bower`:
+### Browsers
+
+#### With [Bower](http://bower.io/)
+
+The Bower package includes the AMD build of evrythng.js. You can either load it directly or use a loader like [require.js](http://requirejs.org/).
 
     bower install evrythng
+    
+Then just load the script in your page:
 
-Or include the script from our CDN in your HTML file using:
+    <script src="bower_components/evrythng/dist/evrythng.js"></script>
 
-    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-2.1.2.min.js"></script>
+Once the script loads, `EVT` becomes available as a browser global. 
+
+If you want to automate this, there are several [Grunt](http://gruntjs.com/) plugins which you may find useful:
+
+* [grunt-wiredep](https://github.com/stephenplusplus/grunt-wiredep) finds your components and injects them directly into the HTML file you specify.
+* [grunt-bower-concat](https://github.com/sapegin/grunt-bower-concat) does automatic concatenation of installed Bower components (JS and/or CSS) in the right order.
+
+Or if you prefer [Gulp](http://gulpjs.com/):
+
+* [main-bower-files](https://github.com/ck86/main-bower-files) (works with Grunt too)
+* [gulp-bower-src](https://github.com/bclozel/gulp-bower-src) - `gulp.src` files from your bower components directory, using your bower.json configuration file.
+
+#### Load from CDN
+
+The CDN version includes [Native Promise Only](https://github.com/getify/native-promise-only), so all you need is to include the script from our CDN in your HTML file using:
+
+    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-3.0.0.min.js"></script>
  
 Or always get the last stable release:
 
@@ -23,7 +44,7 @@ Or always get the last stable release:
     
 For HTTPs you'll have to use:
 
-    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-2.1.2.min.js"></script>
+    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-3.0.0.min.js"></script>
 
 respectively
 
@@ -31,10 +52,9 @@ respectively
     
 ### Node.js
 
-evrythng.js is also available as an NPM package. Install it using:
+`evrythng.js` is also available in CommonJS format as a NPM package. Install it using:
 
     npm install evrythng
-
 
 ## Additional tools
 
@@ -51,8 +71,6 @@ It's available as a Node module. Please refer to [`evrythng-extended.js` README]
 
 ## Usage
 
-evrythng.js uses UMD, which makes it available in every environment running Javascript.
-
 For advanced usage and options, see the [Documentation section](#documentation) below and the API 
 documentation on [EVRYTHNG's Developer Portal](https://dashboard.evrythng.com/developers/apidoc). 
 
@@ -62,6 +80,13 @@ App key in any public application code (read more [here](https://dashboard.evryt
 ### With RequireJS (AMD)
 
 ```javascript
+var bowerPath = '../bower_components/'; // replace with path to your local bower directory
+requirejs.config({
+    paths: {
+        evrythng: bowerPath + 'evrythng/dist/evrythng'
+    }
+});
+    
 require(['evrythng'], function (EVT) {
 
   EVT.setup({
@@ -216,9 +241,11 @@ var app = new EVT.App('apiKey');
 
 ### Node.js
 
-Note: the Node.js version is currently experimental.
+**Note**: Node.js in versions before 0.12 does not support promises natively. Load the polyfill before `evrythng.js`:
 
 ```javascript
+require('native-promise-only);
+
 var EVT = require('evrythng');
 
 var app = new EVT.App('apiKey');
@@ -294,6 +321,32 @@ app.login({
 });
 ```
 
+### As a Device
+
+```javascript
+var device = new EVT.Device({
+  apiKey: 'DEVICE-API-KEY',
+  id: 'thngId'
+});
+
+// update the related thng
+device.update({
+  customFields: {
+    foo: 'bar'
+  }
+}).then(function(updated){
+  console.log('updated device details: ', updated);
+});
+
+// CRUD properties
+device.property('temperature').update(32);
+device.property('humidity').read().then(function(results){
+  console.log('humidity readings:', results);
+});
+
+// CR actions
+device.action('_turnOn').create();
+```
 
 ## Documentation
 
