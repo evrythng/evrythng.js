@@ -1,4 +1,4 @@
-// EVRYTHNG JS SDK v3.0.1
+// EVRYTHNG JS SDK v3.0.2
 // (c) 2012-2015 EVRYTHNG Ltd. London / New York / Zurich.
 // Released under the Apache Software License, Version 2.0.
 // For all details and usage:
@@ -460,7 +460,7 @@ define("almond", function(){});
 	else if (typeof module != "undefined" && module.exports) { module.exports = context[name]; }
 })("Promise",typeof global != "undefined" ? global : this,function DEF(){
 	/*jshint validthis:true */
-	
+	"use strict";
 
 	var builtInProp, cycle, scheduling_queue,
 		ToString = Object.prototype.toString,
@@ -817,7 +817,7 @@ define("almond", function(){});
 
 // Loader for silly npo.js which uses non-standard UMD definition
 define('promise',['npo'], function() {
-  
+  'use strict';
   return Promise;
 });
 
@@ -828,7 +828,7 @@ define('promise',['npo'], function() {
 // dependency.**
 
 define('utils',['promise'], function (Promise) {
-  
+  'use strict';
 
   return {
 
@@ -903,26 +903,6 @@ define('utils',['promise'], function (Promise) {
       }
     },
 
-    // Merge already built params with object params. Undefined number of parameters.
-    mergeParams: function (first, second) {
-      if(!second){
-        return first;
-      }
-
-      var merged;
-      if(this.isString(first) && this.isObject(second)) {
-        merged = first + '&' + this.buildParams(second);
-      } else if (this.isObject(first) && this.isString(second)){
-        merged = this.buildParams(first) + '&' + second;
-      } else if (this.isObject(first) && this.isObject(second)){
-        merged = this.extend(first, second);
-      } else {
-        throw new TypeError('Cannot merge array parameters.');
-      }
-      [].splice.call(arguments, 0, 2, merged);
-      return this.mergeParams.apply(this, arguments);
-    },
-
     // Build full URL from a base url and params, if there are any.
     buildUrl: function(host, options){
       var url = host + (options.url ? options.url : '');
@@ -990,10 +970,10 @@ define('utils',['promise'], function (Promise) {
 define('core',[
   'utils'
 ], function (Utils) {
-  
+  'use strict';
 
   // Version is updated from package.json using `grunt-version` on build.
-  var version = '3.0.1';
+  var version = '3.0.2';
 
 
   // Setup default settings:
@@ -1072,7 +1052,7 @@ define('core',[
 define('scope/scope',[
   'utils'
 ], function (Utils) {
-  
+  'use strict';
 
   // Scope super class constructor:
 
@@ -1103,7 +1083,7 @@ define('scope/scope',[
 define('logger',[
   'core'],
   function (EVT) {
-  
+  'use strict';
 
   var header = 'EvrythngJS';
 
@@ -1143,7 +1123,7 @@ define('network/cors',[
   'utils',
   'logger'
 ], function (EVT, Promise, Utils, Logger) {
-  
+  'use strict';
 
   // Helper method used to build the returned response. It parses the JSON
   // 'data' response and wraps the 'status' and 'headers' in an object in
@@ -1168,7 +1148,7 @@ define('network/cors',[
         response = null;
 
     if (xhr.responseText) {
-      if (headers['content-type'] === 'application/json') {
+      if (headers['content-type'].indexOf('application/json') !== -1) {
         // try to parse the response if looks like json
         try {
           response = JSON.parse(xhr.responseText);
@@ -1362,7 +1342,7 @@ define('network/jsonp',[
   'utils',
   'logger'
 ], function (EVT, Promise, Utils, Logger) {
-  
+  'use strict';
 
   // Counter defines uniquely identified callbacks.
   var counter = 0, head;
@@ -1497,7 +1477,7 @@ define('connect',[
   'utils',
   'logger'
 ], function (EVT, cors, jsonp, Utils, Logger) {
-  
+  'use strict';
 
   // The ajax() method or EVT.api() returns a **Promise**. Nevertheless,
   // it still allows the old-styled callback API as follows:
@@ -1590,7 +1570,7 @@ define('resource',[
   'logger',
   'connect'
 ], function (EVT, Promise, Scope, Utils, Logger) {
-  
+  'use strict';
 
   // Resource constructor. As this is a private module, all resource constructors
   // are called within scopes. It accepts:
@@ -1601,19 +1581,21 @@ define('resource',[
   // - ***classFn**: class of the current resource, used to serialize/deserialize
   // requests/responses. If the response does not need special treatment and the
   // JSON representation is enough, the classFn can be omitted.*
-  var Resource = function(scope, path, classFn) {
+  var Resource = function (scope, path, classFn) {
 
     // Setup scope for each of the subsequent calls.
-    if(scope && scope instanceof Scope){
+    if (scope && scope instanceof Scope) {
       this.scope = scope;
     } else {
       throw new TypeError('Scope should inherit from Scope (e.g. EVT.App).');
     }
 
     // Setup path and allow to omit leading '/'.
-    if(Utils.isString(path)){
+    if (Utils.isString(path)) {
 
-      if (path[0] != '/') { path = '/' + path; }
+      if (path[0] != '/') {
+        path = '/' + path;
+      }
       this.path = path;
 
     } else {
@@ -1623,17 +1605,17 @@ define('resource',[
     // Setup class for serializing and deserializing results. It must implement
     // a *toJSON()* method. This method is in the Entity prototype. Since all of our
     // entities inherit from Entity, by default all of them will have this.
-    if(Utils.isFunction(classFn)){
+    if (Utils.isFunction(classFn)) {
 
       if (Utils.isFunction(classFn.prototype.toJSON)) {
         this['class'] = classFn;
-      }else{
+      } else {
         Logger.error('Class for resource "' + path + '" does not implement toJSON().');
       }
 
     } else {
       Logger.info('Class for resource "' + path + '" undefined. It will not return ' +
-      'proper Entities nor cascaded Entities.');
+        'proper Entities nor cascaded Entities.');
     }
 
   };
@@ -1649,12 +1631,12 @@ define('resource',[
 
     // This verification allows not to pass any options, and have callbacks in
     // its place. It also allows passing *null* if there is no success callback.
-    if(Utils.isFunction(userOptions) || userOptions === null){
+    if (Utils.isFunction(userOptions) || userOptions === null) {
 
       successCb = userOptions;
       errorCb = successCallback;
 
-    }else if (Utils.isObject(userOptions)) {
+    } else if (Utils.isObject(userOptions)) {
 
       // If options is an object, merge it with the request options. Callbacks
       // can be included in this object or as separate parameters (same as
@@ -1691,7 +1673,7 @@ define('resource',[
     var async = (userOptions && userOptions.async !== undefined) ?
       userOptions.async : EVT.settings.async;
 
-    if(async){
+    if (async) {
 
       var $this = this;
 
@@ -1736,23 +1718,29 @@ define('resource',[
 
     if (this['class'] && response) {
 
-      var  resource = this;
+      var resource = this;
 
       if (Utils.isArray(response)) {
+
         // Response is array of results, parse to an array of entities.
         parsedResponse = [];
-        for (var i in response){
-          if (response.hasOwnProperty(i)){
-            var objId = response[i].id;
+        var baseResourcePath = resource.path;
 
-            if (objId){
-              resource = new Resource(resource.scope, resource.path + '/' + objId, resource['class']);
+        response.forEach(function (obj) {
+          if (Utils.isObject(obj)) {
+            var objId = obj.id;
+
+            if (objId) {
+              resource = new Resource(resource.scope, baseResourcePath + '/' + objId, resource['class']);
             }
 
-            parsedResponse.push(new resource['class'](response[i], resource));
+            parsedResponse.push(new resource['class'](obj, resource));
+          } else {
+            parsedResponse.push(obj);
           }
-        }
-      } else if (Utils.isObject(response)){
+        });
+
+      } else if (Utils.isObject(response)) {
         if (response.hasOwnProperty('data')) {
           // Full response - it is an object and includes "data", parse just the data.
 
@@ -1788,7 +1776,7 @@ define('resource',[
   // is a plain object, do nothing.
   Resource.prototype.jsonify = function (classObject) {
 
-    if(this['class'] && (classObject instanceof this['class'])){
+    if (this['class'] && (classObject instanceof this['class'])) {
       return classObject.toJSON();
     } else {
       return classObject || {};
@@ -1809,7 +1797,7 @@ define('resource',[
   // - ***create(data, options, successCb, errorCb)**: all explicit params*
   // - ***create(data, successCb, errorCb)**: no options, just callbacks*
   Resource.prototype.create = function (data, options, successCallback, errorCallback) {
-    if(!data || Utils.isFunction(data)){
+    if (!data || Utils.isFunction(data)) {
       throw new TypeError('Create method should have payload.');
     }
 
@@ -1865,8 +1853,8 @@ define('resource',[
     };
 
     return _request.call(this, requestOptions, options, successCallback, errorCallback)
-      .then(function(response){
-        return new Promise(function(resolve, reject) {
+      .then(function (response) {
+        return new Promise(function (resolve, reject) {
           if (response.count !== undefined) {
             resolve(response.count);
           } else {
@@ -1923,8 +1911,8 @@ define('resource',[
     return function (id) {
       var fullPath = path || "";
 
-      if(id){
-        if(Utils.isString(id)) {
+      if (id) {
+        if (Utils.isString(id)) {
           fullPath += '/' + id;
         } else {
           throw new TypeError('ID must be a string.');
@@ -1933,7 +1921,7 @@ define('resource',[
 
       var resource = new Resource(this, fullPath, Entity);
 
-      if(nestedResources){
+      if (nestedResources) {
 
         // Allow nested resources in single call.
         // E.g. users can access to a thng's nested data directly with:
@@ -1946,11 +1934,11 @@ define('resource',[
         // instead of fetching the Thng first.
         var rawEntity = new Entity({id: id}, resource);
 
-        if(Utils.isArray(nestedResources)){
+        if (Utils.isArray(nestedResources)) {
           nestedResources.forEach(function (nestedResource) {
 
             // If the entity has it, then attach to this resource as well.
-            if(rawEntity[nestedResource]){
+            if (rawEntity[nestedResource]) {
               resource[nestedResource] = function () {
                 return rawEntity[nestedResource].apply(rawEntity, arguments);
               };
@@ -1982,7 +1970,7 @@ define('entity/entity',[
   'resource',
   'utils'
 ], function (Resource, Utils) {
-  
+  'use strict';
 
   // The entity constructor, and therefore all the standard inheritances,
   // accepts:
@@ -2096,7 +2084,7 @@ define('entity/property',[
   'resource',
   'utils'
 ], function (EVT, Entity, Resource, Utils) {
-  
+  'use strict';
 
   // Setup Property inheritance from Entity.
   var Property = function () {
@@ -2213,7 +2201,7 @@ define('entity/action',[
   'utils',
   'logger'
 ], function (EVT, Entity, Scope, Resource, Utils, Logger) {
-  
+  'use strict';
 
   // Setup Action inheritance from Entity.
   var Action = function () {
@@ -2260,9 +2248,17 @@ define('entity/action',[
     }
 
     var ret = actionObj;
-    ret.type = actionType;
 
-    _addEntityIdentifier(entity, ret);
+    if (Utils.isArray(actionObj)) {
+
+      ret = actionObj.map(function (singleAction) {
+        return _fillAction(entity, singleAction, actionType);
+      });
+
+    } else {
+      ret.type = actionType !== 'all' && actionType ||  actionObj.type || '';
+      _addEntityIdentifier(entity, ret);
+    }
 
     return ret;
   }
@@ -2286,8 +2282,13 @@ define('entity/action',[
 
       if (actionType) {
         if (Utils.isString(actionType)) {
-          // TODO API now has alias to nested /thngs/<>/actions - do same as properties
-          path = '/actions/' + actionType;
+          var relativePath = '/actions/' + actionType;
+
+          // Scopes use the absolute path, while Resources use the relative path.
+          // Devices create a Resource for its Thng dynamically, which makes them
+          // in fact behave like a Resource.
+          path = this instanceof Scope ? relativePath : this.resource.path + relativePath;
+
         } else {
           throw new TypeError('Action type must be a name string');
         }
@@ -2334,25 +2335,6 @@ define('entity/action',[
         }
       };
 
-
-      // Overload Action resource *read()* method to send entity identifier in
-      // the filter param and fetch actions related to this entity.
-      resource.read = function () {
-
-        // Create params if they are not defined yet.
-        var args = _normalizeArguments.apply(this, arguments);
-        args[0].params = args[0].params || {};
-        var filter = {};
-
-        // Add the current entity identifier to the filter
-        _addEntityIdentifier(context, filter);
-
-        // Merge filter params (disregarding if they are strings and/or objects)
-        args[0].params.filter = Utils.mergeParams(args[0].params.filter || {}, filter);
-
-        return Resource.prototype.read.apply(this, args);
-      };
-
       return resource;
     }
 
@@ -2372,7 +2354,7 @@ define('entity/product',[
   './action',
   'utils'
 ], function (EVT, Entity, Resource, Property, Action, Utils) {
-  
+  'use strict';
 
   // Setup Product inheritance from Entity.
   var Product = function () {
@@ -2417,7 +2399,7 @@ define('entity/appUser',[
   'utils',
   'connect'
 ], function (EVT, Entity, Resource, Utils) {
-  
+  'use strict';
 
   // Setup AppUser inheritance from Entity.
   var AppUser = function (objData) {
@@ -2560,6 +2542,80 @@ define('entity/appUser',[
   };
 });
 
+// ## PLACE.JS
+
+// **The Place is a simple Entity subclass representing the REST API
+// Place object.**
+
+define('entity/place',[
+  'core',
+  './entity',
+  'resource',
+  'scope/scope',
+  'utils',
+  'logger'
+], function (EVT, Entity, Resource, Scope, Utils, Logger) {
+  'use strict';
+
+  // Setup Place inheritance from Entity.
+  var Place = function () {
+    Entity.apply(this, arguments);
+  };
+
+  Place.prototype = Object.create(Entity.prototype);
+  Place.prototype.constructor = Place;
+
+  // Attach class to EVT module.
+  EVT.Entity.Place = Place;
+
+  function _normalizeArguments(args) {
+    var data = args[0];
+
+    if (!data || Utils.isFunction(data)) {
+      // Add empty data object
+      args = Array.prototype.slice.call(args, 0);
+      args.unshift({});
+    }
+
+    return args;
+  }
+  return {
+    resourceConstructor: function (id) {
+      var scope = this instanceof Scope ? this : this.resource.scope;
+
+      var resource = Resource.constructorFactory('/places', EVT.Entity.Place).call(scope, id);
+
+      // Overload resource read() to send current location by default
+      resource.read = function () {
+        var $this = this,
+            args = _normalizeArguments(arguments),
+            params = args[0].params || {};
+
+        if (typeof params.lat === 'undefined' && typeof params.lon === 'undefined' && EVT.settings.geolocation) {
+          // If geolocation setting is turned on, get current position
+          return Utils.getCurrentPosition().then(function (position) {
+            params.lat = position.coords.latitude;
+            params.lon = position.coords.longitude;
+
+            args[0].params = params;
+            return Resource.prototype.read.apply($this, args);
+
+          }, function (err) {
+            // Unable to get position, just inform the reason in the console.
+            Logger.info(err);
+            return Resource.prototype.read.apply($this, args);
+          });
+
+        } else {
+          return Resource.prototype.read.apply($this, args);
+        }
+      };
+
+      return resource;
+    }
+  };
+});
+
 // ## FACEBOOK.JS
 
 // **The Facebook module exports wrapped *login*, *logout* and *init* methods
@@ -2569,7 +2625,7 @@ define('social/facebook',[
   'promise',
   'utils'
 ], function (Promise, Utils) {
-  
+  'use strict';
   /*global FB*/
 
   // Load Facebook SDK asynchronously. This means that by default
@@ -2712,7 +2768,7 @@ define('authentication',[
   'utils',
   'connect'
 ], function (EVT, Promise, Facebook, Utils) {
-  
+  'use strict';
 
   // Login into Evryhtng. This method is attached to the `EVT.App` API methods.
   // Currently allowed authentication methods are **evrythng** and **facebook**.
@@ -3011,13 +3067,14 @@ define('scope/application',[
   'entity/product',
   'entity/action',
   'entity/appUser',
+  'entity/place',
   'authentication',
   'social/facebook',
   'utils',
   'logger'
 ], function (EVT, Scope, Resource, Product, Action, AppUser,
-             Authentication, Facebook, Utils, Logger) {
-  
+             Place, Authentication, Facebook, Utils, Logger) {
+  'use strict';
 
   // Application Scope constructor. It can be called with the parameters:
 
@@ -3139,6 +3196,8 @@ define('scope/application',[
     // of the default *'/users'*. Both endpoints return a list of User entities.
     appUser: AppUser.resourceConstructor('/auth/evrythng/users'),
 
+    place: Place.resourceConstructor,
+
     login: Authentication.login
 
   }, true);
@@ -3149,6 +3208,122 @@ define('scope/application',[
 
   return EVT;
 
+});
+
+// ## LOCATION.JS
+
+// **The Location Entity represents a location in the Engine. It inherits
+// from Entity and overload the resource's *update()* method to allow
+// empty parameters (no payload).**
+
+define('entity/location',[
+  'core',
+  './entity',
+  'resource',
+  'utils',
+  'logger'
+], function (EVT, Entity, Resource, Utils, Logger) {
+  'use strict';
+
+  // Setup Location inheritance from Entity.
+  var Location = function () {
+    Entity.apply(this, arguments);
+  };
+
+  Location.prototype = Object.create(Entity.prototype);
+  Location.prototype.constructor = Location;
+
+  // Attach class to EVT module.
+  EVT.Entity.Location = Location;
+
+  // The location update normalization of arguments allows to
+  // make easier and more intuitive calls, such as:
+
+  // - Single location update:
+
+  // ```
+  //  thng.location().update({
+  //    position: GeoJSON
+  //  });
+  // ```
+
+  // - Multi location update:
+
+  // ```
+  //  thng.location().update([
+  //    {
+  //      position: GeoJSON
+  //    },
+  //    {
+  //      position: GeoJSON,
+  //      timestamp: Timestamp
+  //    }
+  // ]);
+  // ```
+
+  function _normalizeArguments(args) {
+    var data = args[0];
+
+    if (Utils.isObject(data)){
+      // Convert single object to array
+      args[0] = [data];
+    } else if (!data || Utils.isFunction(data)) {
+      // Add empty data object
+      args = Array.prototype.slice.call(args, 0);
+      args.unshift([]);
+    }
+
+    return args;
+  }
+
+  return {
+    resourceConstructor: function () {
+      var path = this.resource.path + '/location',
+          args = arguments[0] || [];
+
+      // This endpoint is a bit special, does not allow getting location by ID
+      if (Utils.isString(args) ||
+        Utils.isObject(args) && Utils.isString(args.id)) {
+        throw new TypeError('IDs not allowed here');
+      }
+
+      var resource = new Resource(this.resource.scope, path, EVT.Entity.Location);
+
+      // Overload resource update() to send current location if none provided
+      resource.update = function () {
+        var $this = this,
+            args = _normalizeArguments(arguments);
+
+        if (args[0].length === 0 && EVT.settings.geolocation) {
+          // If geolocation setting is turned on, get current position
+          return Utils.getCurrentPosition().then(function (position) {
+
+            args[0] =[{
+              position: {
+                type: "Point",
+                coordinates: [ position.coords.longitude, position.coords.latitude]
+              }
+            }];
+
+            return Resource.prototype.update.apply($this, args);
+
+          }, function (err) {
+
+            // Unable to get position, just inform the reason in the console.
+            Logger.info(err);
+
+            return Resource.prototype.update.apply($this, args);
+
+          });
+
+        } else {
+          return Resource.prototype.update.apply($this, args);
+        }
+      };
+
+      return resource;
+    }
+  };
 });
 
 // ## THNG.JS
@@ -3162,10 +3337,11 @@ define('entity/thng',[
   'resource',
   './property',
   './action',
+  './location',
   'utils',
   'connect'
-], function (EVT, Entity, Resource, Property, Action, Utils) {
-  
+], function (EVT, Entity, Resource, Property, Action, Location, Utils) {
+  'use strict';
 
   // Setup Thng inheritance from Entity.
   var Thng = function () {
@@ -3203,6 +3379,8 @@ define('entity/thng',[
 
     action: Action.resourceConstructor,
 
+    location: Location.resourceConstructor,
+
     // TODO API not very consistent - thng.product().read/update() better?
     readProduct: readProduct
 
@@ -3214,7 +3392,7 @@ define('entity/thng',[
 
 
   return {
-    resourceConstructor: Resource.constructorFactory('/thngs', EVT.Entity.Thng, ['property', 'action'])
+    resourceConstructor: Resource.constructorFactory('/thngs', EVT.Entity.Thng, ['property', 'action', 'location'])
   };
 });
 
@@ -3231,7 +3409,7 @@ define('entity/actionType',[
   'resource',
   'utils'
 ], function (EVT, Entity, Scope, Resource, Utils) {
-  
+  'use strict';
 
   // Setup Action inheritance from Entity.
   var ActionType = function () {
@@ -3274,7 +3452,7 @@ define('entity/collection',[
   './action',
   'utils'
 ], function (EVT, Entity, Resource, Action, Utils) {
-  
+  'use strict';
 
   // Setup Collection inheritance from Entity.
   var Collection = function () {
@@ -3330,7 +3508,7 @@ define('entity/multimedia',[
   './entity',
   'resource'
 ], function (EVT, Entity, Resource) {
-  
+  'use strict';
 
   // Setup Multimedia inheritance from Entity.
   var Multimedia = function () {
@@ -3359,7 +3537,7 @@ define('search',[
   'core',
   'utils'
 ], function (EVT, Utils) {
-  
+  'use strict';
 
   // Wrap the search API call in the search() method. Check the
   // [search API in Evrythng Documentation](https://dashboard.evrythng.com/developers/apidoc#search).
@@ -3451,12 +3629,13 @@ define('scope/user',[
   'entity/action',
   'entity/collection',
   'entity/multimedia',
+  'entity/place',
   'authentication',
   'utils',
   'search'
 ], function (EVT, Scope, Product, Thng, AppUser, ActionType, Action, Collection,
-             Multimedia, Authentication, Utils, search) {
-  
+             Multimedia, Place, Authentication, Utils, search) {
+  'use strict';
 
   // User Scope constructor. It can be called with the parameters:
 
@@ -3523,6 +3702,8 @@ define('scope/user',[
 
     multimedia: Multimedia.resourceConstructor,
 
+    place: Place.resourceConstructor,
+
     logout: Authentication.logout,
 
     search: search,
@@ -3556,7 +3737,7 @@ define('scope/device',[
   'entity/thng',
   'utils'
 ], function (EVT, Scope, Thng, Utils) {
-  
+  'use strict';
 
   // Device Scope constructor. It can be called with the parameters:
 
@@ -3667,7 +3848,7 @@ define('evrythng',[
   'scope/user',
   'scope/device'
 ], function(EVT) {
-  
+  'use strict';
 
   // Return fully built EVT module.
   return EVT;
