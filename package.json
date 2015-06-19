@@ -1,11 +1,11 @@
 {
   "name": "evrythng",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "main": "lib/evrythng.js",
   "description": "Javascript SDK to communicate with EVRYTHNG REST API",
   "repository": {
     "type": "git",
-    "url": "https://github.com/evrythng/evrythng.js.git"
+    "url": "git://github.com/evrythng/evrythng.js.git"
   },
   "keywords": [
     "evrythng",
