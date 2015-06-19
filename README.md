@@ -5,7 +5,7 @@ We provide two environment-specific versions: AMD and CommonJS to utilise the be
 
 ## Installation
 
-**Note**: `evrythng.js` uses [promises](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise). Not all browsers support that natively; we include [Native Promise Only](https://github.com/getify/native-promise-only) polyfill and suggest loading it before evrythng.js.
+**Note**: `evrythng.js` uses [promises](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise). Not all environments support them natively yet; to deal with this, we use the [Native Promise Only](https://github.com/getify/native-promise-only) polyfill internally.
 
 ### Browsers
 
@@ -35,7 +35,7 @@ Or if you prefer [Gulp](http://gulpjs.com/):
 
 The CDN version includes [Native Promise Only](https://github.com/getify/native-promise-only), so all you need is to include the script from our CDN in your HTML file using:
 
-    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-3.0.2.min.js"></script>
+    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-3.1.0.min.js"></script>
  
 Or always get the last stable release:
 
@@ -44,7 +44,7 @@ Or always get the last stable release:
     
 For HTTPs you'll have to use:
 
-    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-3.0.2.min.js"></script>
+    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-3.1.0.min.js"></script>
 
 respectively
 
@@ -241,11 +241,7 @@ var app = new EVT.App('apiKey');
 
 ### Node.js
 
-**Note**: Node.js in versions before 0.12 does not support promises natively. Load the polyfill before `evrythng.js`:
-
 ```javascript
-require('native-promise-only);
-
 var EVT = require('evrythng');
 
 var app = new EVT.App('apiKey');

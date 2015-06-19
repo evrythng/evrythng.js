@@ -1,4 +1,4 @@
-// EVRYTHNG JS SDK v3.0.2
+// EVRYTHNG JS SDK v3.1.0
 // (c) 2012-2015 EVRYTHNG Ltd. London / New York / Zurich.
 // Released under the Apache Software License, Version 2.0.
 // For all details and usage:
@@ -456,7 +456,7 @@ define("almond", function(){});
 (function UMD(name,context,definition){
 	// special form of UMD for polyfilling across evironments
 	context[name] = context[name] || definition();
-	if (typeof define == "function" && define.amd) { define('npo',[],function $AMD$(){ return context[name]; }); }
+	if (typeof define == "function" && define.amd) { define('promise',[],function $AMD$(){ return context[name]; }); }
 	else if (typeof module != "undefined" && module.exports) { module.exports = context[name]; }
 })("Promise",typeof global != "undefined" ? global : this,function DEF(){
 	/*jshint validthis:true */
@@ -815,12 +815,6 @@ define("almond", function(){});
 	return Promise;
 });
 
-// Loader for silly npo.js which uses non-standard UMD definition
-define('promise',['npo'], function() {
-  'use strict';
-  return Promise;
-});
-
 // ## UTILS.JS
 
 // **The Utils module provide a set of utility methods used
@@ -834,17 +828,17 @@ define('utils',['promise'], function (Promise) {
 
     // Check if a variable is a function.
     isFunction: function(fn){
-      return Object.prototype.toString.call(fn) == "[object Function]";
+      return Object.prototype.toString.call(fn) == '[object Function]';
     },
 
     // Check if a variable is a string.
     isString: function(str){
-      return Object.prototype.toString.call(str) == "[object String]";
+      return Object.prototype.toString.call(str) == '[object String]';
     },
 
     // Check if a variable is an array.
     isArray: function(arr){
-      return Object.prototype.toString.call(arr) == "[object Array]";
+      return Object.prototype.toString.call(arr) == '[object Array]';
     },
 
     // Check if a variable is an Object (includes Object functions and
@@ -867,7 +861,9 @@ define('utils',['promise'], function (Promise) {
         // Create shallow copy of source.
         out = {};
         for(var i in source){
-          out[i] = source[i];
+          if(source.hasOwnProperty(i)) {
+            out[i] = source[i];
+          }
         }
       }
 
@@ -891,7 +887,7 @@ define('utils',['promise'], function (Promise) {
         for (var key in params) {
           if (params.hasOwnProperty(key) && params[key] !== undefined) {
             var value = this.isObject(params[key])? this.buildParams(params[key]) : params[key];
-            paramsStr.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+            paramsStr.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
           }
         }
 
@@ -904,8 +900,8 @@ define('utils',['promise'], function (Promise) {
     },
 
     // Build full URL from a base url and params, if there are any.
-    buildUrl: function(host, options){
-      var url = host + (options.url ? options.url : '');
+    buildUrl: function(options){
+      var url = options.apiUrl + (options.url ? options.url : '');
 
       if(options.params) {
         url += (url.indexOf('?') === -1 ? '?' : '&') + this.buildParams(options.params);
@@ -973,7 +969,7 @@ define('core',[
   'use strict';
 
   // Version is updated from package.json using `grunt-version` on build.
-  var version = '3.0.2';
+  var version = '3.1.0';
 
 
   // Setup default settings:
@@ -997,17 +993,16 @@ define('core',[
   // - ***geolocation**: Boolean - set to true to ask for Geolocation when needed*
   // - ***fetchCascade**: Boolean - set to true to automagically fetch nested entities
   // (e.g. thng.product is an EVT.Entity.Product instead of string id)*
-  // - ***onStartRequest**: Function - run before each HTTP call (e.g. start Spinner)*
-  // - ***onFinishRequest**: Function - run after each HTTP call*
+  // - ***interceptors**: Array - each interceptor implements 'request' and/or 'response' functions
+  // that run before or after each HTTP call (e.g. start Spinner)*
   var defaultSettings = {
     apiUrl: 'https://api.evrythng.com',
     async: true,
     fullResponse: false,
     quiet: false,
     geolocation: true,
-    /*fetchCascade: false,
-    onStartRequest: null,
-    onFinishRequest: null*/
+    interceptors: []
+    /*fetchCascade: false*/
   };
 
 
@@ -1017,21 +1012,37 @@ define('core',[
 
     settings: defaultSettings,
 
-    //
     Entity: {},
 
     // Setup method allows the developer to change overall settings for every
     // subsequent request. However, these can be overridden for each request as well.
     // Setup merges current settings with the new custom ones.
     setup: function (customSettings) {
-
       if(Utils.isObject(customSettings)){
         this.settings = Utils.extend(this.settings, customSettings);
       }else{
         throw new TypeError('Setup should be called with an options object.');
       }
-
       return this.settings;
+    },
+
+
+    // Use the passed plugin features by requiring its dependencies and installing it.
+    use: function (plugin, callback){
+      if (Utils.isObject(plugin) && Utils.isFunction(plugin.install)) {
+        require(plugin.requires || [], function () {
+          plugin.install.apply(plugin, arguments);
+
+          // Call callback if specified
+          if(callback && Utils.isFunction(callback)){
+            callback();
+          }
+        });
+
+        return this;
+      } else {
+        throw new TypeError('Plugin must implement \'install()\' method.');
+      }
     }
   };
 
@@ -1130,29 +1141,31 @@ define('network/cors',[
   // case the flag `fullResponse` is enabled as a global in `EVT.settings`
   // or in this particular request. *200 OK* responses without data,
   // return *null*.
-  function _buildResponse(xhr, fullResponse){
+  function _buildResponse(xhr, fullResponse) {
     // XMLHttpRequest returns a not very usable single big string with all headers
     var _parseHeaders = function(headers) {
-      headers = headers.trim().split("\n");
-
       var parsed = {};
 
-      for (var h in headers) {
-        var header = headers[h].toLowerCase().match(/([^:]+):(.*)/);
-        parsed[header[1].trim()] = header[2].trim();
+      if(headers){
+        headers = headers.trim().split("\n");
+        for (var h in headers) {
+          var header = headers[h].toLowerCase().match(/([^:]+):(.*)/);
+          parsed[header[1].trim()] = header[2].trim();
+        }
       }
       return parsed;
     };
 
     var headers = _parseHeaders(xhr.getAllResponseHeaders()),
-        response = null;
+      response = null;
 
     if (xhr.responseText) {
-      if (headers['content-type'].indexOf('application/json') !== -1) {
+      var contentType = headers['content-type'];
+      if (contentType && contentType.indexOf('application/json') !== -1) {
         // try to parse the response if looks like json
         try {
           response = JSON.parse(xhr.responseText);
-        } catch(e) {
+        } catch (e) {
           response = xhr.responseText;
         }
       } else {
@@ -1160,7 +1173,7 @@ define('network/cors',[
       }
     }
 
-    if(fullResponse){
+    if (fullResponse) {
       response = {
         data: response,
         headers: headers,
@@ -1179,7 +1192,7 @@ define('network/cors',[
 
   // Helper method that builds a custom Error object providing some extra
   // information on a request error.
-  function _buildError(xhr, url, method, response){
+  function _buildError(xhr, url, method, response) {
     var errorData = {
       status: xhr.status,
       type: 'cors',
@@ -1199,13 +1212,11 @@ define('network/cors',[
   }
 
 
-  // Create an XHR2 object. The request will be synchronous or
-  // asynchronous based on the global `async` flag in `EVT.settings` or in
-  // this particular request.
-  function _createXhr(method, url, async, options) {
+  // Create an asynchronous XHR2 object.
+  function _createXhr(method, url, options) {
     var xhr = new XMLHttpRequest();
 
-    xhr.open(method, url, async);
+    xhr.open(method, url);
 
     // Setup headers, including the *Authorization* that holds the Api Key.
     xhr.setRequestHeader('content-type', 'application/json');
@@ -1228,100 +1239,83 @@ define('network/cors',[
   // module doc](../ajax.html). Default method is `GET`, URL is relative to
   // `EVT.settings.apiUrl`, it is asynchronous by default, returns the
   // JSON data response and will not time out.
-  function cors(options, successCallback, errorCallback){
+  function cors(options, successCallback, errorCallback) {
 
     options = options || {};
 
     var method = options.method || 'get',
-        url = Utils.buildUrl(EVT.settings.apiUrl, options),
-        async = options.async !== undefined ? options.async : true;
+      url = Utils.buildUrl(options);
 
-    var xhr = _createXhr(method, url, async, options);
+    var xhr = _createXhr(method, url, options);
 
     // Serialise JSON data before sending.
     var data = options.data ? JSON.stringify(options.data) : null;
 
-    // If request is made synchronously, return direct response or error.
-    // Synchronous requests don't use callbacks.
+    // Do a normal asynchronous request and return a promise. If there
+    // are callbacks execute them as well before resolving the promise.
+    return new Promise(function (resolve, reject) {
 
-    // **Note: Synchronous requests block the UI until result is received!**
-    if(!async){
+      // Set protocol error handler.
+      xhr.onerror = function () {
+        // Could not execute request at all (destination unreachable, offline, ...?)
+        var ex = new Error('Network error.');
+        ex.name = 'CorsError';
+        reject(ex);
+      };
+
+      // Define internal error handler.
+      var errorHandler = function (response) {
+        if (response) {
+          var errorData = _buildError(xhr, url, method, response);
+          Logger.error(errorData);
+
+          if (errorCallback) {
+            errorCallback(errorData);
+          }
+          reject(errorData);
+        }
+      };
+
+      // Set timeout handler if needed.
+      if (options.timeout > 0) {
+        xhr.ontimeout = function () {
+          var timeoutResponse = {errors: ['Request timed out.']};
+          errorHandler(timeoutResponse);
+        };
+      }
+
+
+      // Define the response handler.
+      function handler() {
+        try {
+          if (this.readyState === this.DONE) {
+
+            var response = _buildResponse(this, options.fullResponse);
+
+            // Resolve or reject promise given the response status.
+            // HTTP status of 2xx is considered a success.
+            if (this.status >= 200 && this.status < 300) {
+
+              if (successCallback) {
+                successCallback(response);
+              }
+              resolve(response);
+
+            } else {
+              errorHandler(response);
+            }
+          }
+        } catch (exception) {
+          // Do nothing, will be handled by ontimeout.
+        }
+      }
+
+      // Send the request and wait for the response in the handler.
+      xhr.onreadystatechange = handler;
+
       xhr.send(data);
 
-      // At this point, response was already received.
-      var response = _buildResponse(xhr, options.fullResponse);
-
-      // HTTP status of 2xx is considered a success.
-      if(xhr.status >= 200 && xhr.status < 300) {
-        return response;
-      } else {
-        Logger.error(_buildError(xhr, url, method, response));
-        throw new Error('Synchronous CORS Request failed.');
-      }
-    } else {
-
-      // Do a normal asynchronous request and return a promise. If there
-      // are callbacks execute them as well before resolving the promise.
-      return new Promise(function(resolve, reject) {
-
-        // Set protocol error handler.
-        xhr.onerror = function() {
-          // Could not execute request at all (destination unreachable, offline, ...?)
-          var ex = new Error('Network error.');
-          ex.name = 'CorsError';
-          reject(ex);
-        };
-
-        // Define internal error handler.
-        var errorHandler = function(response) {
-          if (response) {
-            var errorData = _buildError(xhr, url, method, response);
-            Logger.error(errorData);
-
-            if(errorCallback) { errorCallback(errorData); }
-            reject(errorData);
-          }
-        };
-
-        // Set timeout handler if needed.
-        if (options.timeout > 0){
-          xhr.ontimeout = function(){
-            var timeoutResponse = { errors: ['Request timed out.']};
-            errorHandler(timeoutResponse);
-          };
-        }
-
-
-        // Define the response handler.
-        function handler() {
-          try {
-            if (this.readyState === this.DONE) {
-
-              var response = _buildResponse(this, options.fullResponse);
-
-              // Resolve or reject promise given the response status.
-              // HTTP status of 2xx is considered a success.
-              if (this.status >= 200 && this.status < 300) {
-
-                if(successCallback) { successCallback(response); }
-                resolve(response);
-
-              } else {
-                errorHandler(response);
-              }
-            }
-          } catch (exception){
-            // Do nothing, will be handled by ontimeout.
-          }
-        }
-
-        // Send the request and wait for the response in the handler.
-        xhr.onreadystatechange = handler;
-
-        xhr.send(data);
-
-      });
-    }
+    });
   }
 
   return cors;
@@ -1368,14 +1362,12 @@ define('network/jsonp',[
 
   // Making the request is as simple as appending a new script tag
   // to the document. The URL has the *callback* parameter with the
-  // function that will be called with the response data and *async* flag
-  // tells if the request should be synchronous and block the UI or not.
-  function _load(url, async) {
+  // function that will be called with the response data.
+  function _load(url) {
 
     var script = document.createElement('script'),
       done = false;
     script.src = url;
-    script.async = async;
 
     // Once the script has been loaded remove the tag from the document.
     script.onload = script.onreadystatechange = function() {
@@ -1416,10 +1408,11 @@ define('network/jsonp',[
     params.data = JSON.stringify(options.data);
     options.params = params;
 
-    var async = options.async !== undefined ? options.async : true,
-        // Evrythng REST API default endpoint does not provide JSON-P
-        // support, which '//js-api.evrythng.com' does.
-        url = Utils.buildUrl(EVT.settings.apiUrl.replace('//api', '//js-api'), options);
+    options.apiUrl = options.apiUrl && options.apiUrl.replace('//api', '//js-api');
+
+    // Evrythng REST API default endpoint does not provide JSON-P
+    // support, which '//js-api.evrythng.com' does.
+    var url = Utils.buildUrl(options);
 
     // Return a promise and resolve/reject it in the callback function.
     return new Promise(function(resolve, reject) {
@@ -1454,7 +1447,7 @@ define('network/jsonp',[
         window[uniqueName] = null;
       };
 
-      _load(url, async, reject);
+      _load(url, reject);
 
     });
   }
@@ -1474,9 +1467,10 @@ define('connect',[
   'core',
   'network/cors',
   'network/jsonp',
+  'promise',
   'utils',
   'logger'
-], function (EVT, cors, jsonp, Utils, Logger) {
+], function (EVT, cors, jsonp, Promise, Utils, Logger) {
   'use strict';
 
   // The ajax() method or EVT.api() returns a **Promise**. Nevertheless,
@@ -1490,7 +1484,7 @@ define('connect',[
 
   // ```
   // fullResponse - override fullResponse global setting (see module `core`)
-  // async - override async global setting (see module `core`)
+  // apiUrl - override default `EVT.settings.apiUrl`
   // url - URL of the request, relative to `EVT.settings.apiUrl`
   // method - HTTP method, default: `GET`
   // authorization - Authorization header content, should contain API Key
@@ -1501,41 +1495,86 @@ define('connect',[
 
     // Merge options with defaults setup in `EVT.settings`.
     var requestOptions = Utils.extend({
+      apiUrl: EVT.settings.apiUrl,
       url: '/',
-      async: EVT.settings.async,
       fullResponse: EVT.settings.fullResponse,
       authorization: EVT.settings.apiKey,
-      timeout: EVT.settings.timeout
+      timeout: EVT.settings.timeout,
+      interceptors: EVT.settings.interceptors
     }, options);
 
     // Setup callbacks giving priority to parameters.
-    var successCb, errorCb;
+    var successCb, errorCb, cancelled = false;
 
-    if(Utils.isFunction(successCallback)){
+    if (Utils.isFunction(successCallback)) {
       successCb = successCallback;
-    }else if(options && Utils.isFunction(options.success)){
+    } else if (options && Utils.isFunction(options.success)) {
       successCb = options.success;
     }
 
-    if(Utils.isFunction(errorCallback)){
+    if (Utils.isFunction(errorCallback)) {
       errorCb = errorCallback;
-    }else if(options && Utils.isFunction(options.error)){
+    } else if (options && Utils.isFunction(options.error)) {
       errorCb = options.error;
     }
 
-    // Detect what is available.
-    // Returns a promise or immediate response if async = false.
+    // Cancel request, simply adds the flag to be processed afterwards.
+    function cancel() {
+      cancelled = true;
+    }
+
+    // Apply request interceptors
+    if (Utils.isArray(requestOptions.interceptors)) {
+      requestOptions.interceptors.forEach(function (interceptor) {
+        if (interceptor.request && Utils.isFunction(interceptor.request) && !cancelled) {
+
+          // Chain data manipulators
+          var newRequestOptions = interceptor.request(requestOptions, cancel);
+
+          // If interceptor does not return options, use old ones
+          requestOptions = newRequestOptions || requestOptions;
+
+        }
+      });
+    }
+
+    // Reject request if it has been cancelled by request interceptors.
+    if(cancelled){
+      return Promise.reject({
+        errors: ['Request cancelled on request interceptors.'],
+        cancelled: true
+      });
+    }
+
+    // Detect what is available. Returns a promise.
     if (XMLHttpRequest) {
       // *withCredentials* only exists on XmlHttpRequest2 objects.
-      var isXHR2 = typeof new XMLHttpRequest().withCredentials === 'boolean';
+      var isXHR2 = typeof new XMLHttpRequest().withCredentials === 'boolean',
+        response;
 
       // Use XmlHttpRequest with CORS if available, otherwise fall back to JSON-P.
-      if (isXHR2){
-        return cors(requestOptions, successCb, errorCb);
+      if (isXHR2) {
+        response = cors(requestOptions, successCb, errorCb);
       } else {
+        /*TODO remove jsonp, we're building modern stuff here..*/
         Logger.info('CORS not supported, falling back to JSONP.');
-        return jsonp(requestOptions, successCb, errorCb);
+        response = jsonp(requestOptions, successCb, errorCb);
       }
+
+      // Apply response interceptors
+      if (Utils.isArray(requestOptions.interceptors)) {
+        requestOptions.interceptors.forEach(function (interceptor) {
+          if (interceptor.response && Utils.isFunction(interceptor.response)) {
+
+            // Chain promises
+            response = response.then(interceptor.response);
+
+          }
+        });
+      }
+
+      return response;
+
     } else {
       throw new Error('XMLHttpRequest not available.');
     }
@@ -1664,33 +1703,23 @@ define('resource',[
     // the raw `EVT.api()` method.
     request = EVT.api(requestOptions, successCb, errorCb);
 
-    return _handleResponse.call(this, request, userOptions);
+    return _handleResponse.call(this, request);
   }
 
-  // Handle synchronous or asynchronous requests based on the custom or
-  // default options.
-  function _handleResponse(request, userOptions) {
-    var async = (userOptions && userOptions.async !== undefined) ?
-      userOptions.async : EVT.settings.async;
+  // Handle asynchronous requests based on the custom or default options.
+  function _handleResponse(request) {
+    var $this = this;
 
-    if (async) {
+    // Before returning the response, parse it.
+    // This success handler is called inside the Promise, so we need to
+    // keep the current context.
 
-      var $this = this;
-
-      // If request is async, and before returning the response, parse it.
-      // This success handler is called inside the Promise, so we need to
-      // keep the current context.
-
-      // Also, By not providing an error interceptor, we will let the error
-      // propagate from `EVT.api()` to the `resource.read()` promise error
-      // handler
-      return request.then(function (response) {
-        return $this.parse(response);
-      });
-
-    } else {
-      return request;
-    }
+    // Also, By not providing an error interceptor, we will let the error
+    // propagate from `EVT.api()` to the `resource.read()` promise error
+    // handler
+    return request.then(function (response) {
+      return $this.parse(response);
+    });
   }
 
 
@@ -2010,8 +2039,10 @@ define('entity/entity',[
     var json = {};
 
     for(var prop in this){
-      if(this[prop] && !Utils.isFunction(this[prop]) && prop != 'resource'){
-        json[prop] = this[prop];
+      if(this.hasOwnProperty(prop)){
+        if(this[prop] && !Utils.isFunction(this[prop]) && prop != 'resource'){
+          json[prop] = this[prop];
+        }
       }
     }
 
@@ -2300,7 +2331,7 @@ define('entity/action',[
       resource = Resource.constructorFactory(path, EVT.Entity.Action).call(scope, id);
 
       // Overload Action resource *create()* method to allow empty object.
-      resource.create = function () {
+      resource.create = function() {
 
         var $this = this,
           args = _normalizeArguments.apply(this, arguments);
@@ -3381,7 +3412,7 @@ define('entity/thng',[
 
     location: Location.resourceConstructor,
 
-    // TODO API not very consistent - thng.product().read/update() better?
+    /*TODO API not very consistent - thng.product().read/update() better?*/
     readProduct: readProduct
 
   }, true);
