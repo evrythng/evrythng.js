@@ -974,10 +974,10 @@ define('core',[
 
   // Setup default settings:
 
-  // - ***apiUrl**: String - change the default API host*
-  // - ***fullResponse**: Boolean - by default the response of every call if the JSON
+  // - _**apiUrl**: String - change the default API host_
+  // - _**fullResponse**: Boolean - by default the response of every call if the JSON
   // body. However if you need to access the 'status' or 'responseHeaders' in responses
-  // set this to 'true'. The full response has the structure:*
+  // set this to 'true'. The full response has the structure:_
 
   // ```
   //  {
@@ -987,13 +987,13 @@ define('core',[
   //  }
   // ```
 
-  // - ***timeout**: Integer - set the request timeout, in ms*
-  // - ***quiet**: Boolean - set to true if you don't want EVT.js to write anything to the console*
-  // - ***geolocation**: Boolean - set to true to ask for Geolocation when needed*
-  // - ***fetchCascade**: Boolean - set to true to automagically fetch nested entities
-  // (e.g. thng.product is an EVT.Entity.Product instead of string id)*
-  // - ***interceptors**: Array - each interceptor implements 'request' and/or 'response' functions
-  // that run before or after each HTTP call:*
+  // - _**timeout**: Integer - set the request timeout, in ms_
+  // - _**quiet**: Boolean - set to true if you don't want EVT.js to write anything to the console_
+  // - _**geolocation**: Boolean - set to true to ask for Geolocation when needed_
+  // - _**fetchCascade**: Boolean - set to true to automagically fetch nested entities
+  // (e.g. thng.product is an EVT.Entity.Product instead of string id)_
+  // - _**interceptors**: Array - each interceptor implements 'request' and/or 'response' functions
+  // that run before or after each HTTP call:_
 
   // ```
   //  var myInterceptor = {
@@ -1078,7 +1078,7 @@ define('scope/scope',[
 
   // Scope super class constructor:
 
-  // - ***new Scope(apiKey)** - API Key string*
+  // - _**new Scope(apiKey)** - API Key string_
   var Scope = function(apiKey){
 
     // Default parent scope does not have parent.
@@ -1487,9 +1487,9 @@ define('connect',[
   // The ajax() method or EVT.api() returns a **Promise**. Nevertheless,
   // it still allows the old-styled callback API as follows:
 
-  // - ***EVT.api(options)** - options object can contain `success` or `error`
-  // properties to define success and error callbacks*
-  // - ***EVT.api(options, successCb, errorCb)***
+  // - **EVT.api(options)** - options object can contain `success` or `error`
+  // properties to define success and error callbacks
+  // - **EVT.api(options, successCb, errorCb)**
 
   // Options available are:
 
@@ -1627,12 +1627,12 @@ define('resource',[
   // Resource constructor. As this is a private module, all resource constructors
   // are called within scopes. It accepts:
 
-  // - ***scope**: scope that owns this resource (`EVT.App`, `EVT.User`)*
-  // - ***path**: relative path to `EVT.settings.apiUrl` of this resource.
-  // It can represent a list or a single object (e.g. '/thngs', '/thngs/1')*
-  // - ***classFn**: class of the current resource, used to serialize/deserialize
+  // - _**scope**: scope that owns this resource (`EVT.App`, `EVT.User`)_
+  // - _**path**: relative path to `EVT.settings.apiUrl` of this resource.
+  // It can represent a list or a single object (e.g. '/thngs', '/thngs/1')_
+  // - _**classFn**: class of the current resource, used to serialize/deserialize
   // requests/responses. If the response does not need special treatment and the
-  // JSON representation is enough, the classFn can be omitted.*
+  // JSON representation is enough, the classFn can be omitted._
   var Resource = function (scope, path, classFn) {
 
     // Setup scope for each of the subsequent calls.
@@ -1833,11 +1833,11 @@ define('resource',[
   // It always returns an entity or JSON object on success. It accepts the
   // following parameters:
 
-  // - ***create(data)**: just send data (entity or plain JSON), no options,
-  // no callbacks*
-  // - ***create(data, options)**: no callbacks or they are included in options*
-  // - ***create(data, options, successCb, errorCb)**: all explicit params*
-  // - ***create(data, successCb, errorCb)**: no options, just callbacks*
+  // - _**create(data)**: just send data (entity or plain JSON), no options,
+  // no callbacks_
+  // - _**create(data, options)**: no callbacks or they are included in options_
+  // - _**create(data, options, successCb, errorCb)**: all explicit params_
+  // - _**create(data, successCb, errorCb)**: no options, just callbacks_
   Resource.prototype.create = function (data, options, successCallback, errorCallback) {
     if (!data || Utils.isFunction(data)) {
       throw new TypeError('Create method should have payload.');
@@ -1859,10 +1859,10 @@ define('resource',[
   // Read sends a `GET` request to the REST API. It always returns an entity
   // or JSON object on success. It accepts the following parameters:
 
-  // - ***read()**: no options, no callbacks*
-  // - ***read(options)**: no callbacks or they are included in options*
-  // - ***read(options, successCb, errorCb)**: all explicit params*
-  // - ***read(successCb, errorCb)**: no options, just callbacks*
+  // - _**read()**: no options, no callbacks_
+  // - _**read(options)**: no callbacks or they are included in options_
+  // - _**read(options, successCb, errorCb)**: all explicit params_
+  // - _**read(successCb, errorCb)**: no options, just callbacks_
   Resource.prototype.read = function (options, successCallback, errorCallback) {
 
     var requestOptions = {
@@ -1879,10 +1879,10 @@ define('resource',[
   // this query would return.
   // It accepts the following parameters:
 
-  // - ***count()**: no options, no callbacks*
-  // - ***count(options)**: no callbacks or they are included in options*
-  // - ***count(options, successCb, errorCb)**: all explicit params*
-  // - ***count(successCb, errorCb)**: no options, just callbacks*
+  // - _**count()**: no options, no callbacks_
+  // - _**count(options)**: no callbacks or they are included in options_
+  // - _**count(options, successCb, errorCb)**: all explicit params_
+  // - _**count(successCb, errorCb)**: no options, just callbacks_
   Resource.prototype.count = function (options, successCallback, errorCallback) {
 
     var requestOptions = {
@@ -1912,7 +1912,7 @@ define('resource',[
   // Update sends a `PUT` request to the REST API. It always returns an entity
   // or JSON object on success.
 
-  // **The interface is the same as *.create()***
+  // **The interface is the same as _.create()_**
   Resource.prototype.update = function (data, options, successCallback, errorCallback) {
 
     var requestOptions = {
@@ -1931,7 +1931,7 @@ define('resource',[
   // Delete sends a `DELETE` request to the REST API. It always returns an *null*
   // response on success.
 
-  // **The interface is the same as *.read()***
+  // **The interface is the same as _.read()_**
   Resource.prototype['delete'] = function (options, successCallback, errorCallback) {
 
     var requestOptions = {
@@ -2017,10 +2017,10 @@ define('entity/entity',[
   // The entity constructor, and therefore all the standard inheritances,
   // accepts:
 
-  // - ***new Entity()**: create an empty entity*
-  // - ***new Entity(obj)**: entity with merged obj properties*
-  // - ***new Entity(resource)**: empty entity bound to a Resource*
-  // - ***new Entity(obj, resource)**: fully build entity bound to a Resource*
+  // - _**new Entity()**: create an empty entity_
+  // - _**new Entity(obj)**: entity with merged obj properties_
+  // - _**new Entity(resource)**: empty entity bound to a Resource_
+  // - _**new Entity(obj, resource)**: fully build entity bound to a Resource_
 
   // *Nevertheless, an Entity without Resource cannot request any
   // update or delete. It can however be passed to resources as
@@ -2068,10 +2068,10 @@ define('entity/entity',[
   // An entity update, as every request, returns a Promise. Although it also
   // allows callbacks as:
 
-  // - ***update()**: simple update itself with modified properties*
-  // - ***update(obj)**: update itself with new properties*
-  // - ***update(obj, successCb, errorCb)**: previous, with callbacks*
-  // - ***update(successCb, errorCb)**: update itself and use callbacks*
+  // - _**update()**: simple update itself with modified properties_
+  // - _**update(obj)**: update itself with new properties_
+  // - _**update(obj, successCb, errorCb)**: previous, with callbacks_
+  // - _**update(successCb, errorCb)**: update itself and use callbacks_
   Entity.prototype.update = function (obj) {
     if(this.resource){
 
@@ -2101,8 +2101,8 @@ define('entity/entity',[
 
   // Delete method also accepts callbacks as:
 
-  // - ***delete()**: handle with promise*
-  // - ***delete(successCb, errorCb)**: handle with callbacks*
+  // - _**delete()**: handle with promise_
+  // - _**delete(successCb, errorCb)**: handle with callbacks_
   Entity.prototype['delete'] = function () {
     if(this.resource) {
       return this.resource['delete'].apply(this.resource, arguments);
@@ -2315,8 +2315,8 @@ define('entity/action',[
   // Return the resource factory function. Actions have a custom *resource
   // constructor* that needs an action type and allows an optional ID.
 
-  // - ***product.action('scans')**: creates path '/actions/scans'*
-  // - ***product.action('scans', '1')**: creates path '/actions/scans/1'*
+  // - _**product.action('scans')**: creates path '/product/<id>/actions/scans'_
+  // - _**product.action('scans', '1')**: creates path '/product/<id>/actions/scans/1'_
   return {
 
     resourceConstructor: function (actionType, id) {
@@ -2818,17 +2818,17 @@ define('authentication',[
   // Currently allowed authentication methods are **evrythng** and **facebook**.
   // The login  accepts:
 
-  // - ***login('facebook')**: the normal third-party Facebook login pop-up*
-  // - ***login('facebook', fbOptions)**: use fbOptions to pass facebook scope
+  // - _**login('facebook')**: the normal third-party Facebook login pop-up_
+  // - _**login('facebook', fbOptions)**: use fbOptions to pass facebook scope
   // permissions (see the
-  // [Facebook login API reference](https://developers.facebook.com/docs/reference/javascript/FB.login/v2.0)).*
-  // - ***login('facebook', fbOptions, successCb, errorCb)**: same as previous,
-  // with callbacks*
-  // - ***login('facebook', successCb, errorCb**: no custom Facebook options*
-  // - ***login('evrythng', evtCredentials)**: evtCredentials is an object with
-  // `email` or `id` and `password` properties*
-  // - ***login('evrythng', evtCredentials, successCb, errorCb)**: same as previous,
-  // with callbacks*
+  // [Facebook login API reference](https://developers.facebook.com/docs/reference/javascript/FB.login/v2.0))._
+  // - _**login('facebook', fbOptions, successCb, errorCb)**: same as previous,
+  // with callbacks_
+  // - _**login('facebook', successCb, errorCb)**: no custom Facebook options_
+  // - _**login('evrythng', evtCredentials)**: evtCredentials is an object with
+  // `email` or `id` and `password` properties_
+  // - _**login('evrythng', evtCredentials, successCb, errorCb)**: same as previous,
+  // with callbacks_
 
   // The *evrythng* login methods allow to omit the first parameter. Thus, the
   // following authenticates with Evrythng:
@@ -3020,7 +3020,7 @@ define('authentication',[
 
 
   // The *logout()* method behaves similarly to *login()*. The user should
-  // specify the type of logout they want (***evrythng* is default**).
+  // specify the type of logout they want (**_evrythng_ is default**).
 
   // If an application logs in with Facebook, and simply logs out of
   // Evrythng, then the Facebook user will continue connected until its FB
@@ -3122,11 +3122,11 @@ define('scope/application',[
 
   // Application Scope constructor. It can be called with the parameters:
 
-  // - ***new EVT.App(apiKey)** - API Key string*
-  // - ***new EVT.App(options)** - Options object should contain `apiKey`,
+  // - _**new EVT.App(apiKey)** - API Key string_
+  // - _**new EVT.App(options)** - Options object should contain `apiKey`,
   // and optionally `facebook` boolean. Passing `facebook: true` automatically
   // initializes Facebook SDK with this application's FB App Id - setup in
-  // EVRYTHNG's Dashboard Project Preferences.*
+  // EVRYTHNG's Dashboard Project Preferences._
   var ApplicationScope = function(obj, parentScope){
 
     var $this = this;
@@ -3587,8 +3587,8 @@ define('search',[
   // [search API in Evrythng Documentation](https://dashboard.evrythng.com/developers/apidoc#search).
   // .search() allows the following parameters:
 
-  // - ***search(queryString, options)** - ?q=queryString. Options object represent
-  // the additional search parameters. Such as:*
+  // - _**search(queryString, options)** - ?q=queryString. Options object represent
+  // the additional search parameters. Such as:_
 
   // ```
   //  {
@@ -3596,7 +3596,7 @@ define('search',[
   //  }
   // ```
 
-  // - ***search(queryObj, options)** - Apply field or geographic search. Such as:*
+  // - _**search(queryObj, options)** - Apply field or geographic search. Such as:_
 
   // ```
   //  {
@@ -3613,7 +3613,7 @@ define('search',[
   //  }
   // ```
 
-  // - ***search(queryOptions)** - Merge all search parameters in a single object*
+  // - _**search(queryOptions)** - Merge all search parameters in a single object_
   function search(query, options) {
     var params = {};
 
@@ -3683,11 +3683,11 @@ define('scope/user',[
 
   // User Scope constructor. It can be called with the parameters:
 
-  // - ***new EVT.User(apiKey, parentScope)** - API Key string.
-  // Optional parent scope.*
-  // - ***new EVT.User(options, parentScope)** - Options object should
+  // - _**new EVT.User(apiKey, parentScope)** - API Key string.
+  // Optional parent scope._
+  // - _**new EVT.User(options, parentScope)** - Options object should
   // contain `apiKey` and optionally user information (user entity retrieved
-  // from the engine). Optional parent scope.*
+  // from the engine). Optional parent scope._
   var UserScope = function(obj, parentScope){
 
     // Setup base Scope with the provided API Key.
@@ -3785,9 +3785,9 @@ define('scope/device',[
 
   // Device Scope constructor. It can be called with the parameters:
 
-  // - ***new EVT.Device(options, parentScope)** - Options object should
+  // - _**new EVT.Device(options, parentScope)** - Options object should
   // contain `apiKey` and optionally device information (thng entity retrieved
-  // from the engine). Optional parent scope.*
+  // from the engine). Optional parent scope._
   var DeviceScope = function(obj, parentScope){
 
     // Setup base Scope with the provided API Key.
