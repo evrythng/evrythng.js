@@ -1,260 +1,246 @@
-# [EVRYTHNG](https://www.evrythng.com) Client JavaScript SDK
+# [EVRYTHNG](https://www.evrythng.com) Client Javascript SDK
 
-**evrythng.js** is a Javascript library making it a breeze to interact with the EVRYTHNG API thanks to its fluent API. 
-We provide two environment-specific versions: AMD and CommonJS to utilise the best of both browser and Node.js.
+**evrythng.js** is a Javascript library that facilitates the interaction with the EVRYTHNG REST API thanks to its 
+fluent API. It helps EVRYTHNG Application developers to build client apps faster and easier.
+
+**evrythng.js** can be used both in Web applications (Browser) and embedded/server applications using Node.js. The
+difference being the transport layer - Browser's XHR vs Node's HTTP.
+
+> **evrythng.js** is intended to be used with EVRYTHNG [Applications](https://dashboard.evrythng.com/developers/apidoc/apps)
+and corresponding [Application Users](https://dashboard.evrythng.com/developers/apidoc/appusers) or with [Devices](https://dashboard.evrythng.com/developers/apidoc/thngs#thngs-devices). 
+Be sure to only include your EVRYTHNG **Application API key** and **not** your Operator, User or Device key in any 
+public source code (read more about [Scope Permissions](https://dashboard.evrythng.com/developers/apidoc/scopes#permissions)).
+
+> See [Related Tools](#related-tools) below for other usages.
 
 ## Installation
 
-**Note**: `evrythng.js` uses [promises](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise). Not all environments support them natively yet; to deal with this, we use the [Native Promise Only](https://github.com/getify/native-promise-only) polyfill internally.
+### Browser
 
-### Browsers
+##### With [Bower](http://bower.io/)
 
-#### With [Bower](http://bower.io/)
-
-The Bower package includes the AMD build of evrythng.js. You can either load it directly or use a loader like [require.js](http://requirejs.org/).
-
-    bower install evrythng
+    bower install evrythng --save-dev
     
-Then just load the script in your page:
+The Bower package is [AMD](http://requirejs.org/docs/whyamd.html)-compatible. This means you can load 
+it asynchronously using tools like [Require.js](http://requirejs.org/) or simply dropping the script tag 
+into your HTML page:
 
     <script src="bower_components/evrythng/dist/evrythng.js"></script>
 
-Once the script loads, `EVT` becomes available as a browser global. 
+See [Usage](#usage) below for more details.
 
-If you want to automate this, there are several [Grunt](http://gruntjs.com/) plugins which you may find useful:
+##### Load from CDN
 
-* [grunt-wiredep](https://github.com/stephenplusplus/grunt-wiredep) finds your components and injects them directly into the HTML file you specify.
-* [grunt-bower-concat](https://github.com/sapegin/grunt-bower-concat) does automatic concatenation of installed Bower components (JS and/or CSS) in the right order.
+Add the script tag into your HTML page:
 
-Or if you prefer [Gulp](http://gulpjs.com/):
-
-* [main-bower-files](https://github.com/ck86/main-bower-files) (works with Grunt too)
-* [gulp-bower-src](https://github.com/bclozel/gulp-bower-src) - `gulp.src` files from your bower components directory, using your bower.json configuration file.
-
-#### Load from CDN
-
-The CDN version includes [Native Promise Only](https://github.com/getify/native-promise-only), so all you need is to include the script from our CDN in your HTML file using:
-
-    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-3.1.1.min.js"></script>
+    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-3.1.2.min.js"></script>
  
-Or always get the last stable release:
+Or always get the last release:
 
     <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng.js"></script>
     <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng.min.js"></script>
     
-For HTTPs you'll have to use:
+For HTTPS you need to use:
 
-    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-3.1.1.min.js"></script>
+    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-3.1.2.min.js"></script>
 
-respectively
+Respectively:
 
     <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng.min.js"></script>
     
 ### Node.js
 
-`evrythng.js` is also available in CommonJS format as a NPM package. Install it using:
-
-    npm install evrythng
-
-## Additional tools
-
-### `scanthng.js`
-
-[`scanthng.js`](https://github.com/evrythng/scanthng.js) is an additional module that lets you identify Products and Thngs
-right from your browser, without using a standalone QR Code scanning app. It also supports [image recognition](https://dashboard.evrythng.com/developers/quickstart#quickstart-ir).
-It's available from our CDN or as a Bower module. Please refer to [`scanthng.js` README](https://github.com/evrythng/scanthng.js) for details.
-
-### `evrythng-extended.js`
-
-[`evrythng-extended.js`](https://github.com/evrythng/evrythng-extended.js) is an extended version of `evrythng.js` which includes operator access to the API.
-It's available as a Node module. Please refer to [`evrythng-extended.js` README](https://github.com/evrythng/evrythng-extended.js) for details.
+    npm install evrythng --save-dev
 
 ## Usage
 
-For advanced usage and options, see the [Documentation section](#documentation) below and the API 
-documentation on [EVRYTHNG's Developer Portal](https://dashboard.evrythng.com/developers/apidoc). 
+For advanced usage and options, see [Documentation](#documentation) below.
 
-**Note:** Be sure to only include your EVRYTHNG App API key and **not** your Operator or User
-App key in any public application code (read more [here](https://dashboard.evrythng.com/developers/apidoc#appusers)).
-
-### With RequireJS (AMD)
+#### RequireJS (AMD)
 
 ```javascript
-var bowerPath = '../bower_components/'; // replace with path to your local bower directory
 requirejs.config({
-    paths: {
-        evrythng: bowerPath + 'evrythng/dist/evrythng'
-    }
+  paths: {
+    evrythng: '../bower_components/evrythng/dist/evrythng'
+  }
 });
     
 require(['evrythng'], function (EVT) {
 
-  EVT.setup({
-    apiUrl: 'xxx'
-  });
-    
-  var app = new EVT.App('appApiKey');
-
-  // Promise API
-  app.product('123').read().then(function(prod){
-  
-    // Properties
-    
-    // update single property
-    prod.property('status').update('off');
-        
-    // update multiple properties
-    prod.property().update({
-      status: 'off',
-      level: '80'
-    });
-    
-    // read current property
-    console.log(prod.properties['status']);
-    
-    // read property history
-    prod.property('status').read().then(function(statusHistory){
-    
-      console.log(statusHistory);
-      
-    });
-    
-    ...
-  });
-    
-  // Login user (with Evrythng Auth) and create user scope  
-  app.login({
-    email: 'myemail',
-    password: 'mypass'
-  }).then(function(response){
-    
-    // every call using user will use its User Api Key
-    var user = response.user;
-    
-   
-    // Manage thngs
-    user.thng().read().then(function(thngs){
-        
-      thngs[0].description = 'newDesc';              
-      return thngs[0].update();
-            
-    }).then(function(thng){
-        
-      console.log('thng updated');
-            
-    });
-
-    // Update existing thng
-    user.thng('123').update({
-      description: 'new desc'
-    });
-    
-    // Create a thng
-    user.thng().create({
-      name: 'name',
-      description: 'desc'
-    });
-
-    
-    
-    // Actions
-    
-    user.thng('1').read().then(function(thng1){
-      
-      thng1.action('scans').create();
-      
-      thng1.action('_customAction').create({
-        customFields: {
-          foo: 'bar'
-        }
-      });
-    
-    });
-    
-    user.logout();
-    
-    ...
-  });
-  
-  
-  // Callback API
-  app.product().read(function(products){
-  
-    console.log(products);
-    
-  });
-  
-  // Raw API Calls and multiple API designs example
-  var options = {
-    url: '/products',
-    method: 'post',
-    authorization: 'userApiKey',
-    data: {
-      fn: 'My cool product'
-    },
-    params: {
-      foo: 'bar'
-    },
-    success: function(product){
-      console.log(product);
-    },
-    error: function(err){
-      console.log(err);                            
-    }
-  }
-  
-  EVT.api(options).then(successHandler, errorHandler);
-  
-  EVT.api(options);
-  
-  EVT.api(options, successCb, errorCb);
-  
-  
-  // Facebook - in order to use FB login, the application needs to
-  // be initialized with facebook: true
-  app = new EVT.App({
-    apiKey: 'appApiKey',
-    facebook: true
-  });
-  
-  app.login('facebook').then(function(response){
-  
-    var user = response.user;
-    
-    console.log(app.socialNetworks.facebook.appId);
-    
-    user.logout('facebook');
-  });
+  var app = new EVT.App(APP_API_KEY);
   ...
+  
 });
 ```
 
-### Plain Javascript
-
-If you aren't using any of the above script loading mechanisms, the EVT module is available
-as a browser global:
-
-```javascript
-var app = new EVT.App('apiKey');
-...
-```
-
-### Node.js
+#### Node.js
 
 ```javascript
 var EVT = require('evrythng');
 
-var app = new EVT.App('apiKey');
+var app = new EVT.App(APP_API_KEY);
 ...
 ```
 
-## More examples
+#### Globals
 
-### Create and validate app users
+If you aren't using any of the above script loading mechanisms, the EVT module is available
+as a global (`EVT`):
+
+```javascript
+var app = new EVT.App(APP_API_KEY);
+...
+```
+
+## Examples
+
+#### General
+
+```javascript
+// Setup global settings - see all options in http://evrythng.github.io/evrythng-source.js/src/core.html
+EVT.setup({
+  apiUrl: 'http://api.evrythng.com'
+});
+
+// Promise API
+app.product('123').read().then(function(prod){
+
+  // Properties
+  
+  // update single property
+  prod.property('status').update('off');
+      
+  // update multiple properties
+  prod.property().update({
+    status: 'off',
+    level: '80'
+  });
+  
+  // read current property
+  console.log(prod.properties['status']);
+  
+  // read property history
+  prod.property('status').read().then(function(statusHistory){
+  
+    console.log(statusHistory);
+    
+  });
+  
+  ...
+});
+  
+// Login user (with Evrythng Auth) and create user scope  
+app.login({
+  email: 'myemail',
+  password: 'mypass'
+}).then(function(response){
+  
+  // every call using user will use its User Api Key
+  var user = response.user;
+  
+ 
+  // Manage thngs
+  user.thng().read().then(function(thngs){
+      
+    thngs[0].description = 'newDesc';              
+    return thngs[0].update();
+          
+  }).then(function(thng){
+      
+    console.log('thng updated');
+          
+  });
+
+  // Update existing thng
+  user.thng('123').update({
+    description: 'new desc'
+  });
+  
+  // Create a thng
+  user.thng().create({
+    name: 'name',
+    description: 'desc'
+  });
+
+  
+  // Actions
+  
+  user.thng('1').read().then(function(thng1){
+    
+    // Actions request device geolocation by default (if available)
+    // Use 'geolocation: false' option globally or per request to turn if off
+    thng1.action('scans').create();
+    
+    thng1.action('_customAction').create({
+      customFields: {
+        foo: 'bar'
+      }
+    });
+  
+  });
+  
+  user.logout();
+  
+  ...
+});
+
+
+// Callback API
+app.product().read(function(products){
+
+  console.log(products);
+  
+});
+
+// Raw API Calls and multiple API designs example
+var options = {
+  url: '/products',
+  method: 'post',
+  authorization: USER_API_KEY,
+  data: {
+    fn: 'My cool product'
+  },
+  params: {
+    foo: 'bar'
+  },
+  success: function(product){
+    console.log(product);
+  },
+  error: function(err){
+    console.log(err);                            
+  }
+}
+
+EVT.api(options).then(successHandler, errorHandler);
+
+EVT.api(options);
+
+EVT.api(options, successCb, errorCb);
+
+
+// Facebook - in order to use FB login, the application needs to
+// be initialized with facebook: true
+app = new EVT.App({
+  apiKey: APP_API_KEY,
+  facebook: true
+});
+
+app.login('facebook').then(function(response){
+
+  var user = response.user;
+  
+  console.log(app.socialNetworks.facebook.appId);
+  
+  user.logout('facebook');
+});
+...
+```
+
+#### Create and validate app users
 
 ```javascript
 // Initialize app using appApiKey
-var app = new EVT.App('APP-API-KEY');
+var app = new EVT.App(APP_API_KEY);
 
 // create app user
 app.appUser().create({
@@ -275,11 +261,11 @@ app.appUser().create({
 });
 ```
 
-### Create anonymous user to track a device without creating a full app user
+#### Create anonymous user to track a device without creating a full app user
 
 ```javascript
 // Initialize app using appApiKey
-var app = new EVT.App('APP-API-KEY');
+var app = new EVT.App('APP_API_KEY');
 
 // create anonymous user
 app.appUser().create({
@@ -303,25 +289,11 @@ var anonymousUser = new EVT.User({
 
 ```
 
-### Log an EVRYTHNG user in and get their Thngs
-
-```javascript
-app.login({
-  email: 'some@one.com',
-  password: 'password' // don't put this one in the code :)
-}).then(function(authResponse){
-  var user = authResponse.user;
-  user.thng().read().then(function(thngs){
-    console.log('thngs: ' thngs);
-  });
-});
-```
-
-### As a Device
+#### As a [Device](https://dashboard.evrythng.com/developers/apidoc/thngs#thngs-devices)
 
 ```javascript
 var device = new EVT.Device({
-  apiKey: 'DEVICE-API-KEY',
+  apiKey: DEVICE_API_KEY,
   id: 'thngId'
 });
 
@@ -344,15 +316,41 @@ device.property('humidity').read().then(function(results){
 device.action('_turnOn').create();
 ```
 
+---
+
 ## Documentation
 
-The [EVRYTHNG API is documented here](https://dashboard.evrythng.com/developers/apidoc).
+The [EVRYTHNG API](https://dashboard.evrythng.com/developers/apidoc) has *evrythng.js* examples whenever applicable.
+If you'd like to see what's going on under the hood, check out the [Annotated Source](http://evrythng.github.io/evrythng-source.js).
 
 ## Source Maps
 
-Source Maps are available, which means that when using the minified version, if a developer 
-opens the Developer Tools, .map files will be downloaded to help them debug code using the original 
-uncompressed version of the library.
+Source Maps are available, which means that when using the minified version, if you open 
+Developer Tools (Chrome, Safari, Firefox), *.map* files will be downloaded to help you debug code using the 
+original uncompressed version of the library.
+
+## Related tools
+
+#### scanthng.js
+
+[`scanthng.js`](https://github.com/evrythng/scanthng.js) is a separate library that lets you identify Products and Thngs
+right from your browser, without using a standalone QR Code scanning app. It also supports 
+[Image Recognition](https://dashboard.evrythng.com/developers/quickstart/image-recognition).
+
+#### evrythng-extended.js
+
+[`evrythng-extended.js`](https://github.com/evrythng/evrythng-extended.js) is an extended version of *evrythng.js* which 
+includes Operator access to the API.
+
+#### evrythng-mqtt.js
+
+[`evrythng-mqtt`](https://www.npmjs.com/package/evrythng-mqtt) is an *evrythng.js* plugin for Node.js that adds support
+for real-time MQTT methods to any resource.
+
+#### evrythng-hub.js
+
+[`evrythng-hub`](https://github.com/evrythng/evrythng-hub.js) is an *evrythng.js* plugin for both Browser and Node.js that
+adds smart routing of local requests when in the context of a Thng-Hub Gateway.
 
 ## License
 

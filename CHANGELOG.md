@@ -1,3 +1,15 @@
+# v3.1.2 (25-06-2015)
+
+## Features
+
+- **documentation**: clearer usage and installation steps. Consistent format from other libs
+
+# v3.1.1 (19-06-2015)
+
+## Bug fixes
+
+- **package.json**: Github url with `git://` protocol
+
 # v3.1.0 (17-06-2015)
 
 ## Bug fixes

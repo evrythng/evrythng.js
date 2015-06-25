@@ -1,4 +1,4 @@
-// EVRYTHNG JS SDK v3.1.1
+// EVRYTHNG JS SDK v3.1.2
 // (c) 2012-2015 EVRYTHNG Ltd. London / New York / Zurich.
 // Released under the Apache Software License, Version 2.0.
 // For all details and usage:
@@ -969,13 +969,12 @@ define('core',[
   'use strict';
 
   // Version is updated from package.json using `grunt-version` on build.
-  var version = '3.1.1';
+  var version = '3.1.2';
 
 
   // Setup default settings:
 
   // - ***apiUrl**: String - change the default API host*
-  // - ***async**: Boolean - set to false to make synchronous requests (blocks UI)*
   // - ***fullResponse**: Boolean - by default the response of every call if the JSON
   // body. However if you need to access the 'status' or 'responseHeaders' in responses
   // set this to 'true'. The full response has the structure:*
@@ -994,10 +993,22 @@ define('core',[
   // - ***fetchCascade**: Boolean - set to true to automagically fetch nested entities
   // (e.g. thng.product is an EVT.Entity.Product instead of string id)*
   // - ***interceptors**: Array - each interceptor implements 'request' and/or 'response' functions
-  // that run before or after each HTTP call (e.g. start Spinner)*
+  // that run before or after each HTTP call:*
+
+  // ```
+  //  var myInterceptor = {
+  //    request: function(options){
+  //      // do anything with options.data, options.headers, start spinner, etc.
+  //      return options;
+  //    },
+  //    response: function(result){
+  //      // do anything with result, stop spinner, etc. (can return promise)
+  //      return result;
+  //    }
+  //  }
+  // ```
   var defaultSettings = {
     apiUrl: 'https://api.evrythng.com',
-    async: true,
     fullResponse: false,
     quiet: false,
     geolocation: true,
@@ -1490,6 +1501,8 @@ define('connect',[
   // authorization - Authorization header content, should contain API Key
   // success - success handler function
   // error - error handler function
+  // interceptors - override interceptors pipeline. If you want to extend, use:
+  //    interceptors: EVT.settings.interceptors.concat([{...}])
   // ```
   function ajax(options, successCallback, errorCallback) {
 
@@ -1498,7 +1511,7 @@ define('connect',[
       apiUrl: EVT.settings.apiUrl,
       url: '/',
       fullResponse: EVT.settings.fullResponse,
-      authorization: EVT.settings.apiKey,
+      authorization: EVT.settings.apiKey || EVT.settings.authorization,
       timeout: EVT.settings.timeout,
       interceptors: EVT.settings.interceptors
     }, options);
@@ -3861,7 +3874,7 @@ define('scope/device',[
 
 // This is the higher level module that requires the `EVT.App`, `EVT.User` and
 // and `EVT.Device` classes representing the Application, User and Device scopes respectively.
-// All other modules are loaded as dependencies of these two.
+// All other modules are loaded as dependencies of these.
 
 // ### UMD
 
