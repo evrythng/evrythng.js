@@ -333,7 +333,7 @@ original uncompressed version of the library.
 
 #### scanthng.js
 
-[`scanthng.js`](https://github.com/evrythng/scanthng.js) is a separate library that lets you identify Products and Thngs
+[`scanthng.js`](https://github.com/evrythng/scanthng.js) is a library that lets you identify Products and Thngs
 right from your browser, without using a standalone QR Code scanning app. It also supports 
 [Image Recognition](https://dashboard.evrythng.com/developers/quickstart/image-recognition).
 
