@@ -19,7 +19,7 @@ public source code (read more about [Scope Permissions](https://dashboard.evryth
 
 ##### With [Bower](http://bower.io/)
 
-    bower install evrythng --save-dev
+    bower install evrythng --save
     
 The Bower package is [AMD](http://requirejs.org/docs/whyamd.html)-compatible. This means you can load 
 it asynchronously using tools like [Require.js](http://requirejs.org/) or simply dropping the script tag 
@@ -50,7 +50,7 @@ Respectively:
     
 ### Node.js
 
-    npm install evrythng --save-dev
+    npm install evrythng --save
 
 ## Usage
 
