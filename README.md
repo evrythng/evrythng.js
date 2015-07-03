@@ -349,7 +349,7 @@ for real-time MQTT methods to any resource.
 
 #### evrythng-hub.js
 
-[`evrythng-hub`](https://github.com/evrythng/evrythng-hub.js) is an *evrythng.js* plugin for both Browser and Node.js that
+[`evrythng-hub`](https://github.com/evrythng/evrythng-hub.js) is an *evrythng.js* plugin for both browser and Node.js that
 adds smart routing of local requests when in the context of a Thng-Hub Gateway.
 
 ## License
