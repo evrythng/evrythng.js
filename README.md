@@ -7,7 +7,8 @@ fluent API. It helps EVRYTHNG Application developers to build client apps faster
 difference being the transport layer - Browser's XHR vs Node's HTTP.
 
 > **evrythng.js** is intended to be used with EVRYTHNG [Applications](https://dashboard.evrythng.com/developers/apidoc/apps)
-and corresponding [Application Users](https://dashboard.evrythng.com/developers/apidoc/appusers) or with [Devices](https://dashboard.evrythng.com/developers/apidoc/thngs#thngs-devices). 
+and corresponding [Application Users](https://dashboard.evrythng.com/developers/apidoc/appusers) or with 
+[Devices](https://dashboard.evrythng.com/developers/apidoc/thngs#thngs-devices). 
 Be sure to only include your EVRYTHNG **Application API key** and **not** your Operator, User or Device key in any 
 public source code (read more about [Scope Permissions](https://dashboard.evrythng.com/developers/apidoc/scopes#permissions)).
 
@@ -33,7 +34,7 @@ See [Usage](#usage) below for more details.
 
 Add the script tag into your HTML page:
 
-    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-3.1.2.min.js"></script>
+    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-3.2.0.min.js"></script>
  
 Or always get the last release:
 
@@ -42,10 +43,8 @@ Or always get the last release:
     
 For HTTPS you need to use:
 
-    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-3.1.2.min.js"></script>
-
-Respectively:
-
+    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-3.2.0.min.js"></script>
+    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng.js"></script>
     <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng.min.js"></script>
     
 ### Node.js
@@ -331,16 +330,16 @@ original uncompressed version of the library.
 
 ## Related tools
 
-#### scanthng.js
-
-[`scanthng.js`](https://github.com/evrythng/scanthng.js) is a library that lets you identify Products and Thngs
-right from your browser, without using a standalone QR Code scanning app. It also supports 
-[Image Recognition](https://dashboard.evrythng.com/developers/quickstart/image-recognition).
-
 #### evrythng-extended.js
 
 [`evrythng-extended.js`](https://github.com/evrythng/evrythng-extended.js) is an extended version of *evrythng.js* which 
 includes Operator access to the API.
+
+#### evrythng-scan.js
+
+[`evrythng-scan.js`](https://github.com/evrythng/evrythng-scan.js) is an *evrythng.js* plugin that lets you identify 
+Products and Thngs right from your browser, without using a standalone QR Code scanning app. It also supports 
+[Image Recognition](https://dashboard.evrythng.com/developers/quickstart/image-recognition).
 
 #### evrythng-mqtt.js
 
@@ -349,7 +348,7 @@ for real-time MQTT methods to any resource.
 
 #### evrythng-hub.js
 
-[`evrythng-hub`](https://github.com/evrythng/evrythng-hub.js) is an *evrythng.js* plugin for both browser and Node.js that
+[`evrythng-hub`](https://github.com/evrythng/evrythng-hub.js) is an *evrythng.js* plugin for both Browser and Node.js that
 adds smart routing of local requests when in the context of a Thng-Hub Gateway.
 
 ## License

@@ -1,3 +1,15 @@
+# v3.2.0 (10-09-2015)
+
+## Features
+
+- **Trusted App**: scope to use with you **Application Secret Key**, mainly used in Reactor scripts 
+(only available in **evrythng-extended.js**)
+
+## Breaking changes
+
+- **plugins**: `EVT.use()` to install plugin is now synchronous. Callback has been removed. Required dependencies
+now use `$inject` property instead of `requires`
+
 # v3.1.2 (25-06-2015)
 
 ## Features
