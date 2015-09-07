@@ -1,6 +1,6 @@
 {
   "name": "evrythng",
-  "version": "3.1.2",
+  "version": "3.3.0",
   "main": "lib/evrythng.js",
   "description": "Javascript SDK to communicate with EVRYTHNG REST API",
   "repository": {
@@ -18,9 +18,10 @@
     "web of things",
     "thng-hub",
     "hub",
-    "mqtt"
+    "mqtt",
+    "thng-scan",
+    "scanthng"
   ],
-  "author": "EVRYTHNG Ltd.",
   "licenses": [
     {
       "type": "Apache-2.0",
