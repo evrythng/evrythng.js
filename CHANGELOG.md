@@ -1,4 +1,19 @@
-# v3.2.0 (10-09-2015)
+# v3.3.0 (07-09-2015)
+
+## Features
+
+- **Trusted App**: updated permissions for TrustedApp scope
+- **Custom headers**: allow to setup custom headers with **headers** object option
+- **Action Types**: CRUD access like other entities
+- **Filters**: escape special characters for filter param when using object notation
+
+## Bug fixes
+
+- **Properties**: normalize arguments on creation, just like updates. Read properties with special characters
+- **Empty fields**: empty fields not being sent to API request
+- **Encoding**: nested params objects (e.g. filters) are only encoded once
+
+# v3.2.0 (10-08-2015)
 
 ## Features
 

@@ -34,7 +34,7 @@ See [Usage](#usage) below for more details.
 
 Add the script tag into your HTML page:
 
-    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-3.2.0.min.js"></script>
+    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-3.3.0.min.js"></script>
  
 Or always get the last release:
 
@@ -43,7 +43,7 @@ Or always get the last release:
     
 For HTTPS you need to use:
 
-    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-3.2.0.min.js"></script>
+    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-3.3.0.min.js"></script>
     <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng.js"></script>
     <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng.min.js"></script>
     
@@ -184,37 +184,41 @@ app.login({
 });
 
 
-// Callback API
-app.product().read(function(products){
+// Using request options. Read more about options in http://evrythng.github.io/evrythng-source.js/src/ajax.html
+app.product().read({
+  fullResponse: true,
+  params: {
+    perPage: 100,
+    project: '123',
+    context: true     // actions only
+    ...
+  },
+  headers: {
+    authorization: 'anotherApiKey',
+    accepts: 'image/png'
+  }
+}).then(function(result){
 
-  console.log(products);
+  // Using fullResponse, result contains 'data', 'headers' and 'status'
+  console.log(result.headers['x-result-count'] + ' Products:', result.data);
   
 });
 
-// Raw API Calls and multiple API designs example
-var options = {
-  url: '/products',
-  method: 'post',
-  authorization: USER_API_KEY,
-  data: {
-    fn: 'My cool product'
-  },
+// Using filters.
+app.product().read({
   params: {
-    foo: 'bar'
-  },
-  success: function(product){
-    console.log(product);
-  },
-  error: function(err){
-    console.log(err);                            
+    filter: 'name=My Product&tags=shipped'   // regular parameter string notation
   }
-}
+});
 
-EVT.api(options).then(successHandler, errorHandler);
-
-EVT.api(options);
-
-EVT.api(options, successCb, errorCb);
+app.product().read({
+  params: {
+    filter: {
+      name: 'My Product',   // object notation
+      tags: 'shipped'
+    }
+  } 
+});
 
 
 // Facebook - in order to use FB login, the application needs to
