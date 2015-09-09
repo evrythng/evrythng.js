@@ -1,4 +1,4 @@
-// EVRYTHNG JS SDK v3.3.0
+// EVRYTHNG JS SDK v3.3.1
 // (c) 2012-2015 EVRYTHNG Ltd. London / New York / San Francisco.
 // Released under the Apache Software License, Version 2.0.
 // For all details and usage:
@@ -990,7 +990,7 @@ define('core',[
   'use strict';
 
   // Version is updated from package.json using `grunt-version` on build.
-  var version = '3.3.0';
+  var version = '3.3.1';
 
 
   // Setup default settings:
@@ -2202,7 +2202,7 @@ define('entity/property',[
 
     }else if(Utils.isObject(data)) {
 
-      if (data.value) {
+      if (Utils.isDefined(data.value)) {
 
         // Update single property using object notation.
         args[0] = [data];

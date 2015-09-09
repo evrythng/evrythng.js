@@ -1,3 +1,9 @@
+# v3.3.1 (09-09-2015)
+
+## Bug fixes
+
+- **Properties**: normalize arguments with falsy values (e.g. `0`, `false`) on property creation or update
+
 # v3.3.0 (07-09-2015)
 
 ## Features
