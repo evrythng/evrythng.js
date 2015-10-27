@@ -1,3 +1,9 @@
+# v3.3.2 (27-10-2015)
+
+## Bug fixes
+
+- **Resource path**: Newly created entities have wrong resource path [#37]
+
 # v3.3.1 (09-09-2015)
 
 ## Bug fixes
