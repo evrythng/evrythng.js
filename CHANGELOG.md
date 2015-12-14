@@ -1,3 +1,9 @@
+# v3.4.1 (14-12-2015)
+
+## Changes
+
+- **Transport**: Common transport module for Node.js and Browser
+
 # v3.4.0 (02-12-2015)
 
 ## Features

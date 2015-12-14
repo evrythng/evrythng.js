@@ -1,4 +1,4 @@
-// EVRYTHNG JS SDK v3.4.0
+// EVRYTHNG JS SDK v3.4.1
 // (c) 2012-2015 EVRYTHNG Ltd. London / New York / San Francisco.
 // Released under the Apache Software License, Version 2.0.
 // For all details and usage:
@@ -990,7 +990,7 @@ define('core',[
   'use strict';
 
   // Version is updated from package.json using `grunt-version` on build.
-  var version = '3.4.0';
+  var version = '3.4.1';
 
 
   // Setup default settings:
@@ -1059,7 +1059,7 @@ define('core',[
 
 
     // Use the passed plugin features by requiring its dependencies and installing it.
-    use: function (plugin, callback){
+    use: function (plugin){
       if (Utils.isObject(plugin) && Utils.isFunction(plugin.install)) {
         var installArgs = [];
 
@@ -1079,6 +1079,529 @@ define('core',[
       }
     }
   };
+
+  return EVT;
+
+});
+
+// ## LOGGER.JS
+
+// **The Logger module is simple wrapper for console log
+// that prefixes EvrythngJS's logs with a custom header.**
+
+define('logger',[
+  'core'],
+  function (EVT) {
+  'use strict';
+
+  var header = 'EvrythngJS';
+
+  return {
+
+    error: function(data){
+      if (EVT.settings.quiet === false){
+        console.error(header + ' Error:', data);
+      }
+    },
+
+    info: function(data){
+      if (EVT.settings.quiet === false){
+        console.info(header + ' Info:', data);
+      }
+    }
+
+  };
+
+});
+
+// ## CORS.JS
+
+// **The CORS module implements a simple CORS request using *XmlHttpRequest*.
+// For browsers that don't properly support CORS (XHR2) we use JSON-P
+// instead.**
+
+// **In Node.js the *XmlHttpRequest* is proxied using the `w3c-xmlhttprequest`
+// dependency, which is installed when installing EvrythngJS NPM package.**
+
+// *This implementation is based on Nicholas Zakas' in
+// [html5rocks](http://www.html5rocks.com/en/tutorials/cors/).*
+
+define('network/cors',[
+  'core',
+  'promise',
+  'utils',
+  'logger'
+], function (EVT, Promise, Utils, Logger) {
+  'use strict';
+
+  // Helper method used to build the returned response. It parses the JSON
+  // 'data' response and wraps the 'status' and 'headers' in an object in
+  // case the flag `fullResponse` is enabled as a global in `EVT.settings`
+  // or in this particular request. *200 OK* responses without data,
+  // return *null*.
+  function _buildResponse(xhr, fullResponse) {
+    // XMLHttpRequest returns a not very usable single big string with all headers
+    var _parseHeaders = function(headers) {
+      var parsed = {};
+
+      if(headers){
+        headers = headers.trim().split("\n");
+        for (var h in headers) {
+          var header = headers[h].toLowerCase().match(/([^:]+):(.*)/);
+          parsed[header[1].trim()] = header[2].trim();
+        }
+      }
+      return parsed;
+    };
+
+    var headers = _parseHeaders(xhr.getAllResponseHeaders()),
+      response = null;
+
+    if (xhr.responseText) {
+      var contentType = headers['content-type'];
+      if (contentType && contentType.indexOf('application/json') !== -1) {
+        // try to parse the response if looks like json
+        try {
+          response = JSON.parse(xhr.responseText);
+        } catch (e) {
+          response = xhr.responseText;
+        }
+      } else {
+        response = xhr.responseText;
+      }
+    }
+
+    if (fullResponse) {
+      response = {
+        data: response,
+        headers: headers,
+        status: xhr.status
+      };
+
+      // If any errors received, pull them to top level
+      if (response.data && response.data.errors) {
+        response.errors = response.data.errors;
+        delete response.data.errors;
+      }
+    }
+
+    return response;
+  }
+
+  // Helper method that builds a custom Error object providing some extra
+  // information on a request error.
+  function _buildError(xhr, url, method, response) {
+    var errorData = {
+      status: xhr.status,
+      type: 'cors',
+      message: 'Server responded with an error for the CORS request',
+      url: url,
+      method: method
+    };
+
+    // Evrythng's API return an array of errors in the response. Add them
+    // if available.
+    if (response) {
+      errorData.errors = response.errors;
+      errorData.moreInfo = response.moreInfo;
+    }
+
+    return errorData;
+  }
+
+
+  // Create an asynchronous XHR2 object.
+  function _createXhr(method, url, options) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open(method, url);
+
+    // Setup headers, including the *Authorization* that holds the Api Key.
+    for(var header in options.headers){
+      if(options.headers.hasOwnProperty(header)){
+        xhr.setRequestHeader(header, options.headers[header]);
+      }
+    }
+
+    // Set timeout.
+    if (options.timeout > 0) {
+      xhr.timeout = options.timeout;
+    }
+
+    return xhr;
+  }
+
+
+  // Make the actual CORS request. Options available are defined in the [`ajax`
+  // module doc](../ajax.html). Default method is `GET`, URL is relative to
+  // `EVT.settings.apiUrl`, it is asynchronous by default, returns the
+  // JSON data response and will not time out.
+  function cors(options, successCallback, errorCallback) {
+
+    options = options || {};
+
+    var method = options.method || 'get',
+      url = Utils.buildUrl(options);
+
+    var xhr = _createXhr(method, url, options);
+
+    // Serialise JSON data before sending.
+    var data = options.data ? JSON.stringify(options.data) : null;
+
+    // Do a normal asynchronous request and return a promise. If there
+    // are callbacks execute them as well before resolving the promise.
+    return new Promise(function (resolve, reject) {
+
+      // Set protocol error handler.
+      xhr.onerror = function () {
+        // Could not execute request at all (destination unreachable, offline, ...?)
+        var ex = new Error('Network error.');
+        ex.name = 'CorsError';
+        reject(ex);
+      };
+
+      // Define internal error handler.
+      var errorHandler = function (response) {
+        if (response) {
+          var errorData = _buildError(xhr, url, method, response);
+          Logger.error(errorData);
+
+          if (errorCallback) {
+            errorCallback(errorData);
+          }
+          reject(errorData);
+        }
+      };
+
+      // Set timeout handler if needed.
+      if (options.timeout > 0) {
+        xhr.ontimeout = function () {
+          var timeoutResponse = {errors: ['Request timed out.']};
+          errorHandler(timeoutResponse);
+        };
+      }
+
+
+      // Define the response handler.
+      function handler() {
+        try {
+          if (this.readyState === this.DONE) {
+
+            var response = _buildResponse(this, options.fullResponse);
+
+            // Resolve or reject promise given the response status.
+            // HTTP status of 2xx is considered a success.
+            if (this.status >= 200 && this.status < 300) {
+
+              if (successCallback) {
+                successCallback(response);
+              }
+              resolve(response);
+
+            } else {
+              errorHandler(response);
+            }
+          }
+        } catch (exception) {
+          // Do nothing, will be handled by ontimeout.
+        }
+      }
+
+      // Send the request and wait for the response in the handler.
+      xhr.onreadystatechange = handler;
+
+      xhr.send(data);
+
+    });
+  }
+
+  return cors;
+
+});
+
+// ## JSONP.JS
+
+// **The Jsonp module implements a simple JSON-P fetcher. JSON-P is
+// deprecated until IE<10 cease to exist and only works in browsers.**
+
+// *This implementation is based on
+// [Lightweight-JSONP](https://github.com/IntoMethod/Lightweight-JSONP).*
+
+define('network/jsonp',[
+  'core',
+  'promise',
+  'utils',
+  'logger'
+], function (EVT, Promise, Utils, Logger) {
+  'use strict';
+
+  // Counter defines uniquely identified callbacks.
+  var counter = 0, head;
+
+  // Helper method that builds a custom Error object providing some extra
+  // information on a request error.
+  function _buildError(url, status, method, response){
+    var errorData = {
+      status: status,
+      type: 'jsonp',
+      message: 'Server responded with an error for the JSONP request',
+      url: url,
+      method: method
+    };
+
+    if (response) {
+      errorData.errors = response.errors;
+      errorData.moreInfo = response.moreInfo;
+    }
+
+    return errorData;
+  }
+
+  // Making the request is as simple as appending a new script tag
+  // to the document. The URL has the *callback* parameter with the
+  // function that will be called with the response data.
+  function _load(url) {
+
+    var script = document.createElement('script'),
+      done = false;
+    script.src = url;
+
+    // Once the script has been loaded remove the tag from the document.
+    script.onload = script.onreadystatechange = function() {
+      if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
+        done = true;
+        script.onload = script.onreadystatechange = null;
+        if ( script && script.parentNode ) {
+          script.parentNode.removeChild( script );
+        }
+      }
+    };
+
+    if ( !head ) {
+      head = document.getElementsByTagName('head')[0];
+    }
+
+    // Actually load script.
+    head.appendChild( script );
+  }
+
+
+  // Jsonp method sets prepares the script url with all the information
+  // provided and defines the callback handler.
+  function jsonp(options, successCallback, errorCallback) {
+    /*jshint camelcase:false */
+
+    options = options || {};
+
+    // Define unique callback name.
+    var uniqueName = 'callback_json' + (++counter);
+
+    // Send all data (including method, api key and data) via GET
+    // request params.
+    var params = options.params || {};
+    params.callback = uniqueName;
+    params.access_token = options.authorization;
+    params.method = options.method || 'get';
+    params.data = JSON.stringify(options.data);
+    options.params = params;
+
+    options.apiUrl = options.apiUrl && options.apiUrl.replace('//api', '//js-api');
+
+    // Evrythng REST API default endpoint does not provide JSON-P
+    // support, which '//js-api.evrythng.com' does.
+    var url = Utils.buildUrl(options);
+
+    // Return a promise and resolve/reject it in the callback function.
+    return new Promise(function(resolve, reject) {
+
+      // Attach callback as a global method. Evrythng's REST API error
+      // responses always have a status and array of errors.
+      window[uniqueName] = function(response){
+
+        if (response.errors && response.status) {
+
+          var errorData = _buildError(url, response.status, params.method, response);
+          Logger.error(errorData);
+
+          if(errorCallback) { errorCallback(errorData); }
+          reject(errorData);
+
+        }else {
+
+          if(successCallback) { successCallback(response); }
+
+          try {
+            response = JSON.parse(response);
+          } catch(e){}
+
+          resolve(response);
+        }
+
+        // Remove callback from window.
+        try {
+          delete window[uniqueName];
+        } catch (e) {}
+        window[uniqueName] = null;
+      };
+
+      _load(url, reject);
+
+    });
+  }
+
+  return jsonp;
+
+});
+
+// ## AJAX.JS
+
+// Ajax module controls the raw request to the API, first by
+// trying a CORS request and if it fails, continuing with JSON-P.**
+
+define('transport',[
+  'network/cors',
+  'network/jsonp',
+  'utils',
+  'logger'
+], function (cors, jsonp, Utils, Logger) {
+  'use strict';
+
+  return function (requestOptions, successCb, errorCb) {
+
+    // *withCredentials* only exists on XmlHttpRequest2 objects.
+    var isXHR2 = typeof new XMLHttpRequest().withCredentials === 'boolean',
+      response;
+
+    // Use XmlHttpRequest with CORS if available, otherwise fall back to JSON-P.
+    if (isXHR2) {
+      response = cors(requestOptions, successCb, errorCb);
+    } else {
+      /*TODO remove jsonp, we're building modern stuff here..*/
+      Logger.info('CORS not supported, falling back to JSONP.');
+      response = jsonp(requestOptions, successCb, errorCb);
+    }
+
+    return response;
+  };
+
+});
+
+// ## API.JS
+
+// **The API module attaches the api() method to the EVT module.
+
+define('api',[
+  'core',
+  'transport',
+  'promise',
+  'utils'
+], function(EVT, transport, Promise, Utils) {
+  'use strict';
+
+  // The api() method or EVT.api() returns a **Promise**. Nevertheless,
+  // it still allows the old-styled callback API as follows:
+
+  // - **EVT.api(options)** - options object can contain `success` or `error`
+  // properties to define success and error callbacks
+  // - **EVT.api(options, successCb, errorCb)**
+
+  // Options available are:
+
+  // ```
+  // fullResponse - override fullResponse global setting (see module `core`)
+  // apiUrl - override default `EVT.settings.apiUrl`
+  // url - URL of the request, relative to `EVT.settings.apiUrl`
+  // method - HTTP method, default: `GET`
+  // authorization - Authorization header content, should contain API Key
+  // success - success handler function
+  // error - error handler function
+  // interceptors - override interceptors pipeline. If you want to extend, use:
+  //    interceptors: EVT.settings.interceptors.concat([{...}])
+  // ```
+
+  function api(options, successCallback, errorCallback) {
+
+    // Merge options with defaults setup in `EVT.settings`.
+    var requestOptions = Utils.extend({
+      apiUrl: EVT.settings.apiUrl,
+      url: '/',
+      fullResponse: EVT.settings.fullResponse,
+      authorization: EVT.settings.apiKey || EVT.settings.authorization,
+      timeout: EVT.settings.timeout,
+      interceptors: EVT.settings.interceptors
+    }, options);
+
+    // Merge nested headers object. Allow users to use both `options.authorization`
+    // and `options.headers.authorization`.
+    requestOptions.headers = Utils.extend({
+      authorization: requestOptions.authorization,
+      accept: '*/*',
+      'content-type': 'application/json'
+    }, options.headers);
+
+    // Setup callbacks giving priority to parameters.
+    var successCb, errorCb, cancelled = false,
+      response;
+
+    if (Utils.isFunction(successCallback)) {
+      successCb = successCallback;
+    } else if (options && Utils.isFunction(options.success)) {
+      successCb = options.success;
+    }
+
+    if (Utils.isFunction(errorCallback)) {
+      errorCb = errorCallback;
+    } else if (options && Utils.isFunction(options.error)) {
+      errorCb = options.error;
+    }
+
+    // Cancel request, simply adds the flag to be processed afterwards.
+    function cancel() {
+      cancelled = true;
+    }
+
+    // Apply request interceptors
+    if (Utils.isArray(requestOptions.interceptors)) {
+      requestOptions.interceptors.forEach(function (interceptor) {
+        if (interceptor.request && Utils.isFunction(interceptor.request) && !cancelled) {
+
+          // Chain data manipulators
+          var newRequestOptions = interceptor.request(requestOptions, cancel);
+
+          // If interceptor does not return options, use old ones
+          requestOptions = newRequestOptions || requestOptions;
+
+        }
+      });
+    }
+
+    // Reject request if it has been cancelled by request interceptors.
+    if (cancelled) {
+      return Promise.reject({
+        errors: ['Request cancelled on request interceptors.'],
+        cancelled: true
+      });
+    }
+
+    response = transport(requestOptions, successCb, errorCb);
+
+    // Apply response interceptors
+    if (Utils.isArray(requestOptions.interceptors)) {
+      requestOptions.interceptors.forEach(function (interceptor) {
+        if (interceptor.response && Utils.isFunction(interceptor.response)) {
+
+          // Chain promises
+          response = response.then(interceptor.response);
+
+        }
+      });
+    }
+
+    return response;
+  }
+
+  // Attach api method to the EVT module.
+  EVT.api = api;
 
   return EVT;
 
@@ -1117,36 +1640,6 @@ define('scope/scope',[
 
   // Return Scope factory function
   return Scope;
-
-});
-
-// ## LOGGER.JS
-
-// **The Logger module is simple wrapper for console log
-// that prefixes EvrythngJS's logs with a custom header.**
-
-define('logger',[
-  'core'],
-  function (EVT) {
-  'use strict';
-
-  var header = 'EvrythngJS';
-
-  return {
-
-    error: function(data){
-      if (EVT.settings.quiet === false){
-        console.error(header + ' Error:', data);
-      }
-    },
-
-    info: function(data){
-      if (EVT.settings.quiet === false){
-        console.info(header + ' Info:', data);
-      }
-    }
-
-  };
 
 });
 
@@ -2361,486 +2854,6 @@ define('social/facebook',[
 
 });
 
-// ## CORS.JS
-
-// **The CORS module implements a simple CORS request using *XmlHttpRequest*.
-// For browsers that don't properly support CORS (XHR2) we use JSON-P
-// instead.**
-
-// **In Node.js the *XmlHttpRequest* is proxied using the `w3c-xmlhttprequest`
-// dependency, which is installed when installing EvrythngJS NPM package.**
-
-// *This implementation is based on Nicholas Zakas' in
-// [html5rocks](http://www.html5rocks.com/en/tutorials/cors/).*
-
-define('network/cors',[
-  'core',
-  'promise',
-  'utils',
-  'logger'
-], function (EVT, Promise, Utils, Logger) {
-  'use strict';
-
-  // Helper method used to build the returned response. It parses the JSON
-  // 'data' response and wraps the 'status' and 'headers' in an object in
-  // case the flag `fullResponse` is enabled as a global in `EVT.settings`
-  // or in this particular request. *200 OK* responses without data,
-  // return *null*.
-  function _buildResponse(xhr, fullResponse) {
-    // XMLHttpRequest returns a not very usable single big string with all headers
-    var _parseHeaders = function(headers) {
-      var parsed = {};
-
-      if(headers){
-        headers = headers.trim().split("\n");
-        for (var h in headers) {
-          var header = headers[h].toLowerCase().match(/([^:]+):(.*)/);
-          parsed[header[1].trim()] = header[2].trim();
-        }
-      }
-      return parsed;
-    };
-
-    var headers = _parseHeaders(xhr.getAllResponseHeaders()),
-      response = null;
-
-    if (xhr.responseText) {
-      var contentType = headers['content-type'];
-      if (contentType && contentType.indexOf('application/json') !== -1) {
-        // try to parse the response if looks like json
-        try {
-          response = JSON.parse(xhr.responseText);
-        } catch (e) {
-          response = xhr.responseText;
-        }
-      } else {
-        response = xhr.responseText;
-      }
-    }
-
-    if (fullResponse) {
-      response = {
-        data: response,
-        headers: headers,
-        status: xhr.status
-      };
-
-      // If any errors received, pull them to top level
-      if (response.data && response.data.errors) {
-        response.errors = response.data.errors;
-        delete response.data.errors;
-      }
-    }
-
-    return response;
-  }
-
-  // Helper method that builds a custom Error object providing some extra
-  // information on a request error.
-  function _buildError(xhr, url, method, response) {
-    var errorData = {
-      status: xhr.status,
-      type: 'cors',
-      message: 'Server responded with an error for the CORS request',
-      url: url,
-      method: method
-    };
-
-    // Evrythng's API return an array of errors in the response. Add them
-    // if available.
-    if (response) {
-      errorData.errors = response.errors;
-      errorData.moreInfo = response.moreInfo;
-    }
-
-    return errorData;
-  }
-
-
-  // Create an asynchronous XHR2 object.
-  function _createXhr(method, url, options) {
-    var xhr = new XMLHttpRequest();
-
-    xhr.open(method, url);
-
-    // Setup headers, including the *Authorization* that holds the Api Key.
-    for(var header in options.headers){
-      if(options.headers.hasOwnProperty(header)){
-        xhr.setRequestHeader(header, options.headers[header]);
-      }
-    }
-
-    // Set timeout.
-    if (options.timeout > 0) {
-      xhr.timeout = options.timeout;
-    }
-
-    return xhr;
-  }
-
-
-  // Make the actual CORS request. Options available are defined in the [`ajax`
-  // module doc](../ajax.html). Default method is `GET`, URL is relative to
-  // `EVT.settings.apiUrl`, it is asynchronous by default, returns the
-  // JSON data response and will not time out.
-  function cors(options, successCallback, errorCallback) {
-
-    options = options || {};
-
-    var method = options.method || 'get',
-      url = Utils.buildUrl(options);
-
-    var xhr = _createXhr(method, url, options);
-
-    // Serialise JSON data before sending.
-    var data = options.data ? JSON.stringify(options.data) : null;
-
-    // Do a normal asynchronous request and return a promise. If there
-    // are callbacks execute them as well before resolving the promise.
-    return new Promise(function (resolve, reject) {
-
-      // Set protocol error handler.
-      xhr.onerror = function () {
-        // Could not execute request at all (destination unreachable, offline, ...?)
-        var ex = new Error('Network error.');
-        ex.name = 'CorsError';
-        reject(ex);
-      };
-
-      // Define internal error handler.
-      var errorHandler = function (response) {
-        if (response) {
-          var errorData = _buildError(xhr, url, method, response);
-          Logger.error(errorData);
-
-          if (errorCallback) {
-            errorCallback(errorData);
-          }
-          reject(errorData);
-        }
-      };
-
-      // Set timeout handler if needed.
-      if (options.timeout > 0) {
-        xhr.ontimeout = function () {
-          var timeoutResponse = {errors: ['Request timed out.']};
-          errorHandler(timeoutResponse);
-        };
-      }
-
-
-      // Define the response handler.
-      function handler() {
-        try {
-          if (this.readyState === this.DONE) {
-
-            var response = _buildResponse(this, options.fullResponse);
-
-            // Resolve or reject promise given the response status.
-            // HTTP status of 2xx is considered a success.
-            if (this.status >= 200 && this.status < 300) {
-
-              if (successCallback) {
-                successCallback(response);
-              }
-              resolve(response);
-
-            } else {
-              errorHandler(response);
-            }
-          }
-        } catch (exception) {
-          // Do nothing, will be handled by ontimeout.
-        }
-      }
-
-      // Send the request and wait for the response in the handler.
-      xhr.onreadystatechange = handler;
-
-      xhr.send(data);
-
-    });
-  }
-
-  return cors;
-
-});
-
-// ## JSONP.JS
-
-// **The Jsonp module implements a simple JSON-P fetcher. JSON-P is
-// deprecated until IE<10 cease to exist and only works in browsers.**
-
-// *This implementation is based on
-// [Lightweight-JSONP](https://github.com/IntoMethod/Lightweight-JSONP).*
-
-define('network/jsonp',[
-  'core',
-  'promise',
-  'utils',
-  'logger'
-], function (EVT, Promise, Utils, Logger) {
-  'use strict';
-
-  // Counter defines uniquely identified callbacks.
-  var counter = 0, head;
-
-  // Helper method that builds a custom Error object providing some extra
-  // information on a request error.
-  function _buildError(url, status, method, response){
-    var errorData = {
-      status: status,
-      type: 'jsonp',
-      message: 'Server responded with an error for the JSONP request',
-      url: url,
-      method: method
-    };
-
-    if (response) {
-      errorData.errors = response.errors;
-      errorData.moreInfo = response.moreInfo;
-    }
-
-    return errorData;
-  }
-
-  // Making the request is as simple as appending a new script tag
-  // to the document. The URL has the *callback* parameter with the
-  // function that will be called with the response data.
-  function _load(url) {
-
-    var script = document.createElement('script'),
-      done = false;
-    script.src = url;
-
-    // Once the script has been loaded remove the tag from the document.
-    script.onload = script.onreadystatechange = function() {
-      if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
-        done = true;
-        script.onload = script.onreadystatechange = null;
-        if ( script && script.parentNode ) {
-          script.parentNode.removeChild( script );
-        }
-      }
-    };
-
-    if ( !head ) {
-      head = document.getElementsByTagName('head')[0];
-    }
-
-    // Actually load script.
-    head.appendChild( script );
-  }
-
-
-  // Jsonp method sets prepares the script url with all the information
-  // provided and defines the callback handler.
-  function jsonp(options, successCallback, errorCallback) {
-    /*jshint camelcase:false */
-
-    options = options || {};
-
-    // Define unique callback name.
-    var uniqueName = 'callback_json' + (++counter);
-
-    // Send all data (including method, api key and data) via GET
-    // request params.
-    var params = options.params || {};
-    params.callback = uniqueName;
-    params.access_token = options.authorization;
-    params.method = options.method || 'get';
-    params.data = JSON.stringify(options.data);
-    options.params = params;
-
-    options.apiUrl = options.apiUrl && options.apiUrl.replace('//api', '//js-api');
-
-    // Evrythng REST API default endpoint does not provide JSON-P
-    // support, which '//js-api.evrythng.com' does.
-    var url = Utils.buildUrl(options);
-
-    // Return a promise and resolve/reject it in the callback function.
-    return new Promise(function(resolve, reject) {
-
-      // Attach callback as a global method. Evrythng's REST API error
-      // responses always have a status and array of errors.
-      window[uniqueName] = function(response){
-
-        if (response.errors && response.status) {
-
-          var errorData = _buildError(url, response.status, params.method, response);
-          Logger.error(errorData);
-
-          if(errorCallback) { errorCallback(errorData); }
-          reject(errorData);
-
-        }else {
-
-          if(successCallback) { successCallback(response); }
-
-          try {
-            response = JSON.parse(response);
-          } catch(e){}
-
-          resolve(response);
-        }
-
-        // Remove callback from window.
-        try {
-          delete window[uniqueName];
-        } catch (e) {}
-        window[uniqueName] = null;
-      };
-
-      _load(url, reject);
-
-    });
-  }
-
-  return jsonp;
-
-});
-
-// ## AJAX.JS
-
-// **The Ajax module attaches the api() method to the EVT module.
-// It controls the raw request to the API, first by trying a CORS
-// request and if it fails, continuing with JSON-P.**
-
-/*global request */
-define('connect',[
-  'core',
-  'network/cors',
-  'network/jsonp',
-  'promise',
-  'utils',
-  'logger'
-], function (EVT, cors, jsonp, Promise, Utils, Logger) {
-  'use strict';
-
-  // The ajax() method or EVT.api() returns a **Promise**. Nevertheless,
-  // it still allows the old-styled callback API as follows:
-
-  // - **EVT.api(options)** - options object can contain `success` or `error`
-  // properties to define success and error callbacks
-  // - **EVT.api(options, successCb, errorCb)**
-
-  // Options available are:
-
-  // ```
-  // fullResponse - override fullResponse global setting (see module `core`)
-  // apiUrl - override default `EVT.settings.apiUrl`
-  // url - URL of the request, relative to `EVT.settings.apiUrl`
-  // method - HTTP method, default: `GET`
-  // authorization - Authorization header content, should contain API Key
-  // success - success handler function
-  // error - error handler function
-  // interceptors - override interceptors pipeline. If you want to extend, use:
-  //    interceptors: EVT.settings.interceptors.concat([{...}])
-  // ```
-  function ajax(options, successCallback, errorCallback) {
-
-    // Merge options with defaults setup in `EVT.settings`.
-    var requestOptions = Utils.extend({
-      apiUrl: EVT.settings.apiUrl,
-      url: '/',
-      fullResponse: EVT.settings.fullResponse,
-      authorization: EVT.settings.apiKey || EVT.settings.authorization,
-      timeout: EVT.settings.timeout,
-      interceptors: EVT.settings.interceptors
-    }, options);
-
-    // Merge nested headers object. Allow users to use both `options.authorization`
-    // and `options.headers.authorization`.
-    requestOptions.headers = Utils.extend({
-      authorization: requestOptions.authorization,
-      accept: '*/*',
-      'content-type': 'application/json'
-    }, options.headers);
-
-    // Setup callbacks giving priority to parameters.
-    var successCb, errorCb, cancelled = false;
-
-    if (Utils.isFunction(successCallback)) {
-      successCb = successCallback;
-    } else if (options && Utils.isFunction(options.success)) {
-      successCb = options.success;
-    }
-
-    if (Utils.isFunction(errorCallback)) {
-      errorCb = errorCallback;
-    } else if (options && Utils.isFunction(options.error)) {
-      errorCb = options.error;
-    }
-
-    // Cancel request, simply adds the flag to be processed afterwards.
-    function cancel() {
-      cancelled = true;
-    }
-
-    // Apply request interceptors
-    if (Utils.isArray(requestOptions.interceptors)) {
-      requestOptions.interceptors.forEach(function (interceptor) {
-        if (interceptor.request && Utils.isFunction(interceptor.request) && !cancelled) {
-
-          // Chain data manipulators
-          var newRequestOptions = interceptor.request(requestOptions, cancel);
-
-          // If interceptor does not return options, use old ones
-          requestOptions = newRequestOptions || requestOptions;
-
-        }
-      });
-    }
-
-    // Reject request if it has been cancelled by request interceptors.
-    if(cancelled){
-      return Promise.reject({
-        errors: ['Request cancelled on request interceptors.'],
-        cancelled: true
-      });
-    }
-
-    // Detect what is available. Returns a promise.
-    if (XMLHttpRequest) {
-      // *withCredentials* only exists on XmlHttpRequest2 objects.
-      var isXHR2 = typeof new XMLHttpRequest().withCredentials === 'boolean',
-        response;
-
-      // Use XmlHttpRequest with CORS if available, otherwise fall back to JSON-P.
-      if (isXHR2) {
-        response = cors(requestOptions, successCb, errorCb);
-      } else {
-        /*TODO remove jsonp, we're building modern stuff here..*/
-        Logger.info('CORS not supported, falling back to JSONP.');
-        response = jsonp(requestOptions, successCb, errorCb);
-      }
-
-      // Apply response interceptors
-      if (Utils.isArray(requestOptions.interceptors)) {
-        requestOptions.interceptors.forEach(function (interceptor) {
-          if (interceptor.response && Utils.isFunction(interceptor.response)) {
-
-            // Chain promises
-            response = response.then(interceptor.response);
-
-          }
-        });
-      }
-
-      return response;
-
-    } else {
-      throw new Error('XMLHttpRequest not available.');
-    }
-  }
-
-  // Attach ajax method to the EVT module.
-  EVT.api = ajax;
-
-  return EVT;
-
-});
-
 // ## AUTHENTICATION.JS
 
 // **Authentication provides a complete abstraction layer on top of
@@ -2854,8 +2867,7 @@ define('authentication',[
   'core',
   'promise',
   'social/facebook',
-  'utils',
-  'connect'
+  'utils'
 ], function (EVT, Promise, Facebook, Utils) {
   'use strict';
 
@@ -3998,6 +4010,7 @@ define('scope/device',[
 
 define('evrythng',[
   'core',
+  'api',
   'scope/application',
   'scope/user',
   'scope/device'
