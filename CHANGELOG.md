@@ -1,3 +1,8 @@
+# v3.4.2 (22-12-2015)
+
+- **Errors**: Added `code` and `moreInfo` and removed `message` and `type` to/from EVT.js errors.
+- **Callback API**: Added deprecation when callbacks are executed
+
 # v3.4.1 (14-12-2015)
 
 ## Changes

@@ -1,4 +1,4 @@
-// EVRYTHNG JS SDK v3.4.1
+// EVRYTHNG JS SDK v3.4.2
 // (c) 2012-2015 EVRYTHNG Ltd. London / New York / San Francisco.
 // Released under the Apache Software License, Version 2.0.
 // For all details and usage:
@@ -990,7 +990,7 @@ define('core',[
   'use strict';
 
   // Version is updated from package.json using `grunt-version` on build.
-  var version = '3.4.1';
+  var version = '3.4.2';
 
 
   // Setup default settings:
@@ -1090,24 +1090,30 @@ define('core',[
 // that prefixes EvrythngJS's logs with a custom header.**
 
 define('logger',[
-  'core'],
-  function (EVT) {
+  'core'
+], function (EVT) {
   'use strict';
 
   var header = 'EvrythngJS';
 
   return {
 
-    error: function(data){
-      if (EVT.settings.quiet === false){
+    error: function (data) {
+      if (EVT.settings.quiet === false) {
         console.error(header + ' Error:', data);
       }
     },
 
-    info: function(data){
-      if (EVT.settings.quiet === false){
+    info: function (data) {
+      if (EVT.settings.quiet === false) {
         console.info(header + ' Info:', data);
       }
+    },
+
+    // TODO remove when callbacks deprecated
+    warnCallbackDeprecation: function () {
+      console.warn(header + ' Warning: Callbacks are deprecated, and are scheduled to be ' +
+        'removed in the next major release of the library. Please, use the Promise API instead.');
     }
 
   };
@@ -1141,10 +1147,10 @@ define('network/cors',[
   // return *null*.
   function _buildResponse(xhr, fullResponse) {
     // XMLHttpRequest returns a not very usable single big string with all headers
-    var _parseHeaders = function(headers) {
+    var _parseHeaders = function (headers) {
       var parsed = {};
 
-      if(headers){
+      if (headers) {
         headers = headers.trim().split("\n");
         for (var h in headers) {
           var header = headers[h].toLowerCase().match(/([^:]+):(.*)/);
@@ -1188,23 +1194,13 @@ define('network/cors',[
     return response;
   }
 
-  // Helper method that builds a custom Error object providing some extra
-  // information on a request error.
+  // Forward EVRYTHNG API error and extend with URL and Method.
   function _buildError(xhr, url, method, response) {
-    var errorData = {
-      status: xhr.status,
-      type: 'cors',
-      message: 'Server responded with an error for the CORS request',
-      url: url,
-      method: method
-    };
+    var errorData = response || {};
 
-    // Evrythng's API return an array of errors in the response. Add them
-    // if available.
-    if (response) {
-      errorData.errors = response.errors;
-      errorData.moreInfo = response.moreInfo;
-    }
+    errorData.status = xhr.status;
+    errorData.url = url;
+    errorData.method = method;
 
     return errorData;
   }
@@ -1217,8 +1213,8 @@ define('network/cors',[
     xhr.open(method, url);
 
     // Setup headers, including the *Authorization* that holds the Api Key.
-    for(var header in options.headers){
-      if(options.headers.hasOwnProperty(header)){
+    for (var header in options.headers) {
+      if (options.headers.hasOwnProperty(header)) {
         xhr.setRequestHeader(header, options.headers[header]);
       }
     }
@@ -1252,35 +1248,19 @@ define('network/cors',[
     // are callbacks execute them as well before resolving the promise.
     return new Promise(function (resolve, reject) {
 
-      // Set protocol error handler.
-      xhr.onerror = function () {
-        // Could not execute request at all (destination unreachable, offline, ...?)
-        var ex = new Error('Network error.');
-        ex.name = 'CorsError';
-        reject(ex);
-      };
-
       // Define internal error handler.
-      var errorHandler = function (response) {
+      function errorHandler(response) {
         if (response) {
           var errorData = _buildError(xhr, url, method, response);
           Logger.error(errorData);
 
           if (errorCallback) {
+            Logger.warnCallbackDeprecation();
             errorCallback(errorData);
           }
           reject(errorData);
         }
-      };
-
-      // Set timeout handler if needed.
-      if (options.timeout > 0) {
-        xhr.ontimeout = function () {
-          var timeoutResponse = {errors: ['Request timed out.']};
-          errorHandler(timeoutResponse);
-        };
       }
-
 
       // Define the response handler.
       function handler() {
@@ -1294,6 +1274,7 @@ define('network/cors',[
             if (this.status >= 200 && this.status < 300) {
 
               if (successCallback) {
+                Logger.warnCallbackDeprecation();
                 successCallback(response);
               }
               resolve(response);
@@ -1307,11 +1288,24 @@ define('network/cors',[
         }
       }
 
+      // Set timeout handler if needed.
+      if (options.timeout > 0) {
+        xhr.ontimeout = function () {
+          var timeoutErrResponse = {errors: ['Request timed out.']};
+          errorHandler(timeoutErrResponse);
+        };
+      }
+
+      // Could not execute request at all (destination unreachable, offline, ...?)
+      xhr.onerror = function () {
+        var networkErrResponse = {errors: ['Network error.']};
+        errorHandler(networkErrResponse);
+      };
+
       // Send the request and wait for the response in the handler.
       xhr.onreadystatechange = handler;
 
       xhr.send(data);
-
     });
   }
 
@@ -1338,21 +1332,13 @@ define('network/jsonp',[
   // Counter defines uniquely identified callbacks.
   var counter = 0, head;
 
-  // Helper method that builds a custom Error object providing some extra
-  // information on a request error.
-  function _buildError(url, status, method, response){
-    var errorData = {
-      status: status,
-      type: 'jsonp',
-      message: 'Server responded with an error for the JSONP request',
-      url: url,
-      method: method
-    };
+  // Forward EVRYTHNG API error and extend with URL and Method.
+  function _buildError(url, status, method, response) {
+    var errorData = response || {};
 
-    if (response) {
-      errorData.errors = response.errors;
-      errorData.moreInfo = response.moreInfo;
-    }
+    errorData.status = status;
+    errorData.url = url;
+    errorData.method = method;
 
     return errorData;
   }
@@ -1423,12 +1409,18 @@ define('network/jsonp',[
           var errorData = _buildError(url, response.status, params.method, response);
           Logger.error(errorData);
 
-          if(errorCallback) { errorCallback(errorData); }
+          if(errorCallback) {
+            Logger.warnCallbackDeprecation();
+            errorCallback(errorData);
+          }
           reject(errorData);
 
         }else {
 
-          if(successCallback) { successCallback(response); }
+          if(successCallback) {
+            Logger.warnCallbackDeprecation();
+            successCallback(response);
+          }
 
           try {
             response = JSON.parse(response);
@@ -2867,8 +2859,9 @@ define('authentication',[
   'core',
   'promise',
   'social/facebook',
-  'utils'
-], function (EVT, Promise, Facebook, Utils) {
+  'utils',
+  'logger'
+], function (EVT, Promise, Facebook, Utils, Logger) {
   'use strict';
 
   // Login into Evryhtng. This method is attached to the `EVT.App` API methods.
@@ -2963,7 +2956,10 @@ define('authentication',[
         // In this case, we add Evrythng access data to this already wrapped response.
         authFacebook.call($this, userResponse).then(function (fullResponse) {
 
-          if (successCallback) { successCallback(fullResponse);}
+          if (successCallback) {
+            Logger.warnCallbackDeprecation();
+            successCallback(fullResponse);
+          }
           resolve(fullResponse);
 
         });
@@ -2972,7 +2968,10 @@ define('authentication',[
 
         // Login was not successful, apply *errorCb* and reject promise. Response
         // has Facebook's *authResponse* and *status* objects.
-        if (errorCallback) { errorCallback(response); }
+        if (errorCallback) {
+          Logger.warnCallbackDeprecation();
+          errorCallback(response);
+        }
         reject(response);
 
       });
@@ -2995,13 +2994,19 @@ define('authentication',[
 
       // Login was successful, apply callback and propagate response to the
       // next promise handler.
-      if(successCallback) { successCallback(userResponse); }
+      if(successCallback) {
+        Logger.warnCallbackDeprecation();
+        successCallback(userResponse);
+      }
       return userResponse;
 
     }, function (response) {
 
       // Login was not successful, call error callback and re-throw error.
-      if(errorCallback) { errorCallback(response); }
+      if(errorCallback) {
+        Logger.warnCallbackDeprecation();
+        errorCallback(response);
+      }
       throw response;
 
     });
@@ -3125,14 +3130,20 @@ define('authentication',[
 
     }).then(function (response) {
 
-      if(successCallback) { successCallback(response); }
+      if(successCallback) {
+        Logger.warnCallbackDeprecation();
+        successCallback(response);
+      }
       return response;
 
     }, function (err) {
 
       // If the logout from Evrythng fails, by some reason, throw error
       // which would go to the promise error handler of the caller.
-      if(errorCallback) { errorCallback(err); }
+      if(errorCallback) {
+        Logger.warnCallbackDeprecation();
+        errorCallback(err);
+      }
       throw err;
 
     });
