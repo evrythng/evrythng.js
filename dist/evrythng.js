@@ -1,5 +1,5 @@
-// EVRYTHNG JS SDK v3.4.2
-// (c) 2012-2015 EVRYTHNG Ltd. London / New York / San Francisco.
+// EVRYTHNG JS SDK v3.4.3
+// (c) 2012-2016 EVRYTHNG Ltd. London / New York / San Francisco.
 // Released under the Apache Software License, Version 2.0.
 // For all details and usage:
 // https://github.com/evrythng/evrythng.js
@@ -990,7 +990,7 @@ define('core',[
   'use strict';
 
   // Version is updated from package.json using `grunt-version` on build.
-  var version = '3.4.2';
+  var version = '3.4.3';
 
 
   // Setup default settings:
@@ -1112,8 +1112,10 @@ define('logger',[
 
     // TODO remove when callbacks deprecated
     warnCallbackDeprecation: function () {
-      console.warn(header + ' Warning: Callbacks are deprecated, and are scheduled to be ' +
-        'removed in the next major release of the library. Please, use the Promise API instead.');
+      if (EVT.settings.quiet === false) {
+        console.warn(header + ' Warning: Callbacks are deprecated, and are scheduled to be ' +
+          'removed in the next major release of the library. Please, use the Promise API instead.');
+      }
     }
 
   };
