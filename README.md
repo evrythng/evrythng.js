@@ -49,6 +49,8 @@ For HTTPS you need to use:
     
 ### Node.js
 
+[![NPM](https://nodei.co/npm/evrythng.png?downloads=true)](https://nodei.co/npm/evrythng/)
+
     npm install evrythng --save
 
 ## Usage
