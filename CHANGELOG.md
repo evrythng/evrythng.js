@@ -1,3 +1,9 @@
+# v3.4.4 (26-04-2016)
+
+## Bug fixes
+
+- **Request interceptors**: Added Promise support for request interceptors
+
 # v3.4.3 (26-01-2016)
 
 ## Changes
