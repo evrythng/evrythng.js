@@ -34,7 +34,7 @@ See [Usage](#usage) below for more details.
 
 Add the script tag into your HTML page:
 
-    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-3.4.4.min.js"></script>
+    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-3.5.0.min.js"></script>
  
 Or always get the last release:
 
@@ -43,7 +43,7 @@ Or always get the last release:
     
 For HTTPS you need to use:
 
-    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-3.4.4.min.js"></script>
+    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-3.5.0.min.js"></script>
     <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng.js"></script>
     <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng.min.js"></script>
     
@@ -317,6 +317,91 @@ device.property('humidity').read().then(function(results){
 
 // CR actions
 device.action('_turnOn').create();
+```
+
+#### Iterator API
+
+The Iterator API is an [Async Generator Function](https://github.com/tc39/proposal-async-iteration) added to each Resource.
+
+```javascript
+// Initialize app using appApiKey
+var app = new EVT.App('APP_API_KEY');
+
+var it = app.product().iterator();
+
+// .next() returns a promise with the next generator value (page value from API).
+// result.done denotes when the iterator reached the end.
+
+// Get page by page
+it.next().then(function(result){
+  console.log(result.value);
+  return it.next();
+}).then(result){
+  console.log(result.value);
+  console.log(result.done);
+});
+
+// The iterator can be initialized with the same options as any CRUD request.
+// This will iterate through all the Products in the Application's project scope,
+// that are tagged with 'test', with the result in ascending order and in chunks of 100
+
+var it = app.product().iterator({
+  params: {
+    perPage: 100,
+    sortOrder: 'ASCENDING',
+    filter: {
+      tags: 'test'
+    }
+  }
+});
+
+it.next().then(function(result){
+  console.log(result.value);
+});
+
+
+// In order to easily loop through all the items, we provide a utility function
+// that asynchronously iterates through all the generated pages in order, until
+// there are no more results
+
+EVT.Utils.forEachAsync(it, function(val){
+  val.forEach(function(product){
+    console.log(product.name);
+  });
+});
+
+```
+
+#### Spawn Generators
+
+[Generator functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) and the `yield`
+keyword arrived with great excitement in Node v0.11.2 and the latest evergreen browsers.
+
+This allows people targeting these platforms to write asynchrounous code that looks synchronous. 
+[ES7 Async Functions](https://jakearchibald.com/2014/es7-async-functions/) will give you a quick introduction.
+
+```javascript
+function *apiCalls(){
+  try{
+    
+    // Yield promise to thngs (i.e. wait for it to resolve/reject)
+    var thngs = yield user.thng().read();
+    console.log(thngs.length);
+    
+    // Yield promise to thng properties
+    var properties = yield thngs[0].property().read();
+    console.info(properties);
+    
+  } catch(e){
+  
+    // Will catch every rejected request as well as exceptions
+    console.info('Caught: ', e);
+    
+  }
+}
+
+// Iterate through generator
+EVT.Utils.spawn(apiCalls());
 ```
 
 ---

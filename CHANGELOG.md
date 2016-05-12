@@ -1,3 +1,20 @@
+# v3.5.0 (12-05-2016)
+
+## Features
+
+- **Iterator API**: Async generator `iterator()` added to every Resource, supporting looping 
+through the new pagination links
+- **Utils**: Added `forEachAsync()` utility to loop through async generator values
+- **Utils**: Added `spawn()` utility to run through generator function
+
+## Breaking changes
+
+- **Count**: `count()` method on the Resource has been removed
+
+## Bug fixes
+
+- **AJAX Headers**: Header values were being lowercased
+
 # v3.4.4 (26-04-2016)
 
 ## Bug fixes
