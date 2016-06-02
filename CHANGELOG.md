@@ -1,3 +1,10 @@
+# v3.6.0 (02-06-2016)
+
+## Features
+
+- **Batches**: CRUD access in the Operator scope
+- **Batch tasks**: CR access in the Batch resource
+
 # v3.5.0 (12-05-2016)
 
 ## Features
