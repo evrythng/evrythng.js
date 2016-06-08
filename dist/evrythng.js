@@ -1883,7 +1883,9 @@ define('network/cors',[
         headers = headers.trim().split("\n");
         for (var h in headers) {
           var header = headers[h].match(/([^:]+):(.*)/);
-          parsed[header[1].trim().toLowerCase()] = header[2].trim();
+          if (headers.hasOwnProperty(h)) {
+            parsed[header[1].trim().toLowerCase()] = header[2].trim();
+          }
         }
       }
       return parsed;
