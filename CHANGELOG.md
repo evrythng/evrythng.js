@@ -1,3 +1,11 @@
+# v3.6.1 (09-06-2016)
+
+## Bug fixes
+
+- **Iterator API**: Use `sortOrder=DESCENDING` param by default
+- **Application**: Reject `application.$init` promise if app does not exist
+- **AJAX Headers**: Fix response headers not being handled correctly
+
 # v3.6.0 (02-06-2016)
 
 ## Features

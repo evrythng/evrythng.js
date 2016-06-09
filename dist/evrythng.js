@@ -1,4 +1,4 @@
-// EVRYTHNG JS SDK v3.6.0
+// EVRYTHNG JS SDK v3.6.1
 // (c) 2012-2016 EVRYTHNG Ltd. London / New York / San Francisco.
 // Released under the Apache Software License, Version 2.0.
 // For all details and usage:
@@ -1715,7 +1715,7 @@ define('core',[
   'use strict';
 
   // Version is updated from package.json using `grunt-version` on build.
-  var version = '3.6.0';
+  var version = '3.6.1';
 
 
   // Setup default settings:
@@ -1882,8 +1882,10 @@ define('network/cors',[
       if (headers) {
         headers = headers.trim().split("\n");
         for (var h in headers) {
-          var header = headers[h].match(/([^:]+):(.*)/);
-          parsed[header[1].trim().toLowerCase()] = header[2].trim();
+          if (headers.hasOwnProperty(h)) {
+            var header = headers[h].match(/([^:]+):(.*)/);
+            parsed[header[1].trim().toLowerCase()] = header[2].trim();
+          }
         }
       }
       return parsed;
@@ -2718,28 +2720,35 @@ define('resource',[
           }, null, this);
         };
 
-        context$2$0.next = 3;
+        options = options || {};
+
+        // TODO: Remove when page API is fully deprecated.
+        options.params = Utils.extend({
+          sortOrder: 'DESCENDING'
+        }, options.params);
+
+        context$2$0.next = 5;
 
         return awaitResult(_request.call(this, {
           url: this.path,
           fullResponse: true
         }, options));
-      case 3:
+      case 5:
         if (!links.next) {
-          context$2$0.next = 8;
+          context$2$0.next = 10;
           break;
         }
 
-        context$2$0.next = 6;
+        context$2$0.next = 8;
 
         return awaitResult(_request.call(this, {
           apiUrl: decodeURIComponent(links.next),
           fullResponse: true
         }));
-      case 6:
-        context$2$0.next = 3;
-        break;
       case 8:
+        context$2$0.next = 5;
+        break;
+      case 10:
       case "end":
         return context$2$0.stop();
       }
@@ -4000,7 +4009,10 @@ define('scope/application',[
       return Utils.extend($this, application, true);
 
     }, function () {
-      Logger.error('There is no application with this API Key.');
+      
+      var error = 'There is no application with this API Key.';
+      Logger.error(error);
+      throw new Error(error);
 
     }).then(function (app) {
 
