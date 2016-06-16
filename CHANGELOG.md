@@ -1,3 +1,9 @@
+# v3.7.0 (16-06-2016)
+
+## Features
+
+- **Collections**: Add nested collection resource `operator.collection('id').collection()`
+
 # v3.6.1 (09-06-2016)
 
 ## Bug fixes
