@@ -237,6 +237,8 @@ app.product().read({
 
 ### Using filters
 
+Specify filter `params` to limit the returned results to matched criteria:
+
 ```javascript
 app.product().read({
   params: {
@@ -256,7 +258,7 @@ app.product().read({
 
 ### Facebook login
 
-In order to use FB login, the application needs to be initialized with `facebook: true`.
+In order to use FB login, the application needs to be initialized with `facebook: true`:
 
 ```javascript
 app = new EVT.App({
@@ -273,10 +275,11 @@ app.login('facebook').then(function(response) {
 });
 ```
 
-#### Create and validate new app users
+#### New app users
+
+Create and validate a new app user:
 
 ```javascript
-// Create app user
 app.appUser().create({
   email: 'someone@anyone.com',
   password: 'password', // don't put this one in the code :)
@@ -295,7 +298,7 @@ app.appUser().create({
 
 #### Create anonymous user
 
-Track a device without creating a full app user
+Track a device without creating a full app user:
 
 ```javascript
 // Create anonymous user
@@ -312,7 +315,7 @@ app.appUser().create({
 });
 ```
 
-Restore user from saved details
+Restore a user from saved details:
 
 ```javascript
 var anonymousUser = new EVT.User({
@@ -322,6 +325,8 @@ var anonymousUser = new EVT.User({
 ```
 
 #### As a [Device](https://dashboard.evrythng.com/developers/apidoc/thngs#thngs-devices)
+
+Create a `Device` scope to manage a Thng and allow it to update itself: 
 
 ```javascript
 var device = new EVT.Device({
