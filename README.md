@@ -95,96 +95,128 @@ var app = new EVT.App(APP_API_KEY);
 
 #### General
 
+Setup global settings ([see all options](http://evrythng.github.io/evrythng-source.js/src/core.html)):
+
 ```javascript
-// Setup global settings - see all options in http://evrythng.github.io/evrythng-source.js/src/core.html
 EVT.setup({
   apiUrl: 'http://api.evrythng.com'
 });
+```
 
-// Promise API
-app.product('123').read().then(function(prod){
+Access resources using the Promise API:
 
-  // Properties
-  
-  // update single property
-  prod.property('status').update('off');
-      
-  // update multiple properties
-  prod.property().update({
-    status: 'off',
-    level: '80'
-  });
-  
-  // read current property
-  console.log(prod.properties['status']);
-  
-  // read property history
-  prod.property('status').read().then(function(statusHistory){
-  
-    console.log(statusHistory);
-    
-  });
-  
-  ...
+```javascript
+app.product('57bad69fc18104025b292da8').read().then(function(product) {
+  console.log(product);
 });
+```
+
+#### Products and Properties
+
+Update single product property:
+
+```javascript
+product.property('status').update('off');
+```
+      
+Update multiple properties:
+
+```javascript
+product.property().update({
+  status: 'off',
+  level: '80'
+});
+```
   
-// Login user (with Evrythng Auth) and create user scope  
+Read current property:
+
+```javascript
+console.log(product.properties['status']);
+```
+  
+Read property history:
+
+```javascript
+product.property('status').read().then(function(statusHistory) {
+  console.log(statusHistory);
+});
+```
+
+#### Users
+
+Login an existing user (with Evrythng Auth) and create user scope:
+
+```javascript
 app.login({
   email: 'myemail',
   password: 'mypass'
-}).then(function(response){
-  
+}).then(function(response) {
   // every call using user will use its User Api Key
   var user = response.user;
-  
- 
-  // Manage thngs
-  user.thng().read().then(function(thngs){
-      
-    thngs[0].description = 'newDesc';              
-    return thngs[0].update();
-          
-  }).then(function(thng){
-      
-    console.log('thng updated');
-          
-  });
-
-  // Update existing thng
-  user.thng('123').update({
-    description: 'new desc'
-  });
-  
-  // Create a thng
-  user.thng().create({
-    name: 'name',
-    description: 'desc'
-  });
-
-  
-  // Actions
-  
-  user.thng('1').read().then(function(thng1){
-    
-    // Actions request device geolocation by default (if available)
-    // Use 'geolocation: false' option globally or per request to turn if off
-    thng1.action('scans').create();
-    
-    thng1.action('_customAction').create({
-      customFields: {
-        foo: 'bar'
-      }
-    });
-  
-  });
-  
-  user.logout();
-  
-  ...
 });
+```
 
+Log the user out:
 
-// Using request options. Read more about options in http://evrythng.github.io/evrythng-source.js/src/ajax.html
+```javascript  
+user.logout();
+```  
+
+#### Thngs
+
+Create a Thng:
+
+```javascript
+user.thng().create({
+  name: 'name',
+  description: 'desc'
+});
+```
+
+Read all thngs and update first Thng's description:
+
+```javascript
+user.thng().read().then(function(thngs) {
+  thngs[0].description = 'newDesc';              
+  return thngs[0].update();
+}).then(function(thng) {
+  console.log('thng 0 updated');
+});
+```
+  
+Update existing Thng:
+
+```javascript
+user.thng('123').update({
+  description: 'new desc'
+});
+```
+
+#### Actions
+
+Create a new action:
+
+```javascript  
+// Actions request device geolocation by default (if available)
+// Use 'geolocation: false' option globally or per request to turn it off
+thng.action('scans').create();
+```
+
+Create a custom action:
+
+```javascript
+thng.action('_customAction').create({
+  customFields: {
+    foo: 'bar'
+  }
+});
+```
+
+### Using request options 
+
+([Read more about options](http://evrythng.github.io/evrythng-source.js/src/ajax.html)):
+
+```javascript
 app.product().read({
   fullResponse: true,
   params: {
@@ -197,14 +229,17 @@ app.product().read({
     authorization: 'anotherApiKey',
     accepts: 'image/png'
   }
-}).then(function(result){
-
+}).then(function(result) {
   // Using fullResponse, result contains 'data', 'headers' and 'status'
   console.log(result.headers['x-result-count'] + ' Products:', result.data);
-  
 });
+```
 
-// Using filters.
+### Using filters
+
+Specify filter `params` to limit the returned results to matched criteria:
+
+```javascript
 app.product().read({
   params: {
     filter: 'name=My Product&tags=shipped'   // regular parameter string notation
@@ -219,61 +254,57 @@ app.product().read({
     }
   } 
 });
+```
 
+### Facebook login
 
-// Facebook - in order to use FB login, the application needs to
-// be initialized with facebook: true
+In order to use FB login, the application needs to be initialized with `facebook: true`:
+
+```javascript
 app = new EVT.App({
   apiKey: APP_API_KEY,
   facebook: true
 });
 
-app.login('facebook').then(function(response){
-
+app.login('facebook').then(function(response) {
   var user = response.user;
   
   console.log(app.socialNetworks.facebook.appId);
   
   user.logout('facebook');
 });
-...
 ```
 
-#### Create and validate app users
+#### New app users
+
+Create and validate a new app user:
 
 ```javascript
-// Initialize app using appApiKey
-var app = new EVT.App(APP_API_KEY);
-
-// create app user
 app.appUser().create({
   email: 'someone@anyone.com',
   password: 'password', // don't put this one in the code :)
   firstName: 'Some',
   lastName: 'One'
-}).then(function(appUser){
+}).then(function(appUser) {
   console.log('Created user: ', appUser);
 
   // validate app user
   return appUser.validate();
-
-}).then(function(appUser){
-
+}).then(function(appUser) {
   // validated user and his api key
   console.log('Validated app user: ', appUser);
 });
 ```
 
-#### Create anonymous user to track a device without creating a full app user
+#### Create anonymous user
+
+Track a device without creating a full app user:
 
 ```javascript
-// Initialize app using appApiKey
-var app = new EVT.App('APP_API_KEY');
-
-// create anonymous user
+// Create anonymous user
 app.appUser().create({
   anonymous: true
-}).then(function(anonymousUser){
+}).then(function(anonymousUser) {
   console.log('Created anonymous user: ', anonymousUser); // good to go, doesn't need validation
 
   // store anonymous user details locally
@@ -282,17 +313,20 @@ app.appUser().create({
     localStorage['apiKey'] = anonymousUser.apiKey;
   }
 });
+```
 
-...
-// restore user from saved details
+Restore a user from saved details:
+
+```javascript
 var anonymousUser = new EVT.User({
-    id: localStorage['userId'],
-    apiKey: localStorage['apiKey']
-  }, app);
-
+  id: localStorage['userId'],
+  apiKey: localStorage['apiKey']
+}, app);
 ```
 
 #### As a [Device](https://dashboard.evrythng.com/developers/apidoc/thngs#thngs-devices)
+
+Create a `Device` scope to manage a Thng and allow it to update itself: 
 
 ```javascript
 var device = new EVT.Device({
@@ -305,13 +339,13 @@ device.update({
   customFields: {
     foo: 'bar'
   }
-}).then(function(updated){
+}).then(function(updated) {
   console.log('updated device details: ', updated);
 });
 
 // CRUD properties
 device.property('temperature').update(32);
-device.property('humidity').read().then(function(results){
+device.property('humidity').read().then(function(results) {
   console.log('humidity readings:', results);
 });
 
@@ -333,10 +367,10 @@ var it = app.product().iterator();
 // result.done denotes when the iterator reached the end.
 
 // Get page by page
-it.next().then(function(result){
+it.next().then(function(result) {
   console.log(result.value);
   return it.next();
-}).then(result){
+}).then(result) {
   console.log(result.value);
   console.log(result.done);
 });
@@ -355,7 +389,7 @@ var it = app.product().iterator({
   }
 });
 
-it.next().then(function(result){
+it.next().then(function(result) {
   console.log(result.value);
 });
 
@@ -364,8 +398,8 @@ it.next().then(function(result){
 // that asynchronously iterates through all the generated pages in order, until
 // there are no more results
 
-EVT.Utils.forEachAsync(it, function(val){
-  val.forEach(function(product){
+EVT.Utils.forEachAsync(it, function(val) {
+  val.forEach(function(product) {
     console.log(product.name);
   });
 });
@@ -381,7 +415,7 @@ This allows people targeting these platforms to write asynchrounous code that lo
 [ES7 Async Functions](https://jakearchibald.com/2014/es7-async-functions/) will give you a quick introduction.
 
 ```javascript
-function *apiCalls(){
+function *apiCalls() {
   try{
     
     // Yield promise to thngs (i.e. wait for it to resolve/reject)
@@ -392,7 +426,7 @@ function *apiCalls(){
     var properties = yield thngs[0].property().read();
     console.info(properties);
     
-  } catch(e){
+  } catch(e) {
   
     // Will catch every rejected request as well as exceptions
     console.info('Caught: ', e);
