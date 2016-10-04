@@ -1,4 +1,4 @@
-// EVRYTHNG JS SDK v3.7.0
+// EVRYTHNG JS SDK v4.0.0
 // (c) 2012-2016 EVRYTHNG Ltd. London / New York / San Francisco.
 // Released under the Apache Software License, Version 2.0.
 // For all details and usage:
@@ -684,7 +684,7 @@
 
 }(this, function (XMLHttpRequest, request) {
 /**
- * @license almond 0.3.2 Copyright jQuery Foundation and other contributors.
+ * @license almond 0.3.3 Copyright jQuery Foundation and other contributors.
  * Released under MIT license, http://github.com/requirejs/almond/LICENSE
  */
 //Going sloppy to avoid 'use strict' string cost, but strict practices should
@@ -880,32 +880,39 @@ var requirejs, require, define;
         return [prefix, name];
     }
 
+    //Creates a parts array for a relName where first part is plugin ID,
+    //second part is resource ID. Assumes relName has already been normalized.
+    function makeRelParts(relName) {
+        return relName ? splitPrefix(relName) : [];
+    }
+
     /**
      * Makes a name map, normalizing the name, and using a plugin
      * for normalization if necessary. Grabs a ref to plugin
      * too, as an optimization.
      */
-    makeMap = function (name, relName) {
+    makeMap = function (name, relParts) {
         var plugin,
             parts = splitPrefix(name),
-            prefix = parts[0];
+            prefix = parts[0],
+            relResourceName = relParts[1];
 
         name = parts[1];
 
         if (prefix) {
-            prefix = normalize(prefix, relName);
+            prefix = normalize(prefix, relResourceName);
             plugin = callDep(prefix);
         }
 
         //Normalize according
         if (prefix) {
             if (plugin && plugin.normalize) {
-                name = plugin.normalize(name, makeNormalize(relName));
+                name = plugin.normalize(name, makeNormalize(relResourceName));
             } else {
-                name = normalize(name, relName);
+                name = normalize(name, relResourceName);
             }
         } else {
-            name = normalize(name, relName);
+            name = normalize(name, relResourceName);
             parts = splitPrefix(name);
             prefix = parts[0];
             name = parts[1];
@@ -952,13 +959,14 @@ var requirejs, require, define;
     };
 
     main = function (name, deps, callback, relName) {
-        var cjsModule, depName, ret, map, i,
+        var cjsModule, depName, ret, map, i, relParts,
             args = [],
             callbackType = typeof callback,
             usingExports;
 
         //Use name if no relName
         relName = relName || name;
+        relParts = makeRelParts(relName);
 
         //Call the callback to define the module, if necessary.
         if (callbackType === 'undefined' || callbackType === 'function') {
@@ -967,7 +975,7 @@ var requirejs, require, define;
             //Default to [require, exports, module] if no deps
             deps = !deps.length && callback.length ? ['require', 'exports', 'module'] : deps;
             for (i = 0; i < deps.length; i += 1) {
-                map = makeMap(deps[i], relName);
+                map = makeMap(deps[i], relParts);
                 depName = map.f;
 
                 //Fast path CommonJS standard dependencies.
@@ -1023,7 +1031,7 @@ var requirejs, require, define;
             //deps arg is the module name, and second arg (if passed)
             //is just the relName.
             //Normalize module name, if it contains . or ..
-            return callDep(makeMap(deps, callback).f);
+            return callDep(makeMap(deps, makeRelParts(callback)).f);
         } else if (!deps.splice) {
             //deps is a config object, not an array.
             config = deps;
@@ -1715,7 +1723,7 @@ define('core',[
   'use strict';
 
   // Version is updated from package.json using `grunt-version` on build.
-  var version = '3.7.0';
+  var version = '4.0.0';
 
 
   // Setup default settings:
@@ -1967,13 +1975,29 @@ define('network/cors',[
 
     options = options || {};
 
+    // The browser sets the Content-type header for FormData requests
+    // automatically, so we need to remove it.
+    if(options.formData && options.headers){
+      delete options.headers['content-type'];
+    }
+
     var method = options.method || 'get',
-      url = Utils.buildUrl(options);
+      url = Utils.buildUrl(options),
+      xhr = _createXhr(method, url, options),
+      sendable;
 
-    var xhr = _createXhr(method, url, options);
+    // Create form data or send simple request.
+    if(options.formData){
+      sendable = new FormData();
+      for(var key in options.formData){
+        sendable.append(key, options.formData[key]);
+      }
 
-    // Serialise JSON data before sending.
-    var data = options.data ? JSON.stringify(options.data) : null;
+    } else {
+      // Serialise JSON data before sending.
+      sendable = options.data ? JSON.stringify(options.data) : null;
+    }
+
 
     // Do a normal asynchronous request and return a promise. If there
     // are callbacks execute them as well before resolving the promise.
@@ -2036,7 +2060,7 @@ define('network/cors',[
       // Send the request and wait for the response in the handler.
       xhr.onreadystatechange = handler;
 
-      xhr.send(data);
+      xhr.send(sendable);
     });
   }
 
@@ -2374,6 +2398,75 @@ define('scope/scope',[
 
 });
 
+define('iterator',[
+  'utils'
+], function (Utils) {
+  'use strict';
+
+  /* jshint ignore:start */
+  return function (request) {
+    return regeneratorRuntime.mark(function gen(options) {
+      var result, links, awaitResult;
+
+      return regeneratorRuntime.async(function gen$(context$3$0) {
+        while (1) switch (context$3$0.prev = context$3$0.next) {
+        case 0:
+          awaitResult = function awaitResult(requestPromise) {
+            return regeneratorRuntime.async(function awaitResult$(context$4$0) {
+              while (1) switch (context$4$0.prev = context$4$0.next) {
+              case 0:
+                context$4$0.next = 2;
+                return regeneratorRuntime.awrap(requestPromise);
+              case 2:
+                result = context$4$0.sent;
+                links = Utils.parseLinkHeader(result.headers.link);
+                return context$4$0.abrupt("return", result.data);
+              case 5:
+              case "end":
+                return context$4$0.stop();
+              }
+            }, null, this);
+          };
+
+          options = options || {};
+
+          // TODO: Remove when page API is fully deprecated.
+          options.params = Utils.extend({
+            sortOrder: 'DESCENDING'
+          }, options.params);
+
+          context$3$0.next = 5;
+
+          return awaitResult(request.call(this, {
+            url: this.path,
+            fullResponse: true
+          }, options));
+        case 5:
+          if (!links.next) {
+            context$3$0.next = 10;
+            break;
+          }
+
+          context$3$0.next = 8;
+
+          return awaitResult(request.call(this, {
+            apiUrl: decodeURIComponent(links.next),
+            fullResponse: true
+          }));
+        case 8:
+          context$3$0.next = 5;
+          break;
+        case 10:
+        case "end":
+          return context$3$0.stop();
+        }
+      }, gen, this);
+    });
+  };
+  /* jshint ignore:end */
+
+});
+
 // ## RESOURCE.JS
 
 // **The private Resource module setups up the base resource CRUD methods.
@@ -2391,10 +2484,11 @@ define('scope/scope',[
 define('resource',[
   'core',
   'promise',
+  'iterator',
   'scope/scope',
   'utils',
   'logger'
-], function (EVT, Promise, Scope, Utils, Logger) {
+], function (EVT, Promise, iterator, Scope, Utils, Logger) {
   'use strict';
 
   // Resource constructor. As this is a private module, all resource constructors
@@ -2696,65 +2790,7 @@ define('resource',[
 
   // - _**iterator()**: no options_
   // - _**iterator(options)**: forward options to initial request_
-  /* jshint ignore:start */
-  Resource.prototype.iterator = regeneratorRuntime.mark(function gen(options) {
-    var result, links, awaitResult;
-
-    return regeneratorRuntime.async(function gen$(context$2$0) {
-      while (1) switch (context$2$0.prev = context$2$0.next) {
-      case 0:
-        awaitResult = function awaitResult(requestPromise) {
-          return regeneratorRuntime.async(function awaitResult$(context$3$0) {
-            while (1) switch (context$3$0.prev = context$3$0.next) {
-            case 0:
-              context$3$0.next = 2;
-              return regeneratorRuntime.awrap(requestPromise);
-            case 2:
-              result = context$3$0.sent;
-              links = Utils.parseLinkHeader(result.headers.link);
-              return context$3$0.abrupt("return", result.data);
-            case 5:
-            case "end":
-              return context$3$0.stop();
-            }
-          }, null, this);
-        };
-
-        options = options || {};
-
-        // TODO: Remove when page API is fully deprecated.
-        options.params = Utils.extend({
-          sortOrder: 'DESCENDING'
-        }, options.params);
-
-        context$2$0.next = 5;
-
-        return awaitResult(_request.call(this, {
-          url: this.path,
-          fullResponse: true
-        }, options));
-      case 5:
-        if (!links.next) {
-          context$2$0.next = 10;
-          break;
-        }
-
-        context$2$0.next = 8;
-
-        return awaitResult(_request.call(this, {
-          apiUrl: decodeURIComponent(links.next),
-          fullResponse: true
-        }));
-      case 8:
-        context$2$0.next = 5;
-        break;
-      case 10:
-      case "end":
-        return context$2$0.stop();
-      }
-    }, gen, this);
-  });
-  /* jshint ignore:end */
+  Resource.prototype.iterator = iterator(_request);
 
 
   // Given we don't have subclasses of Resource, this static factory method
@@ -4472,112 +4508,6 @@ define('entity/collection',[
   };
 });
 
-// ## MULTIMEDIA.JS
-
-// **The Multimedia is a simple Entity subclass representing the REST API
-// Multimedia Content object.**
-
-define('entity/multimedia',[
-  'core',
-  './entity',
-  'resource'
-], function (EVT, Entity, Resource) {
-  'use strict';
-
-  // Setup Multimedia inheritance from Entity.
-  var Multimedia = function () {
-    Entity.apply(this, arguments);
-  };
-
-  Multimedia.prototype = Object.create(Entity.prototype);
-  Multimedia.prototype.constructor = Multimedia;
-
-
-  // Attach class to EVT module.
-  EVT.Entity.Multimedia = Multimedia;
-
-
-  return {
-
-    'class': Multimedia,
-
-    resourceConstructor: Resource.constructorFactory('/contents/multimedia', EVT.Entity.Multimedia)
-
-  };
-});
-
-// ## SEARCH.JS
-
-// **Search API simplifies the search requests to the API, by
-// splitting the actual query and additional options.**
-
-define('search',[
-  'core',
-  'utils'
-], function (EVT, Utils) {
-  'use strict';
-
-  // Wrap the search API call in the search() method. Check the
-  // [search API in Evrythng Documentation](https://dashboard.evrythng.com/developers/apidoc#search).
-  // .search() allows the following parameters:
-
-  // - _**search(queryString, options)** - ?q=queryString. Options object represent
-  // the additional search parameters. Such as:_
-
-  // ```
-  //  {
-  //    types: 'thng,product'
-  //  }
-  // ```
-
-  // - _**search(queryObj, options)** - Apply field or geographic search. Such as:_
-
-  // ```
-  //  {
-  //    name: 'tv',
-  //    description: 'plasma'
-  //  }
-  // ```
-
-  // ```
-  //  {
-  //    lat: 72,000
-  //    long: -0,190
-  //    maxDistance: 5
-  //  }
-  // ```
-
-  // - _**search(queryOptions)** - Merge all search parameters in a single object_
-  function search(query, options) {
-    var params = {};
-
-    // Use Free-text search using query string and additional parameters.
-    if(Utils.isString(query)) {
-      params.q = query;
-      params = Utils.extend(params, options);
-
-    } else {
-      params = query;
-
-      // Merge query and additional options in a single object for the request.
-      if(options) {
-        Utils.extend(params, options, true);
-      }
-    }
-
-    // "this" represents the scope, since the search method will always be
-    // attached to a scope (e.g. user, operator).
-    return EVT.api({
-      url: '/search',
-      params: params,
-      authorization: this.apiKey
-    });
-  }
-
-  return search;
-
-});
-
 // ## USER.JS
 
 // **Here it is defined the UserScope or `EVT.User`. EVT.User
@@ -4591,9 +4521,7 @@ define('search',[
 // - ActionType resource (`R`)
 // - Action resource (`C`, `R`)
 // - Collection resource (`C`, `R`, `U`)
-// - Multimedia resource (`R`)
 // - Logout
-// - Search
 // - Update itself (the user information)
 // - (`C`, `R`, `U` actions via products/thngs)
 
@@ -4606,13 +4534,11 @@ define('scope/user',[
   'entity/actionType',
   'entity/action',
   'entity/collection',
-  'entity/multimedia',
   'entity/place',
   'authentication',
-  'utils',
-  'search'
+  'utils'
 ], function (EVT, Scope, Product, Thng, User, ActionType, Action, Collection,
-             Multimedia, Place, Authentication, Utils, search) {
+             Place, Authentication, Utils) {
   'use strict';
 
   // User Scope constructor. It can be called with the parameters:
@@ -4678,13 +4604,9 @@ define('scope/user',[
 
     collection: Collection.resourceConstructor,
 
-    multimedia: Multimedia.resourceConstructor,
-
     place: Place.resourceConstructor,
 
     logout: Authentication.logout,
-
-    search: search,
 
     update: update
 
