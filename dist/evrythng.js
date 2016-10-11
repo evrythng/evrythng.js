@@ -1,4 +1,4 @@
-// EVRYTHNG JS SDK v4.0.0
+// EVRYTHNG JS SDK v4.0.1
 // (c) 2012-2016 EVRYTHNG Ltd. London / New York / San Francisco.
 // Released under the Apache Software License, Version 2.0.
 // For all details and usage:
@@ -1723,7 +1723,7 @@ define('core',[
   'use strict';
 
   // Version is updated from package.json using `grunt-version` on build.
-  var version = '4.0.0';
+  var version = '4.0.1';
 
 
   // Setup default settings:
@@ -3547,7 +3547,7 @@ define('social/facebook',[
 
   // The *init()* method also gets the current user information in one
   // is already logged in.
-  function init(appId) {
+  function init(appId, config) {
 
     // Return promise and resolve once user status is retrieved.
     return new Promise(function(resolve){
@@ -3557,10 +3557,10 @@ define('social/facebook',[
       // to run in the browser, as well.
       window.fbAsyncInit = function () {
 
-        FB.init({
+        FB.init(Utils.extend({
           appId: appId,
-          version: 'v2.0'
-        });
+          version: 'v2.8'
+        }, config, true));
 
         // Get Login status and user info if connected. Build response as we
         // fetch more information.
@@ -3639,7 +3639,21 @@ define('social/facebook',[
         // Until here, `response` was FB's auth response. Here
         // we start to build bigger response by appending the Facebook's
         // user info in the `user` property.
-        FB.api('/me', function (userInfo) {
+        FB.api('/me', {
+          fields: [
+            'id',
+            'first_name',
+            'last_name' ,
+            'gender',
+            'link',
+            'picture',
+            'locale',
+            'name',
+            'timezone',
+            'updated_time',
+            'verified'
+          ].toString()
+        }, function (userInfo) {
           resolve(Utils.extend(response, { user: userInfo }));
         });
 
@@ -3855,13 +3869,24 @@ define('authentication',[
         apiKey: access.evrythngApiKey
       }, $this);
 
-      // Prepare resolve object. Move Facebook user data to
-      // 'user.facebook' object
-      Utils.extend(user, { facebook: response.user }, true);
-      response.user = user;
+      // Fetch user dto from the platform and then
+      // return initial response
+      // TODO: Introduce proper read when DEV-190 merged
+      return EVT.api({
+        url: '/users/' + user.id,
+        authorization: user.apiKey
+      }).then(function(userDetails) {
+        // Prepare resolve object. Move Facebook user data to
+        // 'user.facebook' object
+        Utils.extend(user, { facebook: response.user }, true);
 
-      return response;
+        // Merge user data from the platform to User Scope
+        Utils.extend(user, userDetails, true);
 
+        response.user = user;
+
+        return response;
+      });
     });
   }
 
@@ -4045,7 +4070,7 @@ define('scope/application',[
       return Utils.extend($this, application, true);
 
     }, function () {
-      
+
       var error = 'There is no application with this API Key.';
       Logger.error(error);
       throw new Error(error);
@@ -4077,7 +4102,7 @@ define('scope/application',[
         }
 
         // Get Facebook App ID from the Evrythng App social networks list.
-        return Facebook.init(app.socialNetworks.facebook.appId)
+        return Facebook.init(app.socialNetworks.facebook.appId, obj.facebook)
           .then(function (response) {
 
             if(response.status === 'connected') {

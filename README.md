@@ -34,7 +34,7 @@ See [Usage](#usage) below for more details.
 
 Add the script tag into your HTML page:
 
-    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-4.0.0.min.js"></script>
+    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-4.0.1.min.js"></script>
  
 Or always get the last release:
 
@@ -43,7 +43,7 @@ Or always get the last release:
     
 For HTTPS you need to use:
 
-    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-4.0.0.min.js"></script>
+    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-4.0.1.min.js"></script>
     <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng.js"></script>
     <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng.min.js"></script>
     
@@ -258,7 +258,7 @@ app.product().read({
 
 ### Facebook login
 
-In order to use FB login, the application needs to be initialized with `facebook: true`:
+In order to use FB login, the application needs to be initialized with `facebook` property having truthy value:
 
 ```javascript
 app = new EVT.App({
@@ -274,6 +274,18 @@ app.login('facebook').then(function(response) {
   user.logout('facebook');
 });
 ```
+It's possible to pass custom configuration to `FB.init` via `faceboook` config property:
+```javascript
+app = new EVT.App({
+  apiKey: APP_API_KEY,
+  facebook: { 
+    version: 'v2.8'
+    cookie: false,
+    fbml: true
+  }
+});
+```
+For more options see the method [reference](https://developers.facebook.com/docs/javascript/reference/FB.init).
 
 #### New app users
 

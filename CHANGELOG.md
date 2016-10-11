@@ -1,3 +1,10 @@
+# v4.0.1 (11-10-2016)
+
+## Bug fixes
+
+- **Auth**: Allow to pass FB initialization settings
+- **Auth**: Read user details when login in application
+
 # v4.0.0 (04-10-2016)
 
 ## Breaking changes
