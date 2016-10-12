@@ -1,3 +1,10 @@
+# v4.1.0 (12-10-2016)
+
+## Features
+
+- **Reactor scripts**: Add nested reactor script status 
+resource `app.reactor.script().status()`.
+
 # v4.0.1 (11-10-2016)
 
 ## Bug fixes
