@@ -1,38 +1,84 @@
 {
-  "name": "evrythng",
-  "version": "4.1.0",
-  "main": "lib/evrythng.js",
-  "description": "Javascript SDK to communicate with EVRYTHNG REST API",
+  "name": "evrythng.js",
+  "version": "5.0.0",
+  "description": "Official Javascript SDK for the EVRYTHNG API.",
+  "main": "lib/evrythng.polyfill.js",
+  "jsnext:main": "lib/evrythng.es6.polyfill.js",
+  "scripts": {
+    "lint": "standard",
+    "build": "node build.js",
+    "prebuild": "npm run lint",
+    "test:unit": "karma start karma.config.unit.js",
+    "test:int:globals": "karma start karma.config.int.globals.js",
+    "test:int:amd": "karma start karma.config.int.amd.js",
+    "test:integration": "npm run test:int:globals && npm run test:int:amd",
+    "pretest:integration": "npm run build",
+    "test": "npm run test:unit && npm run test:integration",
+    "docker:build": "docker build -t evrythng.js .",
+    "docker:test": "docker run --security-opt seccomp:unconfined evrythng.js docker/test.sh"
+  },
   "repository": {
     "type": "git",
-    "url": "git://github.com/evrythng/evrythng.js.git"
+    "url": "git+https://github.com/evrythng/evrythng.js.git"
   },
   "keywords": [
     "evrythng",
-    "everything",
-    "thng",
     "evt",
     "iot",
-    "internet of things",
     "wot",
-    "web of things",
-    "thng-hub",
-    "hub",
-    "mqtt",
-    "thng-scan",
-    "scanthng"
+    "internet of things",
+    "web of things"
   ],
-  "licenses": [
-    {
-      "type": "Apache-2.0",
-      "url": "https://github.com/evrythng/evrythng.js/blob/master/LICENSE"
-    }
-  ],
-  "readmeFilename": "README.md",
-  "dependencies": {
-    "request": "^2.53.0"
+  "author": "EVRYTHNG Ltd.",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/evrythng/evrythng.js/issues"
   },
-  "ignore": [
-    "dist"
-  ]
+  "homepage": "https://github.com/evrythng/evrythng.js#readme",
+  "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "babel-plugin-external-helpers": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "buffer": "^5.0.2",
+    "chai": "^3.5.0",
+    "dirty-chai": "^1.2.2",
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-rollup": "^2.5.1",
+    "istanbul": "^0.4.5",
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.3.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-coverage": "^1.1.1",
+    "karma-dirty-chai": "^1.0.2",
+    "karma-jasmine": "^1.0.2",
+    "karma-junit-reporter": "^1.1.0",
+    "karma-mocha": "^1.3.0",
+    "karma-requirejs": "^1.1.0",
+    "karma-rollup-plugin": "^0.2.4",
+    "karma-sinon": "^1.0.5",
+    "lodash-es": "^4.17.2",
+    "requirejs": "^2.3.2",
+    "rollup": "^0.36.4",
+    "rollup-plugin-babel": "^2.6.1",
+    "rollup-plugin-commonjs": "^5.0.5",
+    "rollup-plugin-istanbul": "^1.1.0",
+    "rollup-plugin-json": "^2.0.2",
+    "rollup-plugin-node-resolve": "^2.0.0",
+    "rollup-plugin-uglify": "^1.0.1",
+    "sinon": "^1.17.6",
+    "standard": "^8.6.0",
+    "uglify-js": "mishoo/UglifyJS2#harmony"
+  },
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": [
+      "lib"
+    ],
+    "globals": [
+      "fetch"
+    ]
+  }
 }
