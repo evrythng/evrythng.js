@@ -1,13 +1,12 @@
-/* eslint-env mocha */
-import { expect } from '../setup'
+/* eslint-env jasmine */
 import * as evrythng from '../../src/evrythng'
 
 describe('EVT', () => {
   it('should contain version', () => {
-    expect(evrythng.version).to.exist()
+    expect(evrythng.version).toBeDefined()
   })
 
   it('should contain correct version', () => {
-    expect(evrythng.version).to.equal('5.0.0')
+    expect(evrythng.version).toBe('5.0.0')
   })
 })

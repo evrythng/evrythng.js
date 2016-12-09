@@ -3,7 +3,7 @@ const LIB = 'lib/evrythng.polyfill.js'
 
 module.exports = function (config) {
   config.set({
-    frameworks: ['mocha', 'dirty-chai'],
+    frameworks: ['jasmine'],
     files: [LIB, TESTS],
     reporters: ['dots'],
     browsers: ['Chrome'],

@@ -102,6 +102,7 @@ function build (configs) {
       bundle.write({
         banner,
         sourceMap: true,
+        exports: 'named',
         format: config.format,
         dest: config.dest,
         moduleName: config.moduleName,

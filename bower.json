@@ -1,0 +1,38 @@
+{
+  "name": "evrythng",
+  "version": "5.0.0",
+  "homepage": "https://github.com/evrythng/evrythng.js",
+  "authors": [
+    "EVRYTHNG Ltd. <support@evrythng.com>"
+  ],
+  "description": "Official Javascript SDK for the EVRYTHNG API.",
+  "main": "lib/evrythng.js",
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "evrythng",
+    "evt",
+    "iot",
+    "wot",
+    "internet of things",
+    "web of things"
+  ],
+  "license": "Apache-2.0",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "docker",
+    "Dockerfile",
+    "*.js"
+  ],
+  "dependencies": {
+    "fetch": "~2.0.1"
+  }
+}

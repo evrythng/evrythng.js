@@ -1,5 +1,4 @@
 const node = require('rollup-plugin-node-resolve')
-const cjs = require('rollup-plugin-commonjs')
 const istanbul = require('rollup-plugin-istanbul')
 
 const TESTS = 'test/unit/**/*.spec.js'
@@ -7,7 +6,7 @@ const EXTERNAL = ['test/**/*', 'node_modules/**/*']
 
 module.exports = function (config) {
   config.set({
-    frameworks: ['mocha', 'dirty-chai'],
+    frameworks: ['jasmine'],
     files: [TESTS],
     preprocessors: {
       [TESTS]: ['rollup']
@@ -15,13 +14,8 @@ module.exports = function (config) {
     rollupPreprocessor: {
       plugins: [
         istanbul({ exclude: EXTERNAL }),
-        node({
-          jsnext: true,
-          preferBuiltins: false // use provided 'buffer' in browser
-        }),
-        cjs()
+        node({ jsnext: true })
       ],
-      useStrict: false, // Chai doesn't use strict mode
       format: 'iife',
       sourceMap: 'inline'
     },
