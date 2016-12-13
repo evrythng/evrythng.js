@@ -4,6 +4,7 @@ const ENTRY = 'test/require-main.js'
 
 module.exports = function (config) {
   config.set({
+    basePath: '../',
     frameworks: ['jasmine', 'requirejs'],
     files: [
       ENTRY,

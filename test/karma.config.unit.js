@@ -7,6 +7,7 @@ const EXTERNAL = ['test/**/*', 'node_modules/**/*']
 
 module.exports = function (config) {
   config.set({
+    basePath: '../',
     frameworks: ['jasmine'],
     files: [TESTS],
     preprocessors: {

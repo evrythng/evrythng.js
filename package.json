@@ -8,14 +8,14 @@
     "lint": "standard",
     "build": "node build.js",
     "prebuild": "npm run lint",
-    "test:unit": "karma start karma.config.unit.js",
-    "test:int:globals": "karma start karma.config.int.globals.js",
-    "test:int:amd": "karma start karma.config.int.amd.js",
-    "test:int:cjs": "karma start karma.config.int.cjs.js",
+    "test:unit": "karma start test/karma.config.unit.js",
+    "test:int:globals": "karma start test/karma.config.int.globals.js",
+    "test:int:amd": "karma start test/karma.config.int.amd.js",
+    "test:int:cjs": "karma start test/karma.config.int.cjs.js",
     "test:int:browser": "npm run test:int:globals && npm run test:int:amd && npm run test:int:cjs",
-    "test:int:node": "jasmine JASMINE_CONFIG_PATH=jasmine.config.int.node.js",
+    "test:int:node": "jasmine JASMINE_CONFIG_PATH=test/jasmine.config.int.node.js",
     "test:int:umd": "npm run test:int:browser && npm run test:int:node",
-    "test:int:es6": "karma start karma.config.int.es6.js",
+    "test:int:es6": "karma start test/karma.config.int.es6.js",
     "test:integration": "npm run test:int:umd && npm run test:int:es6",
     "pretest:integration": "npm run build",
     "test": "npm run test:unit && npm run test:integration",
@@ -77,6 +77,14 @@
     ],
     "globals": [
       "fetch"
+    ]
+  },
+  "babel": {
+    "presets": [
+      ["es2015", { "modules": false }]
+    ],
+    "plugins": [
+      "external-helpers"
     ]
   }
 }
