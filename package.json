@@ -2,8 +2,8 @@
   "name": "evrythng",
   "version": "5.0.0",
   "description": "Official Javascript SDK for the EVRYTHNG API.",
-  "main": "lib/evrythng.polyfill.js",
-  "jsnext:main": "lib/evrythng.es6.polyfill.js",
+  "main": "dist/evrythng.polyfill.js",
+  "jsnext:main": "dist/evrythng.es6.polyfill.js",
   "scripts": {
     "lint": "standard",
     "build": "node build.js",
@@ -19,7 +19,7 @@
     "test:integration": "npm run test:int:umd && npm run test:int:es6",
     "pretest:integration": "npm run build",
     "test": "npm run test:unit && npm run test:integration",
-    "prepublish": "npm run test",
+    "prepublish": "npm run build",
     "docker:build": "docker build -t evrythng.js .",
     "docker:test": "docker run --security-opt seccomp:unconfined evrythng.js docker/test.sh"
   },
@@ -35,12 +35,15 @@
     "internet of things",
     "web of things"
   ],
-  "author": "EVRYTHNG Ltd.",
+  "author": "EVRYTHNG Ltd. <support@evrythng.com>",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/evrythng/evrythng.js/issues"
   },
   "homepage": "https://github.com/evrythng/evrythng.js#readme",
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1"
+  },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "babel-plugin-external-helpers": "^6.18.0",
@@ -66,9 +69,6 @@
     "rollup-plugin-uglify": "^1.0.1",
     "standard": "^8.6.0",
     "uglify-js": "mishoo/UglifyJS2#harmony"
-  },
-  "dependencies": {
-    "isomorphic-fetch": "^2.2.1"
   },
   "standard": {
     "parser": "babel-eslint",

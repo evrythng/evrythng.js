@@ -1,5 +1,6 @@
 const node = require('rollup-plugin-node-resolve')
 const istanbul = require('rollup-plugin-istanbul')
+const cjs = require('rollup-plugin-commonjs')
 
 const TESTS = 'test/unit/**/*.spec.js'
 const EXTERNAL = ['test/**/*', 'node_modules/**/*']
@@ -14,8 +15,10 @@ module.exports = function (config) {
     rollupPreprocessor: {
       plugins: [
         istanbul({ exclude: EXTERNAL }),
-        node({ jsnext: true })
+        node({ jsnext: true, browser: true }),
+        cjs()
       ],
+      context: 'window',
       format: 'iife',
       sourceMap: 'inline'
     },

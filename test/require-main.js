@@ -9,16 +9,13 @@ for (let file in window.__karma__.files) {
 
 require.config({
   // Karma serves files under /base, which is the basePath from your config file
-  baseUrl: '/base/lib',
+  baseUrl: '/base/dist',
 
   deps: tests,
 
   paths: {
     evrythng: 'evrythng.polyfill',
-    'isomorphic-fetch': '../node_modules/whatwg-fetch/fetch',
-    setup: '../test/setup',
-    chai: '../node_modules/chai/chai',
-    'dirty-chai': '../node_modules/dirty-chai/lib/dirty-chai'
+    'isomorphic-fetch': '../node_modules/whatwg-fetch/fetch'
   },
 
   // we have to kickoff jasmine, as it is asynchronous

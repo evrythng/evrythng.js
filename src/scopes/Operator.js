@@ -1,4 +1,4 @@
-import { Scope } from './Scope'
+import Scope from './Scope'
 import api from '../api'
 
 /**

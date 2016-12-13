@@ -1,5 +1,5 @@
 const TESTS = 'test/integration/umd.spec.js'
-const LIB = 'lib/evrythng.polyfill.js'
+const LIB = 'dist/evrythng.polyfill.js'
 const ENTRY = 'test/require-main.js'
 
 module.exports = function (config) {

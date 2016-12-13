@@ -2,6 +2,7 @@ const rollup = require('rollup')
 const uglify = require('rollup-plugin-uglify')
 const { minify } = require('uglify-js')
 const pkg = require('./package.json')
+const config = require('./evrythng.config')
 
 /**
  * Mandatory banner for all files published to CDN
@@ -9,26 +10,26 @@ const pkg = require('./package.json')
  */
 const currentYear = (new Date()).getFullYear()
 const banner = `/**
- * EVRYTHNG JS SDK v${pkg.version}
+ * ${pkg.name.toUpperCase()}.JS v${pkg.version}
  * (c) 2012-${currentYear} EVRYTHNG Ltd. London / New York / San Francisco.
  * Released under the Apache Software License, Version 2.0.
  * For all details and usage:
- * https://github.com/evrythng/evrythng.js
+ * https://github.com/evrythng/evrythng-pubsub.js
  */
 `
 
 /**
- * For each base config we'll also add a bundle with the Fetch
- * polyfill dependency and a minified version for all targets:
+ * For each base config we'll also add a bundle with any polyfill
+ * dependency and a minified version for all targets:
  *
  * - ES6 + ES Modules
  * - ES6 + ES Modules (minified)
- * - ES6 + ES Modules + Fetch Polyfill
- * - ES6 + ES Modules + Fetch Polyfill (minified)
+ * - ES6 + ES Modules + Polyfills
+ * - ES6 + ES Modules + Polyfills (minified)
  * - ES5 + UMD
  * - ES5 + UMD (minified)
- * - ES5 + UMD + Fetch Polyfill
- * - ES5 + UMD + Fetch Polyfill (minified)
+ * - ES5 + UMD + Polyfills
+ * - ES5 + UMD + Polyfills (minified)
  */
 const configs = getTargetConfigs([
   require('./rollup.config.es6'),
@@ -42,9 +43,11 @@ build(configs)
  * @param targets {Object[]} Base target configurations
  */
 function getTargetConfigs (targets) {
-  const polyfills = targets.map(getPolyfillConfig)
-  const uglifys = targets.concat(polyfills).map(getUglifyConfig)
-  return targets.concat(polyfills, uglifys)
+  const baseTargets = config.polyfill
+    ? targets.concat(targets.map(getPolyfillConfig))
+    : targets
+  const uglifys = baseTargets.map(getUglifyConfig)
+  return baseTargets.concat(uglifys)
 }
 
 /**
@@ -57,13 +60,11 @@ function getPolyfillConfig (target) {
   let polyfill = Object.assign({}, target, {
     entry: addExtension(target.entry, 'polyfill'),
     dest: addExtension(target.dest, 'polyfill'),
-    external: 'isomorphic-fetch'
+    external: config.polyfill.external
   })
 
   if (target.format === 'umd') {
-    polyfill.globals = {
-      'isomorphic-fetch': 'fetch'
-    }
+    polyfill.globals = config.polyfill.globals
   }
 
   return polyfill
@@ -102,7 +103,6 @@ function build (configs) {
       bundle.write({
         banner,
         sourceMap: true,
-        exports: 'named',
         format: config.format,
         dest: config.dest,
         moduleName: config.moduleName,

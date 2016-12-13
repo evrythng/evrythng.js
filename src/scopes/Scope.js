@@ -9,7 +9,7 @@ import api from '../api'
  * @export
  * @class Scope
  */
-export class Scope {
+export default class Scope {
   /**
    * Creates an instance of Scope.
    *
