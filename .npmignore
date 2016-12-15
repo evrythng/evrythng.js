@@ -1,0 +1,10 @@
+# Update .gitignore whenever you update this file!
+
+npm-debug.log
+node_modules
+bower_components
+dist
+report
+.idea
+docker
+Dockerfile
