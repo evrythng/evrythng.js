@@ -4,8 +4,6 @@ ENV NODE_ENV development
 
 WORKDIR /srv
 
-ADD package.json .
+ADD . .
 RUN npm install
 RUN npm run build
-
-ADD . .
