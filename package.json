@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-evrythng-tasks": "0.0.2",
+    "gulp-evrythng-tasks": "^0.0.2",
     "lodash-es": "^4.17.2"
   },
   "standard": {
