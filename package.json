@@ -4,7 +4,6 @@
   "description": "Official Javascript SDK for the EVRYTHNG API.",
   "main": "dist/evrythng.polyfill.js",
   "jsnext:main": "dist/evrythng.es6.polyfill.js",
-  "browser": "dist/evrythng.js",
   "scripts": {
     "lint": "gulp lint",
     "build": "gulp build",
@@ -36,7 +35,7 @@
   },
   "devDependencies": {
     "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-evrythng-tasks": "^0.0.2",
+    "gulp-evrythng-tasks": "^0.0.3",
     "lodash-es": "^4.17.2"
   },
   "standard": {

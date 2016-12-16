@@ -1,4 +1,5 @@
 const dependencies = {
+  'evrythng': 'evrythng.polyfill',
   'isomorphic-fetch': '../node_modules/whatwg-fetch/fetch'
 }
 
