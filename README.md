@@ -6,11 +6,11 @@ fluent API. It helps EVRYTHNG Application developers to build client apps faster
 **evrythng.js** can be used both in Web applications (Browser) and embedded/server applications using Node.js. The
 difference being the transport layer - Browser's XHR vs Node's HTTP.
 
-> **evrythng.js** is intended to be used with EVRYTHNG [Applications](https://dashboard.evrythng.com/developers/apidoc/apps)
-and corresponding [Application Users](https://dashboard.evrythng.com/developers/apidoc/appusers) or with 
-[Devices](https://dashboard.evrythng.com/developers/apidoc/thngs#thngs-devices). 
+> **evrythng.js** is intended to be used with EVRYTHNG [Applications](https://developers.evrythng.com/reference#applications-1)
+and corresponding [Application Users](https://developers.evrythng.com/reference#application-users-1) or with 
+[Devices](https://developers.evrythng.com/reference#section-thngs-as-devices). 
 Be sure to only include your EVRYTHNG **Application API key** and **not** your Operator, User or Device key in any 
-public source code (read more about [Scope Permissions](https://dashboard.evrythng.com/developers/apidoc/scopes#permissions)).
+public source code (read more about [Scope Permissions](https://developers.evrythng.com/docs/scope-api-and-permissions)).
 
 > See [Related Tools](#related-tools) below for other usages.
 
@@ -34,7 +34,7 @@ See [Usage](#usage) below for more details.
 
 Add the script tag into your HTML page:
 
-    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-4.1.0.min.js"></script>
+    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-4.2.0.min.js"></script>
  
 Or always get the last release:
 
@@ -43,7 +43,7 @@ Or always get the last release:
     
 For HTTPS you need to use:
 
-    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-4.1.0.min.js"></script>
+    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-4.2.0.min.js"></script>
     <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng.js"></script>
     <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng.min.js"></script>
     
@@ -79,6 +79,19 @@ var EVT = require('evrythng');
 
 var app = new EVT.App(APP_API_KEY);
 ...
+```
+
+**Note**: It may be required to call `$init()` and use the returned promise to
+utilize the newly created scope straight away. This applies to all scopes
+(including `EVT.Operator`, `EVT.TrustedApp`, `EVT.User`, and `EVT.Device`), and
+should be used in the following manner:
+
+```javascript
+var app = new EVT.App(APP_API_KEY);
+
+app.$init.then(app => {
+  // The scope is now ready for use.
+});
 ```
 
 #### Globals
@@ -336,7 +349,7 @@ var anonymousUser = new EVT.User({
 }, app);
 ```
 
-#### As a [Device](https://dashboard.evrythng.com/developers/apidoc/thngs#thngs-devices)
+#### As a [Device](https://developers.evrythng.com/reference#section-thngs-as-devices)
 
 Create a `Device` scope to manage a Thng and allow it to update itself: 
 
@@ -455,7 +468,7 @@ EVT.Utils.spawn(apiCalls());
 
 ## Documentation
 
-The [EVRYTHNG API](https://dashboard.evrythng.com/developers/apidoc) has *evrythng.js* examples whenever applicable.
+The [EVRYTHNG API](https://developers.evrythng.com/docs/api-overview) has *evrythng.js* examples whenever applicable.
 If you'd like to see what's going on under the hood, check out the [Annotated Source](http://evrythng.github.io/evrythng-source.js/src/evrythng.html).
 
 ## Source Maps

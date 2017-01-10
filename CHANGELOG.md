@@ -1,3 +1,9 @@
+# v4.2.0 (10-01-2017)
+
+## Features
+
+- **Scopes**: Read data from any scope on creation via `$init`.
+
 # v4.1.0 (12-10-2016)
 
 ## Features
