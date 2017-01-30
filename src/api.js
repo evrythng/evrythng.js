@@ -29,9 +29,11 @@ export default function api (customOptions = {}, callback) {
 }
 
 /**
+ * Merge base options, global settings, one-off request options and nested
+ * headers object. Use apiKey option if headers.authorization is not provided.
  *
- * @param customOptions
- * @returns {*}
+ * @param {Settings} customOptions - User options
+ * @returns {Settings} - Merged options for fetch
  */
 function mergeInitialOptions (customOptions) {
   const options = Object.assign(
@@ -50,9 +52,10 @@ function mergeInitialOptions (customOptions) {
 }
 
 /**
+ * Apply request inteceptors functions in sequence, chaining each promise.
  *
- * @param options
- * @returns {Promise.<TResult>}
+ * @param {Settings} options - Request options
+ * @returns {Promise} - Promise to updated request options
  */
 function applyRequestInterceptors (options) {
   // Use closure to keep track if request as been cancelled in interceptors
@@ -88,16 +91,19 @@ function applyRequestInterceptors (options) {
 }
 
 /**
+ * Make the actual fetch request using the Fetch API (browser and Node.js).
+ * Mimic timeout with Promise.race, rejecting request if timeout happens before
+ * response arrives.
+ * Note: timeout should be added to fetch spec:
+ * https://github.com/whatwg/fetch/issues/20
  *
- * @param options
+ * @param {Settings} options - Request options
  */
 function makeFetch (options) {
   const req = fetch(buildUrl(options), options)
   if (!options.timeout) {
     return req
   } else {
-    // Use Promise.race for timeout for now until it's added to fetch spec
-    // https://github.com/whatwg/fetch/issues/20
     return Promise.race([
       req,
       new Promise(function (resolve, reject) {
@@ -108,9 +114,13 @@ function makeFetch (options) {
 }
 
 /**
+ * Return initial response data depending on the options.fullResponse value.
+ * Always resolve request on HTTP success code, reject otherwise. Return the
+ * entire Response object in case of fullResponse option, default to JSON
+ * parsing otherwise.
  *
- * @param options
- * @returns {*}
+ * @param {Settings} options - Request options
+ * @returns {Promise} - Promise to {Response} or {Object}
  */
 function handleResponse (options) {
   return response => {
@@ -129,9 +139,13 @@ function handleResponse (options) {
 }
 
 /**
+ * Apply response interceptors functions. When using fullResponse, response is
+ * a Response object with a ReadableStream. Until transform streams arrive in
+ * browser, there's no way to elegantly transform a response body, other than
+ * monkey-patching .json method.
  *
- * @param options
- * @returns {function(*=)}
+ * @param {Settings} options - Request options
+ * @returns {function} - Response handler function
  */
 function applyResponseInterceptors (options) {
   return response => {
@@ -151,9 +165,10 @@ function applyResponseInterceptors (options) {
 }
 
 /**
+ * Apply error-first callback if available.
  *
- * @param callback
- * @returns {function(*=)}
+ * @param {function} callback - Error-first callback
+ * @returns {function} - Response handler function
  */
 function success (callback) {
   return response => {
@@ -163,9 +178,10 @@ function success (callback) {
 }
 
 /**
+ * Apply error-first callback with error if available.
  *
- * @param callback
- * @returns {function(*=)}
+ * @param {function} callback - Error-first callback
+ * @returns {function} - Response handler function
  */
 function failure (callback) {
   return err => {
