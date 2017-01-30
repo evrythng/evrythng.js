@@ -8,7 +8,7 @@ import buildParams from './buildParams'
  * @returns {string}
  */
 export default function buildUrl (options) {
-  let url = options.apiUrl + options.url || ''
+  let url = `${options.apiUrl}${options.url}`
 
   if (options.params) {
     url += (url.includes('?') ? '?' : '&') + buildParams(options.params)

@@ -1,4 +1,4 @@
-import isObject from 'lodash-es/isObject'
+import isPlainObject from 'lodash-es/isPlainObject'
 
 const SPECIALS = ['&', '|', '!', '>', '<', '=', '~', '(', ')', ',']
 const SPECIALS_REGEXP = new RegExp(`[${SPECIALS.join('\\')}]`, 'g')
@@ -38,7 +38,7 @@ function buildParam (params, useEncoding) {
   const encode = uriEncoder(useEncoding)
   return (accumulator, key) => {
     const value = params[key]
-    const v = isObject(value) ? buildParams(value) : value
+    const v = isPlainObject(value) ? buildParams(value) : value
     accumulator.push(`${encode(key)}=${encode(v)}`)
     return accumulator
   }
@@ -53,7 +53,7 @@ function buildParam (params, useEncoding) {
  * @returns {string}
  */
 export default function buildParams (params = {}, useEncoding = true) {
-  return isObject(params)
+  return isPlainObject(params)
     ? Object.keys(params).reduce(buildParam(params, useEncoding), []).join('&')
     : params
 }

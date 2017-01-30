@@ -5,5 +5,3 @@ node_modules
 bower_components
 report
 .idea
-docker
-Dockerfile

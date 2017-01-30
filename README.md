@@ -23,15 +23,13 @@ EVT.api({
 
 ### Browser
 
-To use immutable from a browser, download `dist/evrythng.min.js` or use a CDN such as CDNJS or jsDelivr.
+To use evrythng from a browser, download `dist/evrythng.min.js` or use a CDN such as CDNJS or jsDelivr.
 
 Then, add it as a script tag to your page:
 
 ```html
 <script src="evrythng.min.js"></script>
 <script>
-    const EVT = require('evrythng')
-
     EVT.api({
       url: '/thngs'
       method: 'get'
@@ -43,8 +41,6 @@ Or use an AMD loader (such as RequireJS):
 
 ```javascript
 require(['./evrythng.min.js'], EVT => {
-    const EVT = require('evrythng')
-
     EVT.api({
       url: '/thngs'
       method: 'get'

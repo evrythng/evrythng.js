@@ -1,4 +1,4 @@
-import Scope from './scopes/Scope'
+import Scope from './scope/Scope'
 import isString from 'lodash-es/isString'
 import isFunction from 'lodash-es/isFunction'
 

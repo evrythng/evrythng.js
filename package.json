@@ -8,9 +8,7 @@
     "lint": "gulp lint",
     "build": "gulp build",
     "test": "gulp test",
-    "prepublish": "npm run build",
-    "docker:build": "docker build -t evrythng.js .",
-    "docker:test": "docker run --security-opt seccomp:unconfined evrythng.js docker/test.sh"
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -34,11 +32,12 @@
     "isomorphic-fetch": "^2.2.1"
   },
   "devDependencies": {
+    "fetch-mock": "^5.8.1",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-evrythng-tasks": "^0.0.3",
     "lodash-es": "^4.17.2"
   },
   "standard": {
-    "globals": "fetch"
+    "globals": ["fetch", "Response", "FormData"]
   }
 }
