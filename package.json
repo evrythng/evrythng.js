@@ -38,6 +38,10 @@
     "lodash-es": "^4.17.2"
   },
   "standard": {
-    "globals": ["fetch", "Response", "FormData"]
+    "globals": [
+      "fetch",
+      "Response",
+      "FormData"
+    ]
   }
 }

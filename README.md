@@ -1,4 +1,4 @@
-# evrythng.js [![Build Status](https://travis-ci.org/evrythng/evrythng.js.svg?branch=master)](https://travis-ci.org/evrythng/evrythng.js)
+# evrythng.js [![Build Status](https://travis-ci.org/evrythng/evrythng.js.svg?branch=master)](https://travis-ci.org/evrythng/evrythng.js) [![Coverage Status](https://coveralls.io/repos/github/evrythng/evrythng.js/badge.svg)](https://coveralls.io/github/evrythng/evrythng.js)
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com)
 
