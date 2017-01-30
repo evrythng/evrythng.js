@@ -1,3 +1,9 @@
+# v4.3.0 (30-01-2017)
+
+## Features
+
+- **Files**: CRD access in the Operator scope.
+
 # v4.2.0 (10-01-2017)
 
 ## Features
