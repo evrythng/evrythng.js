@@ -8,7 +8,9 @@ export { default as api } from './api'
 // TODO add method to install plugins
 
 // Modules
-export { default as Resource } from './Resource'
+export { default as Resource } from './resource/Resource'
+export { default as Entity } from './entity/Entity'
+export { default as Scope } from './scope/Scope'
 
 // Scopes
 export { default as Operator } from './scope/Operator'

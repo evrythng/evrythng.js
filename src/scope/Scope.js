@@ -14,11 +14,11 @@ export default class Scope {
    * Creates an instance of Scope.
    *
    * @param {string} apiKey API Key of scope
-   * @param {Object} [data={}] Optional scope data
+   * @param {Object} [body={}] Optional scope data
    *
    * @memberOf Scope
    */
-  constructor (apiKey, data = {}) {
+  constructor (apiKey, body = {}) {
     if (!isString(apiKey)) {
       throw new Error('Scope constructor should be called with an API Key')
     }
@@ -30,6 +30,6 @@ export default class Scope {
     })
 
     // Extend scope with any given details.
-    Object.assign(this, data)
+    Object.assign(this, body)
   }
 }
