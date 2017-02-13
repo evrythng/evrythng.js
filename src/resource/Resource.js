@@ -3,7 +3,7 @@ import isFunction from 'lodash-es/isFunction'
 import isArray from 'lodash-es/isArray'
 import Scope from '../scope/Scope'
 import Entity from '../entity/Entity'
-import api from '../api'
+import api, { success, failure } from '../api'
 
 /**
  * A Resource is the base class that implements the CRUD methods behavior.
@@ -44,7 +44,7 @@ export default class Resource {
 
     // Setup entity for serializing and deserializing results. It must
     // implement *toJSON()* method, as defined in the Entity base class.
-    if (entity instanceof Entity) {
+    if (entity && (entity === Entity || entity.prototype instanceof Entity)) {
       this.entity = entity
     }
   }
@@ -74,12 +74,14 @@ export default class Resource {
   deserialize (response) {
     if (response && this.entity) {
       if (isArray(response)) {
-        return response.map(this.deserialize)
+        return response.map(this.deserialize.bind(this))
       }
 
       if (response.body) {
-        // Full response, return promise with deserialized JSON body.
-        response.json = Promise.resolve(response.json()).then(this.deserialize)
+        // Full response, add deserialize method to deserialize the Response's
+        // json body
+        response.deserialize = () => response.json()
+          .then(this.deserialize.bind(this))
       } else {
         // JSON response, base case.
         // Create new entity with updated resource derived from current.
@@ -92,7 +94,7 @@ export default class Resource {
 
         const newResource = new Resource(this.scope, newPath, this.entity)
         const EntityClass = this.entity
-        return new EntityClass(response, newResource)
+        return new EntityClass(newResource, response)
       }
     }
 
@@ -112,7 +114,7 @@ export default class Resource {
       throw new TypeError('Create method must have payload.')
     }
 
-    return this._request({ method: 'post' }, options, callback)
+    return this._request({ body, method: 'post' }, options, callback)
   }
 
   /**
@@ -139,7 +141,7 @@ export default class Resource {
       throw new TypeError('Update method must have payload.')
     }
 
-    return this._request({ method: 'put' }, options, callback)
+    return this._request({ body, method: 'put' }, options, callback)
   }
 
   /**
@@ -169,7 +171,7 @@ export default class Resource {
    * @returns {Promise.<Object|Entity|Response>}
    * @private
    */
-  _request (requestOptions, userOptions, callback) {
+  _request (requestOptions, userOptions = {}, callback) {
     if (isFunction(userOptions)) {
       callback = userOptions
     }
@@ -189,6 +191,10 @@ export default class Resource {
       options.body = this.serialize(options.body)
     }
 
-    return api(options, callback).then(this.deserialize)
+    // Execute callback after deserialization.
+    return api(options)
+      .then(this.deserialize.bind(this))
+      .then(success(callback))
+      .catch(failure(callback))
   }
 }

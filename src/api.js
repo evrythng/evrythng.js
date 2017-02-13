@@ -170,7 +170,7 @@ function applyResponseInterceptors (options) {
  * @param {function} callback - Error-first callback
  * @returns {function} - Response handler function
  */
-function success (callback) {
+export function success (callback) {
   return response => {
     if (callback) callback(null, response)
     return response
@@ -183,7 +183,7 @@ function success (callback) {
  * @param {function} callback - Error-first callback
  * @returns {function} - Response handler function
  */
-function failure (callback) {
+export function failure (callback) {
   return err => {
     if (callback) callback(err)
     throw err
