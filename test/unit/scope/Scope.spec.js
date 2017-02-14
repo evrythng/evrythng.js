@@ -4,8 +4,11 @@ import apiUrl from '../../helpers/apiUrl'
 import Scope from '../../../src/scope/Scope'
 
 const apiKey = 'apiKey'
-const operator = {
-  id: 'operatorId'
+const apiResponse = {
+  apiKey,
+  actor: {
+    id: 'operatorId'
+  }
 }
 
 describe('Scope', () => {
@@ -29,7 +32,7 @@ describe('Scope', () => {
         email: 'test@example.com'
       }
 
-      beforeAll(() => fetchMock.mock(apiUrl('/access'), operator))
+      beforeAll(() => fetchMock.mock(apiUrl('/access'), apiResponse))
       afterAll(fetchMock.restore)
 
       beforeEach(() => {

@@ -25,7 +25,7 @@ export default class Operator extends OperatorAccess(Scope) {
       .then(access => {
         this.id = access.actor.id
       })
-      .then(this.read)
+      .then(this.read.bind(this))
       .catch(() => {
         throw new Error('There is no operator with this API Key')
       })
@@ -40,11 +40,11 @@ export default class Operator extends OperatorAccess(Scope) {
   read (options = {}) {
     const opts = Object.assign(options, {
       method: 'get',
-      url: '/operators',
+      url: `/operators/${this.id}`,
       authorization: this.apiKey
     })
 
-    return api(opts).then(this._extend)
+    return api(opts).then(this._extend.bind(this))
   }
 
   /**
@@ -62,7 +62,7 @@ export default class Operator extends OperatorAccess(Scope) {
       data: data
     })
 
-    return api(opts).then(this._extend)
+    return api(opts).then(this._extend.bind(this))
   }
 
   // Private
