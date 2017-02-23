@@ -1,7 +1,7 @@
 import isArray from 'lodash-es/isArray'
 import isFunction from 'lodash-es/isFunction'
 import settings from './settings'
-import { buildUrl } from './util'
+import buildUrl from './util/buildUrl'
 
 /**
  * Make API request to provided API Url. Custom user options are merged with

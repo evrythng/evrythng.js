@@ -197,4 +197,34 @@ export default class Resource {
       .then(success(callback))
       .catch(failure(callback))
   }
+
+  /**
+   * Returns a resource factory function for the given entity type.
+   *
+   * @param {Entity} entity - Entity sub-class
+   * @param {string} path - Path for new resource
+   * @return {Function} - Resource factory function
+   */
+  static factoryFor (entity, path = '') {
+    if (!entity) {
+      throw new Error('Entity is necessary for resource factory.')
+    }
+
+    // No "this" binding with arrow function! This needs to run in the context
+    // where it is mixed in / attached.
+    return function (id) {
+      if (id) {
+        if (!isString(id)) {
+          throw new TypeError('ID must be a string.')
+        }
+        path += `/${encodeURIComponent(id)}`
+      }
+
+      // Context can be a Scope (e.g. operator.action())
+      // or an Entity (e.g. thng.action())
+      const scope = this instanceof Scope ? this : this.resource.scope
+
+      return new Resource(scope, path, entity)
+    }
+  }
 }

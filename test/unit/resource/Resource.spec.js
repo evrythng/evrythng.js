@@ -248,4 +248,60 @@ describe('Resource', () => {
       })
     })
   })
+
+  describe('factoryFor', () => {
+    it('should require entity', () => {
+      const emptyFactory = () => Resource.factoryFor()
+      expect(emptyFactory).toThrow()
+    })
+
+    describe('valid', () => {
+      const resPath = '/foobar'
+      const factory = Resource.factoryFor(Entity, resPath)
+
+      const extendedScope = new Scope(apiKey)
+      extendedScope.foobar = factory
+
+      const extendedEntity = new Entity(new Resource(scope, path, Entity))
+      extendedEntity.foobar = factory
+
+      it('should return a factory function', () => {
+        expect(factory).toEqual(jasmine.any(Function))
+      })
+
+      it('should create a resource for Entity', () => {
+        expect(extendedScope.foobar() instanceof Resource).toBe(true)
+      })
+
+      it('should have scope of creator', () => {
+        const res = extendedScope.foobar()
+        expect(res.scope).toEqual(extendedScope)
+      })
+
+      it('should have provided path', () => {
+        const res = extendedScope.foobar()
+        expect(res.path).toEqual(resPath)
+      })
+
+      it('should have entity class defined', () => {
+        const res = extendedScope.foobar()
+        expect(res.entity).toEqual(Entity)
+      })
+
+      it('should allow to be attached on entities', () => {
+        expect(extendedEntity.foobar() instanceof Resource).toBe(true)
+      })
+
+      it('should not allow non-string arguments', () => {
+        const nonStringId = () => extendedScope.foobar({})
+        expect(nonStringId).toThrow()
+      })
+
+      it('should add ID to path', () => {
+        const id = 'id'
+        const res = extendedScope.foobar(id)
+        expect(res.path).toEqual(`${resPath}/${id}`)
+      })
+    })
+  })
 })
