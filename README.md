@@ -3,7 +3,7 @@
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com)
 
 ## TODO
-[ ] - Unit tests for Property
+[x] - Unit tests for Property
 [ ] - Unit tests for Product resources
 
 ## Getting started

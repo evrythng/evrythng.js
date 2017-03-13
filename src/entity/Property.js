@@ -7,7 +7,7 @@ const path = '/properties'
 
 /**
  * Represents a Property entity. Properties are always nested and require
- * to be constructed on Resource objects (not top level Scopes).
+ * to be constructed on Resource/Entity objects (not top level Scopes).
  *
  * @export
  * @class Property
@@ -16,15 +16,17 @@ export default class Property extends Entity {
   static resourceFactory () {
     return {
       property (property) {
-        if (!this.resource) {
-          throw new Error('This entity does not have a Resource.')
+        if (this.apiKey) {
+          throw new Error('Property is not a top-level resource.')
         }
 
-        let resourcePath = `${this.resource.path}${path}`
+        // Allowed on both Entities and Resources.
+        const parent = this.resource ? this.resource : this
+        let newPath = `${parent.path}${path}`
 
         if (property) {
           if (isString(property)) {
-            resourcePath += `/${encodeURIComponent(property)}`
+            newPath += `/${encodeURIComponent(property)}`
           } else {
             throw new TypeError('Property must be a key/name string.')
           }
@@ -34,13 +36,15 @@ export default class Property extends Entity {
         // Override property resource create/update to allow custom value
         // params. See `normalizeArguments()`.
         return Object.assign(
-          new Resource(this.resource.scope, resourcePath, Property),
+          new Resource(parent.scope, newPath, Property),
           {
             create (...args) {
-              return this.create(...normalizeArguments(args))
+              return Resource.prototype.create
+                .call(this, ...normalizeArguments(...args))
             },
             update (...args) {
-              return this.update(...normalizeArguments(args))
+              return Resource.prototype.update
+                .call(this, ...normalizeArguments(...args))
             }
           }
         )
@@ -80,10 +84,10 @@ function normalizeArguments (data, ...rest) {
       data = [data]
     } else {
       // Update multiple properties creating an object for each key-value pair.
-      data = Object.entries(data).map((acc, val) => ({
+      data = Object.entries(data).map(val => ({
         key: val[0],
         value: val[1]
-      }), [])
+      }))
     }
   }
 
