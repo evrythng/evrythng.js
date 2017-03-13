@@ -5,7 +5,8 @@ import Entity from '../../../src/entity/Entity'
 import Property from '../../../src/entity/Property'
 
 const path = '/foobar'
-const scope = new Scope('apiKey')
+const apiKey = 'apiKey'
+const scope = new Scope(apiKey)
 const resource = new Resource(scope, path, Entity)
 const entity = new Entity(resource)
 const propertiesPath = '/properties'
@@ -15,17 +16,26 @@ let mixin
 describe('Property', () => {
   describe('resourceFactory', () => {
     it('should only be allowed as a nested resource', () => {
-      const scopeMixin = Object.assign({}, scope, Property.resourceFactory())
+      const scopeMixin = Object.assign(
+        new Scope(apiKey),
+        Property.resourceFactory()
+      )
       const wrongBase = () => scopeMixin.property()
       expect(wrongBase).toThrow()
       delete scope.property
 
-      const resourceMixin = Object.assign({}, resource, Property.resourceFactory())
+      const resourceMixin = Object.assign(
+        new Resource(scope, path, Entity),
+        Property.resourceFactory()
+      )
       const resourceProperty = () => resourceMixin.property()
       expect(resourceProperty).not.toThrow()
       delete resource.property
 
-      const entityMixin = Object.assign({}, entity, Property.resourceFactory())
+      const entityMixin = Object.assign(
+        new Entity(resource),
+        Property.resourceFactory()
+      )
       const entityProperty = () => entityMixin.property()
       expect(entityProperty).not.toThrow()
       delete entity.property
@@ -33,7 +43,10 @@ describe('Property', () => {
 
     describe('valid', () => {
       beforeEach(() => {
-        mixin = Object.assign({}, resource, Property.resourceFactory())
+        mixin = Object.assign(
+          new Resource(scope, path, Entity),
+          Property.resourceFactory()
+        )
       })
 
       it('should throw if property is not a string', () => {

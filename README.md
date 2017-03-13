@@ -4,7 +4,7 @@
 
 ## TODO
 [x] - Unit tests for Property
-[ ] - Unit tests for Product resources
+[x] - Unit tests for Product resources
 
 ## Getting started
 

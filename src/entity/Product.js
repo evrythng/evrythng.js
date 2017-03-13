@@ -18,7 +18,7 @@ const ProductResources = mixinResources([
 export default class Product extends ProductResources(Entity) {
   static resourceFactory () {
     return {
-      product: Resource.factoryFor(Product, path)
+      product: Resource.factoryFor(Product, path, ProductResources)
     }
   }
 }

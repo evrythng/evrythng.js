@@ -1,5 +1,6 @@
 import Entity from './Entity'
 import Resource from '../resource/Resource'
+import Scope from '../scope/Scope'
 import isString from 'lodash-es/isString'
 import isPlainObject from 'lodash-es/isPlainObject'
 
@@ -16,27 +17,16 @@ export default class Property extends Entity {
   static resourceFactory () {
     return {
       property (property) {
-        if (this.apiKey) {
+        // Only allowed on Entities and Resources.
+        if (this instanceof Scope) {
           throw new Error('Property is not a top-level resource.')
-        }
-
-        // Allowed on both Entities and Resources.
-        const parent = this.resource ? this.resource : this
-        let newPath = `${parent.path}${path}`
-
-        if (property) {
-          if (isString(property)) {
-            newPath += `/${encodeURIComponent(property)}`
-          } else {
-            throw new TypeError('Property must be a key/name string.')
-          }
         }
 
         // Creates and returns Resource of type Property.
         // Override property resource create/update to allow custom value
         // params. See `normalizeArguments()`.
         return Object.assign(
-          new Resource(parent.scope, newPath, Property),
+          Resource.factoryFor(Property, path).call(this, property),
           {
             create (...args) {
               return Resource.prototype.create

@@ -265,6 +265,9 @@ describe('Resource', () => {
       const extendedEntity = new Entity(new Resource(scope, path, Entity))
       extendedEntity.foobar = factory
 
+      const extendedResource = new Resource(scope, path, Entity)
+      extendedResource.foobar = factory
+
       it('should return a factory function', () => {
         expect(factory).toEqual(jasmine.any(Function))
       })
@@ -292,6 +295,10 @@ describe('Resource', () => {
         expect(extendedEntity.foobar() instanceof Resource).toBe(true)
       })
 
+      it('should allow to be attached on resources', () => {
+        expect(extendedResource.foobar() instanceof Resource).toBe(true)
+      })
+
       it('should not allow non-string arguments', () => {
         const nonStringId = () => extendedScope.foobar({})
         expect(nonStringId).toThrow()
@@ -301,6 +308,16 @@ describe('Resource', () => {
         const id = 'id'
         const res = extendedScope.foobar(id)
         expect(res.path).toEqual(`${resPath}/${id}`)
+      })
+
+      it('should allow extending the Resource with a Mixin', () => {
+        const Mixin = C => class extends C {
+          mixedIn () {}
+        }
+        const factory = Resource.factoryFor(Entity, resPath, Mixin)
+        const extendedScope = new Scope(apiKey)
+        extendedScope.foobar = factory
+        expect(extendedScope.foobar().mixedIn).toBeDefined()
       })
     })
   })
