@@ -34,12 +34,12 @@ See [Usage](#usage) below for more details.
 
 Add the script tag into your HTML page:
 
-    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng-4.3.0.min.js"></script>
+    <script src="//cdn.evrythng.com/toolkit/evrythng-js-sdk/evrythng-4.3.0.min.js"></script>
  
 Or always get the latest release (warning, new releases might break your code!):
 
-    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng.js"></script>
-    <script src="//cdn.evrythng.net/toolkit/evrythng-js-sdk/evrythng.min.js"></script>
+    <script src="//cdn.evrythng.com/toolkit/evrythng-js-sdk/evrythng.js"></script>
+    <script src="//cdn.evrythng.com/toolkit/evrythng-js-sdk/evrythng.min.js"></script>
     
 For HTTPS you need to use:
 
