@@ -6,6 +6,7 @@
 * [x] - Unit tests for Property
 * [x] - Unit tests for Product resources
 * [x] - Add Action entity
+* [ ] - Solve Collection circular reference problem
 * [ ] - Unit tests for Action
 * [ ] - Add Geolocation utils
 * [ ] - Unit tests for Thng resources

@@ -7,7 +7,7 @@ import { mixinResources } from '../util/mixin'
 const path = '/collections'
 const CollectionResources = mixinResources([
   Thng,
-  Collection,
+  // Collection,
   Action
 ])
 

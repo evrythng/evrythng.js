@@ -1,7 +1,4 @@
 import Entity from './Entity'
-import Product from './Product'
-import Thng from './Thng'
-import Collection from './Collection'
 import Resource from '../resource/Resource'
 import settings from '../settings'
 import getCurrentPosition from '../util/getCurrentPosition'
@@ -146,15 +143,9 @@ function fillAction (data, actionType, caller) {
  * @return {string}
  */
 function getIdentifier (caller) {
-  if (caller instanceof Product) {
-    return 'product'
-  } else if (caller instanceof Thng) {
-    return 'thng'
-  } else if (caller instanceof Collection) {
-    return 'collection'
-  } else {
-    return ''
-  }
+  return caller instanceof Entity
+    ? caller.constructor.name.toLocaleLowerCase()
+    : ''
 }
 
 /**
