@@ -14,6 +14,14 @@ const path = '/properties'
  * @class Property
  */
 export default class Property extends Entity {
+  /**
+   * Return overridden resource factory for Properties. Properties are
+   * sub-resources of Thngs and Products and are not allowed on top level
+   * Scope classes. This factory also override the default Resource's create
+   * and update methods to accept and normalize different types of arguments.
+   *
+   * @return {{property: Function}}
+   */
   static resourceFactory () {
     return {
       property (property) {
@@ -48,14 +56,15 @@ export default class Property extends Entity {
  * and allows developers to pass in simple strings, numbers, booleans and objects.
  * It also allows to pass multiple key-value updates in a single object.
  *
- * E.g.
+ * E.g.:
  * ```
  * .property().update({
- *   on: true,
- *   temp: 26,
-  *  custom: ['1', '2']
- * })
+   *   on: true,
+   *   temp: 26,
+   *   custom: ['1', '2']
+   * })
  * ```
+ *
  * @param {*} data - Property data.
  * @param {*} rest - Rest of parameters.
  * @return {Array} - Same input format, with first data param updated.

@@ -3,8 +3,13 @@
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com)
 
 ## TODO
-[x] - Unit tests for Property
-[x] - Unit tests for Product resources
+* [x] - Unit tests for Property
+* [x] - Unit tests for Product resources
+* [x] - Add Action entity
+* [ ] - Unit tests for Action
+* [ ] - Add Geolocation utils
+* [ ] - Unit tests for Thng resources
+* [ ] - Complete collection entity
 
 ## Getting started
 

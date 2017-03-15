@@ -2,6 +2,8 @@ import { mixinResources } from '../util/mixin'
 import Product from '../entity/Product'
 import Thng from '../entity/Thng'
 
+// TODO remove and keep resource mixins where they're used?
+
 /**
  * An Operator currently has access to:
  *  - Product resource (CRUD)

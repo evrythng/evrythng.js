@@ -18,6 +18,53 @@ import api, { success, failure } from '../api'
  */
 export default class Resource {
   /**
+   * Returns a resource factory function for the given entity type.
+   *
+   * @param {Entity} entity - Entity sub-class
+   * @param {string} path - Path for new resource
+   * @param {Function} MixinNestedResources - Mixin that extends Resource class
+   * with nested resources
+   * @return {Function} - Resource factory function
+   */
+  static factoryFor (entity, path = '', MixinNestedResources) {
+    if (!entity) {
+      throw new Error('Entity is necessary for resource factory.')
+    }
+
+    // No "this" binding with arrow function! This needs to run in the context
+    // where it is mixed in / attached.
+    return function (id) {
+      // Allowed on Scopes, Resources and Entities.
+      let parentPath, parentScope, newPath
+
+      if (this instanceof Scope) {
+        parentScope = this
+        parentPath = ''
+      } else if (this instanceof Resource) {
+        parentScope = this.scope
+        parentPath = this.path
+      } else {
+        parentScope = this.resource.scope
+        parentPath = this.resource.path
+      }
+
+      newPath = parentPath + path
+
+      if (id) {
+        if (!isString(id)) {
+          throw new TypeError('ID must be a string.')
+        }
+        newPath += `/${encodeURIComponent(id)}`
+      }
+
+      const XResource = MixinNestedResources
+        ? MixinNestedResources(Resource)
+        : Resource
+      return new XResource(parentScope, newPath, entity)
+    }
+  }
+
+  /**
    * A Resource requires a Scope sub-class (App, Operator, etc.) and the
    * corresponding path in the Engine API. An Entity sub-class can be
    * provider, in which case is it used to create instance of that Entity class
@@ -105,7 +152,7 @@ export default class Resource {
    * Create a new entity for this resource.
    *
    * @param {Object|Entity} body - Entity to create
-   * @param {Object} [options] - Options of the request
+   * @param {Settings} [options] - Options of the request
    * @param {Function} [callback] - Error-first callback
    * @returns {Promise}
    */
@@ -120,7 +167,7 @@ export default class Resource {
   /**
    * Reads resource entities.
    *
-   * @param {Object} [options] - Options of the request
+   * @param {Settings} [options] - Options of the request
    * @param {Function} [callback] - Error-first callback
    * @returns {Promise}
    */
@@ -132,7 +179,7 @@ export default class Resource {
    * Updates entity via this resource.
    *
    * @param {Object|Entity} body - Entity to create
-   * @param {Object} [options] - Options of the request
+   * @param {Settings} [options] - Options of the request
    * @param {Function} [callback] - Error-first callback
    * @returns {Promise}
    */
@@ -147,7 +194,7 @@ export default class Resource {
   /**
    * Deletes entity in resource.
    *
-   * @param {Object} [options] - Options of the request
+   * @param {Settings} [options] - Options of the request
    * @param {Function} [callback] - Error-first callback
    * @returns {Promise}
    */
@@ -165,8 +212,8 @@ export default class Resource {
    *
    * Callback may be used in place of userOptions.
    *
-   * @param {Objects} requestOptions - Mandatory request options
-   * @param {Object} [userOptions] - Optional user options
+   * @param {Settings} requestOptions - Mandatory request options
+   * @param {Settings} [userOptions] - Optional user options
    * @param {Function} [callback] - Error-first callback
    * @returns {Promise.<Object|Entity|Response>}
    * @private
@@ -196,52 +243,5 @@ export default class Resource {
       .then(this.deserialize.bind(this))
       .then(success(callback))
       .catch(failure(callback))
-  }
-
-  /**
-   * Returns a resource factory function for the given entity type.
-   *
-   * @param {Entity} entity - Entity sub-class
-   * @param {string} path - Path for new resource
-   * @param {Function} MixinNestedResources - Mixin that extends Resource class
-   * with nested resources
-   * @return {Function} - Resource factory function
-   */
-  static factoryFor (entity, path = '', MixinNestedResources) {
-    if (!entity) {
-      throw new Error('Entity is necessary for resource factory.')
-    }
-
-    // No "this" binding with arrow function! This needs to run in the context
-    // where it is mixed in / attached.
-    return function (id) {
-      // Allowed on Scopes, Resources and Entities.
-      let parentPath, parentScope, newPath
-
-      if (this instanceof Scope) {
-        parentScope = this
-        parentPath = ''
-      } else if (this instanceof Resource) {
-        parentScope = this.scope
-        parentPath = this.path
-      } else {
-        parentScope = this.resource.scope
-        parentPath = this.resource.path
-      }
-
-      newPath = parentPath + path
-
-      if (id) {
-        if (!isString(id)) {
-          throw new TypeError('ID must be a string.')
-        }
-        newPath += `/${encodeURIComponent(id)}`
-      }
-
-      const XResource = MixinNestedResources
-        ? MixinNestedResources(Resource)
-        : Resource
-      return new XResource(parentScope, newPath, entity)
-    }
   }
 }

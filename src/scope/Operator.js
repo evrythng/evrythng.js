@@ -1,6 +1,29 @@
 import Scope from './Scope'
-import { OperatorAccess } from './access'
+import Product from '../entity/Product'
+import Thng from '../entity/Thng'
 import api from '../api'
+import { mixinResources } from '../util/mixin'
+
+/**
+ * An Operator has access to:
+ *  - Product resource (CRUD)
+ *  - Thng resource (CRUD)
+ *  - App User resource (R)
+ *  - Project resource (CRUD)
+ *  - ActionType resource (CR)
+ *  - Action resource (CRUD)
+ *  - Collection resource (CRUD)
+ *  - Batch resource (CRUD)
+ */
+const operatorResources = [
+  Product,
+  Thng
+]
+
+/**
+ * Operator Access Mixin
+ */
+const OperatorAccess = mixinResources(operatorResources)
 
 /**
  * Operator is the Scope with highest permissions that can manage the account
