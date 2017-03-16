@@ -48,7 +48,7 @@ describe('Resource', () => {
 
     it('should store entity if passed', () => {
       resource = new Resource(scope, path, Entity)
-      expect(resource.entity).toEqual(Entity)
+      expect(resource.type).toEqual(Entity)
     })
   })
 
@@ -286,9 +286,9 @@ describe('Resource', () => {
         expect(res.path).toEqual(resPath)
       })
 
-      it('should have entity class defined', () => {
+      it('should have entity type defined', () => {
         const res = extendedScope.foobar()
-        expect(res.entity).toEqual(Entity)
+        expect(res.type).toEqual(Entity)
       })
 
       it('should allow to be attached on entities', () => {

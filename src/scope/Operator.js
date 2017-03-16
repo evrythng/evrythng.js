@@ -1,6 +1,7 @@
 import Scope from './Scope'
 import Product from '../entity/Product'
 import Thng from '../entity/Thng'
+import Collection from '../entity/Collection'
 import api from '../api'
 import { mixinResources } from '../util/mixin'
 
@@ -17,7 +18,8 @@ import { mixinResources } from '../util/mixin'
  */
 const operatorResources = [
   Product,
-  Thng
+  Thng,
+  Collection
 ]
 
 /**
@@ -29,9 +31,7 @@ const OperatorAccess = mixinResources(operatorResources)
  * Operator is the Scope with highest permissions that can manage the account
  * resources. Should be used with caution in server-side code.
  *
- * @export
- * @class Operator
- * @extends {Scope}
+ * @extends Scope
  */
 export default class Operator extends OperatorAccess(Scope) {
   /**

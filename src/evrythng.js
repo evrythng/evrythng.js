@@ -14,3 +14,10 @@ export { default as Scope } from './scope/Scope'
 
 // Scopes
 export { default as Operator } from './scope/Operator'
+
+// Entities
+export { default as Product } from './entity/Product'
+export { default as Thng } from './entity/Thng'
+export { default as Collection } from './entity/Collection'
+export { default as Property } from './entity/Property'
+export { default as Action } from './entity/Action'

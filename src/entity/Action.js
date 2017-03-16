@@ -13,8 +13,7 @@ const path = '/actions/:type'
  * Represents a Property entity. Properties are always nested and require
  * to be constructed on Resource/Entity objects (not top level Scopes).
  *
- * @export
- * @class Action
+ * @extends Entity
  */
 export default class Action extends Entity {
   /**
@@ -23,6 +22,7 @@ export default class Action extends Entity {
    * different from any other Resource, as it fetches the user location and
    * pre-populates the action payload with the Resource type.
    *
+   * @static
    * @return {{action: Function}}
    */
   static resourceFactory () {
@@ -92,14 +92,12 @@ function createAction (actionType, ...args) {
 /**
  * Add an empty action object if none is provided.
  *
- * E.g.:
- * ```
- * .action().create()
- * ```
- *
  * @param {*} data - Property data.
  * @param {*} rest - Rest of parameters.
  * @return {Array} - Same input format, with first data param updated.
+ * @example
+ *
+ * product.action().create()
  */
 function normalizeArguments (data, ...rest) {
   if (isUndefined(data) || isFunction(data)) {

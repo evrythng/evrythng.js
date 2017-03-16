@@ -20,7 +20,7 @@ describe('Product', () => {
 
     it('should create new Product resource', () => {
       expect(productResource instanceof Resource).toBe(true)
-      expect(productResource.entity).toBe(Product)
+      expect(productResource.type).toBe(Product)
       expect(productResource.path).toEqual(`${productsPath}/${productId}`)
     })
 

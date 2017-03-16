@@ -5,9 +5,6 @@ import api from '../api'
  * Scope defines the context in which API calls are made. A scope is defined
  * by its API Key. That key is sent in each request's Authorization header that
  * uses this scope.
- *
- * @export
- * @class Scope
  */
 export default class Scope {
   /**
@@ -15,8 +12,6 @@ export default class Scope {
    *
    * @param {string} apiKey API Key of scope
    * @param {Object} [body={}] Optional scope data
-   *
-   * @memberOf Scope
    */
   constructor (apiKey, body = {}) {
     if (!isString(apiKey)) {

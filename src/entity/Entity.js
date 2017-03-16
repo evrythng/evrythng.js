@@ -4,9 +4,6 @@ import Resource from '../resource/Resource'
  * Entity is the base class for all types of entities in the EVRYTHNG API.
  * An Entity knows how to update and delete itself given that a resource is
  * provided.
- *
- * @export
- * @class Entity
  */
 export default class Entity {
   /**
@@ -14,7 +11,7 @@ export default class Entity {
    * with pre-defined data.
    *
    * @param {Resource} resource - Resource owner of this entity.
-   * @param {Object} [body={}] Optional entity data
+   * @param {Object} [body] Optional entity data
    */
   constructor (resource, body = {}) {
     if (!(resource && resource instanceof Resource)) {

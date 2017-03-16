@@ -10,8 +10,7 @@ const path = '/properties'
  * Represents a Property entity. Properties are always nested and require
  * to be constructed on Resource/Entity objects (not top level Scopes).
  *
- * @export
- * @class Property
+ * @extends Entity
  */
 export default class Property extends Entity {
   /**
@@ -20,6 +19,7 @@ export default class Property extends Entity {
    * Scope classes. This factory also override the default Resource's create
    * and update methods to accept and normalize different types of arguments.
    *
+   * @static
    * @return {{property: Function}}
    */
   static resourceFactory () {
@@ -56,18 +56,16 @@ export default class Property extends Entity {
  * and allows developers to pass in simple strings, numbers, booleans and objects.
  * It also allows to pass multiple key-value updates in a single object.
  *
- * E.g.:
- * ```
- * .property().update({
-   *   on: true,
-   *   temp: 26,
-   *   custom: ['1', '2']
-   * })
- * ```
- *
  * @param {*} data - Property data.
  * @param {*} rest - Rest of parameters.
  * @return {Array} - Same input format, with first data param updated.
+ * @example
+ *
+ * product.property().update({
+ *   on: true,
+ *   temp: 26,
+ *   custom: ['1', '2']
+ * })
  */
 function normalizeArguments (data, ...rest) {
   if (

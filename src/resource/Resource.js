@@ -12,23 +12,21 @@ import api, { success, failure } from '../api'
  * Every resource operation tries to serialize/deserialize the type of object
  * corresponding to the resource (i.e. when creating a Thng, the developer gets
  * a Thng entity back, with nested methods).
- *
- * @export
- * @class Resource
  */
 export default class Resource {
   /**
    * Returns a resource factory function for the given entity type.
    *
-   * @param {Entity} entity - Entity sub-class
+   * @static
+   * @param {Entity} type - Entity sub-class
    * @param {string} path - Path for new resource
    * @param {Function} MixinNestedResources - Mixin that extends Resource class
    * with nested resources
    * @return {Function} - Resource factory function
    */
-  static factoryFor (entity, path = '', MixinNestedResources) {
-    if (!entity) {
-      throw new Error('Entity is necessary for resource factory.')
+  static factoryFor (type, path = '', MixinNestedResources) {
+    if (!type) {
+      throw new Error('Entity type is necessary for resource factory.')
     }
 
     // No "this" binding with arrow function! This needs to run in the context
@@ -60,7 +58,7 @@ export default class Resource {
       const XResource = MixinNestedResources
         ? MixinNestedResources(Resource)
         : Resource
-      return new XResource(parentScope, newPath, entity)
+      return new XResource(parentScope, newPath, type)
     }
   }
 
@@ -72,9 +70,9 @@ export default class Resource {
    *
    * @param {Scope} scope - Scope containing API Key
    * @param {string} path - Relative path to API resource
-   * @param {Entity} [entity] - Reference to Entity class (constructor)
+   * @param {Entity} [type] - Reference to Entity class (constructor)
    */
-  constructor (scope, path, entity) {
+  constructor (scope, path, type) {
     if (!(scope && scope instanceof Scope)) {
       throw new TypeError('Scope should inherit from Scope (e.g. EVT.App).')
     }
@@ -91,8 +89,8 @@ export default class Resource {
 
     // Setup entity for serializing and deserializing results. It must
     // implement *toJSON()* method, as defined in the Entity base class.
-    if (entity && (entity === Entity || entity.prototype instanceof Entity)) {
-      this.entity = entity
+    if (type && (type === Entity || type.prototype instanceof Entity)) {
+      this.type = type
     }
   }
 
@@ -103,7 +101,7 @@ export default class Resource {
    * @returns {Object}
    */
   serialize (entity = {}) {
-    if (!(this.entity && entity instanceof this.entity)) {
+    if (!(this.type && entity instanceof this.type)) {
       return entity
     }
     return entity.json()
@@ -119,7 +117,7 @@ export default class Resource {
    * Response if fullResponse option was used; Object otherwise.
    */
   deserialize (response) {
-    if (response && this.entity) {
+    if (response && this.type) {
       if (isArray(response)) {
         return response.map(this.deserialize.bind(this))
       }
@@ -139,9 +137,9 @@ export default class Resource {
           newPath += `/${response.id}`
         }
 
-        const newResource = new Resource(this.scope, newPath, this.entity)
-        const EntityClass = this.entity
-        return new EntityClass(newResource, response)
+        const newResource = new Resource(this.scope, newPath, this.type)
+        const EntityType = this.type
+        return new EntityType(newResource, response)
       }
     }
 

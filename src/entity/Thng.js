@@ -14,13 +14,13 @@ const ThngResources = mixinResources([
 /**
  * Represents a Thng entity object.
  *
- * @export
- * @class Thng
+ * @extends Entity
  */
 export default class Thng extends ThngResources(Entity) {
   /**
    * Return simple resource factory for Thngs.
    *
+   * @static
    * @return {{product: Function}}
    */
   static resourceFactory () {

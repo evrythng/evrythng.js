@@ -13,13 +13,13 @@ const ProductResources = mixinResources([
 /**
  * Represents a Product entity object.
  *
- * @export
- * @class Product
+ * @extends Entity
  */
 export default class Product extends ProductResources(Entity) {
   /**
    * Return simple resource factory for Products.
    *
+   * @static
    * @return {{product: Function}}
    */
   static resourceFactory () {
