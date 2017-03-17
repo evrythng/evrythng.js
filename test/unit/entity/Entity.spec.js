@@ -1,10 +1,9 @@
 /* eslint-env jasmine */
 import Entity from '../../../src/entity/Entity'
 import { dummyResource } from '../../helpers/dummy'
+import { entityTemplate } from '../../helpers/data'
 
-const body = {
-  foo: 'bar'
-}
+const cb = () => {}
 let entity
 
 describe('Entity', () => {
@@ -32,8 +31,8 @@ describe('Entity', () => {
     })
 
     it('should extend instance properties with body', () => {
-      entity = new Entity(resource, body)
-      expect(entity.foo).toEqual(body.foo)
+      entity = new Entity(resource, entityTemplate)
+      expect(entity.foo).toEqual(entityTemplate.foo)
     })
 
     describe('json', () => {
@@ -43,36 +42,34 @@ describe('Entity', () => {
       })
 
       it('should return all properties apart from resource', () => {
-        entity = new Entity(resource, body)
-        expect(entity.json()).toEqual(body)
+        entity = new Entity(resource, entityTemplate)
+        expect(entity.json()).toEqual(entityTemplate)
       })
 
       it('should return dynamically added properties', () => {
         const val = 'foobar'
-        entity = new Entity(resource, body)
+        entity = new Entity(resource, entityTemplate)
         entity.test = val
         expect(entity.json().test).toEqual(val)
       })
     })
 
     describe('update', () => {
-      let callback = jasmine.createSpy('callback')
-      const updatedEntity = {
+      const updatedEntity = Object.assign({}, entityTemplate, {
         updated: true
-      }
+      })
       const dataToUpdate = {
         val: 'foobar'
       }
 
       beforeEach(() => {
-        entity = new Entity(resource, body)
+        entity = new Entity(resource, entityTemplate)
         spyOn(resource, 'update').and.returnValue(Promise.resolve(updatedEntity))
-        callback.calls.reset()
       })
 
       it('should call resource update with entity\'s JSON', done => {
         entity.update().then(() => {
-          expect(resource.update.calls.mostRecent().args[0]).toEqual(body)
+          expect(resource.update.calls.mostRecent().args[0]).toEqual(entityTemplate)
           done()
         })
       })
@@ -85,15 +82,15 @@ describe('Entity', () => {
       })
 
       it('should allow callback in first argument', done => {
-        entity.update(callback).then(() => {
-          expect(resource.update.calls.mostRecent().args[0]).toEqual(callback)
+        entity.update(cb).then(() => {
+          expect(resource.update.calls.mostRecent().args[0]).toEqual(cb)
           done()
         })
       })
 
       it('should allow callback in second argument', done => {
-        entity.update(dataToUpdate, callback).then(() => {
-          expect(resource.update.calls.mostRecent().args[1]).toEqual(callback)
+        entity.update(dataToUpdate, cb).then(() => {
+          expect(resource.update.calls.mostRecent().args[1]).toEqual(cb)
           done()
         })
       })
@@ -110,7 +107,7 @@ describe('Entity', () => {
 
     describe('delete', () => {
       beforeEach(() => {
-        entity = new Entity(resource, body)
+        entity = new Entity(resource)
         spyOn(resource, 'delete').and.returnValue(Promise.resolve())
       })
 
@@ -121,10 +118,9 @@ describe('Entity', () => {
         })
       })
 
-      it('should allow callback', done => {
-        const callback = () => {}
-        entity.delete(callback).then(() => {
-          expect(resource.delete.calls.mostRecent().args[0]).toBe(callback)
+      it('should support callback', done => {
+        entity.delete(cb).then(() => {
+          expect(resource.delete.calls.mostRecent().args[0]).toBe(cb)
           done()
         })
       })

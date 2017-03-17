@@ -2,23 +2,22 @@
 import Resource from '../../../src/resource/Resource'
 import Product from '../../../src/entity/Product'
 import { dummyScope, dummyResource } from '../../helpers/dummy'
+import { paths, productTemplate } from '../../helpers/data'
 
-const productId = 'productId'
-const productsPath = '/products'
 let productResource
 let product
 
 describe('Product', () => {
   describe('resourceFactory', () => {
     beforeEach(() => {
-      const mixin = Object.assign(dummyScope(), Product.resourceFactory())
-      productResource = mixin.product(productId)
+      const scope = Object.assign(dummyScope(), Product.resourceFactory())
+      productResource = scope.product(productTemplate.id)
     })
 
     it('should create new Product resource', () => {
       expect(productResource instanceof Resource).toBe(true)
       expect(productResource.type).toBe(Product)
-      expect(productResource.path).toEqual(`${productsPath}/${productId}`)
+      expect(productResource.path).toEqual(`${paths.products}/${productTemplate.id}`)
     })
 
     it('should have nested property resource', () => {

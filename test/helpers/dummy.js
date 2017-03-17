@@ -2,6 +2,7 @@ import './apiMock'
 import Scope from '../../src/scope/Scope'
 import Resource from '../../src/resource/Resource'
 import Entity from '../../src/entity/Entity'
+import { apiKey, paths, entityTemplate } from './data'
 
 // Any call to dummy creators below should be inside test blocks (either
 // `beforeAll`, `beforeEach` or `it`).
@@ -9,11 +10,11 @@ import Entity from '../../src/entity/Entity'
 /**
  * Return new simplistic Scope as base for scope mixins.
  *
- * @param {string} [apiKey] - Optional API Key
+ * @param {string} [key] - Optional API Key
  * @return {Scope}
  */
-export function dummyScope (apiKey = 'apiKey') {
-  return new Scope(apiKey)
+export function dummyScope (key = apiKey) {
+  return new Scope(key)
 }
 
 /**
@@ -23,7 +24,7 @@ export function dummyScope (apiKey = 'apiKey') {
  * @param {string} [path] - Path for resource
  * @return {Resource}
  */
-export function dummyResource (EntityType = Entity, path = '/path') {
+export function dummyResource (EntityType = Entity, path = paths.dummy) {
   const scope = dummyScope()
   return new Resource(scope, path, EntityType)
 }
@@ -35,7 +36,7 @@ export function dummyResource (EntityType = Entity, path = '/path') {
  * @param {Object} [body] - Predefined entity body
  * @return {Entity}
  */
-export function dummyEntity (EntityType = Entity, body = {}) {
+export function dummyEntity (EntityType = Entity, body = entityTemplate) {
   const resource = dummyResource()
   return new EntityType(resource, body)
 }

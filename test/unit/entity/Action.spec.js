@@ -4,48 +4,48 @@ import Action from '../../../src/entity/Action'
 import Entity from '../../../src/entity/Entity'
 import setup from '../../../src/setup'
 import { dummyScope, dummyEntity } from '../../helpers/dummy'
-import data from '../../helpers/data'
+import { paths, actionTemplate, entityTemplate } from '../../helpers/data'
 
-const actionsPath = '/actions'
-const actionType = 'tests'
-const actionId = 'actionId'
-let mixin
+// const cb = () => {}
+let actionResource
+let scope
+let entity
 
 describe('Action', () => {
   describe('resourceFactory', () => {
     beforeEach(() => {
-      mixin = Object.assign(dummyScope(), Action.resourceFactory())
+      scope = Object.assign(dummyScope(), Action.resourceFactory())
     })
 
     it('should throw if actionType not specified', () => {
-      const noActionTypeResource = () => mixin.action(() => 'test')
+      const noActionTypeResource = () => scope.action()
       expect(noActionTypeResource).toThrow()
     })
 
     it('should throw if actionType is not a string', () => {
-      const noActionTypeResource = () => mixin.action(() => 'test')
+      const noActionTypeResource = () => scope.action(1)
       expect(noActionTypeResource).toThrow()
     })
 
     it('should create new Action resource', () => {
-      const actionResource = mixin.action(actionType)
+      const actionResource = scope.action(actionTemplate.type)
       expect(actionResource instanceof Resource).toBe(true)
       expect(actionResource.type).toBe(Action)
     })
 
     it('should add actions path', () => {
-      const actionResource = mixin.action(actionType)
-      expect(actionResource.path).toEqual(`${actionsPath}/${actionType}`)
+      const actionResource = scope.action(actionTemplate.type)
+      expect(actionResource.path)
+        .toEqual(`${paths.actions}/${actionTemplate.type}`)
     })
 
     it('should add action to path', () => {
-      const actionResource = mixin.action(actionType, actionId)
-      expect(actionResource.path).toEqual(`${actionsPath}/${actionType}/${actionId}`)
+      const actionResource = scope.action(actionTemplate.type, actionTemplate.id)
+      expect(actionResource.path)
+        .toEqual(`${paths.actions}/${actionTemplate.type}/${actionTemplate.id}`)
     })
 
     describe('with normalization', () => {
-      let actionResource
-
       beforeEach(() => {
         spyOn(Resource.prototype, 'create').and.returnValue(Promise.resolve())
         setup({ geolocation: false })
@@ -54,11 +54,11 @@ describe('Action', () => {
       describe('create', () => {
         describe('on Scope base', () => {
           beforeEach(() => {
-            mixin = Object.assign(dummyScope(), Action.resourceFactory())
+            scope = Object.assign(dummyScope(), Action.resourceFactory())
           })
 
           it('should support empty invocation', done => {
-            actionResource = mixin.action(actionType)
+            actionResource = scope.action(actionTemplate.type)
             actionResource.create().then(() => {
               expect(Resource.prototype.create).toHaveBeenCalled()
               done()
@@ -67,35 +67,35 @@ describe('Action', () => {
 
           it('should fill correct action type', done => {
             Promise.all([
-              mixin.action(actionType).create().then(() => {
+              scope.action(actionTemplate.type).create().then(() => {
                 expect(Resource.prototype.create).toHaveBeenCalledWith(
                   jasmine.objectContaining({
-                    type: actionType
+                    type: actionTemplate.type
                   })
                 )
               }),
-              mixin.action('all').create().then(() => {
+              scope.action('all').create().then(() => {
                 expect(Resource.prototype.create).toHaveBeenCalledWith(
                   jasmine.objectContaining({
                     type: ''
                   })
                 )
               }),
-              mixin.action('all').create({ type: 'test' }).then(() => {
+              scope.action('all').create({ type: 'test' }).then(() => {
                 expect(Resource.prototype.create).toHaveBeenCalledWith(
                   jasmine.objectContaining({
                     type: 'test'
                   })
                 )
               }),
-              mixin.action(actionType).create([{foo: 1}, {foo: 2}]).then(() => {
+              scope.action(actionTemplate.type).create([{foo: 1}, {foo: 2}]).then(() => {
                 expect(Resource.prototype.create).toHaveBeenCalledWith([
                   jasmine.objectContaining({
-                    type: actionType,
+                    type: actionTemplate.type,
                     foo: 1
                   }),
                   jasmine.objectContaining({
-                    type: actionType,
+                    type: actionTemplate.type,
                     foo: 2
                   })
                 ])
@@ -106,34 +106,39 @@ describe('Action', () => {
 
         describe('on Entity base', () => {
           beforeEach(() => {
-            mixin = Object.assign(
-              dummyEntity(Entity, data.thng),
+            entity = Object.assign(
+              dummyEntity(Entity, entityTemplate),
               Action.resourceFactory()
             )
+            actionResource = entity.action(actionTemplate.type)
           })
 
           it('should fill correct entity ID', done => {
             Promise.all([
-              mixin.action(actionType).create().then(() => {
+              actionResource.create().then(() => {
                 expect(Resource.prototype.create).toHaveBeenCalledWith(
                   jasmine.objectContaining({
-                    entity: data.thng.id
+                    entity: entityTemplate.id
                   })
                 )
               }),
-              mixin.action(actionType).create([{foo: 1}, {foo: 2}]).then(() => {
+              actionResource.create([{foo: 1}, {foo: 2}]).then(() => {
                 expect(Resource.prototype.create).toHaveBeenCalledWith([
                   jasmine.objectContaining({
-                    entity: data.thng.id,
+                    entity: entityTemplate.id,
                     foo: 1
                   }),
                   jasmine.objectContaining({
-                    entity: data.thng.id,
+                    entity: entityTemplate.id,
                     foo: 2
                   })
                 ])
               })
             ]).then(done)
+          })
+
+          xit('should support callbacks', () => {
+            // TODO
           })
         })
 
