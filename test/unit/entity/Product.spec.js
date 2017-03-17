@@ -1,20 +1,17 @@
 /* eslint-env jasmine */
-import Scope from '../../../src/scope/Scope'
 import Resource from '../../../src/resource/Resource'
 import Product from '../../../src/entity/Product'
+import { dummyScope, dummyResource } from '../../helpers/dummy'
 
-const apiKey = 'apiKey'
 const productId = 'productId'
 const productsPath = '/products'
-const scope = new Scope(apiKey)
-const resource = new Resource(scope, productsPath, Product)
 let productResource
 let product
 
 describe('Product', () => {
   describe('resourceFactory', () => {
     beforeEach(() => {
-      const mixin = Object.assign(new Scope(apiKey), Product.resourceFactory())
+      const mixin = Object.assign(dummyScope(), Product.resourceFactory())
       productResource = mixin.product(productId)
     })
 
@@ -27,15 +24,23 @@ describe('Product', () => {
     it('should have nested property resource', () => {
       expect(productResource.property).toBeDefined()
     })
+
+    it('should have nested action resource', () => {
+      expect(productResource.action).toBeDefined()
+    })
   })
 
   describe('access', () => {
     beforeEach(() => {
-      product = new Product(resource)
+      product = new Product(dummyResource())
     })
 
     it('should have property resource', () => {
       expect(product.property).toBeDefined()
+    })
+
+    it('should have action resource', () => {
+      expect(product.action).toBeDefined()
     })
   })
 })

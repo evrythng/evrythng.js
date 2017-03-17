@@ -37,6 +37,7 @@ export default class Action extends Entity {
         }
 
         const typePath = path.replace(':type', actionType)
+        const context = this
 
         // Creates and returns Resource of type Action.
         // Override property resource create to allow custom value params and
@@ -45,7 +46,7 @@ export default class Action extends Entity {
           Resource.factoryFor(Action, typePath).call(this, id),
           {
             create (...args) {
-              return createAction.call(this, actionType, ...args)
+              return createAction.call(this, context, actionType, ...args)
             }
           }
         )
@@ -58,54 +59,53 @@ export default class Action extends Entity {
  * Create action of given type. Allow empty body and fetch geolocation if
  * setup and available.
  *
+ * @param {Scope|Resource|Entity} caller - Where the resource is attached to
  * @param {string} actionType - Type of action
  * @param {*} args - Rest of arguments passed to resource creation
  * @return {Promise}
  */
-function createAction (actionType, ...args) {
-  let [data, options, ...rest] = normalizeArguments(...args)
-  if (isArray(data)) {
-    data = data.map(action => {
-      return fillAction(action, actionType, this)
-    })
-  } else {
-    data = fillAction(data, actionType, this)
-  }
+function createAction (caller, actionType, ...args) {
+  let [data, ...rest] = normalizeArguments(...args)
+  let [options] = rest
 
-  const request = Resource.prototype.create.bind(this)
+  // Auto-fill action payload with resource type and entity id.
+  data = isArray(data)
+    ? data.map(action => fillAction(action, caller, actionType))
+    : data = fillAction(data, caller, actionType)
+
+  const baseCreate = Resource.prototype.create.bind(this)
+  const updatedArgs = () => [data, ...rest]
 
   if (useGeolocation(options)) {
     return getCurrentPosition()
       .then(position => {
         data = fillActionLocation(data, position)
-        return request(...[data, options, ...rest])
+        return baseCreate(...updatedArgs())
       })
       .catch(err => {
         console.info('Unable to get position:', err)
-        return request(...[data, options, ...rest])
+        return baseCreate(...updatedArgs())
       })
   } else {
-    return request(...[data, options, ...rest])
+    return baseCreate(...updatedArgs())
   }
 }
 
 /**
  * Add an empty action object if none is provided.
  *
- * @param {*} data - Property data.
- * @param {*} rest - Rest of parameters.
+ * @param {*} args - Arguments array.
  * @return {Array} - Same input format, with first data param updated.
  * @example
  *
  * product.action().create()
  */
-function normalizeArguments (data, ...rest) {
-  if (isUndefined(data) || isFunction(data)) {
-    rest.unshift(data)
-    data = {}
+function normalizeArguments (...args) {
+  let firstArg = args[0]
+  if (isUndefined(firstArg) || isFunction(firstArg)) {
+    args.unshift({})
   }
-
-  return [data, ...rest]
+  return args
 }
 
 /**
@@ -118,7 +118,7 @@ function normalizeArguments (data, ...rest) {
  * @param {string} actionType - Resource action type
  * @return {Object} - New action data
  */
-function fillAction (data, actionType, caller) {
+function fillAction (data, caller, actionType) {
   const action = Object.assign({}, data)
 
   // Fill type from Resource or pre-defined type.

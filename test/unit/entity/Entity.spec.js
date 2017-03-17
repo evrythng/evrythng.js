@@ -1,12 +1,7 @@
 /* eslint-env jasmine */
-import Scope from '../../../src/scope/Scope'
-import Resource from '../../../src/resource/Resource'
 import Entity from '../../../src/entity/Entity'
+import { dummyResource } from '../../helpers/dummy'
 
-const apiKey = 'apiKey'
-const path = '/foobar'
-const scope = new Scope(apiKey)
-const resource = new Resource(scope, path, Entity)
 const body = {
   foo: 'bar'
 }
@@ -19,7 +14,10 @@ describe('Entity', () => {
   })
 
   describe('valid', () => {
+    let resource
+
     beforeEach(() => {
+      resource = dummyResource()
       entity = new Entity(resource)
     })
 
@@ -111,12 +109,9 @@ describe('Entity', () => {
     })
 
     describe('delete', () => {
-      let callback = jasmine.createSpy('callback')
-
       beforeEach(() => {
         entity = new Entity(resource, body)
         spyOn(resource, 'delete').and.returnValue(Promise.resolve())
-        callback.calls.reset()
       })
 
       it('should call resource delete', done => {
@@ -127,8 +122,9 @@ describe('Entity', () => {
       })
 
       it('should allow callback', done => {
+        const callback = () => {}
         entity.delete(callback).then(() => {
-          expect(resource.delete.calls.mostRecent().args[0]).toEqual(callback)
+          expect(resource.delete.calls.mostRecent().args[0]).toBe(callback)
           done()
         })
       })

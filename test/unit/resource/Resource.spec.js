@@ -1,19 +1,23 @@
 /* eslint-env jasmine */
 import fetchMock from 'fetch-mock'
 import apiUrl from '../../helpers/apiUrl'
-import Scope from '../../../src/scope/Scope'
 import Resource from '../../../src/resource/Resource'
 import Entity from '../../../src/entity/Entity'
+import { dummyScope, dummyResource, dummyEntity } from '../../helpers/dummy'
 
-const apiKey = 'apiKey'
 const path = '/foobar'
-const scope = new Scope(apiKey)
 const body = {
   foo: 'bar'
 }
 let resource
 
 describe('Resource', () => {
+  let scope
+
+  beforeEach(() => {
+    scope = dummyScope()
+  })
+
   describe('constructor', () => {
     it('should require Scope', () => {
       const emptyConstructor = () => new Resource()
@@ -166,7 +170,7 @@ describe('Resource', () => {
         it('should use scope apiKey', done => {
           resource.read().then(() => {
             expect(fetchMock.lastOptions().headers.authorization)
-              .toEqual(apiKey)
+              .toEqual(scope.apiKey)
             done()
           })
         })
@@ -257,56 +261,57 @@ describe('Resource', () => {
 
     describe('valid', () => {
       const resPath = '/foobar'
-      const factory = Resource.factoryFor(Entity, resPath)
+      let factory = Resource.factoryFor(Entity, resPath)
+      let testMixin = { test: factory }
+      let extendedScope
+      let extendedEntity
+      let extendedResource
 
-      const extendedScope = new Scope(apiKey)
-      extendedScope.foobar = factory
-
-      const extendedEntity = new Entity(new Resource(scope, path, Entity))
-      extendedEntity.foobar = factory
-
-      const extendedResource = new Resource(scope, path, Entity)
-      extendedResource.foobar = factory
+      beforeEach(() => {
+        extendedScope = Object.assign(dummyScope(), testMixin)
+        extendedResource = Object.assign(dummyResource(), testMixin)
+        extendedEntity = Object.assign(dummyEntity(), testMixin)
+      })
 
       it('should return a factory function', () => {
         expect(factory).toEqual(jasmine.any(Function))
       })
 
       it('should create a resource for Entity', () => {
-        expect(extendedScope.foobar() instanceof Resource).toBe(true)
+        expect(extendedScope.test() instanceof Resource).toBe(true)
       })
 
       it('should have scope of creator', () => {
-        const res = extendedScope.foobar()
+        const res = extendedScope.test()
         expect(res.scope).toEqual(extendedScope)
       })
 
       it('should have provided path', () => {
-        const res = extendedScope.foobar()
+        const res = extendedScope.test()
         expect(res.path).toEqual(resPath)
       })
 
       it('should have entity type defined', () => {
-        const res = extendedScope.foobar()
+        const res = extendedScope.test()
         expect(res.type).toEqual(Entity)
       })
 
       it('should allow to be attached on entities', () => {
-        expect(extendedEntity.foobar() instanceof Resource).toBe(true)
+        expect(extendedEntity.test() instanceof Resource).toBe(true)
       })
 
       it('should allow to be attached on resources', () => {
-        expect(extendedResource.foobar() instanceof Resource).toBe(true)
+        expect(extendedResource.test() instanceof Resource).toBe(true)
       })
 
       it('should not allow non-string arguments', () => {
-        const nonStringId = () => extendedScope.foobar({})
+        const nonStringId = () => extendedScope.test({})
         expect(nonStringId).toThrow()
       })
 
       it('should add ID to path', () => {
         const id = 'id'
-        const res = extendedScope.foobar(id)
+        const res = extendedScope.test(id)
         expect(res.path).toEqual(`${resPath}/${id}`)
       })
 
@@ -314,10 +319,10 @@ describe('Resource', () => {
         const Mixin = C => class extends C {
           mixedIn () {}
         }
-        const factory = Resource.factoryFor(Entity, resPath, Mixin)
-        const extendedScope = new Scope(apiKey)
-        extendedScope.foobar = factory
-        expect(extendedScope.foobar().mixedIn).toBeDefined()
+        factory = Resource.factoryFor(Entity, resPath, Mixin)
+        testMixin = { test: factory }
+        extendedScope = Object.assign(dummyScope(), testMixin)
+        expect(extendedScope.test().mixedIn).toBeDefined()
       })
     })
   })

@@ -7,7 +7,6 @@ import Operator from '../../../src/scope/Operator'
 
 const apiKey = data.apiKey
 const operatorId = data.operator.id
-
 let operator
 
 describe('Operator', () => {

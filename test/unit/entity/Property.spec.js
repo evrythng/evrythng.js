@@ -1,14 +1,8 @@
 /* eslint-env jasmine */
-import Scope from '../../../src/scope/Scope'
 import Resource from '../../../src/resource/Resource'
-import Entity from '../../../src/entity/Entity'
 import Property from '../../../src/entity/Property'
+import { dummyScope, dummyResource, dummyEntity } from '../../helpers/dummy'
 
-const path = '/foobar'
-const apiKey = 'apiKey'
-const scope = new Scope(apiKey)
-const resource = new Resource(scope, path, Entity)
-const entity = new Entity(resource)
 const propertiesPath = '/properties'
 const property = 'test'
 let mixin
@@ -17,36 +11,34 @@ describe('Property', () => {
   describe('resourceFactory', () => {
     it('should only be allowed as a nested resource', () => {
       const scopeMixin = Object.assign(
-        new Scope(apiKey),
+        dummyScope(),
         Property.resourceFactory()
       )
       const wrongBase = () => scopeMixin.property()
       expect(wrongBase).toThrow()
-      delete scope.property
 
       const resourceMixin = Object.assign(
-        new Resource(scope, path, Entity),
+        dummyResource(),
         Property.resourceFactory()
       )
       const resourceProperty = () => resourceMixin.property()
       expect(resourceProperty).not.toThrow()
-      delete resource.property
 
       const entityMixin = Object.assign(
-        new Entity(resource),
+        dummyEntity(),
         Property.resourceFactory()
       )
       const entityProperty = () => entityMixin.property()
       expect(entityProperty).not.toThrow()
-      delete entity.property
     })
 
     describe('valid', () => {
+      let resourcePath
+
       beforeEach(() => {
-        mixin = Object.assign(
-          new Resource(scope, path, Entity),
-          Property.resourceFactory()
-        )
+        const resource = dummyResource()
+        resourcePath = resource.path
+        mixin = Object.assign(resource, Property.resourceFactory())
       })
 
       it('should throw if property is not a string', () => {
@@ -54,25 +46,27 @@ describe('Property', () => {
         expect(numberResource).toThrow()
       })
 
-      it('should create new resource', () => {
-        expect(mixin.property() instanceof Resource).toBe(true)
+      it('should create new Property resource', () => {
+        const propertyResource = mixin.property()
+        expect(propertyResource instanceof Resource).toBe(true)
+        expect(propertyResource.type).toBe(Property)
       })
 
       it('should add properties path', () => {
-        const propertiesResource = mixin.property()
-        expect(propertiesResource.path).toEqual(`${path}${propertiesPath}`)
+        const propertyResource = mixin.property()
+        expect(propertyResource.path).toEqual(`${resourcePath}${propertiesPath}`)
       })
 
       it('should add property to path', () => {
-        const propertiesResource = mixin.property(property)
-        expect(propertiesResource.path).toEqual(`${path}${propertiesPath}/${property}`)
+        const propertyResource = mixin.property(property)
+        expect(propertyResource.path).toEqual(`${resourcePath}${propertiesPath}/${property}`)
       })
 
       describe('with normalization', () => {
-        let propertiesResource
+        let propertyResource
 
         beforeEach(() => {
-          propertiesResource = mixin.property(property)
+          propertyResource = mixin.property(property)
           spyOn(Resource.prototype, 'create')
           spyOn(Resource.prototype, 'update')
         })
@@ -80,31 +74,31 @@ describe('Property', () => {
         ;['create', 'update'].forEach(method => {
           describe(method, () => {
             it('should support simple values', () => {
-              propertiesResource[method](1)
+              propertyResource[method](1)
               expect(Resource.prototype[method]).toHaveBeenCalledWith([{ value: 1 }])
 
-              propertiesResource[method]('blue')
+              propertyResource[method]('blue')
               expect(Resource.prototype[method]).toHaveBeenCalledWith([{ value: 'blue' }])
 
-              propertiesResource[method](true)
+              propertyResource[method](true)
               expect(Resource.prototype[method]).toHaveBeenCalledWith([{ value: true }])
             })
 
             it('should support regular objects', () => {
               const objProp = { value: 1 }
-              propertiesResource[method](objProp)
+              propertyResource[method](objProp)
               expect(Resource.prototype[method]).toHaveBeenCalledWith([objProp])
             })
 
             it('should support regular arrays', () => {
               const arrProp = [{ value: 1 }, { value: 2 }]
-              propertiesResource[method](arrProp)
+              propertyResource[method](arrProp)
               expect(Resource.prototype[method]).toHaveBeenCalledWith(arrProp)
             })
 
             it('should support shorthand object update', () => {
               const shortHandProp = { foo: 'bar', test: 1 }
-              propertiesResource[method](shortHandProp)
+              propertyResource[method](shortHandProp)
               expect(Resource.prototype[method]).toHaveBeenCalledWith([{
                 key: 'foo',
                 value: 'bar'
@@ -112,6 +106,24 @@ describe('Property', () => {
                 key: 'test',
                 value: 1
               }])
+            })
+
+            it('should support options', () => {
+              const options = { fullResponse: true }
+              propertyResource[method](1, options)
+              expect(Resource.prototype[method].calls.mostRecent().args[1])
+                .toEqual(options)
+            })
+
+            it('should support callbacks', () => {
+              const cb = () => {}
+              propertyResource[method](1, cb)
+              expect(Resource.prototype[method].calls.mostRecent().args[1])
+                .toEqual(cb)
+
+              propertyResource[method](1, {}, cb)
+              expect(Resource.prototype[method].calls.mostRecent().args[2])
+                .toEqual(cb)
             })
           })
         })
