@@ -5,25 +5,17 @@ const SPECIALS_REGEXP = new RegExp(`[${SPECIALS.join('\\')}]`, 'g')
 const SPECIALS_ESCAPE = '\\$&'
 
 /**
- * Escape special characters in value with the backslash (\) character.
+ * Build url safe parameter string if an object provided.
  *
- * @param {string} value
+ * @export
+ * @param {(Object | string)} [params] key-value object or final query string
+ * @param {boolean} [useEncoding] wether to skip encoding
  * @returns {string}
  */
-function escapeSpecials (value) {
-  return value.replace(SPECIALS_REGEXP, SPECIALS_ESCAPE)
-}
-
-/**
- * Returns function that encodes values using encodeURIComponent.
- *
- * @param {boolean} useEncoding
- * @returns {Function}
- */
-function uriEncoder (useEncoding) {
-  return (value) => useEncoding
-    ? encodeURIComponent(value)
-    : escapeSpecials(value)
+export default function buildParams (params = {}, useEncoding = true) {
+  return isPlainObject(params)
+    ? Object.keys(params).reduce(buildParam(params, useEncoding), []).join('&')
+    : params
 }
 
 /**
@@ -45,15 +37,23 @@ function buildParam (params, useEncoding) {
 }
 
 /**
- * Build url safe parameter string if an object provided.
+ * Returns function that encodes values using encodeURIComponent.
  *
- * @export
- * @param {(Object | string)} [params] key-value object or final query string
- * @param {boolean} [useEncoding] wether to skip encoding
+ * @param {boolean} useEncoding
+ * @returns {Function}
+ */
+function uriEncoder (useEncoding) {
+  return (value) => useEncoding
+    ? encodeURIComponent(value)
+    : escapeSpecials(value)
+}
+
+/**
+ * Escape special characters in value with the backslash (\) character.
+ *
+ * @param {string} value
  * @returns {string}
  */
-export default function buildParams (params = {}, useEncoding = true) {
-  return isPlainObject(params)
-    ? Object.keys(params).reduce(buildParam(params, useEncoding), []).join('&')
-    : params
+function escapeSpecials (value) {
+  return value.replace(SPECIALS_REGEXP, SPECIALS_ESCAPE)
 }

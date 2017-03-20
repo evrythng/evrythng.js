@@ -7,11 +7,12 @@
 * [x] - Add Action entity
 * [x] - Solve Collection circular reference problem
 * [x] - Unit tests for Action
-* [ ] - Add Geolocation utils
+* [x] - Add Geolocation utils
 * [ ] - Rethink ES6 module stubbing with named aggregator modules (https://github.com/eventualbuddha/rollup-plugin-stub)
 * [ ] - Unit tests for Thng resources
 * [ ] - Complete collection entity
 * [x] - Replace individual fetchMock.mocks with apiMock
+* [ ] - Unit tests for url utils
 
 ## Getting started
 
