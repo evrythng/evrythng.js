@@ -1,19 +1,13 @@
 /* eslint-env jasmine */
 import getCurrentPosition from '../../../src/util/getCurrentPosition'
-
-const position = {
-  coords: {
-    latitude: 1,
-    longitude: 2
-  }
-}
+import { positionTemplate } from '../../helpers/data'
 
 if (typeof window !== 'undefined') {
-  fdescribe('getCurrentPosition', () => {
+  describe('getCurrentPosition', () => {
     describe('success', () => {
       beforeEach(() => {
         spyOn(window.navigator.geolocation, 'getCurrentPosition')
-          .and.callFake(success => success(position))
+          .and.callFake(success => success(positionTemplate))
       })
 
       it('should use defaults', () => {
@@ -29,7 +23,7 @@ if (typeof window !== 'undefined') {
 
       it('should resolve with Geolocation', done => {
         getCurrentPosition().then(resp => {
-          expect(resp).toEqual(position)
+          expect(resp).toEqual(positionTemplate)
           done()
         })
       })

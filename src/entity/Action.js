@@ -83,7 +83,7 @@ function createAction (caller, actionType, ...args) {
         return baseCreate(...updatedArgs())
       })
       .catch(err => {
-        console.info('Unable to get position:', err)
+        console.info(`Unable to get position: ${err}`)
         return baseCreate(...updatedArgs())
       })
   } else {

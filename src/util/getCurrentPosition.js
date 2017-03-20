@@ -33,19 +33,19 @@ export default function getCurrentPosition () {
  * @return {string}
  */
 function mapError (err) {
-  let errorMessage = 'Geolocation: '
+  let errorMessage
   switch (err.code) {
     case 1:
-      errorMessage += 'User did not share location.'
+      errorMessage = 'User did not share location.'
       break
     case 2:
-      errorMessage += 'Couldn\'t detect current location.'
+      errorMessage = 'Couldn\'t detect current location.'
       break
     case 3:
-      errorMessage += 'Retrieving position timed out.'
+      errorMessage = 'Retrieving position timed out.'
       break
     default:
-      errorMessage += 'Unknown error.'
+      errorMessage = 'Unknown error.'
       break
   }
   return errorMessage

@@ -6,7 +6,12 @@ import setup from '../../../src/setup'
 import mockApi from '../../helpers/apiMock'
 import paths from '../../helpers/paths'
 import { dummyScope, dummyEntity } from '../../helpers/dummy'
-import { actionTemplate, entityTemplate, optionsTemplate } from '../../helpers/data'
+import {
+  actionTemplate,
+  entityTemplate,
+  optionsTemplate,
+  positionTemplate
+} from '../../helpers/data'
 
 const cb = () => {}
 let actionResource
@@ -165,9 +170,44 @@ describe('Action', () => {
           })
         })
 
-        describe('with Geolocation', () => {
-          // TODO
-        })
+        if (typeof window !== 'undefined') {
+          describe('with Geolocation', () => {
+            beforeEach(() => {
+              scope = Object.assign(dummyScope(), Action.resourceFactory())
+              actionResource = scope.action(actionTemplate.type)
+            })
+
+            it('should request user location if local config is passed', done => {
+              spyOn(window.navigator.geolocation, 'getCurrentPosition')
+                .and.callFake(success => success(positionTemplate))
+
+              actionResource.create(actionTemplate, { geolocation: true })
+                .then(() => {
+                  expect(window.navigator.geolocation.getCurrentPosition)
+                    .toHaveBeenCalled()
+                  expect(Resource.prototype.create.calls.mostRecent().args[0])
+                    .toEqual(jasmine.objectContaining({
+                      location: positionTemplate.coords
+                    }))
+                })
+                .then(done)
+            })
+
+            it('should create action even if geolocation failed', done => {
+              spyOn(window.navigator.geolocation, 'getCurrentPosition')
+                .and.callFake((success, error) => error(new Error()))
+              spyOn(console, 'info').and.callFake(() => {})
+
+              actionResource.create(actionTemplate, { geolocation: true })
+                .catch(() => {
+                  expect(window.navigator.geolocation.getCurrentPosition)
+                    .toHaveBeenCalled()
+                  expect(Resource.prototype.create).toHaveBeenCalled()
+                })
+                .then(done)
+            })
+          })
+        }
       })
     })
   })

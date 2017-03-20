@@ -38,3 +38,10 @@ export const operatorTemplate = {
   lastName: 'Operator',
   email: 'test@evrythng.com'
 }
+
+export const positionTemplate = {
+  coords: {
+    latitude: 1,
+    longitude: 2
+  }
+}
