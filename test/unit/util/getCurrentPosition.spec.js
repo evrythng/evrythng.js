@@ -32,7 +32,7 @@ if (typeof window !== 'undefined') {
     describe('error', () => {
       beforeEach(() => {
         spyOn(window.navigator.geolocation, 'getCurrentPosition')
-          .and.callFake((success, error) => error({ code: 10 }))
+          .and.callFake((success, error) => error(new Error('Location error')))
       })
 
       it('should reject with text message', done => {

@@ -15,38 +15,11 @@ export default function getCurrentPosition () {
 
       window.navigator.geolocation.getCurrentPosition(
         resolve,
-        err => {
-          reject(mapError(err))
-        },
+        err => reject(err.message),
         geolocationOptions
       )
     } else {
       reject('Geolocation API not available.')
     }
   })
-}
-
-/**
- * Convert Geolocation API error code to readable message.
- *
- * @param {Error} err - Geolocation API error
- * @return {string}
- */
-function mapError (err) {
-  let errorMessage
-  switch (err.code) {
-    case 1:
-      errorMessage = 'User did not share location.'
-      break
-    case 2:
-      errorMessage = 'Couldn\'t detect current location.'
-      break
-    case 3:
-      errorMessage = 'Retrieving position timed out.'
-      break
-    default:
-      errorMessage = 'Unknown error.'
-      break
-  }
-  return errorMessage
 }
