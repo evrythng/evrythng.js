@@ -1,17 +1,16 @@
 /* eslint-env jasmine */
-import fetchMock from 'fetch-mock'
-import apiUrl from '../../helpers/apiUrl'
 import Scope from '../../../src/scope/Scope'
+import fetchMock from 'fetch-mock'
+import mockApi from '../../helpers/apiMock'
+import apiUrl from '../../helpers/apiUrl'
+import paths from '../../helpers/paths'
+import { apiKey, operatorTemplate } from '../../helpers/data'
 
-const apiKey = 'apiKey'
-const apiResponse = {
-  apiKey,
-  actor: {
-    id: 'operatorId'
-  }
-}
+let scope
 
 describe('Scope', () => {
+  mockApi()
+
   describe('constructor', () => {
     describe('invalid', () => {
       it('should need an API key', () => {
@@ -26,17 +25,8 @@ describe('Scope', () => {
     })
 
     describe('valid', () => {
-      let scope
-      const operatorDocument = {
-        id: 'operatorId',
-        email: 'test@example.com'
-      }
-
-      beforeAll(() => fetchMock.mock(apiUrl('/access'), apiResponse))
-      afterAll(fetchMock.restore)
-
       beforeEach(() => {
-        scope = new Scope(apiKey, operatorDocument)
+        scope = new Scope(apiKey, operatorTemplate)
       })
 
       it('should have API Key', () => {
@@ -44,8 +34,8 @@ describe('Scope', () => {
       })
 
       it('should extend document with any pre-provided data', () => {
-        expect(scope.id).toEqual(operatorDocument.id)
-        expect(scope.email).toEqual(operatorDocument.email)
+        expect(scope.id).toEqual(operatorTemplate.id)
+        expect(scope.email).toEqual(operatorTemplate.email)
       })
 
       it('should expose $init promise', () => {
@@ -55,7 +45,7 @@ describe('Scope', () => {
 
       it('should fetch scope access using scope apiKey', done => {
         scope.$init.then(() => {
-          expect(fetchMock.lastUrl()).toEqual(apiUrl('/access'))
+          expect(fetchMock.lastUrl()).toEqual(apiUrl(paths.access))
           expect(fetchMock.lastOptions()).toEqual(
             jasmine.objectContaining({
               headers: jasmine.objectContaining({ authorization: apiKey })

@@ -1,18 +1,18 @@
 /* eslint-env jasmine */
-import fetchMock from 'fetch-mock'
-import apiUrl from '../../helpers/apiUrl'
 import Resource from '../../../src/resource/Resource'
 import Entity from '../../../src/entity/Entity'
+import fetchMock from 'fetch-mock'
+import mockApi from '../../helpers/apiMock'
+import apiUrl from '../../helpers/apiUrl'
+import paths from '../../helpers/paths'
 import { dummyScope, dummyResource, dummyEntity } from '../../helpers/dummy'
+import { entityTemplate } from '../../helpers/data'
 
-const path = '/foobar'
-const body = {
-  foo: 'bar'
-}
 let resource
+let scope
 
 describe('Resource', () => {
-  let scope
+  mockApi()
 
   beforeEach(() => {
     scope = dummyScope()
@@ -25,7 +25,7 @@ describe('Resource', () => {
     })
 
     it('should require a Scope instance', () => {
-      const invalidScopeConstructor = () => new Resource(() => {})
+      const invalidScopeConstructor = () => new Resource(1)
       expect(invalidScopeConstructor).toThrow()
     })
 
@@ -35,13 +35,13 @@ describe('Resource', () => {
     })
 
     it('should store scope', () => {
-      resource = new Resource(scope, path)
+      resource = new Resource(scope, paths.dummy)
       expect(resource.scope).toEqual(scope)
     })
 
     it('should store path', () => {
-      resource = new Resource(scope, path)
-      expect(resource.path).toEqual(path)
+      resource = new Resource(scope, paths.dummy)
+      expect(resource.path).toEqual(paths.dummy)
     })
 
     it('should allow missing preceding slash for path', () => {
@@ -51,40 +51,40 @@ describe('Resource', () => {
     })
 
     it('should store entity if passed', () => {
-      resource = new Resource(scope, path, Entity)
+      resource = new Resource(scope, paths.dummy, Entity)
       expect(resource.type).toEqual(Entity)
     })
   })
 
   describe('serialize', () => {
     it('should return object if there is no Entity', () => {
-      resource = new Resource(scope, path)
+      resource = new Resource(scope, paths.dummy)
       expect(resource.serialize()).toEqual({})
-      expect(resource.serialize(body)).toEqual(body)
+      expect(resource.serialize(entityTemplate)).toEqual(entityTemplate)
     })
 
     it('should return JSON representation if Entity', () => {
-      resource = new Resource(scope, path, Entity)
-      const dummy = new Entity(resource, body)
-      expect(resource.serialize(dummy)).toEqual(body)
+      resource = new Resource(scope, paths.dummy, Entity)
+      const dummy = new Entity(resource, entityTemplate)
+      expect(resource.serialize(dummy)).toEqual(entityTemplate)
     })
   })
 
   describe('deserialize', () => {
     it('should return payload if there is no Entity', () => {
-      resource = new Resource(scope, path)
-      expect(resource.deserialize(body)).toEqual(body)
+      resource = new Resource(scope, paths.dummy)
+      expect(resource.deserialize(entityTemplate)).toEqual(entityTemplate)
     })
 
     describe('with Entity', () => {
       beforeEach(() => {
-        resource = new Resource(scope, path, Entity)
+        resource = new Resource(scope, paths.dummy, Entity)
       })
 
       it('should return new entity with body', () => {
-        const res = resource.deserialize(body)
+        const res = resource.deserialize(entityTemplate)
         expect(res instanceof Entity).toBe(true)
-        expect(res.foo).toEqual(body.foo)
+        expect(res.foo).toEqual(entityTemplate.foo)
         expect(res.resource).toBeDefined()
         expect(res.resource.scope).toEqual(resource.scope)
         expect(res.resource.path).toEqual(resource.path)
@@ -97,42 +97,36 @@ describe('Resource', () => {
       })
 
       it('should add serialize method if Response object', done => {
-        const response = new Response(JSON.stringify(body))
+        const response = new Response(JSON.stringify(entityTemplate))
         const res = resource.deserialize(response)
 
         res.deserialize().then(res => {
-          expect(res.foo).toEqual(body.foo)
+          expect(res.foo).toEqual(entityTemplate.foo)
           done()
         })
       })
 
       it('should deserialize every element if array', () => {
-        const res = resource.deserialize([body, body])
+        const res = resource.deserialize([entityTemplate, entityTemplate])
         expect(res.length).toEqual(2)
         res.forEach(item => {
           expect(item instanceof Entity).toBe(true)
-          expect(item.foo).toEqual(body.foo)
+          expect(item.foo).toEqual(entityTemplate.foo)
         })
       })
     })
   })
 
   describe('CRUD', () => {
-    afterAll(fetchMock.restore)
-
     beforeEach(() => {
-      resource = new Resource(scope, path, Entity)
+      resource = new Resource(scope, paths.dummy, Entity)
     })
 
     describe('read', () => {
       describe('valid', () => {
-        beforeAll(() => {
-          fetchMock.get(apiUrl(path), [body, body])
-        })
-
         it('should send get request to path', done => {
           resource.read().then(() => {
-            expect(fetchMock.lastUrl()).toEqual(apiUrl(path))
+            expect(fetchMock.lastUrl()).toEqual(apiUrl(paths.dummy))
             expect(fetchMock.lastOptions().method).toEqual('get')
             done()
           })
@@ -145,7 +139,7 @@ describe('Resource', () => {
             expect(res.length).toEqual(2)
             res.forEach(item => {
               expect(item instanceof Entity).toBe(true)
-              expect(item.foo).toEqual(body.foo)
+              expect(item.foo).toEqual(entityTemplate.foo)
             })
             done()
           })
@@ -192,15 +186,11 @@ describe('Resource', () => {
       })
 
       describe('valid', () => {
-        beforeAll(() => {
-          fetchMock.post(apiUrl(path), body)
-        })
-
         it('should send post request to path', done => {
-          resource.create(body).then(() => {
-            expect(fetchMock.lastUrl()).toEqual(apiUrl(path))
+          resource.create(entityTemplate).then(() => {
+            expect(fetchMock.lastUrl()).toEqual(apiUrl(paths.dummy))
             expect(fetchMock.lastOptions().method).toEqual('post')
-            expect(fetchMock.lastOptions().body).toEqual(body)
+            expect(fetchMock.lastOptions().body).toEqual(entityTemplate)
             done()
           })
         })
@@ -208,9 +198,9 @@ describe('Resource', () => {
         // Bellow is testing the internal _request method
 
         it('should serialize body', done => {
-          const newEntity = new Entity(resource, body)
+          const newEntity = new Entity(resource, entityTemplate)
           resource.create(newEntity).then(() => {
-            expect(fetchMock.lastOptions().body).toEqual(body)
+            expect(fetchMock.lastOptions().body).toEqual(entityTemplate)
             done()
           })
         })
@@ -224,13 +214,9 @@ describe('Resource', () => {
       })
 
       describe('valid', () => {
-        beforeAll(() => {
-          fetchMock.put(apiUrl(path), body)
-        })
-
         it('should send put request to path', done => {
-          resource.update(body).then(() => {
-            expect(fetchMock.lastUrl()).toEqual(apiUrl(path))
+          resource.update(entityTemplate).then(() => {
+            expect(fetchMock.lastUrl()).toEqual(apiUrl(paths.dummy))
             expect(fetchMock.lastOptions().method).toEqual('put')
             done()
           })
@@ -239,13 +225,9 @@ describe('Resource', () => {
     })
 
     describe('delete', () => {
-      beforeAll(() => {
-        fetchMock.delete(apiUrl(path), body)
-      })
-
       it('should send delete request to path', done => {
         resource.delete().then(() => {
-          expect(fetchMock.lastUrl()).toEqual(apiUrl(path))
+          expect(fetchMock.lastUrl()).toEqual(apiUrl(paths.dummy))
           expect(fetchMock.lastOptions().method).toEqual('delete')
           done()
         })
@@ -260,8 +242,7 @@ describe('Resource', () => {
     })
 
     describe('valid', () => {
-      const resPath = '/foobar'
-      let factory = Resource.factoryFor(Entity, resPath)
+      let factory = Resource.factoryFor(Entity, paths.dummy)
       let testMixin = { test: factory }
       let extendedScope
       let extendedEntity
@@ -288,7 +269,7 @@ describe('Resource', () => {
 
       it('should have provided path', () => {
         const res = extendedScope.test()
-        expect(res.path).toEqual(resPath)
+        expect(res.path).toEqual(paths.dummy)
       })
 
       it('should have entity type defined', () => {
@@ -312,14 +293,14 @@ describe('Resource', () => {
       it('should add ID to path', () => {
         const id = 'id'
         const res = extendedScope.test(id)
-        expect(res.path).toEqual(`${resPath}/${id}`)
+        expect(res.path).toEqual(`${paths.dummy}/${id}`)
       })
 
       it('should allow extending the Resource with a Mixin', () => {
         const Mixin = C => class extends C {
           mixedIn () {}
         }
-        factory = Resource.factoryFor(Entity, resPath, Mixin)
+        factory = Resource.factoryFor(Entity, paths.dummy, Mixin)
         testMixin = { test: factory }
         extendedScope = Object.assign(dummyScope(), testMixin)
         expect(extendedScope.test().mixedIn).toBeDefined()

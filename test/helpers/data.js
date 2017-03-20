@@ -1,16 +1,3 @@
-export default {
-  apiKey: 'apiKey',
-  operator: {
-    id: 'operatorId',
-    firstName: 'Test',
-    lastName: 'Operator'
-  },
-  thng: {
-    id: 'thndId',
-    name: 'Test Thng'
-  }
-}
-
 export const apiKey = 'apiKey'
 
 export const optionsTemplate = {
@@ -18,13 +5,6 @@ export const optionsTemplate = {
   headers: {
     'Accept': '*/*'
   }
-}
-
-export const paths = {
-  actions: '/actions',
-  dummy: '/path',
-  products: '/products',
-  properties: '/properties'
 }
 
 export const entityTemplate = {
@@ -36,6 +16,11 @@ export const productTemplate = {
   name: 'Test Product'
 }
 
+export const thngTemplate = {
+  id: 'thndId',
+  name: 'Test Thng'
+}
+
 export const propertyTemplate = {
   key: 'test',
   value: 1
@@ -45,4 +30,11 @@ export const actionTemplate = {
   id: 'actionId',
   type: 'test',
   product: productTemplate.id
+}
+
+export const operatorTemplate = {
+  id: 'operatorId',
+  firstName: 'Test',
+  lastName: 'Operator',
+  email: 'test@evrythng.com'
 }

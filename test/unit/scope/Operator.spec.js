@@ -1,19 +1,15 @@
 /* eslint-env jasmine */
-import fetchMock from 'fetch-mock'
-import apiUrl from '../../helpers/apiUrl'
-import responses from '../../helpers/responses'
-import data from '../../helpers/data'
 import Operator from '../../../src/scope/Operator'
+import fetchMock from 'fetch-mock'
+import mockApi from '../../helpers/apiMock'
+import apiUrl from '../../helpers/apiUrl'
+import paths from '../../helpers/paths'
+import { apiKey, operatorTemplate } from '../../helpers/data'
 
-const apiKey = data.apiKey
-const operatorId = data.operator.id
 let operator
 
 describe('Operator', () => {
-  beforeEach(() => {
-    fetchMock.get(apiUrl('/access'), responses.access.operator)
-  })
-  afterEach(fetchMock.restore)
+  mockApi()
 
   describe('constructor', () => {
     describe('existent', () => {
@@ -32,8 +28,7 @@ describe('Operator', () => {
 
     describe('non-existent', () => {
       beforeEach(() => {
-        fetchMock.get(apiUrl(`/operators/${operatorId}`), responses.error.generic)
-        operator = new Operator(apiKey)
+        operator = new Operator('invalidKey')
       })
 
       it('should throw error', done => {
@@ -47,14 +42,13 @@ describe('Operator', () => {
 
   describe('read', () => {
     beforeEach(done => {
-      fetchMock.get(apiUrl(`/operators/${operatorId}`), responses.operator.one)
       operator = new Operator(apiKey)
       operator.$init.then(done)
     })
 
     it('should send get request to operator ID', done => {
       operator.read().then(() => {
-        expect(fetchMock.lastUrl()).toEqual(apiUrl(`/operators/${operatorId}`))
+        expect(fetchMock.lastUrl()).toEqual(apiUrl(paths.operator))
         expect(fetchMock.lastOptions().method).toEqual('get')
         done()
       })
@@ -63,39 +57,30 @@ describe('Operator', () => {
     it('should fill operator scope with details', done => {
       operator.read().then(response => {
         expect(operator).toBe(response)
-        expect(operator).toEqual(jasmine.objectContaining(data.operator))
+        expect(operator).toEqual(jasmine.objectContaining(operatorTemplate))
         done()
       })
     })
   })
 
   describe('update', () => {
-    const payload = {
-      firstName: 'firstName'
-    }
-    const updateResponse = Object.assign({}, responses.operator.one)
-    Object.assign(updateResponse.body, payload)
-
     beforeEach(done => {
-      fetchMock.get(apiUrl(`/operators/${operatorId}`), responses.operator.one)
-      fetchMock.put(apiUrl(`/operators/${operatorId}`), updateResponse)
       operator = new Operator(apiKey)
       operator.$init.then(done)
     })
 
     it('should send get request to operator ID', done => {
-      operator.update(payload).then(() => {
-        expect(fetchMock.lastUrl()).toEqual(apiUrl(`/operators/${operatorId}`))
+      operator.update(operatorTemplate).then(() => {
+        expect(fetchMock.lastUrl()).toEqual(apiUrl(paths.operator))
         expect(fetchMock.lastOptions().method).toEqual('put')
         done()
       })
     })
 
     it('should fill operator scope with details', done => {
-      operator.read(payload).then(response => {
-        expect(operator.firstName).toEqual(payload.firstName)
+      operator.update(operatorTemplate).then(response => {
         expect(operator).toBe(response)
-        expect(operator).toEqual(jasmine.objectContaining(data.operator))
+        expect(operator).toEqual(jasmine.objectContaining(operatorTemplate))
         done()
       })
     })

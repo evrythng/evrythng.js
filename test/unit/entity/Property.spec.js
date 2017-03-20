@@ -1,14 +1,18 @@
 /* eslint-env jasmine */
 import Resource from '../../../src/resource/Resource'
 import Property from '../../../src/entity/Property'
+import mockApi from '../../helpers/apiMock'
+import paths from '../../helpers/paths'
 import { dummyScope, dummyResource, dummyEntity } from '../../helpers/dummy'
-import { paths, propertyTemplate, optionsTemplate } from '../../helpers/data'
+import { propertyTemplate, optionsTemplate } from '../../helpers/data'
 
 const cb = () => {}
 let propertyResource
 let resource
 
 describe('Property', () => {
+  mockApi()
+
   describe('resourceFactory', () => {
     it('should only be allowed as a nested resource', () => {
       const scope = Object.assign(

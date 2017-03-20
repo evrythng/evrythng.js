@@ -11,7 +11,7 @@
 * [ ] - Rethink ES6 module stubbing with named aggregator modules (https://github.com/eventualbuddha/rollup-plugin-stub)
 * [ ] - Unit tests for Thng resources
 * [ ] - Complete collection entity
-* [ ] - Replace individual fetchMock.mocks with apiMock
+* [x] - Replace individual fetchMock.mocks with apiMock
 
 ## Getting started
 

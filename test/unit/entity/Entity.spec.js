@@ -1,5 +1,6 @@
 /* eslint-env jasmine */
 import Entity from '../../../src/entity/Entity'
+import mockApi from '../../helpers/apiMock'
 import { dummyResource } from '../../helpers/dummy'
 import { entityTemplate } from '../../helpers/data'
 
@@ -7,6 +8,8 @@ const cb = () => {}
 let entity
 
 describe('Entity', () => {
+  mockApi()
+
   it('should require Resource', () => {
     const emptyConstructor = () => new Entity()
     expect(emptyConstructor).toThrow()

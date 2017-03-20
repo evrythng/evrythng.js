@@ -3,15 +3,19 @@ import Resource from '../../../src/resource/Resource'
 import Action from '../../../src/entity/Action'
 import Entity from '../../../src/entity/Entity'
 import setup from '../../../src/setup'
+import mockApi from '../../helpers/apiMock'
+import paths from '../../helpers/paths'
 import { dummyScope, dummyEntity } from '../../helpers/dummy'
-import { paths, actionTemplate, entityTemplate } from '../../helpers/data'
+import { actionTemplate, entityTemplate, optionsTemplate } from '../../helpers/data'
 
-// const cb = () => {}
+const cb = () => {}
 let actionResource
 let scope
 let entity
 
 describe('Action', () => {
+  mockApi()
+
   describe('resourceFactory', () => {
     beforeEach(() => {
       scope = Object.assign(dummyScope(), Action.resourceFactory())
@@ -137,8 +141,27 @@ describe('Action', () => {
             ]).then(done)
           })
 
-          xit('should support callbacks', () => {
-            // TODO
+          it('should support callback in first param', done => {
+            actionResource.create(cb).then(() => {
+              expect(Resource.prototype.create.calls.mostRecent().args[1])
+                .toEqual(cb)
+            }).then(done)
+          })
+
+          it('should support callback in second param', done => {
+            actionResource.create(actionTemplate, cb).then(() => {
+              expect(Resource.prototype.create.calls.mostRecent().args[1])
+                .toEqual(cb)
+            }).then(done)
+          })
+
+          it('should support callback in third param', done => {
+            actionResource.create(actionTemplate, optionsTemplate, cb)
+              .then(() => {
+                expect(Resource.prototype.create.calls.mostRecent().args[2])
+                  .toEqual(cb)
+              })
+              .then(done)
           })
         })
 

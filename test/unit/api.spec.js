@@ -1,36 +1,25 @@
 /* eslint-env jasmine */
-import fetchMock from 'fetch-mock'
-import apiUrl from '../helpers/apiUrl'
 import settings from '../../src/settings'
 import setup from '../../src/setup'
 import api from '../../src/api'
+import mockApi from '../helpers/apiMock'
+import fetchMock from 'fetch-mock'
+import apiUrl from '../helpers/apiUrl'
+import paths from '../helpers/paths'
+import responses from '../helpers/responses'
+import { operatorTemplate } from '../helpers/data'
 
 let request
-const response = {
-  id: 'testId',
-  name: 'Foobar'
-}
-const error = {
-  status: 400,
-  body: {
-    status: 400,
-    errors: ['error']
-  }
-}
 
 // Copy initial settings
 const initialSettings = Object.assign({}, settings)
 
 describe('api', () => {
-  beforeAll(() => {
-    fetchMock.mock(apiUrl('/error'), Object.assign({}, error))
-    fetchMock.mock('*', Object.assign({}, response))
-  })
-  afterAll(fetchMock.restore)
+  mockApi()
 
   afterEach(done => {
     setup(initialSettings)
-    request.then(done).catch(done)
+    request.then(done).catch(done.fail)
   })
 
   describe('options', () => {
@@ -171,7 +160,7 @@ describe('api', () => {
           const json = res.json
           res.json = function () {
             return json.apply(this, arguments).then(j => {
-              j.foo = 'bar'
+              j.patch = 'patched'
               return j
             })
           }
@@ -182,7 +171,6 @@ describe('api', () => {
       beforeEach(() => {
         requestSpy.calls.reset()
         responseSpy.calls.reset()
-        fetchMock.reset()
       })
 
       describe('request interceptors', () => {
@@ -234,6 +222,7 @@ describe('api', () => {
         })
 
         it('should be able to cancel requests', () => {
+          fetchMock.reset()
           const interceptors = [cancelInterceptor]
           request = api({ interceptors }).catch(err => {
             expect(err.cancelled).toBe(true)
@@ -242,6 +231,7 @@ describe('api', () => {
         })
 
         it('should be able to cancel request from async interceptor', () => {
+          fetchMock.reset()
           const interceptors = [asyncCancelInterceptor]
           request = api({ interceptors }).catch(err => {
             expect(err.cancelled).toBe(true)
@@ -250,6 +240,7 @@ describe('api', () => {
         })
 
         it('should not run interceptors after request is cancelled', () => {
+          fetchMock.reset()
           const interceptors = [cancelInterceptor, loggerInterceptor]
           request = api({ interceptors }).catch(() => {
             expect(requestSpy).not.toHaveBeenCalled()
@@ -260,8 +251,10 @@ describe('api', () => {
         it('should cancel the right request', () => {
           const firstRequest = api({ interceptors: [asyncCancelInterceptor] })
             .then(() => expect(true).toBe(false)) // should not get here
+            .catch(() => expect(true).toBe(true))
 
           const secondRequest = api({ interceptors: [loggerInterceptor] })
+            .then(() => expect(true).toBe(true))
             .catch(() => expect(true).toBe(false)) // should not get here
 
           request = Promise.all([firstRequest, secondRequest])
@@ -273,15 +266,16 @@ describe('api', () => {
           const interceptors = [loggerInterceptor]
           request = api({ interceptors }).then(() => {
             expect(responseSpy).toHaveBeenCalled()
-            expect(responseSpy).toHaveBeenCalledWith(response)
+            expect(responseSpy).toHaveBeenCalledWith(responses.ok.body)
           })
         })
 
         it('should be able to mutate simple response', () => {
           const interceptors = [mutatorInterceptor]
-          request = api({ interceptors }).then(res => {
+          const url = paths.operators
+          request = api({ interceptors, url }).then(res => {
             expect(res.id).toBeDefined()
-            expect(res.id).toEqual(response.id)
+            expect(res.id).toEqual(operatorTemplate.id)
             expect(res.foo).toBeDefined()
             expect(res.foo).toEqual('bar')
           })
@@ -310,6 +304,7 @@ describe('api', () => {
           const interceptors = [rejectInterceptor]
           request = api({ interceptors })
             .then(() => expect(true).toBe(false)) // should not get here
+            .catch(() => expect(true).toBe(true))
         })
 
         it('should allow monkey patch of full responses', () => {
@@ -317,8 +312,8 @@ describe('api', () => {
           request = api({ interceptors, fullResponse: true })
             .then(res => res.json())
             .then(res => {
-              expect(res.foo).toBeDefined()
-              expect(res.foo).toEqual('bar')
+              expect(res.patch).toBeDefined()
+              expect(res.patch).toEqual('patched')
             })
         })
       })
@@ -328,7 +323,7 @@ describe('api', () => {
       it('should join url with apiUrl', () => {
         const customOptions = {
           apiUrl: 'https://api-test.evrythng.net',
-          url: '/thngs'
+          url: paths.dummy
         }
         request = api(customOptions).then(() => {
           expect(fetchMock.lastUrl())
@@ -341,7 +336,7 @@ describe('api', () => {
           foo: 'bar'
         }
         request = api({ params }).then(() => {
-          expect(fetchMock.lastUrl()).equal(apiUrl('?foo=bar'))
+          expect(fetchMock.lastUrl()).toEqual(apiUrl('?foo=bar'))
         })
       })
 
@@ -357,15 +352,24 @@ describe('api', () => {
 
     describe('handle response', () => {
       it('should return json body by default', () => {
-        request = api({ url: '/thngs' }).then(res => {
-          expect(res).toEqual(response)
+        request = api().then(res => {
+          expect(res).toEqual(responses.ok.body)
+        })
+      })
+
+      it('should handle empty body', () => {
+        request = api({
+          method: 'delete',
+          url: paths.dummy
+        }).then(res => {
+          expect(res).toBeUndefined()
         })
       })
 
       it('should reject on HTTP error code', function () {
-        request = api({ url: '/error' })
+        request = api({ url: paths.error })
           .then(() => expect(true).toBe(false)) // should not get here
-          .catch(res => expect(res).toEqual(error.body))
+          .catch(res => expect(res).toEqual(responses.error.generic.body))
       })
 
       it('should return full Response object with fullResponse option', () => {
@@ -375,14 +379,14 @@ describe('api', () => {
           expect(res.ok).toBe(true)
 
           return res.json().then(body => {
-            expect(body).toEqual(response)
+            expect(body).toEqual(responses.ok.body)
           })
         })
       })
 
       it('should return full Response object even on HTTP error code', function () {
         request = api({
-          url: '/error',
+          url: paths.error,
           fullResponse: true
         })
           .then(() => expect(true).toBe(false)) // should not get here
@@ -391,7 +395,7 @@ describe('api', () => {
             expect(res.ok).toBe(false)
 
             return res.json().then(body => {
-              expect(body).toEqual(error.body)
+              expect(body).toEqual(responses.error.generic.body)
             })
           })
       })
@@ -403,14 +407,16 @@ describe('api', () => {
       beforeEach(callbackSpy.calls.reset)
 
       it('should call callback without error on success', () => {
-        request = api({ url: '/thngs' }, callbackSpy).then(() => {
-          expect(callbackSpy).toHaveBeenCalledWith(null, response)
+        request = api({ url: paths.dummy }, callbackSpy).then(() => {
+          expect(callbackSpy)
+            .toHaveBeenCalledWith(null, responses.entity.multiple.body)
         })
       })
 
       it('should call callback with error on error', () => {
-        request = api({ url: '/error' }, callbackSpy)
-          .catch(() => expect(callbackSpy).toHaveBeenCalledWith(error.body))
+        request = api({ url: paths.error }, callbackSpy)
+          .catch(() => expect(callbackSpy)
+            .toHaveBeenCalledWith(responses.error.generic.body))
       })
     })
   })

@@ -11,7 +11,7 @@ export default function buildUrl (options) {
   let url = `${options.apiUrl}${options.url}`
 
   if (options.params) {
-    url += (url.includes('?') ? '?' : '&') + buildParams(options.params)
+    url += (url.includes('?') ? '&' : '?') + buildParams(options.params)
   }
 
   return url

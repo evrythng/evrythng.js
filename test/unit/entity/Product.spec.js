@@ -1,13 +1,17 @@
 /* eslint-env jasmine */
 import Resource from '../../../src/resource/Resource'
 import Product from '../../../src/entity/Product'
+import mockApi from '../../helpers/apiMock'
+import paths from '../../helpers/paths'
 import { dummyScope, dummyResource } from '../../helpers/dummy'
-import { paths, productTemplate } from '../../helpers/data'
+import { productTemplate } from '../../helpers/data'
 
 let productResource
 let product
 
 describe('Product', () => {
+  mockApi()
+
   describe('resourceFactory', () => {
     beforeEach(() => {
       const scope = Object.assign(dummyScope(), Product.resourceFactory())

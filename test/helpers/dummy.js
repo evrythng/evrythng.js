@@ -1,8 +1,8 @@
-import './apiMock'
 import Scope from '../../src/scope/Scope'
 import Resource from '../../src/resource/Resource'
 import Entity from '../../src/entity/Entity'
-import { apiKey, paths, entityTemplate } from './data'
+import paths from './paths'
+import { apiKey, entityTemplate } from './data'
 
 // Any call to dummy creators below should be inside test blocks (either
 // `beforeAll`, `beforeEach` or `it`).
