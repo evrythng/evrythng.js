@@ -9,5 +9,6 @@ export default {
   operators: '/operators',
   operator: `/operators/${data.operatorTemplate.id}`,
   products: '/products',
-  properties: '/properties'
+  properties: '/properties',
+  thngs: '/thngs'
 }
