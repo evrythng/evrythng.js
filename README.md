@@ -9,11 +9,15 @@
 * [x] - Unit tests for Action
 * [x] - Add Geolocation utils
 * [x] - Unit tests for Thng resources
-* [ ] - Add Location entity
+* [x] - Add Location entity
+* [ ] - Unit tests for Location
 * [ ] - Complete collection entity
 * [x] - Replace individual fetchMock.mocks with apiMock
 * [ ] - Unit tests for url utils
 * [ ] - Reconsider ES6 module stubbing with aggregator modules and named exports (https://github.com/eventualbuddha/rollup-plugin-stub)
+* [ ] - Yarn?
+* [ ] - Validate JSDoc?
+* [ ] - Prettier-standard? https://github.com/sheerun/prettier-standard
 
 ## Getting started
 

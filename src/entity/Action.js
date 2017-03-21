@@ -99,6 +99,7 @@ function createAction (caller, actionType, ...args) {
  * @example
  *
  * product.action().create()
+ * product.action().create(<Action>)
  */
 function normalizeArguments (...args) {
   let firstArg = args[0]
@@ -163,7 +164,7 @@ function useGeolocation (options) {
  * Fill action location with coordinates from browser's Geolocation API.
  *
  * @param {Object} data - Action data
- * @param {GeoJSON} position - GeoJSON with position coordinates
+ * @param {Object} position - Geolocation API position coordinates
  * @return {Object} - New action data
  */
 function fillActionLocation (data, position) {

@@ -7,7 +7,7 @@ import isPlainObject from 'lodash-es/isPlainObject'
 const path = '/properties'
 
 /**
- * Represents a Property entity. Properties are always nested and require
+ * Represents a Property entity. Properties are always nested and required
  * to be constructed on Resource/Entity objects (not top level Scopes).
  *
  * @extends Entity
