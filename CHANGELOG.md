@@ -1,3 +1,9 @@
+# v4.4.0 (03-04-2017)
+
+## Features
+
+-**Roles**: Add Role resource in Operator and User scope.
+
 # v4.3.0 (30-01-2017)
 
 ## Features
