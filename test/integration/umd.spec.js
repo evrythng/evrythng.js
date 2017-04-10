@@ -3,7 +3,7 @@
   if (typeof define === 'function' && define.amd) {
     define(['evrythng'], factory)
   } else if (typeof module === 'object' && module.exports) {
-    factory(require('../../dist/evrythng.polyfill'))
+    factory(require('../../dist/evrythng'))
   } else {
     factory(root.EVT)
   }

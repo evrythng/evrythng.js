@@ -2,8 +2,8 @@
   "name": "evrythng",
   "version": "5.0.0-pre.2",
   "description": "Official Javascript SDK for the EVRYTHNG API.",
-  "main": "dist/evrythng.polyfill.js",
-  "jsnext:main": "dist/evrythng.es6.polyfill.js",
+  "main": "dist/evrythng.js",
+  "module": "dist/evrythng.es6.js",
   "scripts": {
     "lint": "gulp lint",
     "build": "gulp build",
@@ -34,7 +34,7 @@
   "devDependencies": {
     "fetch-mock": "^5.8.1",
     "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-evrythng-tasks": "^0.0.6",
+    "gulp-evrythng-tasks": "^0.0.7",
     "lodash-es": "^4.17.2"
   },
   "standard": {
