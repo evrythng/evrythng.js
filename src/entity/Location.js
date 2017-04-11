@@ -27,7 +27,7 @@ export default class Location extends Entity {
    */
   static resourceFactory () {
     return {
-      action () {
+      location () {
         // Locations don't have single resource endpoint (e.g.: /locations/:id)
         if (arguments.length > 0) {
           throw new TypeError('There is no single resource for Locations')
@@ -63,21 +63,21 @@ export default class Location extends Entity {
  */
 function updateLocation (...args) {
   let [data, ...rest] = normalizeArguments(...args)
-  const baseCreate = Resource.prototype.create.bind(this)
+  const baseUpdate = Resource.prototype.update.bind(this)
   const updatedArgs = () => [data, ...rest]
 
   if (useGeolocation(data)) {
     return getCurrentPosition()
       .then(position => {
         data[0] = fillLocation(data[0], position)
-        return baseCreate(...updatedArgs())
+        return baseUpdate(...updatedArgs())
       })
       .catch(err => {
         console.info(`Unable to get position: ${err}`)
-        return baseCreate(...updatedArgs())
+        return baseUpdate(...updatedArgs())
       })
   } else {
-    return baseCreate(...updatedArgs())
+    return baseUpdate(...updatedArgs())
   }
 }
 
@@ -110,7 +110,7 @@ function normalizeArguments (...args) {
  * @return {boolean}
  */
 function useGeolocation (data) {
-  return data.length > 0 && settings.geolocation
+  return data.length === 0 && settings.geolocation
 }
 
 /**

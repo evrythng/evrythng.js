@@ -6,6 +6,7 @@ export default {
   access: '/access',
   actions: '/actions',
   dummy: '/path',
+  locations: '/locations',
   operators: '/operators',
   operator: `/operators/${data.operatorTemplate.id}`,
   products: '/products',

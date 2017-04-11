@@ -45,3 +45,11 @@ export const positionTemplate = {
     longitude: 2
   }
 }
+
+export const locationTemplate = {
+  position: {
+    type: 'Point',
+    coordinates: [1.1, 2.2]
+  },
+  timestamp: 1
+}

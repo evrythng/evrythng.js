@@ -9,7 +9,7 @@
 * [x] - Add Geolocation utils
 * [x] - Unit tests for Thng resources
 * [x] - Add Location entity
-* [ ] - Unit tests for Location
+* [x] - Unit tests for Location
 * [ ] - Complete collection entity
 * [x] - Replace individual fetchMock.mocks with apiMock
 * [ ] - Unit tests for url utils
@@ -35,7 +35,7 @@ resource oriented API. It can be used both for server-side scripting (Node.js) o
 
 ## Install
 
-evrythng.js is distributed via NPM, Bower and the EVRYTHNG CDN. This ensures you manage the version of the library that your
+evrythng.js is distributed via NPM, Bower and the EVRYTHNG CDN. This ensures you can manage the version of the library that your
 application or scripts uses.
 
 ### NPM
@@ -61,8 +61,7 @@ EVT.api({ url: '/thngs' })
 ```
 
 If you're using [Webpack](https://webpack.js.org/), [Rollup](https://rollupjs.org/) or [Browserify](http://browserify.org/)
-the `evrythng` NPM module also works from the browser using the CommonJS format (there's also an ES2015 version
-- see [Compatibility](#compatibility)).
+the `evrythng` NPM module also works from the browser using the CommonJS format (there's also an ES2015 version - see [Compatibility](#compatibility)).
 
 If using evrythng.js in Node.js, you need to also load the fetch API polyfill (see [Compatibility](#compatibility)).
 
@@ -108,21 +107,20 @@ Or use a simple script tag to load it from the CDN.
 ### Node.js + Older browsers
 
 evrythng.js relies on the new standard resource fetching API (**fetch**) to communicate with the EVRYTHNG API. **fetch** has already
-been shipped in the major browsers (see http://caniuse.com/#feat=fetch). Nevertheless, if you're targeting older browsers you will
-need to also load a fetch polyfill before evrythng.js.
+been shipped in all the major browsers (see http://caniuse.com/#feat=fetch). Nevertheless, if you're targeting older browsers or
+running in Node.js you will also need to load the fetch polyfill. The polyfill dependency is already installed in both NPM or Bower
+version. It just needs to be loaded.
 
 #### CommonJS
 
-**Note:** Node.js always needs the polyfill.
+**Note: Node.js always requires the polyfill.**
 
 ```javascript
 require('isomorphic-fetch')
 const EVT = require('evrythng')
 ```
 
-#### Browser
-
-RequireJS:
+#### RequireJS
 
 ```javascript
 requirejs.config({
@@ -140,7 +138,7 @@ require(['evrythng'], function (EVT) {
 });
 ```
 
-Globals:
+#### Globals
 
 ```html
 <script src="//cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js"></script>
@@ -153,17 +151,23 @@ If you're using modern bundlers like Webpack 2 and Rollup and using the new ES m
 use the module version of evrythng.js as well, in order to take advantage of the static analysis that those bundlers provide
 (e.g. tree-shaking).
 
-Both Rollup and Webpack 2 will use the `module` entrypoint by default. I.e. you're already using ES2015 by default. Awesome.
+Both Rollup and Webpack 2 will use the `pkg.module` entrypoint by default. I.e. you're already using ES2015 by default. Awesome.
+
+```javascript
+import {App} from 'evrythng'
+
+const app = new App('<application_api_key>');
+```
 
 ## Scopes
 
 It's useful to understand the [different Scopes and API Keys that are used to interact with the API](https://developers.evrythng.com/docs/api-scope-and-key-permissions).
-Only the Application API Key can be safely versioned in public code! The rest are private and secure API Keys with higher permission sets
-and should not be hard-coded - ideally encrypted in configuration files or fetched at runtime from a server.
+**Only the Application API Key can be safely versioned in public code!** The rest are private and secure API Keys with higher
+permission sets and should not be hard-coded - ideally encrypted in configuration files or fetched at runtime from a server.
 
 evrythng.js provides the following Scopes:
 
-* EVT.Operator - Highest level scope that can manage the account structure, its resources, manage team members, etc.
+* **EVT.Operator**: Highest level scope that can manage the account structure, its resources, manage team members, etc.
 
 ```javascript
 const operator = new EVT.Operator('<operator_api_key>')
