@@ -53,3 +53,8 @@ export const locationTemplate = {
   },
   timestamp: 1
 }
+
+export const collectionTemplate = {
+  id: 'collectionId',
+  name: 'Test Collection'
+}

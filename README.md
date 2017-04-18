@@ -10,7 +10,7 @@
 * [x] - Unit tests for Thng resources
 * [x] - Add Location entity
 * [x] - Unit tests for Location
-* [ ] - Complete collection entity
+* [x] - Complete collection entity
 * [x] - Replace individual fetchMock.mocks with apiMock
 * [ ] - Unit tests for url utils
 * [ ] - Reconsider ES6 module stubbing with aggregator modules and named exports (https://github.com/eventualbuddha/rollup-plugin-stub)

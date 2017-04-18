@@ -15,10 +15,10 @@ const CollectionResources = mixinResources([
  * Represents a Collection entity object. Collection has nested Collections
  * sub-resources. The workaround for the circular dependency is to only add
  * the Collection resource mixin after the class definition. This is different
- * than baking it in the parent Class Expression (i.e. CollectionResources) as
- * the method is attached to the Collection prototype, rather than the extended
- * Entity class. Though, given the JS prototype chain, there is no difference
- * for the end user.
+ * than baking it in the parent Class Expression mixin
+ * (i.e. CollectionResources) as the method is attached to the Collection
+ * prototype, rather than the extended Entity class. Though, given the JS
+ * prototype chain, there is no difference for the end user.
  *
  * @extends Entity
  */
@@ -27,7 +27,7 @@ export default class Collection extends CollectionResources(Entity) {
    * Return simple resource factory for Collections.
    *
    * @static
-   * @return {{product: Function}}
+   * @return {{collection: Function}}
    */
   static resourceFactory () {
     return {
