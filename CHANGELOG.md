@@ -1,3 +1,9 @@
+# v4.5.0 (25-04-2017)
+
+## Features
+
+-**Permissions**: Add Permission resource to Roles.
+
 # v4.4.1 (25-04-2017)
 
 ## Bug fixes
