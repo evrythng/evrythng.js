@@ -1,3 +1,9 @@
+# v4.4.1 (25-04-2017)
+
+## Bug fixes
+
+- **HTTP**: Fix incorrect Content-Type header check in Node.
+
 # v4.4.0 (03-04-2017)
 
 ## Features
