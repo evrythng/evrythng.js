@@ -4,6 +4,7 @@ import Thng from '../entity/Thng'
 import Collection from '../entity/Collection'
 import Action from '../entity/Action'
 import ActionType from '../entity/ActionType'
+import Project from '../entity/Project'
 import api from '../api'
 import { mixinResources } from '../util/mixin'
 
@@ -14,8 +15,8 @@ import { mixinResources } from '../util/mixin'
  *  - Collection resource (CRUD)
  *  - Action resource (CRUD)
  *  - ActionType resource (CR)
- *  - App User resource (R)
  *  - Project resource (CRUD)
+ *  - App User resource (R)
  *  - Batch resource (CRUD)
  *  - Role resource (CRUD)
  *  - File resource (CRD)
@@ -25,7 +26,8 @@ const operatorResources = [
   Thng,
   Collection,
   Action,
-  ActionType
+  ActionType,
+  Project
 ]
 
 /**

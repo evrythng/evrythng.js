@@ -24,7 +24,7 @@ export default class Property extends Entity {
    */
   static resourceFactory () {
     return {
-      property (property) {
+      property (id) {
         // Only allowed on Entities and Resources.
         if (this instanceof Scope) {
           throw new Error('Property is not a top-level resource.')
@@ -34,7 +34,7 @@ export default class Property extends Entity {
         // Override property resource create/update to allow custom value
         // params. See `normalizeArguments()`.
         return Object.assign(
-          Resource.factoryFor(Property, path).call(this, property),
+          Resource.factoryFor(Property, path).call(this, id),
           {
             create (...args) {
               return Resource.prototype.create

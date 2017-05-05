@@ -87,29 +87,24 @@ describe('Operator', () => {
   })
 
   describe('access', () => {
+    const operatorResources = [
+      'product',
+      'thng',
+      'collection',
+      'action',
+      'actionType',
+      'project'
+    ]
+
     beforeEach(done => {
       operator = new Operator(apiKey)
       operator.$init.then(done)
     })
 
-    it('should have product resource', () => {
-      expect(operator.product).toBeDefined()
-    })
-
-    it('should have thng resource', () => {
-      expect(operator.thng).toBeDefined()
-    })
-
-    it('should have collection resource', () => {
-      expect(operator.collection).toBeDefined()
-    })
-
-    it('should have action resource', () => {
-      expect(operator.action).toBeDefined()
-    })
-
-    it('should have action type resource', () => {
-      expect(operator.actionType).toBeDefined()
+    operatorResources.forEach(resource => {
+      it(`should have ${resource} resource`, () => {
+        expect(operator[resource]).toBeDefined()
+      })
     })
   })
 })

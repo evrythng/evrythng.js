@@ -1,10 +1,10 @@
-const dependencies = {
+const paths = {
   'evrythng': 'evrythng.polyfill',
   'isomorphic-fetch': '../node_modules/whatwg-fetch/fetch'
 }
 
 if (typeof module !== 'undefined') {
-  module.exports = dependencies
+  module.exports = paths
 } else {
   let tests = []
   for (let file in window.__karma__.files) {
@@ -22,8 +22,6 @@ if (typeof module !== 'undefined') {
     deps: tests,
 
     paths,
-
-    shims,
 
     // we have to kickoff jasmine, as it is asynchronous
     callback: window.__karma__.start

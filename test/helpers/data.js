@@ -65,3 +65,13 @@ export const actionTypeTemplate = {
     displayname: 'Foo Bar'
   }
 }
+
+export const projectTemplate = {
+  id: 'projectId',
+  name: 'Test Project'
+}
+
+export const applicationTemplate = {
+  id: 'applicationId',
+  name: 'Test Application'
+}
