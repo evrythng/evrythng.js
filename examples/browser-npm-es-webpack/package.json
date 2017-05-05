@@ -1,0 +1,13 @@
+{
+  "name": "evrythng.js-browser-npm-es-webpack-example",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "evrythng": "file:../..",
+    "webpack": "^2.4.1"
+  },
+  "scripts": {
+    "postinstall": "./node_modules/.bin/webpack"
+  }
+}

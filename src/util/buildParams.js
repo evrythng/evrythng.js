@@ -9,12 +9,12 @@ const SPECIALS_ESCAPE = '\\$&'
  *
  * @export
  * @param {(Object | string)} [params] key-value object or final query string
- * @param {boolean} [useEncoding] wether to skip encoding
+ * @param {boolean} [useEncoding] whether to skip encoding
  * @returns {string}
  */
 export default function buildParams (params = {}, useEncoding = true) {
   return isPlainObject(params)
-    ? Object.keys(params).reduce(buildParam(params, useEncoding), []).join('&')
+    ? Object.entries(params).map(buildParam(useEncoding)).join('&')
     : params
 }
 
@@ -22,17 +22,13 @@ export default function buildParams (params = {}, useEncoding = true) {
  * Returns reducer function that adds the encoded key-value params to
  * accumulator.
  *
- * @param {Object} params
  * @param {boolean} useEncoding
  * @returns {Function}
  */
-function buildParam (params, useEncoding) {
+function buildParam (useEncoding) {
   const encode = uriEncoder(useEncoding)
-  return (accumulator, key) => {
-    const value = params[key]
-    const v = isPlainObject(value) ? buildParams(value) : value
-    accumulator.push(`${encode(key)}=${encode(v)}`)
-    return accumulator
+  return ([key, value]) => {
+    return `${encode(key)}=${encode(buildParams(value))}`
   }
 }
 

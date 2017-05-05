@@ -12,7 +12,7 @@
 * [x] - Unit tests for Location
 * [x] - Complete collection entity
 * [x] - Replace individual fetchMock.mocks with apiMock
-* [ ] - Unit tests for url utils
+* [x] - Unit tests for url utils
 * [ ] - Reconsider ES6 module stubbing with aggregator modules and named exports (https://github.com/eventualbuddha/rollup-plugin-stub)
 * [x] - Yarn?
 * [ ] - Validate JSDoc?
@@ -20,6 +20,22 @@
 * [ ] - Gulp task to generate docs build
 * [ ] - Publish JSDoc. Is it understandable?
 * [ ] - Finish and polish README
+
+## Make sure it works with
+* [x] - Node + NPM package (main field) -> UMD + ES5 + polyfill
+* [x] - Node + NPM package + Webpack (module field) -> ESM + ES6 + polyfill
+* [x] - Browser + NPM package + Globals (dist/evrythng.js) -> UMD + ES5 + polyfill
+* [x] - Browser + NPM package + Globals (dist/evrythng.es6.js) -> ESM + ES6 (Safari 10.1 only)
+* [x] - Browser + NPM package + RequireJS (dist/evrythng.js) -> UMD + ES5 + polyfill
+* [x] - Browser + NPM package + Webpack (module + browser field) -> ESM + ES6
+* [x] - Browser + NPM package + Rollup (module + browser field) -> ESM + ES6
+* [x] - Browser + NPM package + Browserify (browser field) -> UMD + ES5 + polyfill
+* [ ] - Browser + CDN + Globals (dist) -> UMD + ES5 + polyfill
+* [ ] - Browser + Bower package + Globals (dist/evrythng.js) -> UMD + ES5 + polyfill
+* [ ] - Browser + Bower package + Globals (dist/evrythng.es6.js) -> ESM + ES6 (Safari 10.1 only)
+* [ ] - Browser + Bower package + RequireJS (dist/evrythng.js) -> UMD + ES5 + polyfill
+* [ ] - Browser + Bower package + RequireJS (dist/evrythng.es6.js) -> ESM + ES6 (Safari 10.1 only)
+
 
 evrythng.js facilitates the communication with the [EVRYTHNG](https://developers.evrythng.com) REST API thanks to its fluent and
 resource oriented API. It can be used both for server-side scripting (Node.js) or in client-side web applications.

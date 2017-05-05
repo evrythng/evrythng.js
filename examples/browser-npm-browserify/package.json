@@ -1,0 +1,13 @@
+{
+  "name": "evrythng.js-browser-npm-es-webpack-example",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "browserify": "^14.3.0",
+    "evrythng": "file:../.."
+  },
+  "scripts": {
+    "postinstall": "mkdir dist && ./node_modules/.bin/browserify index.js -o dist/index.js"
+  }
+}

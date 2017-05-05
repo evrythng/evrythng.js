@@ -2,6 +2,8 @@ import Scope from './Scope'
 import Product from '../entity/Product'
 import Thng from '../entity/Thng'
 import Collection from '../entity/Collection'
+import Action from '../entity/Action'
+import ActionType from '../entity/ActionType'
 import api from '../api'
 import { mixinResources } from '../util/mixin'
 
@@ -9,17 +11,21 @@ import { mixinResources } from '../util/mixin'
  * An Operator has access to:
  *  - Product resource (CRUD)
  *  - Thng resource (CRUD)
+ *  - Collection resource (CRUD)
+ *  - Action resource (CRUD)
+ *  - ActionType resource (CR)
  *  - App User resource (R)
  *  - Project resource (CRUD)
- *  - ActionType resource (CR)
- *  - Action resource (CRUD)
- *  - Collection resource (CRUD)
  *  - Batch resource (CRUD)
+ *  - Role resource (CRUD)
+ *  - File resource (CRD)
  */
 const operatorResources = [
   Product,
   Thng,
-  Collection
+  Collection,
+  Action,
+  ActionType
 ]
 
 /**

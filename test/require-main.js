@@ -1,13 +1,10 @@
-const paths = {
-  'fetch': '../node_modules/whatwg-fetch/fetch'
-}
-
-const shims = {
-  'evrythng': ['fetch']
+const dependencies = {
+  'evrythng': 'evrythng.polyfill',
+  'isomorphic-fetch': '../node_modules/whatwg-fetch/fetch'
 }
 
 if (typeof module !== 'undefined') {
-  module.exports = paths
+  module.exports = dependencies
 } else {
   let tests = []
   for (let file in window.__karma__.files) {

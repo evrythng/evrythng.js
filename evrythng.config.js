@@ -1,3 +1,9 @@
 module.exports = {
-  moduleName: 'EVT'
+  moduleName: 'EVT',
+  polyfill: {
+    external: 'isomorphic-fetch',
+    globals: {
+      'isomorphic-fetch': 'fetch'
+    }
+  }
 }

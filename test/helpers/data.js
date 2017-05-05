@@ -58,3 +58,10 @@ export const collectionTemplate = {
   id: 'collectionId',
   name: 'Test Collection'
 }
+
+export const actionTypeTemplate = {
+  name: '_foobar',
+  customFields: {
+    displayname: 'Foo Bar'
+  }
+}

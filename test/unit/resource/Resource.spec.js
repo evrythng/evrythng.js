@@ -296,6 +296,13 @@ describe('Resource', () => {
         expect(res.path).toEqual(`${paths.dummy}/${id}`)
       })
 
+      it('should encode ID', () => {
+        const id = 'foo bar'
+        const idEncoded = encodeURIComponent(id)
+        const res = extendedScope.test(id)
+        expect(res.path).toEqual(`${paths.dummy}/${idEncoded}`)
+      })
+
       it('should allow extending the Resource with a Mixin', () => {
         const Mixin = C => class extends C {
           mixedIn () {}

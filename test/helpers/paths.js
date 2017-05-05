@@ -5,6 +5,7 @@ export default {
   error: '/error',
   access: '/access',
   actions: '/actions',
+  actionTypes: '/actions',
   collections: '/collections',
   dummy: '/path',
   locations: '/locations',

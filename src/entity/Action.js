@@ -10,8 +10,7 @@ import isUndefined from 'lodash-es/isUndefined'
 const path = '/actions/:type'
 
 /**
- * Represents a Property entity. Properties are always nested and require
- * to be constructed on Resource/Entity objects (not top level Scopes).
+ * Represents an Action entity.
  *
  * @extends Entity
  */
