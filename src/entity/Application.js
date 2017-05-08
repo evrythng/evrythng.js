@@ -24,6 +24,8 @@ export default class Application extends Entity {
           throw new Error('Application is not a top-level resource.')
         }
 
+        // TODO add REACTOR
+
         return Resource.factoryFor(Application, path).call(this, id)
       }
     }

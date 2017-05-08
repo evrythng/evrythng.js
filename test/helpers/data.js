@@ -81,7 +81,9 @@ export const roleTemplate = {
   name: 'Test Role'
 }
 
-export const permissionTemplate = {
-  path: '/foobar',
-  access: 'crud'
+export const appUserTemplate = {
+  id: 'appUserId',
+  firstName: 'Test',
+  lastName: 'User',
+  email: 'test@evrythng.com'
 }

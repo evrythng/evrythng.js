@@ -7,6 +7,7 @@ export default {
   actions: '/actions',
   actionTypes: '/actions',
   applications: '/applications',
+  appUsers: '/users',
   collections: '/collections',
   dummy: '/path',
   locations: '/locations',

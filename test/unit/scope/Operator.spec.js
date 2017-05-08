@@ -93,7 +93,8 @@ describe('Operator', () => {
       'collection',
       'action',
       'actionType',
-      'project'
+      'project',
+      'appUser'
     ]
 
     beforeEach(done => {
