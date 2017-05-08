@@ -20,6 +20,7 @@
 * [ ] - Gulp task to generate docs build
 * [ ] - Publish JSDoc. Is it understandable?
 * [ ] - Finish and polish README
+* [ ] - Refactor tests with commonly used Jasmine matchers?
 
 ## Make sure it works with
 * [x] - Node + NPM package (main field) -> UMD + ES5 + polyfill

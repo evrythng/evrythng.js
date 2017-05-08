@@ -12,8 +12,10 @@ export default {
   locations: '/locations',
   operators: '/operators',
   operator: `/operators/${data.operatorTemplate.id}`,
+  permissions: '/permissions',
   products: '/products',
   projects: '/projects',
   properties: '/properties',
+  roles: '/roles',
   thngs: '/thngs'
 }

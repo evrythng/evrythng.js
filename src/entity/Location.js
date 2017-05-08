@@ -6,6 +6,7 @@ import getCurrentPosition from '../util/getCurrentPosition'
 import isUndefined from 'lodash-es/isUndefined'
 import isFunction from 'lodash-es/isFunction'
 import isPlainObject from 'lodash-es/isPlainObject'
+import isString from 'lodash-es/isString'
 
 const path = '/locations'
 
@@ -29,7 +30,7 @@ export default class Location extends Entity {
     return {
       location () {
         // Locations don't have single resource endpoint (e.g.: /locations/:id)
-        if (arguments.length > 0) {
+        if (isString(arguments[0])) {
           throw new TypeError('There is no single resource for Locations')
         }
 

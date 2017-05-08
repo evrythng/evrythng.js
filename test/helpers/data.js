@@ -75,3 +75,13 @@ export const applicationTemplate = {
   id: 'applicationId',
   name: 'Test Application'
 }
+
+export const roleTemplate = {
+  id: 'roleId',
+  name: 'Test Role'
+}
+
+export const permissionTemplate = {
+  path: '/foobar',
+  access: 'crud'
+}

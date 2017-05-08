@@ -5,6 +5,7 @@ import Collection from '../entity/Collection'
 import Action from '../entity/Action'
 import ActionType from '../entity/ActionType'
 import Project from '../entity/Project'
+import Role from '../entity/Role'
 import api from '../api'
 import { mixinResources } from '../util/mixin'
 
@@ -20,6 +21,7 @@ import { mixinResources } from '../util/mixin'
  *  - Batch resource (CRUD)
  *  - Role resource (CRUD)
  *  - File resource (CRD)
+ *  - Place resource (CRUD)
  */
 const operatorResources = [
   Product,
@@ -27,7 +29,8 @@ const operatorResources = [
   Collection,
   Action,
   ActionType,
-  Project
+  Project,
+  Role
 ]
 
 /**
