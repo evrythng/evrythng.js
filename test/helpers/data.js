@@ -97,3 +97,8 @@ export const placeTemplate = {
   id: 'placeId',
   name: 'Test Place'
 }
+
+export const reactorScheduleTemplate = {
+  id: 'reactorScheduleId',
+  enabled: true
+}

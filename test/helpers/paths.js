@@ -20,6 +20,7 @@ export default {
   projects: '/projects',
   properties: '/properties',
   reactorScript: '/reactor/script',
+  reactorSchedules: '/reactor/schedules',
   roles: '/roles',
   status: '/status',
   tasks: '/tasks',
