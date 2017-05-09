@@ -7,6 +7,7 @@ import { dummyScope, dummyResource, dummyEntity } from '../../helpers/dummy'
 import { applicationTemplate } from '../../helpers/data'
 
 let applicationResource
+let application
 
 describe('Application', () => {
   mockApi()
@@ -38,6 +39,20 @@ describe('Application', () => {
         expect(applicationResource.path)
           .toEqual(`${paths.dummy}${paths.applications}/${applicationTemplate.id}`)
       })
+
+      it('should have nested reactorScript resource', () => {
+        expect(applicationResource.reactorScript).toBeDefined()
+      })
+    })
+  })
+
+  describe('access', () => {
+    beforeEach(() => {
+      application = new Application(dummyResource())
+    })
+
+    it('should have reactorScript resource', () => {
+      expect(application.reactorScript).toBeDefined()
     })
   })
 })

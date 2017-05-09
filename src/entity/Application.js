@@ -1,15 +1,22 @@
 import Entity from './Entity'
+import ReactorScript from './ReactorScript'
 import Resource from '../resource/Resource'
 import Scope from '../scope/Scope'
+import { mixinResources } from '../util/mixin'
 
 const path = '/applications'
+const ApplicationResources = mixinResources([
+  ReactorScript,
+  // ReactorLog,
+  // ReactorSchedule
+])
 
 /**
  * Represents an Application entity.
  *
  * @extends Entity
  */
-export default class Application extends Entity {
+export default class Application extends ApplicationResources(Entity) {
   /**
    * Return simple resource factory for Applications.
    *
@@ -24,9 +31,8 @@ export default class Application extends Entity {
           throw new Error('Application is not a top-level resource.')
         }
 
-        // TODO add REACTOR
-
-        return Resource.factoryFor(Application, path).call(this, id)
+        return Resource.factoryFor(Application, path, ApplicationResources)
+          .call(this, id)
       }
     }
   }

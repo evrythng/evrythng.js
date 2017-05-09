@@ -19,7 +19,9 @@ export default {
   products: '/products',
   projects: '/projects',
   properties: '/properties',
+  reactorScript: '/reactor/script',
   roles: '/roles',
+  status: '/status',
   tasks: '/tasks',
   thngs: '/thngs'
 }

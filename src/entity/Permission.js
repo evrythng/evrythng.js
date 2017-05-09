@@ -20,7 +20,7 @@ export default class Permission extends Entity {
   static resourceFactory () {
     return {
       permission () {
-        // Locations don't have single resource endpoint (e.g.: /permissions/:id)
+        // Permissions don't have single resource endpoint (e.g.: /permissions/:id)
         if (isString(arguments[0])) {
           throw new TypeError('There is no single resource for Permissions')
         }
