@@ -8,6 +8,7 @@ export default {
   actionTypes: '/actions',
   applications: '/applications',
   appUsers: '/users',
+  batches: '/batches',
   collections: '/collections',
   dummy: '/path',
   locations: '/locations',
@@ -18,5 +19,6 @@ export default {
   projects: '/projects',
   properties: '/properties',
   roles: '/roles',
+  tasks: '/tasks',
   thngs: '/thngs'
 }

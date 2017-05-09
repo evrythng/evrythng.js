@@ -18,7 +18,7 @@ describe('Role', () => {
       roleResource = scope.role(roleTemplate.id)
     })
 
-    it('should create new Product resource', () => {
+    it('should create new Role resource', () => {
       expect(roleResource instanceof Resource).toBe(true)
       expect(roleResource.type).toBe(Role)
       expect(roleResource.path).toEqual(`${paths.roles}/${roleTemplate.id}`)

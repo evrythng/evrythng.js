@@ -1043,17 +1043,11 @@ debug@2.6.1:
   dependencies:
     ms "0.7.2"
 
-debug@2.6.3:
+debug@2.6.3, debug@^2.1.1, debug@^2.2.0:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.3.tgz#0f7eb8c30965ec08c72accfa0130c8b79984141d"
   dependencies:
     ms "0.7.2"
-
-debug@^2.1.1, debug@^2.2.0:
-  version "2.6.6"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.6.tgz#a9fa6fbe9ca43cf1e79f73b75c0189cbb7d6db5a"
-  dependencies:
-    ms "0.7.3"
 
 decamelize@^1.0.0, decamelize@^1.1.1, decamelize@^1.1.2:
   version "1.2.0"
@@ -1851,9 +1845,9 @@ gulp-cli@^1.0.0:
     wreck "^6.3.0"
     yargs "^3.28.0"
 
-gulp-evrythng-tasks@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/gulp-evrythng-tasks/-/gulp-evrythng-tasks-0.0.8.tgz#fd0ee4675e70c1704ba48543ed8bfd0a1c6bf0e5"
+gulp-evrythng-tasks@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/gulp-evrythng-tasks/-/gulp-evrythng-tasks-0.0.9.tgz#46c5b29159f72c65fd0d4f6889bc79a0783ac2e7"
   dependencies:
     babel-plugin-external-helpers "^6.22.0"
     babel-preset-es2015 "^6.24.1"
@@ -1873,8 +1867,6 @@ gulp-evrythng-tasks@^0.0.8:
     rollup-plugin-commonjs "^5.0.5"
     rollup-plugin-istanbul "^1.1.0"
     rollup-plugin-node-resolve "^2.0.0"
-    rollup-plugin-uglify "^1.0.1"
-    uglify-js mishoo/UglifyJS2#harmony
 
 gulp-sourcemaps@1.6.0:
   version "1.6.0"
@@ -2872,10 +2864,6 @@ ms@0.7.2:
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.2.tgz#ae25cf2512b3885a1d95d7f037868d8431124765"
 
-ms@0.7.3:
-  version "0.7.3"
-  resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.3.tgz#708155a5e44e33f5fd0fc53e81d0d40a91be1fff"
-
 multipipe@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/multipipe/-/multipipe-0.1.2.tgz#2a8f2ddf70eed564dff2d57f1e1a137d9f05078b"
@@ -3588,12 +3576,6 @@ rollup-plugin-node-resolve@^2.0.0:
     builtin-modules "^1.1.0"
     resolve "^1.1.6"
 
-rollup-plugin-uglify@^1.0.1:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-uglify/-/rollup-plugin-uglify-1.0.2.tgz#d4aa6f5df13522eae1ba17780c7c4c7096038359"
-  dependencies:
-    uglify-js "^2.6.1"
-
 rollup-pluginutils@^1.3.1, rollup-pluginutils@^1.5.0, rollup-pluginutils@^1.5.1:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/rollup-pluginutils/-/rollup-pluginutils-1.5.2.tgz#1e156e778f94b7255bfa1b3d0178be8f5c552408"
@@ -3900,6 +3882,14 @@ supports-color@^3.1.0:
   dependencies:
     has-flag "^1.0.0"
 
+systemjs-plugin-babel@^0.0.21:
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/systemjs-plugin-babel/-/systemjs-plugin-babel-0.0.21.tgz#847179b50ee46d69a549486e1c78802629537f0c"
+
+systemjs@^0.20.12:
+  version "0.20.12"
+  resolved "https://registry.yarnpkg.com/systemjs/-/systemjs-0.20.12.tgz#135cc471280448453347829ebb9639a09a67f101"
+
 table@^3.7.8:
   version "3.8.3"
   resolved "https://registry.yarnpkg.com/table/-/table-3.8.3.tgz#2bbc542f0fda9861a755d3947fefd8b3f513855f"
@@ -4040,18 +4030,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-uglify-js@^2.6, uglify-js@^2.6.1:
+uglify-js@^2.6:
   version "2.8.22"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.8.22.tgz#d54934778a8da14903fa29a326fb24c0ab51a1a0"
-  dependencies:
-    source-map "~0.5.1"
-    yargs "~3.10.0"
-  optionalDependencies:
-    uglify-to-browserify "~1.0.0"
-
-"uglify-js@github:mishoo/UglifyJS2#harmony":
-  version "2.8.22"
-  resolved "https://codeload.github.com/mishoo/UglifyJS2/tar.gz/73d6438773a40aa5aa06354781334af79a67e42d"
   dependencies:
     source-map "~0.5.1"
     yargs "~3.10.0"

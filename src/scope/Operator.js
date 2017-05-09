@@ -7,6 +7,7 @@ import ActionType from '../entity/ActionType'
 import Project from '../entity/Project'
 import Role from '../entity/Role'
 import AppUser from '../entity/AppUser'
+import Batch from '../entity/Batch'
 import api from '../api'
 import { mixinResources } from '../util/mixin'
 
@@ -32,7 +33,8 @@ const operatorResources = [
   ActionType,
   Project,
   Role,
-  AppUser
+  AppUser,
+  Batch
 ]
 
 /**

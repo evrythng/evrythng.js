@@ -87,3 +87,8 @@ export const appUserTemplate = {
   lastName: 'User',
   email: 'test@evrythng.com'
 }
+
+export const batchTemplate = {
+  id: 'batchId',
+  name: 'Test Batch'
+}

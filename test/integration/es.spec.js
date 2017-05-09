@@ -1,5 +1,5 @@
 /* eslint-env jasmine */
-import * as EVT from '../../dist/evrythng.es6'
+import * as EVT from '../../dist/evrythng.es'
 
 describe('EVT Distribution', () => {
   it('should exist', () => {

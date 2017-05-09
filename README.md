@@ -13,6 +13,7 @@
 * [x] - Complete collection entity
 * [x] - Replace individual fetchMock.mocks with apiMock
 * [x] - Unit tests for url utils
+* [ ] - Use Symbols for private properties (e.g. resource, path) - simpler Entity.json
 * [ ] - Reconsider ES6 module stubbing with aggregator modules and named exports (https://github.com/eventualbuddha/rollup-plugin-stub)
 * [x] - Yarn?
 * [ ] - Validate JSDoc?
