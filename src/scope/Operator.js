@@ -8,45 +8,34 @@ import Project from '../entity/Project'
 import Role from '../entity/Role'
 import AppUser from '../entity/AppUser'
 import Batch from '../entity/Batch'
+import Place from '../entity/Place'
 import api from '../api'
 import { mixinResources } from '../util/mixin'
 
 /**
- * An Operator has access to:
- *  - Product resource (CRUD)
- *  - Thng resource (CRUD)
- *  - Collection resource (CRUD)
- *  - Action resource (CRUD)
- *  - ActionType resource (CR)
- *  - Project resource (CRUD)
- *  - App User resource (R)
- *  - Batch resource (CRUD)
- *  - Role resource (CRUD)
- *  - File resource (CRD)
- *  - Place resource (CRUD)
+ * Mixin with all the top-level Operator resources.
+ *
+ * @mixin
  */
-const operatorResources = [
-  Product,
-  Thng,
-  Collection,
-  Action,
-  ActionType,
-  Project,
-  Role,
-  AppUser,
-  Batch
-]
-
-/**
- * Operator Access Mixin
- */
-const OperatorAccess = mixinResources(operatorResources)
+const OperatorAccess = mixinResources([
+  Product,          // CRUD
+  Thng,             // CRUD
+  Collection,       // CRUD
+  Action,           // CR
+  ActionType,       // CRUD
+  Project,          // CRUD
+  Role,             // CRUD
+  AppUser,          // R
+  Batch,            // CRUD
+  Place             // CRUD
+])
 
 /**
  * Operator is the Scope with highest permissions that can manage the account
  * resources. Should be used with caution in server-side code.
  *
  * @extends Scope
+ * @mixes OperatorAccess
  */
 export default class Operator extends OperatorAccess(Scope) {
   /**

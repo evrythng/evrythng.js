@@ -92,3 +92,8 @@ export const batchTemplate = {
   id: 'batchId',
   name: 'Test Batch'
 }
+
+export const placeTemplate = {
+  id: 'placeId',
+  name: 'Test Place'
+}

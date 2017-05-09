@@ -15,6 +15,7 @@ export default {
   operators: '/operators',
   operator: `/operators/${data.operatorTemplate.id}`,
   permissions: '/permissions',
+  places: '/places',
   products: '/products',
   projects: '/projects',
   properties: '/properties',

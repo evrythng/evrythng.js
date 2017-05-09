@@ -95,7 +95,8 @@ describe('Operator', () => {
       'actionType',
       'project',
       'appUser',
-      'batch'
+      'batch',
+      'place'
     ]
 
     beforeEach(done => {
