@@ -108,3 +108,9 @@ export const reactorLogTemplate = {
   logLevel: 'info',
   createdAt: 1
 }
+
+export const fileTemplate = {
+  id: 'fileId',
+  contentUrl: 'http://example.com/test.jpg',
+  name: 'File example'
+}

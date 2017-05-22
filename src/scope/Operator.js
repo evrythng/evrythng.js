@@ -9,6 +9,7 @@ import Role from '../entity/Role'
 import AppUser from '../entity/AppUser'
 import Batch from '../entity/Batch'
 import Place from '../entity/Place'
+import File from '../entity/File'
 import api from '../api'
 import { mixinResources } from '../util/mixin'
 
@@ -27,7 +28,8 @@ const OperatorAccess = mixinResources([
   Role,             // CRUD
   AppUser,          // R
   Batch,            // CRUD
-  Place             // CRUD
+  Place,            // CRUD
+  File              // CRUD
 ])
 
 /**

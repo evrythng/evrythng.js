@@ -11,6 +11,7 @@ export default {
   batches: '/batches',
   collections: '/collections',
   dummy: '/path',
+  files: '/files',
   locations: '/locations',
   operators: '/operators',
   operator: `/operators/${data.operatorTemplate.id}`,

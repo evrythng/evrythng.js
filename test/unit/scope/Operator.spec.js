@@ -96,7 +96,8 @@ describe('Operator', () => {
       'project',
       'appUser',
       'batch',
-      'place'
+      'place',
+      'file'
     ]
 
     beforeEach(done => {
