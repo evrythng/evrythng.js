@@ -21,6 +21,7 @@ export default {
   properties: '/properties',
   reactorScript: '/reactor/script',
   reactorSchedules: '/reactor/schedules',
+  reactorLogs: '/reactor/logs',
   roles: '/roles',
   status: '/status',
   tasks: '/tasks',

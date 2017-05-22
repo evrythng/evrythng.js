@@ -1,6 +1,7 @@
 import Entity from './Entity'
 import ReactorScript from './ReactorScript'
 import ReactorSchedule from './ReactorSchedule'
+import ReactorLog from './ReactorLog'
 import Resource from '../resource/Resource'
 import Scope from '../scope/Scope'
 import { mixinResources } from '../util/mixin'
@@ -8,8 +9,8 @@ import { mixinResources } from '../util/mixin'
 const path = '/applications'
 const ApplicationResources = mixinResources([
   ReactorScript,
-  ReactorSchedule
-  // ReactorLog,
+  ReactorSchedule,
+  ReactorLog
 ])
 
 /**

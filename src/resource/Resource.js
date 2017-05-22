@@ -1,6 +1,5 @@
 import isString from 'lodash-es/isString'
 import isFunction from 'lodash-es/isFunction'
-import isArray from 'lodash-es/isArray'
 import Scope from '../scope/Scope'
 import Entity from '../entity/Entity'
 import api, { success, failure } from '../api'
@@ -118,7 +117,7 @@ export default class Resource {
    */
   deserialize (response) {
     if (response && this.type) {
-      if (isArray(response)) {
+      if (Array.isArray(response)) {
         return response.map(this.deserialize.bind(this))
       }
 

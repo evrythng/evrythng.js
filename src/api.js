@@ -1,4 +1,3 @@
-import isArray from 'lodash-es/isArray'
 import isFunction from 'lodash-es/isFunction'
 import settings from './settings'
 import buildUrl from './util/buildUrl'
@@ -66,7 +65,7 @@ function applyRequestInterceptors (options) {
 
   let intercepted = Promise.resolve(options)
 
-  if (isArray(options.interceptors)) {
+  if (Array.isArray(options.interceptors)) {
     options.interceptors
       .filter(interceptor => isFunction(interceptor.request))
       .forEach(interceptor => {
@@ -153,7 +152,7 @@ function applyResponseInterceptors (options) {
   return response => {
     let intercepted = Promise.resolve(response)
 
-    if (isArray(options.interceptors)) {
+    if (Array.isArray(options.interceptors)) {
       options.interceptors
         .filter(interceptor => isFunction(interceptor.response))
         .forEach(interceptor => {

@@ -102,3 +102,9 @@ export const reactorScheduleTemplate = {
   id: 'reactorScheduleId',
   enabled: true
 }
+
+export const reactorLogTemplate = {
+  message: 'Log example message',
+  logLevel: 'info',
+  createdAt: 1
+}

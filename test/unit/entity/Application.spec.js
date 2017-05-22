@@ -47,6 +47,10 @@ describe('Application', () => {
       it('should have nested reactorSchedule resource', () => {
         expect(applicationResource.reactorSchedule).toBeDefined()
       })
+
+      it('should have nested reactorLog resource', () => {
+        expect(applicationResource.reactorLog).toBeDefined()
+      })
     })
   })
 
@@ -61,6 +65,10 @@ describe('Application', () => {
 
     it('should have reactorSchedule resource', () => {
       expect(application.reactorSchedule).toBeDefined()
+    })
+
+    it('should have reactorLog resource', () => {
+      expect(application.reactorLog).toBeDefined()
     })
   })
 })

@@ -18,11 +18,11 @@ describe('ReactorScript', () => {
     })
 
     it('should not allow single resource access', () => {
-      const singleResource = () => scope.location('id')
+      const singleResource = () => scope.reactorScript('id')
       expect(singleResource).toThrow()
     })
 
-    it('should create new Product resource', () => {
+    it('should create new ReactorScript resource', () => {
       reactorScriptResource = scope.reactorScript()
       expect(reactorScriptResource instanceof Resource).toBe(true)
       expect(reactorScriptResource.type).toBe(ReactorScript)

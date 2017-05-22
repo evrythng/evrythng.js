@@ -17,7 +17,7 @@ describe('ReactorSchedule', () => {
       reactorScheduleResource = scope.reactorSchedule(reactorScheduleTemplate.id)
     })
 
-    it('should create new Product resource', () => {
+    it('should create new ReactorSchedule resource', () => {
       expect(reactorScheduleResource instanceof Resource).toBe(true)
       expect(reactorScheduleResource.type).toBe(ReactorSchedule)
       expect(reactorScheduleResource.path)

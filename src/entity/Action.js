@@ -4,7 +4,6 @@ import settings from '../settings'
 import getCurrentPosition from '../util/getCurrentPosition'
 import isString from 'lodash-es/isString'
 import isFunction from 'lodash-es/isFunction'
-import isArray from 'lodash-es/isArray'
 import isUndefined from 'lodash-es/isUndefined'
 
 const path = '/actions/:type'
@@ -68,7 +67,7 @@ function createAction (caller, actionType, ...args) {
   let [options] = rest
 
   // Auto-fill action payload with resource type and entity id.
-  data = isArray(data)
+  data = Array.isArray(data)
     ? data.map(action => fillAction(action, caller, actionType))
     : data = fillAction(data, caller, actionType)
 
