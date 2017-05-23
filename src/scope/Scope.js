@@ -27,4 +27,59 @@ export default class Scope {
     // Extend scope with any given details.
     Object.assign(this, body)
   }
+
+  /**
+   * Read itself and extend scope document.
+   *
+   * @param {Settings} [options={}] - Optional API request options
+   * @returns {Promise} - Updated operator scope
+   */
+  read (options = {}) {
+    const opts = Object.assign(options, {
+      method: 'get',
+      url: this.scopePath,
+      authorization: this.apiKey
+    })
+
+    return this._request(opts)
+  }
+
+  /**
+   * Update self and extend scope document.
+   *
+   * @param {Object} data - Operator data
+   * @param {Settings} [options={}] - Optional API request options
+   * @returns {Promise} - Updated operator scope
+   */
+  update (data, options = {}) {
+    const opts = Object.assign(options, {
+      method: 'put',
+      url: this.scopePath,
+      authorization: this.apiKey,
+      data
+    })
+
+    return this._request(opts)
+  }
+
+  /**
+   * Path to this scope's entity.
+   *
+   * @return {string}
+   */
+  get scopePath () {
+    return ''
+  }
+
+  // Private
+
+  /**
+   *
+   * @param {Settings} options - Request options
+   * @returns {Promise} - Updated operator scope
+   * @private
+   */
+  _request (options) {
+    return api(options).then(data => Object.assign(this, data))
+  }
 }

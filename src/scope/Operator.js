@@ -10,7 +10,6 @@ import AppUser from '../entity/AppUser'
 import Batch from '../entity/Batch'
 import Place from '../entity/Place'
 import File from '../entity/File'
-import api from '../api'
 import { mixinResources } from '../util/mixin'
 
 /**
@@ -45,8 +44,6 @@ export default class Operator extends OperatorAccess(Scope) {
    *
    * @param {string} apiKey - API Key of scope
    * @param {Object} [data={}] - Optional operator data
-   *
-   * @memberOf Operator
    */
   constructor (apiKey, data = {}) {
     super(apiKey, data)
@@ -61,42 +58,11 @@ export default class Operator extends OperatorAccess(Scope) {
   }
 
   /**
-   * Read itself and extend scope document.
+   * Return operator endpoint.
    *
-   * @param {Object} [options={}] - Optional API request options
-   * @returns {Promise} - Update operator scope
+   * @return {string}
    */
-  read (options = {}) {
-    const opts = Object.assign(options, {
-      method: 'get',
-      url: `/operators/${this.id}`,
-      authorization: this.apiKey
-    })
-
-    return api(opts).then(this._extend.bind(this))
-  }
-
-  /**
-   * Update self and extend scope document.
-   *
-   * @param {Object} data - Operator data
-   * @param {Object} [options={}] - Optional API request options
-   * @returns {Promise} - Update operator scope
-   */
-  update (data, options = {}) {
-    const opts = Object.assign(options, {
-      method: 'put',
-      url: `/operators/${this.id}`,
-      authorization: this.apiKey,
-      data: data
-    })
-
-    return api(opts).then(this._extend.bind(this))
-  }
-
-  // Private
-
-  _extend (data) {
-    return Object.assign(this, data)
+  get scopePath () {
+    return `/operators/${this.id}`
   }
 }

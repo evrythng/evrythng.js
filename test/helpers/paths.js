@@ -1,4 +1,8 @@
-import * as data from './data'
+import {
+  operatorTemplate,
+  projectTemplate,
+  applicationTemplate
+} from './data'
 
 export default {
   testBase: 'https://api-test.evrythng.net',
@@ -7,6 +11,7 @@ export default {
   actions: '/actions',
   actionTypes: '/actions',
   applications: '/applications',
+  application: `/projects/${projectTemplate.id}/applications/${applicationTemplate.id}`,
   appUsers: '/users',
   batches: '/batches',
   collections: '/collections',
@@ -14,7 +19,7 @@ export default {
   files: '/files',
   locations: '/locations',
   operators: '/operators',
-  operator: `/operators/${data.operatorTemplate.id}`,
+  operator: `/operators/${operatorTemplate.id}`,
   permissions: '/permissions',
   places: '/places',
   products: '/products',

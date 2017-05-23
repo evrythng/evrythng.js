@@ -4,7 +4,7 @@ import fetchMock from 'fetch-mock'
 import mockApi from '../../helpers/apiMock'
 import apiUrl from '../../helpers/apiUrl'
 import paths from '../../helpers/paths'
-import { apiKey, operatorTemplate } from '../../helpers/data'
+import { operatorApiKey, operatorTemplate } from '../../helpers/data'
 
 let operator
 
@@ -15,7 +15,7 @@ describe('Operator', () => {
     describe('existent', () => {
       beforeEach(() => {
         spyOn(Operator.prototype, 'read')
-        operator = new Operator(apiKey)
+        operator = new Operator(operatorApiKey)
       })
 
       it('should read itself', done => {
@@ -33,7 +33,6 @@ describe('Operator', () => {
 
       it('should throw error', done => {
         operator.$init
-          .then(() => expect(true).toBe(false))
           .catch(() => expect(true).toBe(true))
           .then(done)
       })
@@ -42,7 +41,7 @@ describe('Operator', () => {
 
   describe('read', () => {
     beforeEach(done => {
-      operator = new Operator(apiKey)
+      operator = new Operator(operatorApiKey)
       operator.$init.then(done)
     })
 
@@ -65,7 +64,7 @@ describe('Operator', () => {
 
   describe('update', () => {
     beforeEach(done => {
-      operator = new Operator(apiKey)
+      operator = new Operator(operatorApiKey)
       operator.$init.then(done)
     })
 
@@ -101,7 +100,7 @@ describe('Operator', () => {
     ]
 
     beforeEach(done => {
-      operator = new Operator(apiKey)
+      operator = new Operator(operatorApiKey)
       operator.$init.then(done)
     })
 

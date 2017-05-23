@@ -3,7 +3,7 @@ import fetchMock from 'fetch-mock'
 import apiUrl from './apiUrl'
 import responses from './responses'
 import paths from './paths'
-import { apiKey } from './data'
+import { apiKey, operatorApiKey, appApiKey } from './data'
 
 /**
  * Mock API for each separate test block. It is important that tests run
@@ -57,6 +57,10 @@ function prepare () {
   fetchMock.get(apiUrl(paths.operator), responses.operator.one)
   fetchMock.post(apiUrl(paths.operators), responses.operator.one)
   fetchMock.put(apiUrl(paths.operator), responses.operator.one)
+
+  // Application
+  fetchMock.get(apiUrl(paths.application), responses.application.one)
+  fetchMock.put(apiUrl(paths.application), responses.application.one)
 }
 
 /**
@@ -76,8 +80,11 @@ function tearDown (done) {
  * @return {Object} - Response
  */
 function validAccess (opts) {
-  if (opts.headers.authorization === apiKey) {
+  if (opts.headers.authorization === apiKey ||
+    opts.headers.authorization === operatorApiKey) {
     return responses.access.operator
+  } else if (opts.headers.authorization === appApiKey) {
+    return responses.access.application
   } else {
     return responses.error.generic
   }

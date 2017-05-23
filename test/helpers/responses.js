@@ -30,12 +30,27 @@ export default {
         },
         apiKey: data.apiKey
       }
+    },
+    application: {
+      body: {
+        project: data.projectTemplate.id,
+        actor: {
+          type: 'app',
+          id: data.applicationTemplate.id
+        }
+      }
     }
   },
 
   operator: {
     one: {
       body: data.operatorTemplate
+    }
+  },
+
+  application: {
+    one: {
+      body: data.applicationTemplate
     }
   },
 

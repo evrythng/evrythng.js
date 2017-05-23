@@ -1,4 +1,6 @@
 export const apiKey = 'apiKey'
+export const operatorApiKey = 'operatorApiKey'
+export const appApiKey = 'appApiKey'
 
 export const optionsTemplate = {
   fullResponse: true,
