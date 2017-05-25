@@ -61,6 +61,16 @@ function prepare () {
   // Application
   fetchMock.get(apiUrl(paths.application), responses.application.one)
   fetchMock.put(apiUrl(paths.application), responses.application.one)
+
+  // Validate user
+  fetchMock.post(
+    apiUrl(`${paths.dummy}/${paths.appUsersAccessValidate}`),
+    responses.ok
+  )
+  fetchMock.post(
+    apiUrl(`${paths.appUsersAccess}/${paths.appUsersAccessValidate}`),
+    responses.ok
+  )
 }
 
 /**

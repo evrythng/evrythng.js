@@ -2,6 +2,7 @@ import Scope from './Scope'
 import Product from '../entity/Product'
 import Action from '../entity/Action'
 import Place from '../entity/Place'
+import AppUserAccess from '../entity/AppUserAccess'
 import { mixinResources } from '../util/mixin'
 
 /**
@@ -12,7 +13,7 @@ import { mixinResources } from '../util/mixin'
 const ApplicationAccess = mixinResources([
   Product,          // R
   Action,           // C scans
-  // UserAccess,       // C
+  AppUserAccess,    // C
   Place             // R
 ])
 

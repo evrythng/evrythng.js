@@ -116,3 +116,8 @@ export const fileTemplate = {
   contentUrl: 'http://example.com/test.jpg',
   name: 'File example'
 }
+
+export const appUserAccessTemplate = {
+  evrythngUser: 'appUserId',
+  activationCode: 'activactionCode'
+}

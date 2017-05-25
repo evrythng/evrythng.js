@@ -6,33 +6,29 @@ import isString from 'lodash-es/isString'
 const path = '/auth/evrythng/users'
 
 /**
- * Represents a Role entity object.
+ * Represents an AppUser access entry object. In the API there is a distinction
+ * and different actions available for AppUser access. I.e. they can be validated.
  *
  * @extends Entity
  */
 export default class AppUserAccess extends Entity {
   /**
-   * Return resource factory for AppUsers.
+   * Return resource factory for AppUsers access.
    *
    * @static
-   * @return {{role: Function}}
+   * @return {{appUser: Function}}
    */
-  static resourceFactory (customPath) {
+  static resourceFactory () {
     return {
       appUser (id) {
         return Object.assign(
-          Resource.factoryFor(AppUserAccess, customPath || path).call(this, id),
+          Resource.factoryFor(AppUserAccess, path).call(this, id),
           {
+            create (...args) {
+              return createAppUser.call(this, ...args)
+            },
             validate (...args) {
               return validate.call(this, ...args)
-            },
-            create (...args) {
-              const [data] = args
-              if (data && data.anonymous) {
-                return createAnonymousUser.call(this, ...args)
-              } else {
-                return Resource.prototype.create.call(this, ...args)
-              }
             }
           }
         )
@@ -47,18 +43,45 @@ export default class AppUserAccess extends Entity {
    * @param {Object} [body] Optional entity data
    */
   constructor (resource, body = {}) {
-    if (body.evrythngUser) {
-      body.id = body.evrythngUser
-      Reflect.deleteProperty(body, 'evrythngUser')
+    const copy = Object.assign({}, body)
+    if (copy.evrythngUser) {
+      copy.id = copy.evrythngUser
+      Reflect.deleteProperty(copy, 'evrythngUser')
     }
-    super(resource, body)
+    super(resource, copy)
   }
 
+  /**
+   * Validate user access using own activation code.
+   *
+   * @return {Promise}
+   */
   validate () {
-    return validate.call(this.activationCode)
+    return validate.call(this, this.activationCode)
   }
 }
 
+/**
+ * Create anonymous app user if anonymous property defined.
+ *
+ * @param {Array} args - Arguments array.
+ * @return {Promise}
+ */
+function createAppUser (...args) {
+  const [data] = args
+  if (data && data.anonymous) {
+    return createAnonymousUser.call(this, ...args)
+  } else {
+    return Resource.prototype.create.call(this, ...args)
+  }
+}
+
+/**
+ * Send a request to the validate endpoint with the given activation code.
+ *
+ * @param {String} activationCode - Activation code provided on creation.
+ * @return {Promise}
+ */
 function validate (activationCode) {
   if (!activationCode || !isString(activationCode)) {
     throw new Error('Activation code must be a string.')
@@ -77,7 +100,7 @@ function validate (activationCode) {
     path = `${this.resource.path}/${this.id}`
   }
 
-  // Activate newly created user.
+  // Activate  user.
   return api({
     url: `${path}/validate`,
     method: 'post',
@@ -86,6 +109,11 @@ function validate (activationCode) {
   })
 }
 
+/**
+ * Create anonymous user in API and return new scope for that user.
+ *
+ * @return {Promise}
+ */
 function createAnonymousUser () {
   return api({
     url: this.path,
@@ -99,7 +127,7 @@ function createAnonymousUser () {
     .then(createUserScope.bind(this))
 }
 
-// Create User Scope
+// TODO Create User Scope
 function createUserScope (access) {
   // return new User({
   //   id: access.evrythngUser,

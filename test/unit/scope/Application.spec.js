@@ -89,7 +89,8 @@ describe('Application', () => {
     const operatorResources = [
       'product',
       'action',
-      'place'
+      'place',
+      'appUser'
     ]
 
     beforeEach(done => {

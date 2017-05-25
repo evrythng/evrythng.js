@@ -1,7 +1,8 @@
 import {
   operatorTemplate,
   projectTemplate,
-  applicationTemplate
+  applicationTemplate,
+  appUserAccessTemplate
 } from './data'
 
 export default {
@@ -13,6 +14,8 @@ export default {
   applications: '/applications',
   application: `/projects/${projectTemplate.id}/applications/${applicationTemplate.id}`,
   appUsers: '/users',
+  appUsersAccess: '/auth/evrythng/users',
+  appUsersAccessValidate: `${appUserAccessTemplate.evrythngUser}/validate`,
   batches: '/batches',
   collections: '/collections',
   dummy: '/path',
