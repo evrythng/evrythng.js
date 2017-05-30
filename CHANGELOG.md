@@ -1,3 +1,9 @@
+# v4.5.1 (30-05-2017)
+
+## Bug fixes
+
+-**Permissions**: Add support for old Permission API.
+
 # v4.5.0 (25-04-2017)
 
 ## Features
