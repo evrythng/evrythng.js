@@ -1,3 +1,9 @@
+# v4.6.0 (09-06-2017)
+
+## Features
+
+-**Schemas**: Add Schema resource in Operator scope.
+
 # v4.5.1 (30-05-2017)
 
 ## Bug fixes
