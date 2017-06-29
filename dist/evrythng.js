@@ -1,4 +1,4 @@
-// EVRYTHNG JS SDK v4.6.0
+// EVRYTHNG JS SDK v4.7.0
 // (c) 2012-2017 EVRYTHNG Ltd. London / New York / San Francisco.
 // Released under the Apache Software License, Version 2.0.
 // For all details and usage:
@@ -1733,7 +1733,7 @@ define('core',[
   'use strict';
 
   // Version is updated from package.json using `grunt-version` on build.
-  var version = '4.6.0';
+  var version = '4.7.0';
 
 
   // Setup default settings:
@@ -4552,9 +4552,8 @@ define('entity/collection',[
 define('entity/permission',[
   'core',
   './entity',
-  'resource',
-  'utils'
-], function (EVT, Entity, Resource, Utils) {
+  'resource'
+], function (EVT, Entity, Resource) {
   'use strict';
 
   // Setup Permission inheritance from Entity.
@@ -4592,6 +4591,52 @@ define('entity/permission',[
   };
 });
 
+// ## POLICY.JS
+
+// **Policy defines the relationship between a role and schema.**
+
+define('entity/policy',[
+  'core',
+  './entity',
+  'resource'
+], function (EVT, Entity, Resource) {
+  'use strict';
+
+  // Setup Policy inheritance from Entity.
+  var Policy = function () {
+    Entity.apply(this, arguments);
+  };
+
+  Policy.prototype = Object.create(Entity.prototype);
+  Policy.prototype.constructor = Policy;
+
+  // Attach class to EVT module.
+  EVT.Entity.Policy = Policy;
+
+  return {
+    'class': Policy,
+    resourceConstructor: function () {
+      // TODO relax validation to support old permission API
+      // var args = arguments[0] || [];
+      //
+      // // Permission endpoint does not allow single resource ID.
+      // if (Utils.isString(args) ||
+      //   Utils.isObject(args) && Utils.isString(args.id)) {
+      //   throw new TypeError('IDs not allowed here');
+      // }
+
+      if (!this.resource) {
+        throw new Error('This Entity does not have a Resource.');
+      }
+
+      var path = this.resource.path + '/policies',
+        scope = this.resource.scope;
+
+      return Resource.constructorFactory(path, EVT.Entity.Policy).call(scope);
+    }
+  };
+});
+
 // ## ROLE.JS
 
 // **Role defines a set of API access permissions, containing a nested
@@ -4601,9 +4646,10 @@ define('entity/role',[
   'core',
   './entity',
   './permission',
+  './policy',
   'resource',
   'utils'
-], function (EVT, Entity, Permission, Resource, Utils) {
+], function (EVT, Entity, Permission, Policy, Resource, Utils) {
   'use strict';
 
   // Setup Role inheritance from Entity.
@@ -4617,14 +4663,15 @@ define('entity/role',[
   // Attach class to EVT module.
   EVT.Entity.Role = Role;
 
-  // Extend Role API by exposing a Permission Resource.
+  // Extend Role API.
   Utils.extend(Role.prototype, {
-    permission: Permission.resourceConstructor
+    permission: Permission.resourceConstructor,
+    policy: Policy.resourceConstructor
   }, true);
 
   return {
     'class': Role,
-    resourceConstructor: Resource.constructorFactory('/roles', EVT.Entity.Role, ['permission'])
+    resourceConstructor: Resource.constructorFactory('/roles', EVT.Entity.Role, ['permission', 'policy'])
   };
 });
 

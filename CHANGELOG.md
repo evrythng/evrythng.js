@@ -1,3 +1,9 @@
+# v4.7.0 (29-06-2017)
+
+## Features
+
+-**Policies**: Add Policy resource to Roles.
+
 # v4.6.0 (09-06-2017)
 
 ## Features
