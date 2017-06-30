@@ -1,3 +1,9 @@
+# v4.7.1 (30-06-2017)
+
+## Features
+
+-**Policies**: Allow single Policy access.
+
 # v4.7.0 (29-06-2017)
 
 ## Features
