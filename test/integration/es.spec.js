@@ -6,4 +6,3 @@ describe('EVT Distribution', () => {
     expect(EVT).toBeDefined()
   })
 })
-

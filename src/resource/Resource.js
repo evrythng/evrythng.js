@@ -3,6 +3,7 @@ import isFunction from 'lodash-es/isFunction'
 import Scope from '../scope/Scope'
 import Entity from '../entity/Entity'
 import api, { success, failure } from '../api'
+import parseLinkHeader from '../util/parseLinkHeader'
 
 /**
  * A Resource is the base class that implements the CRUD methods behavior.
@@ -158,7 +159,11 @@ export default class Resource {
       throw new TypeError('Create method must have payload.')
     }
 
-    return this._request({ body, method: 'post' }, options, callback)
+    return this._request({
+      url: this.path,
+      body,
+      method: 'post'
+    }, options, callback)
   }
 
   /**
@@ -169,7 +174,10 @@ export default class Resource {
    * @returns {Promise}
    */
   read (options, callback) {
-    return this._request({ method: 'get' }, options, callback)
+    return this._request({
+      url: this.path,
+      method: 'get'
+    }, options, callback)
   }
 
   /**
@@ -185,7 +193,11 @@ export default class Resource {
       throw new TypeError('Update method must have payload.')
     }
 
-    return this._request({ body, method: 'put' }, options, callback)
+    return this._request({
+      url: this.path,
+      body,
+      method: 'put'
+    }, options, callback)
   }
 
   /**
@@ -196,7 +208,43 @@ export default class Resource {
    * @returns {Promise}
    */
   ['delete'] (options, callback) {
-    return this._request({ method: 'delete' }, options, callback)
+    return this._request({
+      url: this.path,
+      method: 'delete'
+    }, options, callback)
+  }
+
+  /**
+   * Returns a page iterator. It is essentially an async generator that returns
+   * a promise to the next page on every `.next()` invocation.
+   *
+   * @param {Settings} [options] - Options of the request
+   * @returns {AsyncGenerator}
+   * @example
+   *
+   * ```
+   *   const it = operator.thng().pages()
+   *   it.next().then(console.log)
+   *
+   *   // or in ES7+
+   *
+   *   for await (let page of pages) {
+   *     console.log(page)
+   *   }
+   * ```
+   */
+  async *pages (options = {}) {
+    const fullResponse = options.fullResponse
+    let response
+
+    // Read first 'page' with user-defined options.
+    response = await this._linkRequest({url: this.path}, fullResponse, options)
+    yield response.result
+
+    while (response.next) {
+      response = await this._linkRequest({apiUrl: response.next}, fullResponse)
+      yield response.result
+    }
   }
 
   // PRIVATE
@@ -215,30 +263,51 @@ export default class Resource {
    * @returns {Promise.<Object|Entity|Response>}
    * @private
    */
-  _request (requestOptions, userOptions = {}, callback) {
+  async _request (requestOptions, userOptions = {}, callback) {
     if (isFunction(userOptions)) {
       callback = userOptions
     }
 
     // Merge options, priority to mandatory ones.
     const options = Object.assign(
+      {},
       userOptions,
       requestOptions,
       {
-        url: this.path,
         apiKey: this.scope.apiKey
       }
     )
 
     // Serialize Entity into JSON payload.
     if (options.body) {
-      options.body = this.serialize(options.body)
+      options.body = await this.serialize(options.body)
     }
 
     // Execute callback after deserialization.
-    return api(options)
-      .then(this.deserialize.bind(this))
-      .then(success(callback))
-      .catch(failure(callback))
+    try {
+      const response = await api(options)
+      const deserialized = await this.deserialize(response)
+      return success(callback)(deserialized)
+    } catch (err) {
+      throw failure(callback)(err)
+    }
+  }
+
+  /**
+   * Async request that parses the link header if any.
+   *
+   * @param {Settings} requestOptions - Mandatory request options
+   * @param {Boolean} fullResponse - Wrap Response or not
+   * @param {Settings} [userOptions] - Optional user options
+   * @returns {Promise.<{result: Response|Array, next: string}>}
+   * @private
+   */
+  async _linkRequest (requestOptions, fullResponse, userOptions = {}) {
+    const opts = Object.assign({ fullResponse: true }, requestOptions)
+    const response = await this._request(opts, userOptions)
+    const linkHeader = parseLinkHeader(response.headers.get('link'))
+    const next = linkHeader.next && decodeURIComponent(linkHeader.next)
+    const result = await (fullResponse ? response : response.json())
+    return { result, next }
   }
 }

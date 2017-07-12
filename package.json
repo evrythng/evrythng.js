@@ -3,9 +3,9 @@
   "version": "5.0.0-pre.2",
   "description": "Official Javascript SDK for the EVRYTHNG API.",
   "main": "dist/evrythng.polyfill.js",
-  "module": "dist/evrythng.es6.polyfill.js",
+  "module": "dist/evrythng.es.polyfill.js",
   "browser": {
-    "./dist/evrythng.es6.polyfill.js": "./dist/evrythng.es6.js"
+    "./dist/evrythng.es.polyfill.js": "./dist/evrythng.es.js"
   },
   "scripts": {
     "lint": "gulp lint",
@@ -37,7 +37,7 @@
   "devDependencies": {
     "fetch-mock": "^5.8.1",
     "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-evrythng-tasks": "^0.0.9",
+    "gulp-evrythng-tasks": "^0.0.10",
     "lodash-es": "^4.17.2",
     "systemjs": "^0.20.12",
     "systemjs-plugin-babel": "^0.0.21"
@@ -47,6 +47,7 @@
       "fetch",
       "Response",
       "FormData"
-    ]
+    ],
+    "parser": "babel-eslint"
   }
 }
