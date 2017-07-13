@@ -23,10 +23,6 @@ export default class ReactorScript extends ReactorScriptResources(Entity) {
           throw new TypeError('There is no single resource for Reactor Scripts')
         }
 
-        // if (this instanceof AppScope) {
-        //   TODO make sure all requests are made after $init promise
-        // }
-
         return Resource.factoryFor(ReactorScript, path, ReactorScriptResources)
           .call(this)
       }

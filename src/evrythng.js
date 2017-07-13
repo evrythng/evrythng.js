@@ -10,6 +10,7 @@ export { default as api } from './api'
 // Scopes
 export { default as Operator } from './scope/Operator'
 export { default as Application } from './scope/Application'
+export { default as TrustedApplication } from './scope/TrustedApplication'
 export { default as User } from './scope/User'
 
 // Namespaces for: Entities and Symbols

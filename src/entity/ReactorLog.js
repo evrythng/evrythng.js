@@ -1,5 +1,7 @@
 import Entity from './Entity'
 import Resource from '../resource/Resource'
+import Scope from '../scope/Scope'
+import symbols from '../symbols'
 import isUndefined from 'lodash-es/isUndefined'
 import isFunction from 'lodash-es/isFunction'
 import isString from 'lodash-es/isString'
@@ -20,12 +22,10 @@ export default class ReactorLog extends Entity {
           throw new TypeError('There is no single resource for Reactor Logs')
         }
 
-        // if (this instanceof AppScope) {
-        //   TODO make sure all requests are made after $init promise
-        // }
+        const appPath = this instanceof Scope ? this[symbols.path] : ''
 
         return Object.assign(
-          Resource.factoryFor(ReactorLog, path).call(this, id),
+          Resource.factoryFor(ReactorLog, appPath + path).call(this, id),
           {
             create (...args) {
               return createLogs.call(this, ...args)
