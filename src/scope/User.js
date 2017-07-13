@@ -5,7 +5,9 @@ import Collection from '../entity/Collection'
 import Action from '../entity/Action'
 import ActionType from '../entity/ActionType'
 import Role from '../entity/Role'
+import Place from '../entity/Place'
 import { mixinResources } from '../util/mixin'
+import api from '../api'
 import symbols from '../symbols'
 
 /**
@@ -19,7 +21,8 @@ const UserAccess = mixinResources([
   Collection,       // CRU
   Action,           // CR
   ActionType,       // R
-  Role              // R
+  Role,             // R
+  Place             // R
 ])
 
 /**
@@ -32,7 +35,7 @@ const UserAccess = mixinResources([
  */
 export default class User extends UserAccess(Scope) {
   /**
-   * Creates an instance of Operator.
+   * Creates an instance of User.
    *
    * @param {string} apiKey - API Key of scope
    * @param {Object} [data={}] - Optional operator data
@@ -51,6 +54,23 @@ export default class User extends UserAccess(Scope) {
       })
   }
 
+  /**
+   * Log current user out of EVRYTHNG platform. I.e. API Key is not longer
+   * valid.
+   *
+   * @param {Function} callback - Error first callback
+   * @returns {Promise.<void>}
+   */
+  async logout (callback) {
+    try {
+      await this._invalidateUser()
+      if (callback) callback(null)
+    } catch (err) {
+      if (callback) callback(err)
+      throw err
+    }
+  }
+
   // PRIVATE
 
   /**
@@ -60,5 +80,19 @@ export default class User extends UserAccess(Scope) {
    */
   _getPath () {
     return `/users/${this.id}`
+  }
+
+  /**
+   * Request to invalidate API Key.
+   *
+   * @returns {Promise}
+   * @private
+   */
+  _invalidateUser () {
+    return api({
+      url: '/auth/all/logout',
+      method: 'post',
+      apiKey: this.apiKey
+    })
   }
 }
