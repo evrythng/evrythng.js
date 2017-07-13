@@ -1,6 +1,7 @@
 /* eslint-env jasmine */
 import Resource from '../../../src/resource/Resource'
 import Entity from '../../../src/entity/Entity'
+import symbols from '../../../src/symbols'
 import fetchMock from 'fetch-mock'
 import mockApi from '../../helpers/apiMock'
 import apiUrl from '../../helpers/apiUrl'
@@ -85,15 +86,15 @@ describe('Resource', () => {
         const res = resource.deserialize(entityTemplate)
         expect(res instanceof Entity).toBe(true)
         expect(res.foo).toEqual(entityTemplate.foo)
-        expect(res.resource).toBeDefined()
-        expect(res.resource.scope).toEqual(resource.scope)
-        expect(res.resource.path).toEqual(resource.path)
+        expect(res[symbols.resource]).toBeDefined()
+        expect(res[symbols.resource].scope).toEqual(resource.scope)
+        expect(res[symbols.resource].path).toEqual(resource.path)
       })
 
       it('should create new path if entity contains ID', () => {
         const newBody = { id: 'newEntity' }
         const res = resource.deserialize(newBody)
-        expect(res.resource.path).toEqual(`${resource.path}/${newBody.id}`)
+        expect(res[symbols.resource].path).toEqual(`${resource.path}/${newBody.id}`)
       })
 
       it('should add serialize method if Response object', done => {

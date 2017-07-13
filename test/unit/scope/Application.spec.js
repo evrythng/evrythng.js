@@ -1,5 +1,6 @@
 /* eslint-env jasmine */
 import Application from '../../../src/scope/Application'
+import symbols from '../../../src/symbols'
 import fetchMock from 'fetch-mock'
 import mockApi from '../../helpers/apiMock'
 import apiUrl from '../../helpers/apiUrl'
@@ -19,7 +20,7 @@ describe('Application', () => {
       })
 
       it('should read itself', done => {
-        application.$init.then(() => {
+        application[symbols.init].then(() => {
           expect(Application.prototype.read).toHaveBeenCalled()
           done()
         })
@@ -32,7 +33,7 @@ describe('Application', () => {
       })
 
       it('should throw error', done => {
-        application.$init
+        application[symbols.init]
           .catch(() => expect(true).toBe(true))
           .then(done)
       })
@@ -42,7 +43,7 @@ describe('Application', () => {
   describe('read', () => {
     beforeEach(done => {
       application = new Application(appApiKey)
-      application.$init.then(done)
+      application[symbols.init].then(done)
     })
 
     it('should send get request to project and application ID', done => {
@@ -65,7 +66,7 @@ describe('Application', () => {
   describe('update', () => {
     beforeEach(done => {
       application = new Application(appApiKey)
-      application.$init.then(done)
+      application[symbols.init].then(done)
     })
 
     it('should send get request to operator ID', done => {
@@ -90,12 +91,12 @@ describe('Application', () => {
       'product',
       'action',
       'place',
-      'appUser'
+      'userAccess'
     ]
 
     beforeEach(done => {
       application = new Application(appApiKey)
-      application.$init.then(done)
+      application[symbols.init].then(done)
     })
 
     operatorResources.forEach(resource => {

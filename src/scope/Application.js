@@ -1,19 +1,31 @@
 import Scope from './Scope'
+import User from './User'
 import Product from '../entity/Product'
 import Action from '../entity/Action'
 import Place from '../entity/Place'
-import AppUserAccess from '../entity/AppUserAccess'
+import UserAccess from '../entity/UserAccess'
 import { mixinResources } from '../util/mixin'
+import api from '../api'
+import symbols from '../symbols'
+import isPlainObject from 'lodash-es/isPlainObject'
 
 /**
- * Mixin with all the top-level Operator resources.
+ * E-mail and password used to create a user into the platform.
+ *
+ * @typedef {Object} AccessCredentials
+ * @param {string} email - E-mail used on registration
+ * @param {string} password - Password defined on registration
+ */
+
+/**
+ * Mixin with all the top-level Application resources.
  *
  * @mixin
  */
 const ApplicationAccess = mixinResources([
   Product,          // R
   Action,           // C scans
-  AppUserAccess,    // C
+  UserAccess,       // C
   Place             // R
 ])
 
@@ -24,7 +36,7 @@ const ApplicationAccess = mixinResources([
  * @extends Scope
  * @mixes ApplicationAccess
  */
-export default class Operator extends ApplicationAccess(Scope) {
+export default class Application extends ApplicationAccess(Scope) {
   /**
    * Creates an instance of Application.
    *
@@ -33,10 +45,12 @@ export default class Operator extends ApplicationAccess(Scope) {
    */
   constructor (apiKey, data = {}) {
     super(apiKey, data)
-    this.$init = this.$init
+
+    this[symbols.init] = this[symbols.init]
       .then(access => {
         this.id = access.actor.id
         this.project = access.project
+        this[symbols.path] = this._getPath()
       })
       .then(this.read.bind(this))
       .catch(() => {
@@ -45,11 +59,53 @@ export default class Operator extends ApplicationAccess(Scope) {
   }
 
   /**
+   * Login user using EVRYTHNG credentials and create User scope on success.
+   *
+   * @param {AccessCredentials} credentials - User login credentials
+   * @param {Function} callback - Error first callback
+   * @returns {Promise.<User>} - Authorized User scope
+   */
+  async login (credentials, callback) {
+    try {
+      const user = await this._authenticateUser(credentials)
+      const userScope = new User(user.access.apiKey, user)
+      if (callback) callback(null, userScope)
+      return userScope
+    } catch (err) {
+      if (callback) callback(err)
+      throw err
+    }
+  }
+
+  // PRIVATE
+
+  /**
    * Return application endpoint, nested within projects.
    *
-   * @return {string}
+   * @returns {string}
+   * @private
    */
-  get scopePath () {
+  _getPath () {
     return `/projects/${this.project}/applications/${this.id}`
+  }
+
+  /**
+   * Validate user credentials.
+   *
+   * @param {AccessCredentials} credentials - User login credentials
+   * @returns {Promise.<Object>} - User details with access
+   * @private
+   */
+  _authenticateUser (credentials) {
+    if (!credentials || !isPlainObject(credentials)) {
+      throw new TypeError('Credentials are missing.')
+    }
+
+    return api({
+      url: '/users/login',
+      method: 'post',
+      data: credentials,
+      apiKey: this.apiKey
+    })
   }
 }

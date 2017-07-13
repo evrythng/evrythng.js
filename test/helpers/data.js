@@ -83,8 +83,8 @@ export const roleTemplate = {
   name: 'Test Role'
 }
 
-export const appUserTemplate = {
-  id: 'appUserId',
+export const userTemplate = {
+  id: 'userId',
   firstName: 'Test',
   lastName: 'User',
   email: 'test@evrythng.com'
@@ -117,7 +117,7 @@ export const fileTemplate = {
   name: 'File example'
 }
 
-export const appUserAccessTemplate = {
-  evrythngUser: 'appUserId',
+export const userAccessTemplate = {
+  evrythngUser: 'userId',
   activationCode: 'activactionCode'
 }

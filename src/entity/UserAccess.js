@@ -1,6 +1,7 @@
 import Entity from './Entity'
 import Resource from '../resource/Resource'
 import api from '../api'
+import symbols from '../symbols'
 import isString from 'lodash-es/isString'
 
 const path = '/auth/evrythng/users'
@@ -11,7 +12,7 @@ const path = '/auth/evrythng/users'
  *
  * @extends Entity
  */
-export default class AppUserAccess extends Entity {
+export default class UserAccess extends Entity {
   /**
    * Return resource factory for AppUsers access.
    *
@@ -20,9 +21,9 @@ export default class AppUserAccess extends Entity {
    */
   static resourceFactory () {
     return {
-      appUser (id) {
+      userAccess (id) {
         return Object.assign(
-          Resource.factoryFor(AppUserAccess, path).call(this, id),
+          Resource.factoryFor(UserAccess, path).call(this, id),
           {
             create (...args) {
               return createAppUser.call(this, ...args)
@@ -96,15 +97,15 @@ function validate (activationCode) {
 
   // If called from the entity, the scope is the resource's scope.
   if (this instanceof Entity) {
-    scope = this.resource.scope
-    path = `${this.resource.path}/${this.id}`
+    scope = this[symbols.resource].scope
+    path = `${this[symbols.resource].path}/${this.id}`
   }
 
   // Activate  user.
   return api({
     url: `${path}/validate`,
     method: 'post',
-    authorization: scope.apiKey,
+    apiKey: scope.apiKey,
     data: { activationCode }
   })
 }
@@ -122,7 +123,7 @@ function createAnonymousUser () {
       anonymous: true // must be set to create anonymous user
     },
     data: {},
-    authorization: this.scope.apiKey
+    apiKey: this.scope.apiKey
   })
     .then(createUserScope.bind(this))
 }

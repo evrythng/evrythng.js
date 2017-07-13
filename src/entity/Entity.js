@@ -1,4 +1,5 @@
 import Resource from '../resource/Resource'
+import symbols from '../symbols'
 
 /**
  * Entity is the base class for all types of entities in the EVRYTHNG API.
@@ -18,21 +19,22 @@ export default class Entity {
       throw new Error('Resource must be a Resource.')
     }
 
-    this.resource = resource
+    // Define non-enumerable unique resource property so it's not copied over
+    // in shallow copies of this (e.g. using Object.assign).
+    this[symbols.resource] = resource
 
     // Extend Entity with data.
     Object.assign(this, body)
   }
 
   /**
-   * Returns raw JSON object payload, stripping out the resource property.
+   * Returns all enumerable properties.
    *
    * @returns {Object}
    */
   json () {
-    let json = Object.assign({}, this)
-    delete json.resource
-    return json
+    return Object.entries(this)
+      .reduce((ret, [k, v]) => Object.assign(ret, {[k]: v}), {})
   }
 
   /**
@@ -44,7 +46,7 @@ export default class Entity {
    * @returns {Promise.<Object>}
    */
   update (body = this.json(), callback) {
-    return this.resource.update(body, callback)
+    return this[symbols.resource].update(body, callback)
       .then(updated => {
         // Update self and keep chaining with API response.
         Object.assign(this, updated)
@@ -59,6 +61,6 @@ export default class Entity {
    * @returns {Promise.<Object>}
    */
   ['delete'] (callback) {
-    return this.resource.delete(callback)
+    return this[symbols.resource].delete(callback)
   }
 }

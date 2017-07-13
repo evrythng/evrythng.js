@@ -1,5 +1,6 @@
 /* eslint-env jasmine */
 import Entity from '../../../src/entity/Entity'
+import symbols from '../../../src/symbols'
 import mockApi from '../../helpers/apiMock'
 import { dummyResource } from '../../helpers/dummy'
 import { entityTemplate } from '../../helpers/data'
@@ -25,12 +26,12 @@ describe('Entity', () => {
 
     it('should store resource', () => {
       entity = new Entity(resource)
-      expect(entity.resource).toEqual(resource)
+      expect(entity[symbols.resource]).toEqual(resource)
     })
 
     it('should have optional body', () => {
       entity = new Entity(resource)
-      expect(Object.keys(entity).length).toEqual(1) // only .resource
+      expect(Object.keys(entity).length).toEqual(0)
     })
 
     it('should extend instance properties with body', () => {

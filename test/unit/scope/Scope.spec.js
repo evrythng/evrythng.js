@@ -1,5 +1,6 @@
 /* eslint-env jasmine */
 import Scope from '../../../src/scope/Scope'
+import symbols from '../../../src/symbols'
 import fetchMock from 'fetch-mock'
 import mockApi from '../../helpers/apiMock'
 import apiUrl from '../../helpers/apiUrl'
@@ -38,13 +39,13 @@ describe('Scope', () => {
         expect(scope.email).toEqual(operatorTemplate.email)
       })
 
-      it('should expose $init promise', () => {
-        expect(scope.$init).toBeDefined()
-        expect(scope.$init instanceof Promise).toBe(true)
+      it('should expose init promise', () => {
+        expect(scope[symbols.init]).toBeDefined()
+        expect(scope[symbols.init] instanceof Promise).toBe(true)
       })
 
       it('should fetch scope access using scope apiKey', done => {
-        scope.$init.then(() => {
+        scope[symbols.init].then(() => {
           expect(fetchMock.lastUrl()).toEqual(apiUrl(paths.access))
           expect(fetchMock.lastOptions()).toEqual(
             jasmine.objectContaining({

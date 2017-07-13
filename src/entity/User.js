@@ -4,11 +4,11 @@ import Resource from '../resource/Resource'
 const path = '/users'
 
 /**
- * Represents a Role entity object.
+ * Represents a User entity object.
  *
  * @extends Entity
  */
-export default class AppUser extends Entity {
+export default class User extends Entity {
   /**
    * Return simple resource factory for AppUsers.
    *
@@ -17,7 +17,7 @@ export default class AppUser extends Entity {
    */
   static resourceFactory () {
     return {
-      appUser: Resource.factoryFor(AppUser, path)
+      user: Resource.factoryFor(User, path)
     }
   }
 }

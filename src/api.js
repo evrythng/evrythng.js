@@ -47,6 +47,12 @@ function mergeInitialOptions (customOptions) {
     options.headers.authorization = options.apiKey
   }
 
+  // Stringify data if any
+  if (options.data) {
+    options.body = JSON.stringify(options.data)
+    Reflect.deleteProperty(options, 'data')
+  }
+
   return options
 }
 

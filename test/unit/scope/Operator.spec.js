@@ -1,5 +1,6 @@
 /* eslint-env jasmine */
 import Operator from '../../../src/scope/Operator'
+import symbols from '../../../src/symbols'
 import fetchMock from 'fetch-mock'
 import mockApi from '../../helpers/apiMock'
 import apiUrl from '../../helpers/apiUrl'
@@ -19,7 +20,7 @@ describe('Operator', () => {
       })
 
       it('should read itself', done => {
-        operator.$init.then(() => {
+        operator[symbols.init].then(() => {
           expect(Operator.prototype.read).toHaveBeenCalled()
           done()
         })
@@ -32,7 +33,7 @@ describe('Operator', () => {
       })
 
       it('should throw error', done => {
-        operator.$init
+        operator[symbols.init]
           .catch(() => expect(true).toBe(true))
           .then(done)
       })
@@ -42,7 +43,7 @@ describe('Operator', () => {
   describe('read', () => {
     beforeEach(done => {
       operator = new Operator(operatorApiKey)
-      operator.$init.then(done)
+      operator[symbols.init].then(done)
     })
 
     it('should send get request to operator ID', done => {
@@ -65,7 +66,7 @@ describe('Operator', () => {
   describe('update', () => {
     beforeEach(done => {
       operator = new Operator(operatorApiKey)
-      operator.$init.then(done)
+      operator[symbols.init].then(done)
     })
 
     it('should send get request to operator ID', done => {
@@ -93,7 +94,7 @@ describe('Operator', () => {
       'action',
       'actionType',
       'project',
-      'appUser',
+      'user',
       'batch',
       'place',
       'file'
@@ -101,7 +102,7 @@ describe('Operator', () => {
 
     beforeEach(done => {
       operator = new Operator(operatorApiKey)
-      operator.$init.then(done)
+      operator[symbols.init].then(done)
     })
 
     operatorResources.forEach(resource => {

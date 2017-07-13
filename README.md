@@ -13,7 +13,7 @@
 * [x] - Complete collection entity
 * [x] - Replace individual fetchMock.mocks with apiMock
 * [x] - Unit tests for url utils
-* [ ] - Use Symbols for private properties (e.g. resource, path) - simpler Entity.json
+* [x] - Use Symbols for private properties (e.g. resource, path) - simpler Entity.json
 * [ ] - Reconsider ES6 module stubbing with aggregator modules and named exports (https://github.com/eventualbuddha/rollup-plugin-stub)
 * [x] - Yarn?
 * [ ] - Validate JSDoc?
@@ -32,11 +32,6 @@
 * [x] - Browser + NPM package + Webpack (module + browser field) -> ESM + ES6
 * [x] - Browser + NPM package + Rollup (module + browser field) -> ESM + ES6
 * [x] - Browser + NPM package + Browserify (browser field) -> UMD + ES5 + polyfill
-* [ ] - Browser + CDN + Globals (dist) -> UMD + ES5 + polyfill
-* [ ] - Browser + Bower package + Globals (dist/evrythng.js) -> UMD + ES5 + polyfill
-* [ ] - Browser + Bower package + Globals (dist/evrythng.es6.js) -> ESM + ES6 (Safari 10.1 only)
-* [ ] - Browser + Bower package + RequireJS (dist/evrythng.js) -> UMD + ES5 + polyfill
-* [ ] - Browser + Bower package + RequireJS (dist/evrythng.es6.js) -> ESM + ES6 (Safari 10.1 only)
 
 
 evrythng.js facilitates the communication with the [EVRYTHNG](https://developers.evrythng.com) REST API thanks to its fluent and

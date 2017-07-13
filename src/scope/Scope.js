@@ -1,5 +1,6 @@
 import isString from 'lodash-es/isString'
 import api from '../api'
+import symbols from '../symbols'
 
 /**
  * Scope defines the context in which API calls are made. A scope is defined
@@ -19,7 +20,10 @@ export default class Scope {
     }
 
     this.apiKey = apiKey
-    this.$init = api({
+
+    // Define non-enumerable unique init property so it's not copied over in
+    // shallow copies of this (e.g. using Object.assign).
+    this[symbols.init] = api({
       url: '/access',
       apiKey: this.apiKey
     })
@@ -37,8 +41,8 @@ export default class Scope {
   read (options = {}) {
     const opts = Object.assign(options, {
       method: 'get',
-      url: this.scopePath,
-      authorization: this.apiKey
+      url: this[symbols.path],
+      apiKey: this.apiKey
     })
 
     return this._request(opts)
@@ -54,21 +58,12 @@ export default class Scope {
   update (data, options = {}) {
     const opts = Object.assign(options, {
       method: 'put',
-      url: this.scopePath,
-      authorization: this.apiKey,
+      url: this[symbols.path],
+      apiKey: this.apiKey,
       data
     })
 
     return this._request(opts)
-  }
-
-  /**
-   * Path to this scope's entity.
-   *
-   * @return {string}
-   */
-  get scopePath () {
-    return ''
   }
 
   // Private

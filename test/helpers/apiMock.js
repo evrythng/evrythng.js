@@ -64,11 +64,11 @@ function prepare () {
 
   // Validate user
   fetchMock.post(
-    apiUrl(`${paths.dummy}/${paths.appUsersAccessValidate}`),
+    apiUrl(`${paths.dummy}/${paths.usersAccessValidate}`),
     responses.ok
   )
   fetchMock.post(
-    apiUrl(`${paths.appUsersAccess}/${paths.appUsersAccessValidate}`),
+    apiUrl(`${paths.usersAccess}/${paths.usersAccessValidate}`),
     responses.ok
   )
 }

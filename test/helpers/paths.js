@@ -2,7 +2,7 @@ import {
   operatorTemplate,
   projectTemplate,
   applicationTemplate,
-  appUserAccessTemplate
+  userAccessTemplate
 } from './data'
 
 export default {
@@ -13,9 +13,6 @@ export default {
   actionTypes: '/actions',
   applications: '/applications',
   application: `/projects/${projectTemplate.id}/applications/${applicationTemplate.id}`,
-  appUsers: '/users',
-  appUsersAccess: '/auth/evrythng/users',
-  appUsersAccessValidate: `${appUserAccessTemplate.evrythngUser}/validate`,
   batches: '/batches',
   collections: '/collections',
   dummy: '/path',
@@ -34,5 +31,8 @@ export default {
   roles: '/roles',
   status: '/status',
   tasks: '/tasks',
-  thngs: '/thngs'
+  thngs: '/thngs',
+  users: '/users',
+  usersAccess: '/auth/evrythng/users',
+  usersAccessValidate: `${userAccessTemplate.evrythngUser}/validate`
 }

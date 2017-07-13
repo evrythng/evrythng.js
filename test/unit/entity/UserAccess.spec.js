@@ -1,6 +1,6 @@
 /* eslint-env jasmine */
 import Resource from '../../../src/resource/Resource'
-import AppUserAccess from '../../../src/entity/AppUserAccess'
+import UserAccess from '../../../src/entity/UserAccess'
 import fetchMock from 'fetch-mock'
 import apiUrl from '../../helpers/apiUrl'
 import mockApi from '../../helpers/apiMock'
@@ -9,49 +9,49 @@ import { dummyScope, dummyResource } from '../../helpers/dummy'
 import {
   apiKey,
   optionsTemplate,
-  appUserTemplate,
-  appUserAccessTemplate
+  userTemplate,
+  userAccessTemplate
 } from '../../helpers/data'
 
 const cb = () => {}
-let appUserAccessResource
-let appUserAccess
+let userAccessResource
+let userAccess
 let scope
 
-describe('AppUserAccess', () => {
+describe('UserAccess', () => {
   mockApi()
 
   it('should convert evrythngUser property to standard id', () => {
-    appUserAccess = new AppUserAccess(dummyResource(), appUserAccessTemplate)
-    expect(appUserAccess.id).toEqual(appUserAccessTemplate.evrythngUser)
-    expect(appUserAccess.evrythngUser).not.toBeDefined()
+    userAccess = new UserAccess(dummyResource(), userAccessTemplate)
+    expect(userAccess.id).toEqual(userAccessTemplate.evrythngUser)
+    expect(userAccess.evrythngUser).not.toBeDefined()
   })
 
   describe('validate', () => {
     beforeEach(() => {
-      appUserAccess = new AppUserAccess(dummyResource(), appUserAccessTemplate)
+      userAccess = new UserAccess(dummyResource(), userAccessTemplate)
     })
 
     it('should throw if no activaction code provided', () => {
-      Reflect.deleteProperty(appUserAccess, 'activationCode')
-      const invalid = () => appUserAccess.validate()
+      Reflect.deleteProperty(userAccess, 'activationCode')
+      const invalid = () => userAccess.validate()
       expect(invalid).toThrow()
     })
 
     it('should throw on anonymous user', () => {
-      appUserAccess.type = 'anonymous'
-      const invalid = () => appUserAccess.validate()
+      userAccess.type = 'anonymous'
+      const invalid = () => userAccess.validate()
       expect(invalid).toThrow()
     })
 
     it('should validate itself', done => {
-      const path = `${paths.dummy}/${appUserAccessTemplate.evrythngUser}/validate`
-      appUserAccess.validate().then(() => {
+      const path = `${paths.dummy}/${userAccessTemplate.evrythngUser}/validate`
+      userAccess.validate().then(() => {
         expect(fetchMock.lastUrl()).toEqual(apiUrl(path))
         expect(fetchMock.lastOptions()).toEqual(jasmine.objectContaining({
-          authorization: apiKey,
+          apiKey,
           method: 'post',
-          data: { activationCode: appUserAccessTemplate.activationCode }
+          body: JSON.stringify({ activationCode: userAccessTemplate.activationCode })
         }))
       }).then(done)
     })
@@ -59,14 +59,14 @@ describe('AppUserAccess', () => {
 
   describe('resourceFactory', () => {
     beforeEach(() => {
-      scope = Object.assign(dummyScope(), AppUserAccess.resourceFactory())
-      appUserAccessResource = scope.appUser()
+      scope = Object.assign(dummyScope(), UserAccess.resourceFactory())
+      userAccessResource = scope.userAccess()
     })
 
     it('should create new AppUserAccess resource', () => {
-      expect(appUserAccessResource instanceof Resource).toBe(true)
-      expect(appUserAccessResource.type).toBe(AppUserAccess)
-      expect(appUserAccessResource.path).toEqual(`${paths.appUsersAccess}`)
+      expect(userAccessResource instanceof Resource).toBe(true)
+      expect(userAccessResource.type).toBe(UserAccess)
+      expect(userAccessResource.path).toEqual(`${paths.usersAccess}`)
     })
 
     describe('create', () => {
@@ -75,20 +75,20 @@ describe('AppUserAccess', () => {
       })
 
       it('should create normal user', done => {
-        appUserAccessResource.create(appUserTemplate).then(() => {
-          expect(Resource.prototype.create).toHaveBeenCalledWith(appUserTemplate)
+        userAccessResource.create(userTemplate).then(() => {
+          expect(Resource.prototype.create).toHaveBeenCalledWith(userTemplate)
         }).then(done)
       })
 
       it('should support callback in second param', done => {
-        appUserAccessResource.create(appUserTemplate, cb).then(() => {
+        userAccessResource.create(userTemplate, cb).then(() => {
           expect(Resource.prototype.create.calls.mostRecent().args[1])
             .toEqual(cb)
         }).then(done)
       })
 
       it('should support callback in third param', done => {
-        appUserAccessResource.create(appUserTemplate, optionsTemplate, cb)
+        userAccessResource.create(userTemplate, optionsTemplate, cb)
           .then(() => {
             expect(Resource.prototype.create.calls.mostRecent().args[2])
               .toEqual(cb)
@@ -99,14 +99,14 @@ describe('AppUserAccess', () => {
       it('should create anonymous user', done => {
         const anonymousUserTemplate = Object.assign(
           { anonymous: true },
-          appUserTemplate
+          userTemplate
         )
-        appUserAccessResource.create(anonymousUserTemplate).then(() => {
+        userAccessResource.create(anonymousUserTemplate).then(() => {
           expect(fetchMock.lastOptions()).toEqual(jasmine.objectContaining({
-            authorization: apiKey,
+            apiKey,
             method: 'post',
             params: { anonymous: true },
-            data: {}
+            body: JSON.stringify({})
           }))
         }).then(done)
       })
@@ -114,14 +114,14 @@ describe('AppUserAccess', () => {
       describe('validate', () => {
         it('should validate', done => {
           const activationCode = 'code'
-          const path = `${paths.appUsersAccess}/${appUserAccessTemplate.evrythngUser}/validate`
-          appUserAccessResource = scope.appUser(appUserAccessTemplate.evrythngUser)
-          appUserAccessResource.validate(activationCode).then(() => {
+          const path = `${paths.usersAccess}/${userAccessTemplate.evrythngUser}/validate`
+          userAccessResource = scope.userAccess(userAccessTemplate.evrythngUser)
+          userAccessResource.validate(activationCode).then(() => {
             expect(fetchMock.lastUrl()).toEqual(apiUrl(path))
             expect(fetchMock.lastOptions()).toEqual(jasmine.objectContaining({
-              authorization: apiKey,
+              apiKey,
               method: 'post',
-              data: { activationCode }
+              body: JSON.stringify({ activationCode })
             }))
           }).then(done)
         })

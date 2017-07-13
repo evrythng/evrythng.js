@@ -4,42 +4,33 @@ import Thng from '../entity/Thng'
 import Collection from '../entity/Collection'
 import Action from '../entity/Action'
 import ActionType from '../entity/ActionType'
-import Project from '../entity/Project'
 import Role from '../entity/Role'
-import User from '../entity/User'
-import Batch from '../entity/Batch'
-import Place from '../entity/Place'
-import File from '../entity/File'
 import { mixinResources } from '../util/mixin'
 import symbols from '../symbols'
 
 /**
- * Mixin with all the top-level Operator resources.
+ * Mixin with all the top-level User resources.
  *
  * @mixin
  */
-const OperatorAccess = mixinResources([
-  Product,          // CRUD
-  Thng,             // CRUD
-  Collection,       // CRUD
+const UserAccess = mixinResources([
+  Product,          // CRU
+  Thng,             // CRU
+  Collection,       // CRU
   Action,           // CR
-  ActionType,       // CRUD
-  Project,          // CRUD
-  Role,             // CRUD
-  User,             // R
-  Batch,            // CRUD
-  Place,            // CRUD
-  File              // CRUD
+  ActionType,       // R
+  Role              // R
 ])
 
 /**
- * Operator is the Scope with highest permissions that can manage the account
- * resources. Should be used with caution in server-side code.
+ * User is the Scope that represents an application user. It is usually
+ * retrieved by authenticating a user in an app, but can also be instantiated
+ * explicitly if API Key and details are known (e.g. stored in localStorage).
  *
  * @extends Scope
- * @mixes OperatorAccess
+ * @mixes UserAccess
  */
-export default class Operator extends OperatorAccess(Scope) {
+export default class User extends UserAccess(Scope) {
   /**
    * Creates an instance of Operator.
    *
@@ -56,18 +47,18 @@ export default class Operator extends OperatorAccess(Scope) {
       })
       .then(this.read.bind(this))
       .catch(() => {
-        throw new Error('There is no operator with this API Key')
+        throw new Error('There is no user with this API Key')
       })
   }
 
   // PRIVATE
 
   /**
-   * Return operator endpoint.
+   * Return user endpoint.
    *
    * @return {string}
    */
   _getPath () {
-    return `/operators/${this.id}`
+    return `/users/${this.id}`
   }
 }

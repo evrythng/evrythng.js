@@ -3,6 +3,7 @@ import isFunction from 'lodash-es/isFunction'
 import Scope from '../scope/Scope'
 import Entity from '../entity/Entity'
 import api, { success, failure } from '../api'
+import symbols from '../symbols'
 import parseLinkHeader from '../util/parseLinkHeader'
 
 /**
@@ -42,8 +43,8 @@ export default class Resource {
         parentScope = this.scope
         parentPath = this.path
       } else {
-        parentScope = this.resource.scope
-        parentPath = this.resource.path
+        parentScope = this[symbols.resource].scope
+        parentPath = this[symbols.resource].path
       }
 
       newPath = parentPath + path
