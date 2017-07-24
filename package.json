@@ -11,7 +11,7 @@
     "lint": "gulp lint",
     "build": "gulp build",
     "test": "gulp test",
-    "prepublish": "npm run build"
+    "deploy": "sh ./node_modules/gulp-evrythng-tasks/bin/deploy.sh"
   },
   "repository": {
     "type": "git",
