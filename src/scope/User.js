@@ -38,7 +38,7 @@ export default class User extends UserAccess(Scope) {
    * Creates an instance of User.
    *
    * @param {string} apiKey - API Key of scope
-   * @param {Object} [data={}] - Optional operator data
+   * @param {Object} [data={}] - Optional user data
    */
   constructor (apiKey, data = {}) {
     super(apiKey, data)

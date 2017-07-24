@@ -30,6 +30,8 @@ const ApplicationAccess = mixinResources([
   User,             // R
   ReactorSchedule,  // C
   ReactorLog        // C
+
+  // From Application:
   // Product        // CRUD
   // Place          // CRUD
   // Action         // CR

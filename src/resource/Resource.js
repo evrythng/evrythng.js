@@ -42,7 +42,7 @@ export default class Resource {
       } else if (this instanceof Resource) {
         parentScope = this.scope
         parentPath = this.path
-      } else {
+      } else if (this instanceof Entity) {
         parentScope = this[symbols.resource].scope
         parentPath = this[symbols.resource].path
       }
@@ -66,7 +66,7 @@ export default class Resource {
   /**
    * A Resource requires a Scope sub-class (App, Operator, etc.) and the
    * corresponding path in the Engine API. An Entity sub-class can be
-   * provider, in which case is it used to create instance of that Entity class
+   * provided, in which case is it used to create instance of that Entity class
    * when returning from API requests.
    *
    * @param {Scope} scope - Scope containing API Key

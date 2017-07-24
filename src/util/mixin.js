@@ -25,13 +25,14 @@ export function mixinResources (entities) {
  * See: http://raganwald.com/2015/06/17/functional-mixins.html
  *
  * @param {Object} behaviour - Shared behaviour object literal
- * @return {function(class)}
+ * @param {Boolean} proto - Indicates if mixin should be applied to prototype
+ * @return {function(target)}
  */
-export default function mixin (behaviour) {
+export default function mixin (behaviour, proto = true) {
   return (target) => {
     for (let property of Reflect.ownKeys(behaviour)) {
       Object.defineProperty(
-        target.prototype,
+        proto ? target.prototype : target,
         property,
         { value: behaviour[property] }
       )
