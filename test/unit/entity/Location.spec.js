@@ -4,7 +4,7 @@ import Location from '../../../src/entity/Location'
 import setup from '../../../src/setup'
 import mockApi from '../../helpers/apiMock'
 import paths from '../../helpers/paths'
-import { dummyScope, dummyResource } from '../../helpers/dummy'
+import { dummyResource } from '../../helpers/dummy'
 import {
   locationTemplate,
   positionTemplate,
