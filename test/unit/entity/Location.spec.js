@@ -28,12 +28,6 @@ describe('Location', () => {
       expect(singleResource).toThrow()
     })
 
-    it('should not be allowed as top level resource (on Scopes)', () => {
-      const scope = Object.assign(dummyScope(), Location.resourceFactory())
-      const topLevelResource = () => scope.location()
-      expect(topLevelResource).toThrow()
-    })
-
     it('should create new Location resource', () => {
       locationResource = resource.location()
       expect(locationResource instanceof Resource).toBe(true)

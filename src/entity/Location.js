@@ -2,6 +2,7 @@ import Entity from './Entity'
 import Resource from '../resource/Resource'
 import Scope from '../scope/Scope'
 import settings from '../settings'
+import symbols from '../symbols'
 import getCurrentPosition from '../util/getCurrentPosition'
 import isUndefined from 'lodash-es/isUndefined'
 import isFunction from 'lodash-es/isFunction'
@@ -34,16 +35,13 @@ export default class Location extends Entity {
           throw new TypeError('There is no single resource for Locations')
         }
 
-        // Only allowed on Entities and Resources.
-        if (this instanceof Scope) {
-          throw new Error('Location is not a top-level resource.')
-        }
+        const thngPath = this instanceof Scope ? this[symbols.path] : ''
 
         // Creates and returns Resource of type Location.
         // Override property resource update to allow empty updates.
         // See `updateLocation()`.
         return Object.assign(
-          Resource.factoryFor(Location, path).call(this),
+          Resource.factoryFor(Location, thngPath + path).call(this),
           {
             update (...args) {
               return updateLocation.call(this, ...args)

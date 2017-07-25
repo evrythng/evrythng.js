@@ -1,6 +1,8 @@
 import Entity from './Entity'
 import Resource from '../resource/Resource'
+import Scope from '../scope/Scope'
 import settings from '../settings'
+import symbols from '../symbols'
 import getCurrentPosition from '../util/getCurrentPosition'
 import isString from 'lodash-es/isString'
 import isFunction from 'lodash-es/isFunction'
@@ -35,13 +37,14 @@ export default class Action extends Entity {
         }
 
         const typePath = path.replace(':type', actionType)
+        const thngPath = this instanceof Scope ? this[symbols.path] : ''
         const context = this
 
         // Creates and returns Resource of type Action.
         // Override property resource create to allow custom value params and
         // fetch the user's geolocation. See `createAction()`.
         return Object.assign(
-          Resource.factoryFor(Action, typePath).call(this, id),
+          Resource.factoryFor(Action, thngPath + typePath).call(this, id),
           {
             create (...args) {
               return createAction.call(this, context, actionType, ...args)

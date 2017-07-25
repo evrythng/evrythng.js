@@ -1,6 +1,20 @@
 import Scope from './Scope'
-import Thng from '../entity/Thng'
+import Property from '../entity/Property'
+import Action from '../entity/Action'
+// import Location from '../entity/Location'
 import symbols from '../symbols'
+import { mixinResources } from '../util/mixin'
+
+/**
+ * Mixin with all the top-level Application resources.
+ *
+ * @mixin
+ */
+const DeviceAccess = mixinResources([
+  Property,          // CRUD
+  Action             // CRUD
+  // Location           // CRUD
+])
 
 /**
  * Device is the Scope that represents an active/smart Thng. It can only
@@ -9,7 +23,7 @@ import symbols from '../symbols'
  *
  * @extends Scope
  */
-export default class Device extends Scope {
+export default class Device extends DeviceAccess(Scope) {
   /**
    * Creates an instance of Device.
    *
@@ -30,33 +44,6 @@ export default class Device extends Scope {
       .then(this.read.bind(this))
   }
 
-  /**
-   * Proxy request to Thng resource.
-   *
-   * @param {*} args - Defined in Property
-   */
-  property (...args) {
-    return this._getResource().property(...args)
-  }
-
-  /**
-   * Proxy request to Thng resource.
-   *
-   * @param {*} args - Defined in Action
-   */
-  action (...args) {
-    return this._getResource().action(...args)
-  }
-
-  /**
-   * Proxy request to Thng resource.
-   *
-   * @param {*} args - Defined in Location
-   */
-  location (...args) {
-    return this._getResource().location(...args)
-  }
-
   // PRIVATE
 
   /**
@@ -66,15 +53,5 @@ export default class Device extends Scope {
    */
   _getPath () {
     return `/thngs/${this.id}`
-  }
-
-  /**
-   * Return newly instantiated Thng resource for this device ID.
-   *
-   * @returns {Resource}
-   * @private
-   */
-  _getResource () {
-    return Thng.resourceFactory().thng.call(this, this.id)
   }
 }
