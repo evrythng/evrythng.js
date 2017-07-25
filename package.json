@@ -37,7 +37,7 @@
   "devDependencies": {
     "fetch-mock": "^5.8.1",
     "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-evrythng-tasks": "^0.0.12",
+    "gulp-evrythng-tasks": "^0.0.13",
     "lodash-es": "^4.17.2",
     "systemjs": "^0.20.12",
     "systemjs-plugin-babel": "^0.0.21"
