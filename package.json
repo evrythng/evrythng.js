@@ -1,6 +1,6 @@
 {
   "name": "evrythng",
-  "version": "5.0.0-pre.2",
+  "version": "5.0.0-pre.3",
   "description": "Official Javascript SDK for the EVRYTHNG API.",
   "main": "dist/evrythng.polyfill.js",
   "module": "dist/evrythng.es.polyfill.js",
