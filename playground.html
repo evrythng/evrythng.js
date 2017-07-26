@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>evrythng.js playground</title>
+  <script src="node_modules/systemjs/dist/system.js"></script>
+  <script>
+    SystemJS.config({
+      transpiler: 'plugin-babel',
+      map: {
+        'plugin-babel': 'node_modules/systemjs-plugin-babel/plugin-babel.js',
+        'systemjs-babel-build': 'node_modules/systemjs-plugin-babel/systemjs-babel-browser.js'
+      },
+      paths: {
+        'lodash-es/': 'node_modules/lodash-es/'
+      },
+      meta: {
+        '*.js': {
+          babelOptions: {
+            es2015: false
+          }
+        }
+      },
+      packages: {
+        'src': {
+          defaultExtensions: 'js'
+        },
+        'lodash-es': {
+          defaultExtensions: 'js'
+        }
+      }
+    });
+    SystemJS.import('src/evrythng').then(module => EVT = module)
+  </script>
+</head>
+<body>
+<h1>evrythng.js Playground</h1>
+</body>
+</html>

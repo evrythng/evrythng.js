@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EVT.js NPM Globals</title>
+</head>
+<body>
+  <script src="./node_modules/evrythng/dist/evrythng.polyfill.js"></script>
+  <script>
+    console.log('It loads!')
+    console.log('EVT version', EVT.version)
+
+    EVT.api().catch(function(e) {
+      console.log('Fetch works!')
+      console.log('API response', e)
+    })
+  </script>
+</body>
+</html>

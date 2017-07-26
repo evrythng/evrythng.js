@@ -1,4 +1,3 @@
-import isPlainObject from 'lodash-es/isPlainObject'
 import settings from './settings'
 
 /**
@@ -8,10 +7,5 @@ import settings from './settings'
  * @returns {Object} new
  */
 export default function setup (customSettings) {
-  if (!isPlainObject(customSettings)) {
-    throw new TypeError('Setup should be called with an options object.')
-  }
-
-  // Update and return new settings.
   return Object.assign(settings, customSettings)
 }
