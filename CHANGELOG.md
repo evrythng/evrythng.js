@@ -1,3 +1,9 @@
+# v4.7.2 (11-15-2017)
+
+## Bug fixes
+
+-**Places**: Do not geolocate place with id
+
 # v4.7.1 (30-06-2017)
 
 ## Features

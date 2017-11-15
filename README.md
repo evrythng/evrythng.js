@@ -34,7 +34,7 @@ See [Usage](#usage) below for more details.
 
 Add the script tag into your HTML page:
 
-    <script src="//cdn.evrythng.com/toolkit/evrythng-js-sdk/evrythng-4.7.1.min.js"></script>
+    <script src="//cdn.evrythng.com/toolkit/evrythng-js-sdk/evrythng-4.7.2.min.js"></script>
  
 Or always get the latest release (warning, new releases might break your code!):
 
@@ -43,7 +43,7 @@ Or always get the latest release (warning, new releases might break your code!):
     
 For HTTPS you need to use:
 
-    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-4.7.1.min.js"></script>
+    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-4.7.2.min.js"></script>
     <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng.js"></script>
     <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng.min.js"></script>
     
@@ -74,6 +74,9 @@ require(['evrythng'], function (EVT) {
 
 #### Node.js
 
+Create a new scope object of the required actor type to begin making API 
+requests with it:
+
 ```javascript
 var EVT = require('evrythng');
 
@@ -81,18 +84,34 @@ var app = new EVT.App(APP_API_KEY);
 ...
 ```
 
-**Note**: It may be required to call `$init()` and use the returned promise to
-utilize the newly created scope straight away. This applies to all scopes
-(including `EVT.Operator`, `EVT.TrustedApp`, `EVT.User`, and `EVT.Device`), and
-should be used in the following manner:
+The scope can be used immediately to make other API calls (that do not
+require information about the scope beyond the API key used to construct it):
 
 ```javascript
 var app = new EVT.App(APP_API_KEY);
 
-app.$init.then(app => {
-  // The scope is now ready for use.
+// Read all products
+app.product().read().then(console.log);
+```
+
+However, if information about the scope itself (such as the application ID for 
+an `EVT.App` scope, for example) is required as soon as possible, use the 
+returned promise to be notified when the scope is ready for use. 
+
+**Note**: This applies to all scopes (including `EVT.Operator`, 
+`EVT.TrustedApp`, `EVT.User`, and `EVT.Device`). 
+
+Below is an example of this mode of usage:
+
+```javascript
+var app = new EVT.App(APP_API_KEY);
+
+app.$init.then((app) => {
+  // The scope 'id' property is now ready for use
+  console.log(app.id);
 });
 ```
+
 
 #### Globals
 
