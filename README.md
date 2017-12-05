@@ -131,7 +131,7 @@ Setup global settings ([see all options](http://evrythng.github.io/evrythng-sour
 
 ```javascript
 EVT.setup({
-  apiUrl: 'http://api.evrythng.com'
+  apiUrl: 'https://api.evrythng.com'
 });
 ```
 
