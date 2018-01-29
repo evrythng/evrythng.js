@@ -224,7 +224,7 @@ user.thng('123').update({
 });
 ```
 
-#### Actions
+#### Actions
 
 Create a new action:
 
@@ -244,7 +244,7 @@ thng.action('_customAction').create({
 });
 ```
 
-### Using request options 
+### Using request options 
 
 ([Read more about options](http://evrythng.github.io/evrythng-source.js/src/ajax.html)):
 
@@ -267,7 +267,7 @@ app.product().read({
 });
 ```
 
-### Using filters
+### Using filters
 
 Specify filter `params` to limit the returned results to matched criteria:
 
@@ -288,7 +288,7 @@ app.product().read({
 });
 ```
 
-### Facebook login
+### Facebook login
 
 In order to use FB login, the application needs to be initialized with `facebook` property having truthy value:
 
