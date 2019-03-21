@@ -3,6 +3,7 @@ import Resource from '../resource/Resource'
 import api from '../api'
 import symbols from '../symbols'
 import isString from 'lodash-es/isString'
+import User from '../scope/User'
 
 const path = '/auth/evrythng/users'
 
@@ -128,11 +129,6 @@ function createAnonymousUser () {
     .then(createUserScope.bind(this))
 }
 
-// TODO Create User Scope
 function createUserScope (access) {
-  // return new User({
-  //   id: access.evrythngUser,
-  //   apiKey: access.evrythngApiKey,
-  //   type: 'anonymous'
-  // })
+  return new User(access.evrythngApiKey, { type: 'anonymous' })
 }
