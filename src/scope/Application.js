@@ -86,7 +86,7 @@ export default class Application extends ApplicationAccess(Scope) {
    * @private
    */
   _getPath () {
-    return `/projects/${this.project}/applications/${this.id}`
+    return '/applications/me'
   }
 
   /**
