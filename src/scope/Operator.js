@@ -63,11 +63,11 @@ export default class Operator extends OperatorAccess(Scope) {
   // PRIVATE
 
   /**
-   * Return operator endpoint.
+   * Return operator access endpoint.
    *
    * @return {string}
    */
   _getPath () {
-    return `/operators/${this.id}`
+    return '/access'
   }
 }
