@@ -32,7 +32,7 @@ describe('UserAccess', () => {
       userAccess = new UserAccess(dummyResource(), userAccessTemplate)
     })
 
-    it('should throw if no activaction code provided', () => {
+    it('should throw if no activation code provided', () => {
       Reflect.deleteProperty(userAccess, 'activationCode')
       const invalid = () => userAccess.validate()
       expect(invalid).toThrow()
