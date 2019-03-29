@@ -1,5 +1,4 @@
 const path = require('path');
-const nodeExternals = require('webpack-node-externals');
 
 const browserConfig = {
   entry: './src/evrythng.polyfill.js',
@@ -14,9 +13,6 @@ const browserConfig = {
 const nodeConfig = {
   entry: './src/evrythng.polyfill.js',
   target: 'node',
-  externals: [
-    nodeExternals(),
-  ],
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'evrythng.node.js',

@@ -37,8 +37,7 @@
     "fetch-mock": "^5.8.1",
     "lodash-es": "^4.17.2",
     "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0",
-    "webpack-node-externals": "^1.7.2"
+    "webpack-cli": "^3.3.0"
   },
   "standard": {
     "globals": [
