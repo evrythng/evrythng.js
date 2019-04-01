@@ -151,21 +151,22 @@ export default class Resource {
   /**
    * Create a new entity for this resource.
    *
-   * @param {Object|Entity} body - Entity to create
+   * @param {Object|Entity} data - Entity to create
    * @param {Settings} [options] - Options of the request
    * @param {Function} [callback] - Error-first callback
    * @returns {Promise}
    */
-  create (body, options, callback) {
-    if (!body || isFunction(body)) {
+  create (data, options, callback) {
+    if (!data || isFunction(data)) {
       throw new TypeError('Create method must have payload.')
     }
-
-    return this._request({
+    const req = {
       url: this.path,
-      body,
+      data,
       method: 'post'
-    }, options, callback)
+    }
+
+    return this._request(req, options, callback)
   }
 
   /**
@@ -185,19 +186,19 @@ export default class Resource {
   /**
    * Updates entity via this resource.
    *
-   * @param {Object|Entity} body - Entity to create
+   * @param {Object|Entity} data - Entity to create
    * @param {Settings} [options] - Options of the request
    * @param {Function} [callback] - Error-first callback
    * @returns {Promise}
    */
-  update (body, options, callback) {
-    if (!body || isFunction(body)) {
+  update (data, options, callback) {
+    if (!data || isFunction(data)) {
       throw new TypeError('Update method must have payload.')
     }
 
     return this._request({
       url: this.path,
-      body,
+      data,
       method: 'put'
     }, options, callback)
   }

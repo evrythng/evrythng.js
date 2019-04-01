@@ -144,7 +144,9 @@ function fillAction (data, caller, actionType) {
  */
 function getIdentifier (caller) {
   return caller instanceof Entity
-    ? caller.constructor.name.toLocaleLowerCase()
+    ? caller[symbols.actionIdentifier]
+      ? caller[symbols.actionIdentifier]
+      : ''
     : ''
 }
 
