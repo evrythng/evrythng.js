@@ -1,22 +1,26 @@
-const path = require('path');
+const { resolve } = require('path');
+
+const path = resolve(__dirname, 'dist');
+const entry = './src/evrythng.polyfill.js';
+const library = 'evrythng';
 
 const browserConfig = {
-  entry: './src/evrythng.polyfill.js',
+  entry,
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path,
+    library,
     filename: 'evrythng.browser.js',
-    library: 'evrythng',
     libraryTarget: 'var',
   },
 };
 
 const nodeConfig = {
-  entry: './src/evrythng.polyfill.js',
+  entry,
   target: 'node',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path,
+    library,
     filename: 'evrythng.node.js',
-    library: 'evrythng',
     libraryTarget: 'umd',
     umdNamedDefine: true,
     globalObject: 'typeof self !== \'undefined\' ? self : this',
