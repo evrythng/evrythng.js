@@ -21,9 +21,7 @@ export default class Scope {
 
     this.apiKey = apiKey
 
-    // Define non-enumerable unique init property so it's not copied over in
-    // shallow copies of this (e.g. using Object.assign).
-    this[symbols.init] = api({
+    this.init = api({
       url: '/access',
       apiKey: this.apiKey
     })

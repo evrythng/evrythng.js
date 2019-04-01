@@ -43,20 +43,19 @@ export default class User extends UserAccess(Scope) {
   constructor (apiKey, data = {}) {
     super(apiKey, data)
 
-    this[symbols.init] = this[symbols.init]
+    this.init = this.init
       .then(access => {
         this.id = access.actor.id
         this[symbols.path] = this._getPath()
       })
-      .then(this.read.bind(this))
+      .then(() => this.read())
       .catch(() => {
         throw new Error('There is no user with this API Key')
       })
   }
 
   /**
-   * Log current user out of EVRYTHNG platform. I.e. API Key is not longer
-   * valid.
+   * Log current user out of EVRYTHNG platform. The API key is no longer valid.
    *
    * @param {Function} callback - Error first callback
    * @returns {Promise.<void>}
