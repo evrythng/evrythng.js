@@ -7,7 +7,6 @@ import ReactorSchedule from '../entity/ReactorSchedule'
 import ReactorLog from '../entity/ReactorLog'
 import { mixinResources } from '../util/mixin'
 import api from '../api'
-import symbols from '../symbols'
 import isPlainObject from 'lodash-es/isPlainObject'
 
 /**
@@ -52,18 +51,17 @@ export default class TrustedApplication extends ApplicationAccess(Application) {
    * @param {Object} [data={}] - Optional application data
    */
   constructor (apiKey, data = {}) {
-    super(apiKey, data)
+    super(apiKey, data) 
+  }
 
-    this[symbols.init] = this[symbols.init]
-      .then(access => {
-        this.id = access.actor.id
-        this.project = access.project
-        this[symbols.path] = this._getPath()
-      })
-      .then(this.read.bind(this))
-      .catch(() => {
-        throw new Error('There is no application with this API Key')
-      })
+  /**
+   * Read the trusted application's data asynchronously.
+   *
+   * @returns {Promise}
+   */
+  init () {
+    // Operation is the same as for Application scope.
+    return super.init()
   }
 
   /**
@@ -94,7 +92,7 @@ export default class TrustedApplication extends ApplicationAccess(Application) {
    * @private
    */
   _getPath () {
-    return `/projects/${this.project}/applications/${this.id}`
+    return '/applications/me'
   }
 
   /**

@@ -45,14 +45,21 @@ export default class Application extends ApplicationAccess(Scope) {
    */
   constructor (apiKey, data = {}) {
     super(apiKey, data)
+  }
 
-    this[symbols.init] = this[symbols.init]
+  /**
+   * Read the application's data asynchronously
+   *
+   * @returns {Promise}
+   */
+  init () {
+    return super.init()
       .then(access => {
         this.id = access.actor.id
         this.project = access.project
         this[symbols.path] = this._getPath()
       })
-      .then(this.read.bind(this))
+      .then(() => this.read())
       .catch(() => {
         throw new Error('There is no application with this API Key')
       })

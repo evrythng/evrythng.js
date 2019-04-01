@@ -48,13 +48,20 @@ export default class Operator extends OperatorAccess(Scope) {
    */
   constructor (apiKey, data = {}) {
     super(apiKey, data)
+  }
 
-    this[symbols.init] = this[symbols.init]
+  /**
+   * Read the operator's data asynchronously.
+   *
+   * @returns {Promise}
+   */
+  init () {
+    return super.init()
       .then(access => {
         this.id = access.actor.id
         this[symbols.path] = this._getPath()
       })
-      .then(this.read.bind(this))
+      .then(() => this.read())
       .catch(() => {
         throw new Error('There is no operator with this API Key')
       })

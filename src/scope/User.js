@@ -42,8 +42,15 @@ export default class User extends UserAccess(Scope) {
    */
   constructor (apiKey, data = {}) {
     super(apiKey, data)
+  }
 
-    this.init = this.init
+  /**
+   * Read the user's data asynchronously.
+   *
+   * @returns {Promise}
+   */
+  init () {
+    return super.init()
       .then(access => {
         this.id = access.actor.id
         this[symbols.path] = this._getPath()

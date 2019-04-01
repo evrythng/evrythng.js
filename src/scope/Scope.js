@@ -21,13 +21,20 @@ export default class Scope {
 
     this.apiKey = apiKey
 
-    this.init = api({
+    // Extend scope with any given details.
+    Object.assign(this, body)
+  }
+
+  /**
+   * Read the scope's access data asynchronously.
+   *
+   * @returns {Promise}
+   */
+  init () {
+    return api({
       url: '/access',
       apiKey: this.apiKey
     })
-
-    // Extend scope with any given details.
-    Object.assign(this, body)
   }
 
   /**
