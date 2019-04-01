@@ -97,7 +97,7 @@ describe('Action', () => {
                   })
                 )
               }),
-              resource.action(actionTemplate.type).create([{foo: 1}, {foo: 2}]).then(() => {
+              resource.action(actionTemplate.type).create([{ foo: 1 }, { foo: 2 }]).then(() => {
                 expect(Resource.prototype.create).toHaveBeenCalledWith([
                   jasmine.objectContaining({
                     type: actionTemplate.type,
@@ -131,7 +131,7 @@ describe('Action', () => {
                   })
                 )
               }),
-              actionResource.create([{foo: 1}, {foo: 2}]).then(() => {
+              actionResource.create([{ foo: 1 }, { foo: 2 }]).then(() => {
                 expect(Resource.prototype.create).toHaveBeenCalledWith([
                   jasmine.objectContaining({
                     entity: entityTemplate.id,

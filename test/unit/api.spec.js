@@ -110,7 +110,7 @@ describe('api', () => {
         response (res) {
           // assuming fullResponse: false
           res.count = res.count || 0
-          res.count ++
+          res.count++
           return res
         }
       }

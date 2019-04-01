@@ -15,11 +15,11 @@ export default function getCurrentPosition () {
 
       window.navigator.geolocation.getCurrentPosition(
         resolve,
-        err => reject(err.message),
+        err => reject(err),
         geolocationOptions
       )
     } else {
-      reject('Geolocation API not available.')
+      throw new Error('Geolocation API not available.')
     }
   })
 }
