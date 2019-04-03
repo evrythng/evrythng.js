@@ -30,12 +30,17 @@
   },
   "homepage": "https://github.com/evrythng/evrythng.js#readme",
   "dependencies": {
+    "@babel/runtime": "^7.4.3",
     "isomorphic-fetch": "^2.2.1",
     "node-fetch": "^2.3.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "@babel/plugin-transform-runtime": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
     "acorn": "^6.1.1",
     "ajv": "^6.10.0",
+    "babel-loader": "^8.0.5",
     "fetch-mock": "^5.8.1",
     "lodash-es": "^4.17.2",
     "webpack": "^4.29.6",
