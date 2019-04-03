@@ -51,7 +51,7 @@ export default class TrustedApplication extends ApplicationAccess(Application) {
    * @param {Object} [data={}] - Optional application data
    */
   constructor (apiKey, data = {}) {
-    super(apiKey, data) 
+    super(apiKey, data)
   }
 
   /**

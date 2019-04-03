@@ -34,7 +34,7 @@ export default class Entity {
    */
   json () {
     return Object.entries(this)
-      .reduce((ret, [k, v]) => Object.assign(ret, {[k]: v}), {})
+      .reduce((ret, [k, v]) => Object.assign(ret, { [k]: v }), {})
   }
 
   /**

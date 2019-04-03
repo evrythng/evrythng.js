@@ -241,11 +241,11 @@ export default class Resource {
     let response
 
     // Read first 'page' with user-defined options.
-    response = await this._linkRequest({url: this.path}, fullResponse, options)
+    response = await this._linkRequest({ url: this.path }, fullResponse, options)
     yield response.result
 
     while (response.next) {
-      response = await this._linkRequest({apiUrl: response.next}, fullResponse)
+      response = await this._linkRequest({ apiUrl: response.next }, fullResponse)
       yield response.result
     }
   }

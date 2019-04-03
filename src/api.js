@@ -133,8 +133,8 @@ function handleResponse (options) {
     const res = options.fullResponse
       ? Promise.resolve(response)
       : response.status === 204
-      ? Promise.resolve()
-      : response.json()
+        ? Promise.resolve()
+        : response.json()
 
     return res.then(data => {
       if (response.ok) {
