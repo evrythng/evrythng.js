@@ -4,6 +4,13 @@ const path = resolve(__dirname, 'dist')
 const entry = './src/evrythng.polyfill.js'
 const library = 'evrythng'
 
+const babelrc = {
+  presets: ['@babel/preset-env'],
+  plugins: [
+    ['@babel/transform-runtime', { regenerator: true }]
+  ]
+}
+
 const browserConfig = {
   entry,
   output: {
@@ -18,12 +25,7 @@ const browserConfig = {
       exclude: /node_modules/,
       use: {
         loader: 'babel-loader',
-        options: {
-          presets: ['@babel/preset-env'],
-          plugins: [
-            ['@babel/transform-runtime', { regenerator: true }]
-          ]
-        }
+        options: babelrc
       }
     }]
   }
