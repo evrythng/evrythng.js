@@ -3,8 +3,6 @@
   "version": "5.0.0",
   "description": "Official Javascript SDK for the EVRYTHNG API.",
   "main": "./dist/evrythng.node.js",
-  "browser": "./dist/evrythng.browser.js",
-  "module": "./src/evrythng.polyfill.js",
   "scripts": {
     "lint": "standard",
     "build": "webpack --config webpack.config.js --mode production",
