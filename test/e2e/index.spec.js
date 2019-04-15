@@ -12,6 +12,7 @@ describe('evrythng.js', () => {
     require('./entity/thngs.spec')(getAnonUser);
     require('./entity/products.spec')(getAnonUser);
     require('./entity/collections.spec')(getAnonUser);
+    require('./entity/places.spec')(getAnonUser);
 
     after(async () => {
       const operator = getOperator();
@@ -26,6 +27,7 @@ describe('evrythng.js', () => {
     require('./entity/products.spec')(getOperator, true);
     require('./entity/collections.spec')(getOperator, true);
     require('./entity/user.spec')(getOperator, true);
+    require('./entity/places.spec')(getOperator, true);
 
     after(async () => {
       const operator = getOperator();

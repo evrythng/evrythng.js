@@ -25,7 +25,7 @@ module.exports = (scope, isOperator) => {
         expect(res.evrythngApiKey).to.have.length(80);
       });
 
-      it('should create a named user', async () => {
+      it('should create and validate a named user', async () => {
         const res = await scope.userAccess().create(USER)
           .then(res => res.validate());
         resources.namedUser = res;
