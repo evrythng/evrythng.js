@@ -132,7 +132,7 @@ function handleResponse (options) {
   return response => {
     const res = options.fullResponse
       ? Promise.resolve(response)
-      : response.status === 204
+      : response.status === 204 || options.method === 'delete'
         ? Promise.resolve()
         : response.json()
 
