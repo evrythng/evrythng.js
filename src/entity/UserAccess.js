@@ -129,5 +129,5 @@ function createAnonymousUser () {
     },
     data: {},
     apiKey: this.scope.apiKey
-  }).then(access => new User(access.evrythngApiKey, { type: 'anonymous' }))
+  }).then(access => new User(access.evrythngApiKey, Object.assign(access, { type: 'anonymous' })))
 }

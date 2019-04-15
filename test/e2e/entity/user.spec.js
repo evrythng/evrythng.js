@@ -16,10 +16,13 @@ module.exports = (scope, isOperator) => {
   describe('Application Users', () => {
     if (!isOperator) {
       it('should create an anonymous Application User', async () => {
-        resources.anonUser = await scope.userAccess().create({ anonymous: true });
-        await resources.anonUser.init();
+        const res = await scope.userAccess().create({ anonymous: true });
+        resources.anonUser = res;
 
-        expect(resources.anonUser).to.be.an('object');
+        expect(res).to.be.an('object');
+        expect(res.status).to.equal('anonymous');
+        expect(res.evrythngApiKey).to.be.a('string');
+        expect(res.evrythngApiKey).to.have.length(80);
       });
 
       it('should create a named user', async () => {
