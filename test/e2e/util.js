@@ -17,15 +17,12 @@ const setup = async () => {
   await scopes.application.init();
   scopes.anonUser = await scopes.application.userAccess().create({ anonymous: true });
   await scopes.anonUser.init();
-
-  console.log('Setup complete');
 };
 
 /**
  * Clean up resources set up in setup().
  */
 const teardown = async () => {
-  console.log('Teardown complete');
 };
 
 module.exports = {

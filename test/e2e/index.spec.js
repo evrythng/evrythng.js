@@ -12,7 +12,7 @@ describe('evrythng.js', () => {
   after(async () => await teardown());
 
   describe('as Application', () => {
-    require('./entity/appUser.spec')(getApplication);
+    require('./entity/user.spec')(getApplication);
   });
 
   describe('as anonymous Application User', () => {
@@ -27,6 +27,6 @@ describe('evrythng.js', () => {
     require('./entity/thngs.spec')(getOperator, true);
     require('./entity/products.spec')(getOperator, true);
     require('./entity/collections.spec')(getOperator, true);
-    require('./entity/appUser.spec')(getOperator, true);
+    require('./entity/user.spec')(getOperator, true);
   });
 });
