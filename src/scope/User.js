@@ -68,8 +68,9 @@ export default class User extends UserAccess(Scope) {
    */
   async logout (callback) {
     try {
-      await this._invalidateUser()
-      if (callback) callback(null)
+      const res = await this._invalidateUser()
+      if (callback) callback(res)
+      return res;
     } catch (err) {
       if (callback) callback(err)
       throw err

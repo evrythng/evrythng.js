@@ -78,6 +78,7 @@ export default class Application extends ApplicationAccess(Scope) {
     try {
       const user = await this._authenticateUser(credentials)
       const userScope = new User(user.access.apiKey, user)
+      await userScope.init();
       if (callback) callback(null, userScope)
       return userScope
     } catch (err) {

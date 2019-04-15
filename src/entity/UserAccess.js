@@ -18,7 +18,7 @@ export default class UserAccess extends Entity {
    * Return resource factory for AppUsers access.
    *
    * @static
-   * @return {{appUser: Function}}
+   * @return {{userAccess: Function}}
    */
   static resourceFactory () {
     return {
@@ -108,6 +108,10 @@ function validate (activationCode) {
     method: 'post',
     apiKey: scope.apiKey,
     data: { activationCode }
+  }).then((validated) => {
+    // Return a ready-to-go user scope
+    const newUser = new User(validated.evrythngApiKey)
+    return newUser.init()
   })
 }
 
@@ -125,10 +129,5 @@ function createAnonymousUser () {
     },
     data: {},
     apiKey: this.scope.apiKey
-  })
-    .then(createUserScope.bind(this))
-}
-
-function createUserScope (access) {
-  return new User(access.evrythngApiKey, { type: 'anonymous' })
+  }).then(access => new User(access.evrythngApiKey, { type: 'anonymous' }))
 }

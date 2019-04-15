@@ -1,12 +1,5 @@
 const { getAnonUser, getOperator, getApplication, resources, setup, teardown } = require('./util');
 
-const teardownBasicResources = async () => {
-  const operator = getOperator();
-  await operator.thng(resources.thng.id).delete();
-  await operator.product(resources.product.id).delete();
-  await operator.collection(resources.collection.id).delete();
-};
-
 describe('evrythng.js', () => {
   before(async () => await setup());
   after(async () => await teardown());
@@ -20,7 +13,12 @@ describe('evrythng.js', () => {
     require('./entity/products.spec')(getAnonUser);
     require('./entity/collections.spec')(getAnonUser);
 
-    after(async () => await teardownBasicResources());
+    after(async () => {
+      const operator = getOperator();
+      await operator.thng(resources.thng.id).delete();
+      await operator.product(resources.product.id).delete();
+      await operator.collection(resources.collection.id).delete();
+    });
   });
 
   describe('as Operator', () => {
@@ -28,5 +26,10 @@ describe('evrythng.js', () => {
     require('./entity/products.spec')(getOperator, true);
     require('./entity/collections.spec')(getOperator, true);
     require('./entity/user.spec')(getOperator, true);
+
+    after(async () => {
+      const operator = getOperator();
+      await operator.user(resources.namedUser.id).delete();
+    });
   });
 });
