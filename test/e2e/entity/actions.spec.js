@@ -1,5 +1,4 @@
 const { expect } = require('chai');
-const { resources } = require('../util');
 
 module.exports = (scope, isOperator, operatorScope) => {
   let actionType, action;
@@ -9,8 +8,10 @@ module.exports = (scope, isOperator, operatorScope) => {
       scope = scope();
       operatorScope = isOperator ? scope : operatorScope();
 
-      const TYPE_NAME = `_actionType${Date.now()}`;
-      actionType = await operatorScope.actionType().create({ name: TYPE_NAME });
+      let payload = { name: `_actionType${Date.now()}` };
+      actionType = await operatorScope.actionType().create(payload);
+      payload = { scopes: { users: ['+all'] } };
+      await operatorScope.actionType(actionType.name).update(payload);
     });
 
     after(async () => {

@@ -1,5 +1,4 @@
 const { expect } = require('chai');
-const { resources } = require('../util');
 
 module.exports = (scope, isOperator) => {
   before(() => {
@@ -7,6 +6,15 @@ module.exports = (scope, isOperator) => {
   });
   
   describe('Places', () => {
+    let place;
+
+    it('should read all places', async () => {
+      const res = await scope.place().read();
+
+      expect(res).to.be.an('array');
+      expect(res).to.have.length.gte(0);
+    });
+
     if (isOperator) {
       it('should create a place', async () => {
         const payload = {
@@ -17,38 +25,29 @@ module.exports = (scope, isOperator) => {
           },
         };
         
-        resources.place = await scope.place().create(payload);
+        place = await scope.place().create(payload);
 
-        expect(resources.place).to.be.an('object');
-        expect(resources.place.customFields).to.deep.equal(payload.customFields);
+        expect(place).to.be.an('object');
+        expect(place.customFields).to.deep.equal(payload.customFields);
       });
 
       it('should read a place', async () => {
-        const res = await scope.place(resources.place.id).read();
+        const res = await scope.place(place.id).read();
 
         expect(res).to.be.an('object');
-        expect(res.id).to.equal(resources.place.id);
+        expect(res.id).to.equal(place.id);
       });
 
       it('should update a place', async () => {
         const payload = { tags: ['updated'] };
-        const res = await scope.place(resources.place.id).update(payload);
+        const res = await scope.place(place.id).update(payload);
         
         expect(res).to.be.an('object');
         expect(res.tags).to.deep.equal(payload.tags);
       });
-    }
 
-    it('should read all places', async () => {
-      const res = await scope.place().read();
-
-      expect(res).to.be.an('array');
-      expect(res).to.have.length.gte(0);
-    });
-
-    if (isOperator) {
       it('should delete a place', async () => {
-        await scope.place(resources.place.id).delete();
+        await scope.place(place.id).delete();
       });
     }
   });

@@ -3,8 +3,8 @@ const { getAnonUser, getOperator, getApplication, resources, setup, teardown } =
 process.on('unhandledRejection', console.error)
 
 describe('evrythng.js', () => {
-  before(async () => await setup());
-  after(async () => await teardown());
+  before(setup);
+  after(teardown);
 
   describe('as Application', () => {
     require('./entity/user.spec')(getApplication);
