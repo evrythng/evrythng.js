@@ -15,6 +15,7 @@ describe('evrythng.js', () => {
     require('./entity/products.spec')(getAnonUser);
     require('./entity/collections.spec')(getAnonUser);
     require('./entity/places.spec')(getAnonUser);
+    require('./entity/actionTypes.spec')(getAnonUser);
 
     after(async () => {
       const operator = getOperator();
