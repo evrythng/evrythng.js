@@ -1,5 +1,7 @@
 const { getAnonUser, getOperator, getApplication, resources, setup, teardown } = require('./util');
 
+process.on('unhandledRejection', console.error)
+
 describe('evrythng.js', () => {
   before(async () => await setup());
   after(async () => await teardown());
@@ -28,6 +30,7 @@ describe('evrythng.js', () => {
     require('./entity/collections.spec')(getOperator, true);
     require('./entity/user.spec')(getOperator, true);
     require('./entity/places.spec')(getOperator, true);
+    require('./entity/actionTypes.spec')(getOperator, true);
 
     after(async () => {
       const operator = getOperator();

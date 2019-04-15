@@ -49,6 +49,9 @@ function readActionType (id, ...args) {
   } else {
     const normalizedArgs = normalizeArguments(id)(...args)
     return new Promise((resolve, reject) => {
+      // If reading an action type, only use the root of the path
+      this.path = this.path.split('/').slice(0, 2).join('/')
+
       Resource.prototype.read.call(this, ...normalizedArgs)
         .then(actionTypes => {
           if (!actionTypes.length) {

@@ -76,7 +76,7 @@ export default class Resource {
    */
   constructor (scope, path, type) {
     if (!(scope && scope instanceof Scope)) {
-      throw new TypeError('Scope should inherit from Scope (e.g. EVT.App).')
+      throw new TypeError('Scope should inherit from Scope (e.g. EVT.Application).')
     }
 
     if (!isString(path)) {
