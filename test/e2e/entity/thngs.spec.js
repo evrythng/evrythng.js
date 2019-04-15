@@ -1,41 +1,53 @@
 const { expect } = require('chai');
-const ctx = require('../ctx');
+const { resources } = require('../util');
 
-describe('Thngs', () => {
-  it('should create a Thng', async () => {
-    const payload = {
-      name: 'Test Thng',
-      customFields: {
-        color: 'red',
-        serial: Date.now(),
-      },
-    };
-    
-    ctx.thng = await ctx.anonUser.thng().create(payload);
-
-    expect(ctx.thng).to.be.an('object');
-    expect(ctx.thng.customFields).to.deep.equal(payload.customFields);
+module.exports = (scope, isOperator) => {
+  before(() => {
+    scope = scope();
   });
 
-  it('should read a Thng', async () => {
-    const res = await ctx.anonUser.thng(ctx.thng.id).read();
+  describe('Thngs', () => {
+    it('should create a Thng', async () => {
+      const payload = {
+        name: 'Test Thng',
+        customFields: {
+          color: 'red',
+          serial: Date.now(),
+        },
+      };
+      
+      resources.thng = await scope.thng().create(payload);
 
-    expect(res).to.be.an('object');
-    expect(res.id).to.equal(ctx.thng.id);
+      expect(resources.thng).to.be.an('object');
+      expect(resources.thng.customFields).to.deep.equal(payload.customFields);
+    });
+
+    it('should read a Thng', async () => {
+      const res = await scope.thng(resources.thng.id).read();
+
+      expect(res).to.be.an('object');
+      expect(res.id).to.equal(resources.thng.id);
+    });
+
+    it('should read all Thngs', async () => {
+      const res = await scope.thng().read();
+
+      expect(res).to.be.an('array');
+      expect(res).to.have.length.gte(1);
+    });
+
+    it('should update a Thng', async () => {
+      const payload = { tags: ['updated'] };
+      const res = await scope.thng(resources.thng.id).update(payload);
+      
+      expect(res).to.be.an('object');
+      expect(res.tags).to.deep.equal(payload.tags);
+    });
+
+    if (isOperator) {
+      it('should delete a Thng', async () => {
+        await scope.thng(resources.thng.id).delete();
+      });
+    }
   });
-
-  it('should read all Thngs', async () => {
-    const res = await ctx.anonUser.thng().read();
-
-    expect(res).to.be.an('array');
-    expect(res).to.have.length.gte(1);
-  });
-
-  it('should update a Thng', async () => {
-    const payload = { tags: ['updated'] };
-    const res = await ctx.anonUser.thng(ctx.thng.id).update(payload);
-    
-    expect(res).to.be.an('object');
-    expect(res.tags).to.deep.equal(payload.tags);
-  });
-});
+};

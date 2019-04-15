@@ -1,41 +1,53 @@
 const { expect } = require('chai');
-const ctx = require('../ctx');
+const { resources } = require('../util');
 
-describe('Collections', () => {
-  it('should create a collection', async () => {
-    const payload = {
-      name: 'Test Collection',
-      customFields: {
-        color: 'red',
-        serial: Date.now(),
-      },
-    };
-    
-    ctx.collection = await ctx.anonUser.collection().create(payload);
-
-    expect(ctx.collection).to.be.an('object');
-    expect(ctx.collection.customFields).to.deep.equal(payload.customFields);
+module.exports = (scope, isOperator) => {
+  before(() => {
+    scope = scope();
   });
+  
+  describe('Collections', () => {
+    it('should create a collection', async () => {
+      const payload = {
+        name: 'Test Collection',
+        customFields: {
+          color: 'red',
+          serial: Date.now(),
+        },
+      };
+      
+      resources.collection = await scope.collection().create(payload);
 
-  it('should read a collection', async () => {
-    const res = await ctx.anonUser.collection(ctx.collection.id).read();
+      expect(resources.collection).to.be.an('object');
+      expect(resources.collection.customFields).to.deep.equal(payload.customFields);
+    });
 
-    expect(res).to.be.an('object');
-    expect(res.id).to.equal(ctx.collection.id);
+    it('should read a collection', async () => {
+      const res = await scope.collection(resources.collection.id).read();
+
+      expect(res).to.be.an('object');
+      expect(res.id).to.equal(resources.collection.id);
+    });
+
+    it('should read all collections', async () => {
+      const res = await scope.collection().read();
+
+      expect(res).to.be.an('array');
+      expect(res).to.have.length.gte(1);
+    });
+
+    it('should update a collection', async () => {
+      const payload = { tags: ['updated'] };
+      const res = await scope.collection(resources.collection.id).update(payload);
+      
+      expect(res).to.be.an('object');
+      expect(res.tags).to.deep.equal(payload.tags);
+    });
+
+    if (isOperator) {
+      it('should delete a collection', async () => {
+        await scope.collection(resources.collection.id).delete();
+      });
+    }
   });
-
-  it('should read all collections', async () => {
-    const res = await ctx.anonUser.collection().read();
-
-    expect(res).to.be.an('array');
-    expect(res).to.have.length.gte(1);
-  });
-
-  it('should update a collection', async () => {
-    const payload = { tags: ['updated'] };
-    const res = await ctx.anonUser.collection(ctx.collection.id).update(payload);
-    
-    expect(res).to.be.an('object');
-    expect(res.tags).to.deep.equal(payload.tags);
-  });
-});
+};

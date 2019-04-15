@@ -1,42 +1,32 @@
-const { Operator, Application } = require('evrythng');
-const ctx = require('./ctx');
+const { getAnonUser, getOperator, getApplication, resources, setup, teardown } = require('./util');
 
-const { OPERATOR_API_KEY, APPLICATION_API_KEY } = process.env;
-
-/**
- * Initialise reusable entities in the specified Platform account.
- */
-const setup = async () => {
-  if (!OPERATOR_API_KEY || !APPLICATION_API_KEY) {
-    throw new Error('Please export OPERATOR_API_KEY and APPLICATION_API_KEY');
-  }
-
-  ctx.operator = new Operator(OPERATOR_API_KEY);
-  ctx.app = new Application(APPLICATION_API_KEY);
-  ctx.anonUser = await ctx.app.userAccess().create({ anonymous: true });
-  await ctx.anonUser.init();
-
-  console.log('Setup complete');
-};
-
-/**
- * Clean up resources set up in setup().
- */
-const teardown = async () => {
-  await ctx.operator.thng(ctx.thng.id).delete();
-  await ctx.operator.product(ctx.product.id).delete();
-  await ctx.operator.collection(ctx.collection.id).delete();
-
-  console.log('Teardown complete');
+const teardownBasicResources = async () => {
+  const operator = getOperator();
+  await operator.thng(resources.thng.id).delete();
+  await operator.product(resources.product.id).delete();
+  await operator.collection(resources.collection.id).delete();
 };
 
 describe('evrythng.js', () => {
   before(async () => await setup());
   after(async () => await teardown());
 
+  describe('as Application', () => {
+    require('./entity/appUser.spec')(getApplication);
+  });
+
   describe('as anonymous Application User', () => {
-    require('./entity/thngs.spec');
-    require('./entity/products.spec');
-    require('./entity/collections.spec');
+    require('./entity/thngs.spec')(getAnonUser);
+    require('./entity/products.spec')(getAnonUser);
+    require('./entity/collections.spec')(getAnonUser);
+
+    after(async () => await teardownBasicResources());
+  });
+
+  describe('as Operator', () => {
+    require('./entity/thngs.spec')(getOperator, true);
+    require('./entity/products.spec')(getOperator, true);
+    require('./entity/collections.spec')(getOperator, true);
+    require('./entity/appUser.spec')(getOperator, true);
   });
 });

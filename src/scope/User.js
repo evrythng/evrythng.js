@@ -56,9 +56,6 @@ export default class User extends UserAccess(Scope) {
         this[symbols.path] = this._getPath()
       })
       .then(() => this.read())
-      .catch(() => {
-        throw new Error('There is no user with this API Key')
-      })
   }
 
   /**

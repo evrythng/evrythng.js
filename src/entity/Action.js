@@ -36,15 +36,14 @@ export default class Action extends Entity {
           throw new TypeError('Action type must be a name string')
         }
 
-        const typePath = path.replace(':type', actionType)
-        const thngPath = this instanceof Scope ? this[symbols.path] : ''
+        const relativePath = path.replace(':type', actionType)
         const context = this
 
         // Creates and returns Resource of type Action.
         // Override property resource create to allow custom value params and
         // fetch the user's geolocation. See `createAction()`.
         return Object.assign(
-          Resource.factoryFor(Action, thngPath + typePath).call(this, id),
+          Resource.factoryFor(Action, relativePath).call(this, id),
           {
             create (...args) {
               return createAction.call(this, context, actionType, ...args)
