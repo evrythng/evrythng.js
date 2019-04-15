@@ -32,6 +32,8 @@ export default class Device extends DeviceAccess(Scope) {
    */
   constructor (apiKey, data = {}) {
     super(apiKey, data)
+
+    this.init()
   }
 
   /**

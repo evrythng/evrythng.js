@@ -45,6 +45,8 @@ export default class Application extends ApplicationAccess(Scope) {
    */
   constructor (apiKey, data = {}) {
     super(apiKey, data)
+
+    this.init()
   }
 
   /**

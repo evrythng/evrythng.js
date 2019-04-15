@@ -48,6 +48,8 @@ export default class Operator extends OperatorAccess(Scope) {
    */
   constructor (apiKey, data = {}) {
     super(apiKey, data)
+
+    this.init()
   }
 
   /**

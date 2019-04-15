@@ -42,6 +42,8 @@ export default class User extends UserAccess(Scope) {
    */
   constructor (apiKey, data = {}) {
     super(apiKey, data)
+
+    this.init()
   }
 
   /**

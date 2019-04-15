@@ -52,6 +52,8 @@ export default class TrustedApplication extends ApplicationAccess(Application) {
    */
   constructor (apiKey, data = {}) {
     super(apiKey, data)
+
+    this.init()
   }
 
   /**
