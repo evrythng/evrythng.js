@@ -20,6 +20,8 @@ describe('evrythng.js', () => {
     require('./entity/places.spec')('anonUser');
     require('./entity/actionTypes.spec')('anonUser');
     require('./entity/actions.spec')('anonUser');
+    require('./entity/properties.spec')('anonUser', 'thng');
+    require('./entity/properties.spec')('anonUser', 'product');
 
     after(async () => {
       const operator = getScope('operator');
@@ -36,6 +38,8 @@ describe('evrythng.js', () => {
     require('./entity/places.spec')('trustedApplication');
     require('./entity/actionTypes.spec')('trustedApplication');
     require('./entity/actions.spec')('trustedApplication');
+    require('./entity/properties.spec')('trustedApplication', 'thng');
+    require('./entity/properties.spec')('trustedApplication', 'product');
   });
 
   describe('as Operator', () => {
@@ -46,6 +50,8 @@ describe('evrythng.js', () => {
     require('./entity/places.spec')('operator');
     require('./entity/actionTypes.spec')('operator');
     require('./entity/actions.spec')('operator');
+    require('./entity/properties.spec')('operator', 'thng');
+    require('./entity/properties.spec')('operator', 'product');
 
     after(async () => {
       const operator = getScope('operator');
