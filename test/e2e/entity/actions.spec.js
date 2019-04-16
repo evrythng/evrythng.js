@@ -1,12 +1,12 @@
 const { expect } = require('chai');
 
-module.exports = (scope, isOperator, operatorScope) => {
+module.exports = (scope, scopeType, operatorScope) => {
   let actionType, action;
 
   describe('Actions', () => {
     before(async () => {
       scope = scope();
-      operatorScope = isOperator ? scope : operatorScope();
+      operatorScope = operatorScope();
 
       let payload = { name: `_actionType${Date.now()}` };
       actionType = await operatorScope.actionType().create(payload);
@@ -35,7 +35,7 @@ module.exports = (scope, isOperator, operatorScope) => {
       expect(res).to.have.length.gte(0);
     });
 
-    if (isOperator) {
+    if (scopeType === 'operator') {
       it('should read a single action', async () => {
         const res = await scope.action(actionType.name, action.id).read();
 

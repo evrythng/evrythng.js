@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 
-module.exports = (scope, isOperator) => {
+module.exports = (scope, scopeType) => {
   before(() => {
     scope = scope();
   });
@@ -15,7 +15,7 @@ module.exports = (scope, isOperator) => {
       expect(res).to.have.length.gte(0);
     });
 
-    if (isOperator) {
+    if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should create a place', async () => {
         const payload = {
           name: 'Test Place',

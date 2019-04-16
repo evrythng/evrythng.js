@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { resources } = require('../util');
 
-module.exports = (scope, isOperator) => {
+module.exports = (scope, scopeType) => {
   before(() => {
     scope = scope();
   });
@@ -44,7 +44,7 @@ module.exports = (scope, isOperator) => {
       expect(res.tags).to.deep.equal(payload.tags);
     });
 
-    if (isOperator) {
+    if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should delete a product', async () => {
         await scope.product(resources.product.id).delete();
       });

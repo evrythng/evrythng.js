@@ -8,13 +8,13 @@ const USER = {
   password: 'password',
 };
 
-module.exports = (scope, isOperator) => {
+module.exports = (scope, scopeType) => {
   before(() => {
     scope = scope();
   });
 
   describe('Application Users', () => {
-    if (!isOperator) {
+    if (scopeType === 'application') {
       it('should create an anonymous Application User', async () => {
         const res = await scope.userAccess().create({ anonymous: true });
         resources.anonUser = res;
@@ -89,7 +89,7 @@ module.exports = (scope, isOperator) => {
       const res = await scope.user(resources.anonUser.id).update(payload);
 
       expect(res).to.be.an('object');
-      expect(res.firstName).to.deep.equal(payload.firstName);
+      expect(res.firstName).to.equal(payload.firstName);
     });
 
     it('should delete an Application User', async () => {

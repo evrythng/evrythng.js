@@ -1,4 +1,6 @@
-const { getAnonUser, getOperator, getApplication, resources, setup, teardown } = require('./util');
+const {
+  resources, getAnonUser, getOperator, getTrustedApplication, getApplication, setup, teardown,
+} = require('./util');
 
 process.on('unhandledRejection', console.error)
 
@@ -7,16 +9,16 @@ describe('evrythng.js', () => {
   after(teardown);
 
   describe('as Application', () => {
-    require('./entity/user.spec')(getApplication);
+    require('./entity/user.spec')(getApplication, 'application');
   });
 
   describe('as anonymous Application User', () => {
-    require('./entity/thngs.spec')(getAnonUser);
-    require('./entity/products.spec')(getAnonUser);
-    require('./entity/collections.spec')(getAnonUser);
-    require('./entity/places.spec')(getAnonUser);
-    require('./entity/actionTypes.spec')(getAnonUser);
-    require('./entity/actions.spec')(getAnonUser, false, getOperator);
+    require('./entity/thngs.spec')(getAnonUser, 'user');
+    require('./entity/products.spec')(getAnonUser, 'user');
+    require('./entity/collections.spec')(getAnonUser, 'user');
+    require('./entity/places.spec')(getAnonUser, 'user');
+    require('./entity/actionTypes.spec')(getAnonUser, 'user');
+    require('./entity/actions.spec')(getAnonUser, 'user', getOperator);
 
     after(async () => {
       const operator = getOperator();
@@ -26,14 +28,23 @@ describe('evrythng.js', () => {
     });
   });
 
+  describe('as Trusted Application', () => {
+    require('./entity/thngs.spec')(getTrustedApplication, 'trustedApp');
+    require('./entity/products.spec')(getTrustedApplication, 'trustedApp');
+    require('./entity/collections.spec')(getTrustedApplication, 'trustedApp');
+    require('./entity/places.spec')(getTrustedApplication, 'trustedApp');
+    require('./entity/actionTypes.spec')(getTrustedApplication, 'trustedApp');
+    require('./entity/actions.spec')(getTrustedApplication, 'trustedApp', getOperator);
+  });
+
   describe('as Operator', () => {
-    require('./entity/thngs.spec')(getOperator, true);
-    require('./entity/products.spec')(getOperator, true);
-    require('./entity/collections.spec')(getOperator, true);
-    require('./entity/user.spec')(getOperator, true);
-    require('./entity/places.spec')(getOperator, true);
-    require('./entity/actionTypes.spec')(getOperator, true);
-    require('./entity/actions.spec')(getOperator, true);
+    require('./entity/thngs.spec')(getOperator, 'operator');
+    require('./entity/products.spec')(getOperator, 'operator');
+    require('./entity/collections.spec')(getOperator, 'operator');
+    require('./entity/user.spec')(getOperator, 'operator');
+    require('./entity/places.spec')(getOperator, 'operator');
+    require('./entity/actionTypes.spec')(getOperator, 'operator');
+    require('./entity/actions.spec')(getOperator, 'operator', getOperator);
 
     after(async () => {
       const operator = getOperator();
