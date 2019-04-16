@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { getScope } = require('../util');
 
-const PER_PAGE = 1;
+const PER_PAGE = 2;
 const NUM_TEST_THNGS = 5;
 
 module.exports = (scopeType) => {
@@ -27,11 +27,12 @@ module.exports = (scopeType) => {
       const params = { perPage: PER_PAGE };
       const it = scope.thng().pages({ params });
       let page = await it.next();
-      
+
       expect(page.value.length).to.equal(PER_PAGE);
       expect(page.done).to.equal(false);
 
       page = await it.next();
+
       expect(page.value.length).to.equal(PER_PAGE);
       expect(page.done).to.equal(false);
     });
