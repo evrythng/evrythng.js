@@ -1,26 +1,26 @@
 const { expect } = require('chai');
+const { getScope } = require('../util');
 
-module.exports = (scope, scopeType, operatorScope) => {
-  let actionType, action;
+const ACTION_TYPE = 'scans';
+
+module.exports = (scopeType) => {
+  let scope, operatorScope, actionType, action, thng;
 
   describe('Actions', () => {
     before(async () => {
-      scope = scope();
-      operatorScope = operatorScope();
+      scope = getScope(scopeType);
+      operatorScope = getScope('operator');
 
-      let payload = { name: `_actionType${Date.now()}` };
-      actionType = await operatorScope.actionType().create(payload);
-      payload = { scopes: { users: ['+all'] } };
-      await operatorScope.actionType(actionType.name).update(payload);
+      thng = await scope.thng().create({ name: 'test' });
     });
 
     after(async () => {
-      await operatorScope.actionType(actionType.name).delete();
+      await operatorScope.thng(thng.id).delete();
     });
 
     it('should create an action', async () => {
-      const payload = { type: actionType.name, tags: ['foo'] };
-      const res = await scope.action(actionType.name).create(payload);
+      const payload = { type: ACTION_TYPE, thng: thng.id, tags: ['foo'] };
+      const res = await scope.action(ACTION_TYPE).create(payload);
 
       expect(res).to.be.an('object');
       expect(res.id).to.be.a('string');
@@ -28,7 +28,7 @@ module.exports = (scope, scopeType, operatorScope) => {
     });
 
     it('should read all actions of a type', async () => {
-      const res = await scope.action(actionType.name).read();
+      const res = await scope.action(ACTION_TYPE).read();
       action = res[0];
 
       expect(res).to.be.an('array');
@@ -37,7 +37,7 @@ module.exports = (scope, scopeType, operatorScope) => {
 
     if (scopeType === 'operator') {
       it('should read a single action', async () => {
-        const res = await scope.action(actionType.name, action.id).read();
+        const res = await scope.action(ACTION_TYPE, action.id).read();
 
         expect(res).to.be.an('object');
         expect(res.id).to.be.a('string');
@@ -45,7 +45,7 @@ module.exports = (scope, scopeType, operatorScope) => {
       });
 
       it('should delete an action', async () => {
-        await scope.action(actionType.name, action.id).delete();
+        await scope.action(ACTION_TYPE, action.id).delete();
       });
     }
   });

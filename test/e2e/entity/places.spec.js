@@ -1,12 +1,13 @@
 const { expect } = require('chai');
+const { getScope } = require('../util');
 
-module.exports = (scope, scopeType) => {
-  before(() => {
-    scope = scope();
-  });
-  
+module.exports = (scopeType) => {
   describe('Places', () => {
-    let place;
+    let scope, place;
+
+    before(() => {
+      scope = getScope(scopeType);
+    });
 
     it('should read all places', async () => {
       const res = await scope.place().read();

@@ -1,12 +1,13 @@
 const { expect } = require('chai');
+const { getScope } = require('../util');
 
-module.exports = (scope, scopeType) => {
-  before(() => {
-    scope = scope();
-  });
-
+module.exports = (scopeType) => {
   describe('Action Types', () => {
-    let actionType;
+    let scope, actionType;
+
+    before(() => {
+      scope = getScope(scopeType);
+    });
 
     it('should read all action types', async () => {
       const res = await scope.actionType().read();
@@ -17,7 +18,7 @@ module.exports = (scope, scopeType) => {
 
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should create an action type', async () => {
-        const payload = { name: `_actionType${Date.now()}` };
+        const payload = { name: `_actionType${Math.random() * 10000}` };
         actionType = await scope.actionType().create(payload);
 
         expect(actionType).to.be.an('object');

@@ -1,12 +1,14 @@
 const { expect } = require('chai');
-const { resources } = require('../util');
+const { resources, getScope } = require('../util');
 
-module.exports = (scope, scopeType) => {
-  before(() => {
-    scope = scope();
-  });
-  
+module.exports = (scopeType) => {
   describe('Products', () => {
+    let scope;
+
+    before(() => {
+      scope = getScope(scopeType);
+    });
+
     it('should create a product', async () => {
       const payload = {
         name: 'Test Product',

@@ -27,13 +27,11 @@ const setup = async () => {
 const teardown = async () => {
 };
 
+const getScope = type => scopes[type];
+
 module.exports = {
   resources,
   setup,
   teardown,
-
-  getOperator: () => scopes.operator,
-  getTrustedApplication: () => scopes.trustedApplication,
-  getApplication: () => scopes.application,
-  getAnonUser: () => scopes.anonUser,
+  getScope,
 };

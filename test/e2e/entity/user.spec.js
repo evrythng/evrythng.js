@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { resources } = require('../util');
+const { resources, getScope } = require('../util');
 
 const USER = {
   firstName: 'Test',
@@ -8,12 +8,14 @@ const USER = {
   password: 'password',
 };
 
-module.exports = (scope, scopeType) => {
-  before(() => {
-    scope = scope();
-  });
-
+module.exports = (scopeType) => {
   describe('Application Users', () => {
+    let scope;
+
+    before(() => {
+      scope = getScope(scopeType);
+    });
+
     if (scopeType === 'application') {
       it('should create an anonymous Application User', async () => {
         const res = await scope.userAccess().create({ anonymous: true });
