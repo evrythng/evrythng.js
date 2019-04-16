@@ -60,4 +60,8 @@ describe('evrythng.js', () => {
       await operator.user(resources.namedUser.id).delete();
     });
   });
+
+  describe('Misc', () => {
+    require('./misc/api.spec')('operator');
+  });
 });
