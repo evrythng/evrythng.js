@@ -35,6 +35,19 @@ module.exports = (scopeType) => {
       expect(res).to.have.length.gte(0);
     });
 
+    it('should create an aliased action', async () => {
+      const res = await thng.action(ACTION_TYPE).create({ type: ACTION_TYPE });
+
+      expect(res).to.be.an('object');
+    });
+
+    it('should read all aliased actions', async () => {
+      const res = await thng.action(ACTION_TYPE).read();
+
+      expect(res).to.be.an('array');
+      expect(res).to.have.length.gte(1);
+    });
+
     if (scopeType === 'operator') {
       it('should read a single action', async () => {
         const res = await scope.action(ACTION_TYPE, action.id).read();

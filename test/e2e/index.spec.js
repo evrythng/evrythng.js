@@ -1,4 +1,7 @@
 const { resources, getScope, setup, teardown } = require('./util');
+const evrythng = require('evrythng');
+
+evrythng.setup({ geolocation: false });
 
 process.on('unhandledRejection', console.error)
 
