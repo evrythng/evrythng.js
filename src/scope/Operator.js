@@ -64,9 +64,6 @@ export default class Operator extends OperatorAccess(Scope) {
         this[symbols.path] = this._getPath()
       })
       .then(() => this.read())
-      .catch(() => {
-        throw new Error('There is no operator with this API Key')
-      })
   }
 
   // PRIVATE
