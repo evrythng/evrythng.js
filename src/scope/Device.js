@@ -1,7 +1,7 @@
 import Scope from './Scope'
 import Property from '../entity/Property'
 import Action from '../entity/Action'
-// import Location from '../entity/Location'
+import Location from '../entity/Location'
 import symbols from '../symbols'
 import { mixinResources } from '../util/mixin'
 
@@ -12,8 +12,8 @@ import { mixinResources } from '../util/mixin'
  */
 const DeviceAccess = mixinResources([
   Property, // CRUD
-  Action // CRUD
-  // Location // CRUD
+  Action, // CRUD
+  Location // CRUD
 ])
 
 /**

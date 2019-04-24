@@ -9,7 +9,7 @@ import isFunction from 'lodash-es/isFunction'
 import isPlainObject from 'lodash-es/isPlainObject'
 import isString from 'lodash-es/isString'
 
-const path = '/locations'
+const path = '/location'
 
 /**
  * Represents a Location entity. Locations are always nested and required
