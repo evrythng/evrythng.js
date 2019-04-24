@@ -21,6 +21,7 @@ describe('evrythng.js', () => {
     require('./entity/products.spec')('anonUser')
     require('./entity/properties.spec')('anonUser', 'product')
     require('./entity/properties.spec')('anonUser', 'thng')
+    require('./entity/roles.spec')('anonUser')
     require('./entity/thngs.spec')('anonUser')
 
     after(async () => {
@@ -46,12 +47,15 @@ describe('evrythng.js', () => {
     require('./entity/actions.spec')('operator')
     require('./entity/actionTypes.spec')('operator')
     require('./entity/applications.spec')('operator')
+    require('./entity/batches.spec')()
     require('./entity/collections.spec')('operator')
     require('./entity/places.spec')('operator')
     require('./entity/products.spec')('operator')
     require('./entity/projects.spec')('operator')
     require('./entity/properties.spec')('operator', 'product')
     require('./entity/properties.spec')('operator', 'thng')
+    require('./entity/roles.spec')('operator')
+    require('./entity/tasks.spec')()
     require('./entity/thngs.spec')('operator')
     require('./entity/user.spec')('operator')
 
