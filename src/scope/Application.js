@@ -62,9 +62,6 @@ export default class Application extends ApplicationAccess(Scope) {
         this[symbols.path] = this._getPath()
       })
       .then(() => this.read())
-      .catch(() => {
-        throw new Error('There is no application with this API Key')
-      })
   }
 
   /**

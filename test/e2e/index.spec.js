@@ -68,6 +68,10 @@ describe('evrythng.js', () => {
     })
   })
 
+  describe('as Device', () => {
+    require('./scope/device.spec')()
+  })
+
   describe('Misc', () => {
     require('./misc/api.spec')('operator')
     require('./misc/pages.spec')('operator')

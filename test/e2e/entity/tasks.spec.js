@@ -12,6 +12,10 @@ module.exports = () => {
 
     after(async () => {
       await operator.batch(batch.id).delete()
+
+      // Most recent Thng is task side effect
+      const [taskThng] = await operator.thng().read()
+      await operator.thng(taskThng.id).delete()
     })
 
     it('should create a task', async () => {
