@@ -19,17 +19,17 @@ import symbols from '../symbols'
  * @mixin
  */
 const OperatorAccess = mixinResources([
-  Product,          // CRUD
-  Thng,             // CRUD
-  Collection,       // CRUD
-  Action,           // CR
-  ActionType,       // CRUD
-  Project,          // CRUD
-  Role,             // CRUD
-  User,             // R
-  Batch,            // CRUD
-  Place,            // CRUD
-  File              // CRUD
+  Product, // CRUD
+  Thng, // CRUD
+  Collection, // CRUD
+  Action, // CR
+  ActionType, // CRUD
+  Project, // CRUD
+  Role, // CRUD
+  User, // R
+  Batch, // CRUD
+  Place, // CRUD
+  File // CRUD
 ])
 
 /**

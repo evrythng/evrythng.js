@@ -1,6 +1,5 @@
 import Entity from './Entity'
 import Resource from '../resource/Resource'
-import Scope from '../scope/Scope'
 import settings from '../settings'
 import symbols from '../symbols'
 import getCurrentPosition from '../util/getCurrentPosition'
@@ -123,7 +122,7 @@ function fillAction (data, caller, actionType) {
   const action = Object.assign({}, data)
 
   // Fill type from Resource or pre-defined type.
-  action.type = actionType !== 'all' && actionType || data.type || ''
+  action.type = actionType !== 'all' ? actionType : data.type || ''
 
   // Fill in entity ID if called on an entity.
   const entityIdentifier = getIdentifier(caller)

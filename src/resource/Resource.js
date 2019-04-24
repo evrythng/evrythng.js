@@ -236,7 +236,7 @@ export default class Resource {
    *   }
    * ```
    */
-  async *pages (options = {}) {
+  async * pages (options = {}) {
     const fullResponse = options.fullResponse
     let response
 

@@ -23,17 +23,17 @@ import isPlainObject from 'lodash-es/isPlainObject'
  * @mixin
  */
 const ApplicationAccess = mixinResources([
-  Thng,             // CRUD
-  Collection,       // CRUD
-  ActionType,       // CR
-  User,             // R
-  ReactorSchedule,  // C
-  ReactorLog        // C
+  Thng, // CRUD
+  Collection, // CRUD
+  ActionType, // CR
+  User, // R
+  ReactorSchedule, // C
+  ReactorLog // C
 
   // From Application:
-  // Product        // CRUD
-  // Place          // CRUD
-  // Action         // CR
+  // Product // CRUD
+  // Place // CRUD
+  // Action // CR
 ])
 
 /**
@@ -77,7 +77,7 @@ export default class TrustedApplication extends ApplicationAccess(Application) {
     try {
       const user = await this._authenticateUser(credentials)
       const userScope = new User(user.access.apiKey, user)
-      await userScope.init();
+      await userScope.init()
       if (callback) callback(null, userScope)
       return userScope
     } catch (err) {

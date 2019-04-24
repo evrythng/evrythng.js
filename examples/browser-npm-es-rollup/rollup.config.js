@@ -1,4 +1,4 @@
-import resolve from 'rollup-plugin-node-resolve';
+import resolve from 'rollup-plugin-node-resolve'
 
 export default {
   entry: 'index.mjs',
@@ -9,4 +9,4 @@ export default {
       browser: true
     })
   ]
-};
+}

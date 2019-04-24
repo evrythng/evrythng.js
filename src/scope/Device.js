@@ -11,9 +11,9 @@ import { mixinResources } from '../util/mixin'
  * @mixin
  */
 const DeviceAccess = mixinResources([
-  Property,          // CRUD
-  Action             // CRUD
-  // Location           // CRUD
+  Property, // CRUD
+  Action // CRUD
+  // Location // CRUD
 ])
 
 /**

@@ -16,13 +16,13 @@ import symbols from '../symbols'
  * @mixin
  */
 const UserAccess = mixinResources([
-  Product,          // CRU
-  Thng,             // CRU
-  Collection,       // CRU
-  Action,           // CR
-  ActionType,       // R
-  Role,             // R
-  Place             // R
+  Product, // CRU
+  Thng, // CRU
+  Collection, // CRU
+  Action, // CR
+  ActionType, // R
+  Role, // R
+  Place // R
 ])
 
 /**
@@ -70,7 +70,7 @@ export default class User extends UserAccess(Scope) {
     try {
       const res = await this._invalidateUser()
       if (callback) callback(res)
-      return res;
+      return res
     } catch (err) {
       if (callback) callback(err)
       throw err
