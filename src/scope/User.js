@@ -15,7 +15,7 @@ import symbols from '../symbols'
  *
  * @mixin
  */
-const UserAccess = mixinResources([
+const AppUser = mixinResources([
   Product, // CRU
   Thng, // CRU
   Collection, // CRU
@@ -31,9 +31,9 @@ const UserAccess = mixinResources([
  * explicitly if API Key and details are known (e.g. stored in localStorage).
  *
  * @extends Scope
- * @mixes UserAccess
+ * @mixes AppUser
  */
-export default class User extends UserAccess(Scope) {
+export default class User extends AppUser(Scope) {
   /**
    * Creates an instance of User.
    *

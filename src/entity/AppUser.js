@@ -13,18 +13,18 @@ const path = '/auth/evrythng/users'
  *
  * @extends Entity
  */
-export default class UserAccess extends Entity {
+export default class AppUser extends Entity {
   /**
    * Return resource factory for AppUsers access.
    *
    * @static
-   * @return {{userAccess: Function}}
+   * @return {{appUser: Function}}
    */
   static resourceFactory () {
     return {
-      userAccess (id) {
+      appUser (id) {
         return Object.assign(
-          Resource.factoryFor(UserAccess, path).call(this, id),
+          Resource.factoryFor(AppUser, path).call(this, id),
           {
             create (...args) {
               return createAppUser.call(this, ...args)

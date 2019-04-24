@@ -3,7 +3,7 @@ import User from './User'
 import Product from '../entity/Product'
 import Action from '../entity/Action'
 import Place from '../entity/Place'
-import UserAccess from '../entity/UserAccess'
+import AppUser from '../entity/AppUser'
 import { mixinResources } from '../util/mixin'
 import api from '../api'
 import symbols from '../symbols'
@@ -25,7 +25,7 @@ import isPlainObject from 'lodash-es/isPlainObject'
 const ApplicationAccess = mixinResources([
   Product, // R
   Action, // C scans
-  UserAccess, // C
+  AppUser, // C
   Place // R
 ])
 

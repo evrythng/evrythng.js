@@ -18,7 +18,7 @@ module.exports = (scopeType) => {
 
     if (scopeType === 'application') {
       it('should create an anonymous Application User', async () => {
-        const res = await scope.userAccess().create({ anonymous: true })
+        const res = await scope.appUser().create({ anonymous: true })
         resources.anonUser = res
 
         expect(res).to.be.an('object')
@@ -28,7 +28,7 @@ module.exports = (scopeType) => {
       })
 
       it('should create and validate a named user', async () => {
-        const res = await scope.userAccess().create(USER)
+        const res = await scope.appUser().create(USER)
           .then(res => res.validate())
         resources.namedUser = res
 

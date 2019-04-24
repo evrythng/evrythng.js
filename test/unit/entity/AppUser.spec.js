@@ -1,6 +1,6 @@
 /* eslint-env jasmine */
 import Resource from '../../../src/resource/Resource'
-import UserAccess from '../../../src/entity/UserAccess'
+import AppUser from '../../../src/entity/AppUser'
 import fetchMock from 'fetch-mock'
 import apiUrl from '../../helpers/apiUrl'
 import mockApi from '../../helpers/apiMock'
@@ -18,18 +18,18 @@ let userAccessResource
 let userAccess
 let scope
 
-describe('UserAccess', () => {
+describe('AppUser', () => {
   mockApi()
 
   it('should convert evrythngUser property to standard id', () => {
-    userAccess = new UserAccess(dummyResource(), userAccessTemplate)
+    userAccess = new AppUser(dummyResource(), userAccessTemplate)
     expect(userAccess.id).toEqual(userAccessTemplate.evrythngUser)
     expect(userAccess.evrythngUser).not.toBeDefined()
   })
 
   describe('validate', () => {
     beforeEach(() => {
-      userAccess = new UserAccess(dummyResource(), userAccessTemplate)
+      userAccess = new AppUser(dummyResource(), userAccessTemplate)
     })
 
     it('should throw if no activation code provided', () => {
@@ -59,13 +59,13 @@ describe('UserAccess', () => {
 
   describe('resourceFactory', () => {
     beforeEach(() => {
-      scope = Object.assign(dummyScope(), UserAccess.resourceFactory())
+      scope = Object.assign(dummyScope(), AppUser.resourceFactory())
       userAccessResource = scope.userAccess()
     })
 
-    it('should create new AppUserAccess resource', () => {
+    it('should create new AppUser resource', () => {
       expect(userAccessResource instanceof Resource).toBe(true)
-      expect(userAccessResource.type).toBe(UserAccess)
+      expect(userAccessResource.type).toBe(AppUser)
       expect(userAccessResource.path).toEqual(`${paths.usersAccess}`)
     })
 

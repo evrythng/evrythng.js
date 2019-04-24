@@ -91,7 +91,7 @@ describe('Application', () => {
       'product',
       'action',
       'place',
-      'userAccess'
+      'appUser'
     ]
 
     beforeEach(done => {

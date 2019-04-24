@@ -17,7 +17,7 @@ const setup = async () => {
   await scopes.application.init()
   scopes.trustedApplication = new TrustedApplication(TRUSTED_APPLICATION_API_KEY)
   await scopes.trustedApplication.init()
-  scopes.anonUser = await scopes.application.userAccess().create({ anonymous: true })
+  scopes.anonUser = await scopes.application.appUser().create({ anonymous: true })
   await scopes.anonUser.init()
 }
 
