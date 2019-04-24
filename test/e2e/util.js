@@ -15,8 +15,8 @@ const setup = async () => {
   const operator = new Operator(OPERATOR_API_KEY)
   await operator.init()
 
-  const appProject = await operator.project().create({ name: 'Test Project '})
-  const payload = { name: 'Test App', socialNetworks: {}}
+  const appProject = await operator.project().create({ name: 'Test Project' })
+  const payload = { name: 'Test App', socialNetworks: {} }
   const appResource = await operator.project(appProject.id).application().create(payload)
   const application = new Application(appResource.appApiKey)
   await application.init()

@@ -22,7 +22,7 @@ module.exports = (scopeType) => {
       const res = await scope.thng(thng.id).location().update(payload)
 
       expect(res).to.be.an('array')
-      expect(res).to.have.length.gte(1)      
+      expect(res).to.have.length.gte(1)
     })
 
     it('should read a Thng\'s location', async () => {
