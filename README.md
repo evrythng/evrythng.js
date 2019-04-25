@@ -122,8 +122,8 @@ app.appUser().create({ anonymous: true })
 ```
 
 For any scope, if the scope's own data (such as an Application's `customFields`)
-use the `init()` method to wait until this data is available. If not, this step
-can be ignored:
+is required immediately, use the `init()` method to wait until this data is 
+available. If not, this step can be ignored:
 
 ```js
 import { Application } from 'evrythng'
