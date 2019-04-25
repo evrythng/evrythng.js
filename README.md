@@ -150,14 +150,26 @@ The API for each scope follows a fluent pattern that decreases the time required
 to begin making effective use of the SDK. In general, the format is:
 
 ```
-scope.RESOURCE().METHOD().then(...).catch(console.error)
+SCOPE
+  .RESOURCE(ID)
+  .METHOD(PAYLOAD, PARAMS)
+  .then(...)
+  .catch(console.error)
 ```
 
-Where `RESOURCE` can be any resource type, such as `thng`, `product`,
-`collection` etc. found in the
-[API Reference](https://developers.evrythng.com/reference), and `METHOD` is one
-of `create`, `read`, `update`, or `delete`. Therefore to read all Thngs as a
-`TrustedApplication`:
+Where:
+
+* `SCOPE` - One of the scope types shown above.
+* `RESOURCE` - can be any resource type, such as `thng`, `product`, `collection`
+  etc. found in the
+  [API Reference](https://developers.evrythng.com/reference).
+  * `id` is specified if manipulating a specific resource of this type.
+* `METHOD` - one of `create`, `read`, `update`, or `delete`. 
+  * `payload` - JSON payload object if performing a create or update.
+  * `params` - Parameters object used if required.
+
+
+Therefore to read all Thngs as a `TrustedApplication` scope:
 
 ```js
 trustedApplication.thng().read()
