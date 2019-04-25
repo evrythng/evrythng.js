@@ -151,8 +151,8 @@ to begin making effective use of the SDK. In general, the format is:
 
 ```
 SCOPE
-  .RESOURCE(ID)
-  .METHOD(PAYLOAD, PARAMS)
+  .RESOURCE(id)
+  .METHOD(payload, params)
   .then(...)
   .catch(console.error)
 ```
@@ -163,7 +163,7 @@ Where:
 * `RESOURCE` - can be any resource type, such as `thng`, `product`, `collection`
   etc. found in the
   [API Reference](https://developers.evrythng.com/reference).
-  * `id` is specified if manipulating a specific resource of this type.
+  * `id` - specified if manipulating a specific resource of this type.
 * `METHOD` - one of `create`, `read`, `update`, or `delete`. 
   * `payload` - JSON payload object if performing a create or update.
   * `params` - Parameters object used if required.
