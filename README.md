@@ -197,16 +197,18 @@ syntax as an alternative to Promise chaining when performing sequences of
 operations:
 
 ```js
-// Read all Thngs and find one
-const thngs = await operator.thng().read()
-const testThng = thngs.find(p => p.tags.includes('test'))
+const testThngUpdate = async () => {
+  // Read all Thngs and find one
+  const thngs = await operator.thng().read()
+  const testThng = thngs.find(p => p.tags.includes('test'))
 
-// Update its tags
-const payload = { tags: ['updated'] }
-const updatedThng = await operator.thng(testThng.id).update(payload)
+  // Update its tags
+  const payload = { tags: ['updated'] }
+  const updatedThng = await operator.thng(testThng.id).update(payload)
 
-// Check the update was successful
-expect(updatedThng.tags).to.equal(payload.tags)
+  // Check the update was successful
+  expect(updatedThng.tags).to.equal(payload.tags)
+};
 ```
 
 
