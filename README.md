@@ -113,8 +113,9 @@ const trustedApplication = new evrythng.TrustedApplication(TRUSTED_APP_API_KEY)
 
 ```js
 // Registered user with email + password
+const credentials = { email: 'example@evrythng.com', password }
 app.login(credentials)
-  .then(user => console.log(user))
+  .then(user => console.log(user.apiKey))
 
 // Or, an anonymous user
 app.appUser().create({ anonymous: true })
