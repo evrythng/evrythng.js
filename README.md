@@ -233,11 +233,10 @@ user.product().read({ params })
 Another example is creating resources in a specific project scope:
 
 ```js
-const params = {
-  project: projectId,
-}
+const params = { project: projectId }
+const payload = { name: 'Test Thng' }
 
-user.thng().create({ params })
+user.thng().create(payload, { params })
   .then(thng => console.log(`Created Thng ${thng.id} in project ${projectId}`))
 ```
 
