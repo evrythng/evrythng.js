@@ -49,6 +49,7 @@ describe('evrythng.js', () => {
     require('./entity/applications.spec')('operator')
     require('./entity/batches.spec')()
     require('./entity/collections.spec')('operator')
+    require('./entity/files.spec')('operator')
     require('./entity/locations.spec')('operator')
     require('./entity/permissions.spec')('operator')
     require('./entity/permissions.spec')('userInApp')

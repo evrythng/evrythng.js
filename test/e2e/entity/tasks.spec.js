@@ -1,9 +1,24 @@
 const { expect } = require('chai')
 const { getScope } = require('../util')
 
+const THNG_NAME = 'E2E Test Thng'
+const MIN_AGE = 120000
+let operator
+
+const getTaskThng = async () => {
+  let found
+
+  while(!found) {
+    const thngs = await operator.thng().read()
+    found = thngs.find(p => (p.name.includes(THNG_NAME)) && ((Date.now() - p.createdAt) < MIN_AGE))
+  }
+
+  return found
+}
+
 module.exports = () => {
   describe('Tasks', () => {
-    let operator, batch, task
+    let batch, task
 
     before(async () => {
       operator = getScope('operator')
@@ -11,11 +26,11 @@ module.exports = () => {
     })
 
     after(async () => {
-      await operator.batch(batch.id).delete()
-
       // Most recent Thng is task side effect
-      const [taskThng] = await operator.thng().read()
-      await operator.thng(taskThng.id).delete()
+      const thng = await getTaskThng()
+      await operator.thng(thng.id).delete()
+
+      await operator.batch(batch.id).delete()
     })
 
     it('should create a task', async () => {
@@ -26,7 +41,7 @@ module.exports = () => {
           generateThngs: true,
           generateRedirections: true,
           defaultRedirectUrl: 'https://google.com',
-          thngTemplate: { name: 'Fixed Amount Task Thng' },
+          thngTemplate: { name: THNG_NAME },
           shortDomain: 'tn.gg',
           quantity: 1,
           shortIdTemplate: { type: 'THNG_ID' }
