@@ -1,8 +1,8 @@
 {
-  "name": "evrythng.js-node-example",
+  "name": "evrythng.js-node",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": {
     "evrythng": "file:../.."
   }

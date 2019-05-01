@@ -6,3 +6,4 @@ bower_components
 dist
 report
 .idea
+*.DS_Store

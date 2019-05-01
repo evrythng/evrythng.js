@@ -1,9 +1,0 @@
-{
-  "name": "evrythng.js-browser-npm-amd-example",
-  "version": "1.0.0",
-  "license": "MIT",
-  "dependencies": {
-    "evrythng": "file:../..",
-    "requirejs": "^2.3.3"
-  }
-}

@@ -1,9 +1,7 @@
-const EVT = require('evrythng')
+const evrythng = require('evrythng')
 
-console.log('It loads!')
-console.log('EVT version', EVT.version)
-
-EVT.api().catch(e => {
-  console.log('Fetch works!')
-  console.log('API response', e)
+evrythng.api({
+  url: '/time'
 })
+  .then(res => console.log(`Current time: ${res.timestamp}`))
+  .catch(console.log)

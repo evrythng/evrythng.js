@@ -1,7 +1,7 @@
 {
-  "name": "evrythng.js-browser-npm-globals-example",
+  "name": "evrythng.js-browser-npm-globals",
   "version": "1.0.0",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": {
     "evrythng": "file:../.."
   }
