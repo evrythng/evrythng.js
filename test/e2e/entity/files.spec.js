@@ -15,28 +15,28 @@ module.exports = () => {
         type: 'text/plain'
       }
 
-      file = await operator.file().create(payload)
+      file = await operator.files().create(payload)
 
       expect(file).to.be.an('object')
       expect(file.type).to.deep.equal(payload.type)
     })
 
     it('should read all batches', async () => {
-      const res = await operator.file().read()
+      const res = await operator.files().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
     })
 
     it('should read a file', async () => {
-      const res = await operator.file(file.id).read()
+      const res = await operator.files(file.id).read()
 
       expect(res).to.be.an('object')
       expect(res.id).to.equal(file.id)
     })
 
     it('should delete a file', async () => {
-      await operator.file(file.id).delete()
+      await operator.files(file.id).delete()
     })
   })
 }

@@ -13,7 +13,7 @@ const path = '/reactor/schedules'
 export default class ReactorSchedule extends Entity {
   static resourceFactory () {
     return {
-      reactorSchedule (id) {
+      reactorSchedules (id) {
         const appPath = this instanceof Scope ? this[symbols.path] : ''
 
         return Resource.factoryFor(ReactorSchedule, appPath + path)

@@ -13,11 +13,11 @@ export default class User extends Entity {
    * Return simple resource factory for AppUsers.
    *
    * @static
-   * @return {{appUser: Function}}
+   * @return {{users: Function}}
    */
   static resourceFactory () {
     return {
-      user: Resource.factoryFor(User, path)
+      users: Resource.factoryFor(User, path)
     }
   }
 }

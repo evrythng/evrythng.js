@@ -27,11 +27,11 @@ export default class Collection extends CollectionResources(Entity) {
    * Return simple resource factory for Collections.
    *
    * @static
-   * @return {{collection: Function}}
+   * @return {{collections: Function}}
    */
   static resourceFactory () {
     return {
-      collection (id) {
+      collections (id) {
         // Explicitly add Collection resource mixin to nested resource.
         return Object.assign(
           Resource.factoryFor(Collection, path, CollectionResources)

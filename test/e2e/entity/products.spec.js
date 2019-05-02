@@ -18,21 +18,21 @@ module.exports = (scopeType) => {
         }
       }
 
-      resources.product = await scope.product().create(payload)
+      resources.product = await scope.products().create(payload)
 
       expect(resources.product).to.be.an('object')
       expect(resources.product.customFields).to.deep.equal(payload.customFields)
     })
 
     it('should read a product', async () => {
-      const res = await scope.product(resources.product.id).read()
+      const res = await scope.products(resources.product.id).read()
 
       expect(res).to.be.an('object')
       expect(res.id).to.equal(resources.product.id)
     })
 
     it('should read all products', async () => {
-      const res = await scope.product().read()
+      const res = await scope.products().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
@@ -40,7 +40,7 @@ module.exports = (scopeType) => {
 
     it('should update a product', async () => {
       const payload = { tags: ['updated'] }
-      const res = await scope.product(resources.product.id).update(payload)
+      const res = await scope.products(resources.product.id).update(payload)
 
       expect(res).to.be.an('object')
       expect(res.tags).to.deep.equal(payload.tags)
@@ -48,7 +48,7 @@ module.exports = (scopeType) => {
 
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should delete a product', async () => {
-        await scope.product(resources.product.id).delete()
+        await scope.products(resources.product.id).delete()
       })
     }
   })

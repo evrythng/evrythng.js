@@ -18,21 +18,21 @@ module.exports = () => {
         }
       }
 
-      batch = await operator.batch().create(payload)
+      batch = await operator.batches().create(payload)
 
       expect(batch).to.be.an('object')
       expect(batch.customFields).to.deep.equal(payload.customFields)
     })
 
     it('should read all batches', async () => {
-      const res = await operator.batch().read()
+      const res = await operator.batches().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
     })
 
     it('should read a batch', async () => {
-      const res = await operator.batch(batch.id).read()
+      const res = await operator.batches(batch.id).read()
 
       expect(res).to.be.an('object')
       expect(res.id).to.equal(batch.id)
@@ -40,14 +40,14 @@ module.exports = () => {
 
     it('should update a batch', async () => {
       const payload = { tags: ['updated'] }
-      const res = await operator.batch(batch.id).update(payload)
+      const res = await operator.batches(batch.id).update(payload)
 
       expect(res).to.be.an('object')
       expect(res.tags).to.deep.equal(payload.tags)
     })
 
     it('should delete a batch', async () => {
-      await operator.batch(batch.id).delete()
+      await operator.batches(batch.id).delete()
     })
   })
 }

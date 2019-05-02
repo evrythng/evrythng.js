@@ -18,21 +18,21 @@ module.exports = (scopeType) => {
         }
       }
 
-      resources.collection = await scope.collection().create(payload)
+      resources.collection = await scope.collections().create(payload)
 
       expect(resources.collection).to.be.an('object')
       expect(resources.collection.customFields).to.deep.equal(payload.customFields)
     })
 
     it('should read a collection', async () => {
-      const res = await scope.collection(resources.collection.id).read()
+      const res = await scope.collections(resources.collection.id).read()
 
       expect(res).to.be.an('object')
       expect(res.id).to.equal(resources.collection.id)
     })
 
     it('should read all collections', async () => {
-      const res = await scope.collection().read()
+      const res = await scope.collections().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
@@ -40,7 +40,7 @@ module.exports = (scopeType) => {
 
     it('should update a collection', async () => {
       const payload = { tags: ['updated'] }
-      const res = await scope.collection(resources.collection.id).update(payload)
+      const res = await scope.collections(resources.collection.id).update(payload)
 
       expect(res).to.be.an('object')
       expect(res.tags).to.deep.equal(payload.tags)
@@ -48,7 +48,7 @@ module.exports = (scopeType) => {
 
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should delete a collection', async () => {
-        await scope.collection(resources.collection.id).delete()
+        await scope.collections(resources.collection.id).delete()
       })
     }
   })

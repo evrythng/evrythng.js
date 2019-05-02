@@ -13,19 +13,19 @@ module.exports = (scopeType) => {
       scope = getScope(scopeType)
 
       for (let i = 0; i < NUM_TEST_THNGS; i += 1) {
-        thngs.push(await scope.thng().create({ name: 'test' }))
+        thngs.push(await scope.thngs().create({ name: 'test' }))
       }
     })
 
     after(async () => {
       for (let i = 0; i < NUM_TEST_THNGS; i += 1) {
-        await scope.thng(thngs[i].id).delete()
+        await scope.thngs(thngs[i].id).delete()
       }
     })
 
     it('should read thngs through an async iterator', async () => {
       const params = { perPage: PER_PAGE }
-      const it = scope.thng().pages({ params })
+      const it = scope.thngs().pages({ params })
       let page = await it.next()
 
       expect(page.value.length).to.equal(PER_PAGE)

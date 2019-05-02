@@ -10,7 +10,7 @@ module.exports = (scopeType) => {
     })
 
     it('should read all action types', async () => {
-      const res = await scope.actionType().read()
+      const res = await scope.actionTypes().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(5)
@@ -19,13 +19,13 @@ module.exports = (scopeType) => {
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should create an action type', async () => {
         const payload = { name: `_actionType${Math.random() * 10000}` }
-        actionType = await scope.actionType().create(payload)
+        actionType = await scope.actionTypes().create(payload)
 
         expect(actionType).to.be.an('object')
       })
 
       it('should read an action type', async () => {
-        const res = await scope.actionType(actionType.name).read()
+        const res = await scope.actionTypes(actionType.name).read()
 
         expect(res).to.be.an('object')
         expect(res.name).to.equal(actionType.name)
@@ -35,7 +35,7 @@ module.exports = (scopeType) => {
     if (scopeType === 'operator') {
       it('should update an action type', async () => {
         const payload = { tags: ['updated'] }
-        const res = await scope.actionType(actionType.name).update(payload)
+        const res = await scope.actionTypes(actionType.name).update(payload)
 
         expect(res).to.be.an('object')
         expect(res.tags).to.deep.equal(payload.tags)
@@ -44,7 +44,7 @@ module.exports = (scopeType) => {
 
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should delete an actionType', async () => {
-        await scope.actionType(actionType.name).delete()
+        await scope.actionTypes(actionType.name).delete()
       })
     }
   })

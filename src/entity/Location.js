@@ -25,11 +25,11 @@ export default class Location extends Entity {
    * empty invocations that send the current browser's location as the payload.
    *
    * @static
-   * @return {{property: Function}}
+   * @return {{locations: Function}}
    */
   static resourceFactory () {
     return {
-      location () {
+      locations () {
         // Locations don't have single resource endpoint (e.g.: /locations/:id)
         if (isString(arguments[0])) {
           throw new TypeError('There is no single resource for Locations')

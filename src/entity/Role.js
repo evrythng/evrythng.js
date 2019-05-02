@@ -18,11 +18,11 @@ export default class Role extends RoleResources(Entity) {
    * Return simple resource factory for Roles.
    *
    * @static
-   * @return {{role: Function}}
+   * @return {{roles: Function}}
    */
   static resourceFactory () {
     return {
-      role: Resource.factoryFor(Role, path, RoleResources)
+      roles: Resource.factoryFor(Role, path, RoleResources)
     }
   }
 }

@@ -7,15 +7,15 @@ const describeOperatorPermissionTests = () => {
 
     before(async () => {
       operator = getScope('operator')
-      role = await operator.role().create({ name: 'test role' })
+      role = await operator.roles().create({ name: 'test role' })
     })
 
     after(async () => {
-      await operator.role(role.id).delete()
+      await operator.roles(role.id).delete()
     })
 
     it('should read all role permissions', async () => {
-      const res = await operator.role(role.id).permission().read()
+      const res = await operator.roles(role.id).permissions().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(2)
@@ -36,15 +36,15 @@ const describeAppUserPermissionTests = () => {
         type: 'userInApp',
         version: 2
       }
-      role = await operator.role().create(payload)
+      role = await operator.roles().create(payload)
     })
 
     after(async () => {
-      await operator.role(role.id).delete()
+      await operator.roles(role.id).delete()
     })
 
     it('should read all role permissions', async () => {
-      const res = await operator.role(role.id).permission().read()
+      const res = await operator.roles(role.id).permissions().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(5)
@@ -52,7 +52,7 @@ const describeAppUserPermissionTests = () => {
 
     it('should update role permissions', async () => {
       const payload = [{ path: '/thngs', access: 'cr' }]
-      const res = await operator.role(role.id).permission().update(payload)
+      const res = await operator.roles(role.id).permissions().update(payload)
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(6)
@@ -60,7 +60,7 @@ const describeAppUserPermissionTests = () => {
 
     it('should minimise role permissions', async () => {
       const payload = []
-      const res = await operator.role(role.id).permission().update(payload)
+      const res = await operator.roles(role.id).permissions().update(payload)
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(5)

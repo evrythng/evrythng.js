@@ -14,11 +14,11 @@ export default class Task extends Entity {
    * Return simple resource factory for Tasks.
    *
    * @static
-   * @return {{task: Function}}
+   * @return {{tasks: Function}}
    */
   static resourceFactory () {
     return {
-      task (id) {
+      tasks (id) {
         // Only allowed on Entities and Resources.
         if (this instanceof Scope) {
           throw new Error('Permission is not a top-level resource.')

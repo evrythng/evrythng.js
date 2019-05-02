@@ -18,7 +18,7 @@ module.exports = (scopeType) => {
 
     if (scopeType === 'application') {
       it('should create an anonymous Application User', async () => {
-        const res = await scope.appUser().create({ anonymous: true })
+        const res = await scope.appUsers().create({ anonymous: true })
         resources.anonUser = res
 
         expect(res).to.be.an('object')
@@ -28,7 +28,7 @@ module.exports = (scopeType) => {
       })
 
       it('should create and validate a named user', async () => {
-        const res = await scope.appUser().create(USER)
+        const res = await scope.appUsers().create(USER)
           .then(res => res.validate())
         resources.namedUser = res
 
@@ -73,14 +73,14 @@ module.exports = (scopeType) => {
     }
 
     it('should read an Application User', async () => {
-      const res = await scope.user(resources.anonUser.id).read()
+      const res = await scope.users(resources.anonUser.id).read()
 
       expect(res).to.be.an('object')
       expect(res.id).to.equal(resources.anonUser.id)
     })
 
     it('should read all Application Users', async () => {
-      const res = await scope.user().read()
+      const res = await scope.users().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
@@ -88,14 +88,14 @@ module.exports = (scopeType) => {
 
     it('should update an Application User', async () => {
       const payload = { firstName: 'updated' }
-      const res = await scope.user(resources.anonUser.id).update(payload)
+      const res = await scope.users(resources.anonUser.id).update(payload)
 
       expect(res).to.be.an('object')
       expect(res.firstName).to.equal(payload.firstName)
     })
 
     it('should delete an Application User', async () => {
-      await scope.user(resources.anonUser.id).delete()
+      await scope.users(resources.anonUser.id).delete()
     })
   })
 }

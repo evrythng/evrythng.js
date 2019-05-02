@@ -9,7 +9,7 @@ const getTaskThng = async () => {
   let found
 
   while(!found) {
-    const thngs = await operator.thng().read()
+    const thngs = await operator.thngs().read()
     found = thngs.find(p => (p.name.includes(THNG_NAME)) && ((Date.now() - p.createdAt) < MIN_AGE))
   }
 
@@ -22,15 +22,15 @@ module.exports = () => {
 
     before(async () => {
       operator = getScope('operator')
-      batch = await operator.batch().create({ name: 'test batch' })
+      batch = await operator.batches().create({ name: 'test batch' })
     })
 
     after(async () => {
       // Most recent Thng is task side effect
       const thng = await getTaskThng()
-      await operator.thng(thng.id).delete()
+      await operator.thngs(thng.id).delete()
 
-      await operator.batch(batch.id).delete()
+      await operator.batches(batch.id).delete()
     })
 
     it('should create a task', async () => {
@@ -48,13 +48,13 @@ module.exports = () => {
         }
       }
 
-      const res = await operator.batch(batch.id).task().create(payload, { fullResponse: true })
+      const res = await operator.batches(batch.id).tasks().create(payload, { fullResponse: true })
 
       expect(res).to.be.an('object')
       expect(res.status).to.equal(202)
 
       const taskId = res.headers.get('location').split('/').pop()
-      task = await operator.batch(batch.id).task(taskId).read()
+      task = await operator.batches(batch.id).tasks(taskId).read()
 
       expect(task).to.be.an('object')
       expect(task.type).to.equal(payload.type)
@@ -62,14 +62,14 @@ module.exports = () => {
     })
 
     it('should read all tasks', async () => {
-      const res = await operator.batch(batch.id).task().read()
+      const res = await operator.batches(batch.id).tasks().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
     })
 
     it('should read a task', async () => {
-      const res = await operator.batch(batch.id).task(task.id).read()
+      const res = await operator.batches(batch.id).tasks(task.id).read()
 
       expect(res).to.be.an('object')
       expect(res.id).to.equal(task.id)

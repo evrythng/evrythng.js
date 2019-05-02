@@ -19,16 +19,16 @@ describe('evrythng.js', () => {
     require('./entity/collections.spec')('anonUser')
     require('./entity/places.spec')('anonUser')
     require('./entity/products.spec')('anonUser')
-    require('./entity/properties.spec')('anonUser', 'product')
-    require('./entity/properties.spec')('anonUser', 'thng')
+    require('./entity/properties.spec')('anonUser', 'products')
+    require('./entity/properties.spec')('anonUser', 'thngs')
     require('./entity/roles.spec')('anonUser')
     require('./entity/thngs.spec')('anonUser')
 
     after(async () => {
       const operator = getScope('operator')
-      await operator.thng(resources.thng.id).delete()
-      await operator.product(resources.product.id).delete()
-      await operator.collection(resources.collection.id).delete()
+      await operator.thngs(resources.thng.id).delete()
+      await operator.products(resources.product.id).delete()
+      await operator.collections(resources.collection.id).delete()
     })
   })
 
@@ -38,8 +38,8 @@ describe('evrythng.js', () => {
     require('./entity/collections.spec')('trustedApplication')
     require('./entity/places.spec')('trustedApplication')
     require('./entity/products.spec')('trustedApplication')
-    require('./entity/properties.spec')('trustedApplication', 'product')
-    require('./entity/properties.spec')('trustedApplication', 'thng')
+    require('./entity/properties.spec')('trustedApplication', 'products')
+    require('./entity/properties.spec')('trustedApplication', 'thngs')
     require('./entity/thngs.spec')('trustedApplication')
   })
 
@@ -56,8 +56,8 @@ describe('evrythng.js', () => {
     require('./entity/places.spec')('operator')
     require('./entity/products.spec')('operator')
     require('./entity/projects.spec')('operator')
-    require('./entity/properties.spec')('operator', 'product')
-    require('./entity/properties.spec')('operator', 'thng')
+    require('./entity/properties.spec')('operator', 'products')
+    require('./entity/properties.spec')('operator', 'thngs')
     require('./entity/roles.spec')('operator')
     require('./entity/tasks.spec')()
     require('./entity/thngs.spec')('operator')
@@ -65,7 +65,7 @@ describe('evrythng.js', () => {
 
     after(async () => {
       const operator = getScope('operator')
-      await operator.user(resources.namedUser.id).delete()
+      await operator.users(resources.namedUser.id).delete()
     })
   })
 

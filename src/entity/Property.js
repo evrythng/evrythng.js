@@ -21,7 +21,7 @@ export default class Property extends Entity {
    * and update methods to accept and normalize different types of arguments.
    *
    * @static
-   * @return {{property: Function}}
+   * @return {{properties: Function}}
    */
   static resourceFactory () {
     return {

@@ -10,16 +10,16 @@ module.exports = (scopeType) => {
     before(async () => {
       scope = getScope(scopeType)
 
-      project = await scope.project().create({ name: NAME })
+      project = await scope.projects().create({ name: NAME })
     })
 
     after(async () => {
-      await scope.project(project.id).delete()
+      await scope.projects(project.id).delete()
     })
 
     it('should create an application', async () => {
       const payload = { name: NAME, socialNetworks: {} }
-      application = await scope.project(project.id).application().create(payload)
+      application = await scope.projects(project.id).applications().create(payload)
 
       expect(application).to.be.an('object')
       expect(application.name).to.equal(NAME)
@@ -28,14 +28,14 @@ module.exports = (scopeType) => {
     })
 
     it('should read all applications', async () => {
-      const res = await scope.project(project.id).application().read()
+      const res = await scope.projects(project.id).applications().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
     })
 
     it('should read an application', async () => {
-      const res = await scope.project(project.id).application(application.id).read()
+      const res = await scope.projects(project.id).applications(application.id).read()
 
       expect(res).to.be.an('object')
       expect(res.id).to.equal(application.id)
@@ -43,14 +43,14 @@ module.exports = (scopeType) => {
 
     it('should update an application', async () => {
       const payload = { tags: ['updated'] }
-      const res = await scope.project(project.id).application(application.id).update(payload)
+      const res = await scope.projects(project.id).applications(application.id).update(payload)
 
       expect(res).to.be.an('object')
       expect(res.tags).to.deep.equal(payload.tags)
     })
 
     it('should delete an application', async () => {
-      await scope.project(project.id).application(application.id).delete()
+      await scope.projects(project.id).applications(application.id).delete()
     })
   })
 }
