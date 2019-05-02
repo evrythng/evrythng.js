@@ -160,7 +160,7 @@ SCOPE
 Where:
 
 * `SCOPE` - One of the scope types shown above.
-* `RESOURCE` - can be any resource type, such as `thng`, `product`, `collection`
+* `RESOURCE` - can be any resource type, such as `thngs`, `products`, `collections`
   etc. found in the
   [API Reference](https://developers.evrythng.com/reference).
   * `id` - specified if manipulating a specific resource of this type.
@@ -172,7 +172,7 @@ Where:
 Therefore to read all Thngs as a `TrustedApplication` scope:
 
 ```js
-trustedApplication.thng().read()
+trustedApplication.thngs().read()
   .then(thngs => console.log(`Read ${thngs.length} Thngs!`))
 ```
 
@@ -180,7 +180,7 @@ or to create a product as a `User`:
 
 ```js
 const payload = { name: 'Test Product', tags: ['evrythng.js'] }
-user.product().create(payload)
+user.products().create(payload)
   .then(product => console.log(`Created product ${product.id}!`))
 ```
 
@@ -189,7 +189,7 @@ or to read a known Thng using its `id` as an Operator:
 ```js
 const thngId = 'UqKWAsTpdxCA3KwaaGmTxAhp'
 
-operator.thng(thngId).read()
+operator.thngs(thngId).read()
   .then(thng => console.log(`Thng tags: ${thng.tags.join(', ')}`))
 ```
 
@@ -200,7 +200,7 @@ All methods return Promises, making chaining operations and catching errors very
 simple:
 
 ```js
-user.thng().create(payload)
+user.thngs().create(payload)
   .then(res => console.log('Success!'))
   .catch(err => console.log(`Oh no! Error: ${err.message}`))
 ```
@@ -212,12 +212,12 @@ operations:
 ```js
 const testThngUpdate = async () => {
   // Read all Thngs and find one
-  const thngs = await operator.thng().read()
+  const thngs = await operator.thngs().read()
   const testThng = thngs.find(p => p.tags.includes('test'))
 
   // Update its tags
   const payload = { tags: ['updated'] }
-  const updatedThng = await operator.thng(testThng.id).update(payload)
+  const updatedThng = await operator.thngs(testThng.id).update(payload)
 
   // Check the update was successful
   expect(updatedThng.tags).to.equal(payload.tags)
@@ -239,7 +239,7 @@ const params = {
   }
 }
 
-user.product().read({ params })
+user.products().read({ params })
   .then(products => console.log(`Found ${products.length} 'test' products`))
 ```
 
@@ -249,7 +249,7 @@ Another example is creating resources in a specific project scope:
 const params = { project: projectId }
 const payload = { name: 'Test Thng' }
 
-user.thng().create(payload, { params })
+user.thngs().create(payload, { params })
   .then(thng => console.log(`Created Thng ${thng.id} in project ${projectId}`))
 ```
 
