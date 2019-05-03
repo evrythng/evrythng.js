@@ -25,7 +25,7 @@ export default class Property extends Entity {
    */
   static resourceFactory () {
     return {
-      property (id) {
+      properties (id) {
         const thngPath = this instanceof Scope ? this[symbols.path] : ''
 
         // Creates and returns Resource of type Property.
