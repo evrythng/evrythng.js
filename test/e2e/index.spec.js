@@ -28,7 +28,7 @@ describe('evrythng.js', () => {
       const operator = getScope('operator')
       await operator.thngs(resources.thng.id).delete()
       await operator.products(resources.product.id).delete()
-      await operator.collections(resources.collection.id).delete()
+      await operator.collection(resources.collection.id).delete()
     })
   })
 

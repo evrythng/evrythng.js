@@ -34,10 +34,7 @@ export default function mixin (behaviour, proto = true) {
       Object.defineProperty(
         proto ? target.prototype : target,
         property,
-        {
-          value: behaviour[property],
-          writable: true
-        }
+        { value: behaviour[property] }
       )
     }
     return target

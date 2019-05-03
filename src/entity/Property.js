@@ -21,11 +21,11 @@ export default class Property extends Entity {
    * and update methods to accept and normalize different types of arguments.
    *
    * @static
-   * @return {{properties: Function}}
+   * @return {{property: Function}}
    */
   static resourceFactory () {
     return {
-      properties (id) {
+      property (id) {
         const thngPath = this instanceof Scope ? this[symbols.path] : ''
 
         // Creates and returns Resource of type Property.

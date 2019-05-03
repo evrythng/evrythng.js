@@ -21,7 +21,7 @@ export default class Task extends Entity {
       tasks (id) {
         // Only allowed on Entities and Resources.
         if (this instanceof Scope) {
-          throw new Error('Permission is not a top-level resource.')
+          throw new Error('Task is not a top-level resource.')
         }
 
         return Resource.factoryFor(Task, path).call(this, id)
