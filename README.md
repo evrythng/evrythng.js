@@ -14,8 +14,9 @@ or in client-side web applications in modern browsers.
 
 ## Installation
 
-`evrythng.js` is distributed via NPM and the EVRYTHNG CDN. This ensures you can
-manage the version of the library that your application or scripts uses.
+`evrythng.js` is distributed via [NPM](https://www.npmjs.com/package/evrythng)
+and the EVRYTHNG CDN. This ensures you can manage the version of the library 
+that your application or scripts uses.
 
 
 ### NPM
@@ -35,7 +36,7 @@ Then require it into any module:
 ```js
 const evrythng = require('evrythng')
 
-evrythng.api({ url: '/thngs' })
+evrythng.api({ url: '/time' })
   .then(console.log)
   .error(console.error)
 ```
@@ -56,11 +57,11 @@ import * as evrythng from 'evrythng'
 Or use a simple script tag to load it from the CDN.
 
 ```html
-<script src="//cdn.evrythng.com/js/evrythng/v5.0.0-beta.1/evrythng.js"></script>
+<script src="https://cdn.evrythng.com/js/evrythng/v5.0.0-beta.1/evrythng.js"></script>
 <script>
-    evrythng.api({ url: '/time' })
-      .then(console.log)
-      .catch(console.error)
+  evrythng.api({ url: '/time' })
+    .then(console.log)
+    .catch(console.error)
 </script>
 ```
 
