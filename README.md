@@ -18,14 +18,16 @@ or in client-side web applications in modern browsers.
 manage the version of the library that your application or scripts uses.
 
 
-### NPM / Yarn
+### NPM
 
 ```
 npm install --save evrythng
 ```
 
+or as a development dependency
+
 ```
-yarn add evrythng
+npm install -save-dev evrythng
 ```
 
 Then require it into any module:
@@ -61,6 +63,7 @@ Or use a simple script tag to load it from the CDN.
       .catch(console.error)
 </script>
 ```
+
 
 ## Compatibility
 
@@ -118,7 +121,7 @@ app.login(credentials)
   .then(user => console.log(user.apiKey))
 
 // Or, an anonymous user
-app.appUser().create({ anonymous: true })
+app.appUsers().create({ anonymous: true })
   .then(anonUser => console.log(anonUser.apiKey))
 ```
 
@@ -221,7 +224,7 @@ const testThngUpdate = async () => {
 
   // Check the update was successful
   expect(updatedThng.tags).to.equal(payload.tags)
-};
+}
 ```
 
 
@@ -236,7 +239,9 @@ const params = {
   // Only with these tags
   filter: {
     tags: 'test'
-  }
+  },
+  // Mote items per page
+  perPage: 100
 }
 
 user.products().read({ params })
