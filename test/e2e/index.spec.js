@@ -58,6 +58,7 @@ describe('evrythng.js', () => {
     require('./entity/projects.spec')('operator')
     require('./entity/properties.spec')('operator', 'products')
     require('./entity/properties.spec')('operator', 'thngs')
+    require('./entity/reactor.spec')('operator')
     require('./entity/roles.spec')('operator')
     require('./entity/tasks.spec')()
     require('./entity/thngs.spec')('operator')
