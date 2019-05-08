@@ -9,7 +9,7 @@ let operator, project, application, schedule
 const describeReactorScriptTests = () => {
   it('should update the Reactor script', async () => {
     const payload = { script: SCRIPT }
-    await operator.projects(project.id).applications(application.id)
+    await operator.project(project.id).application(application.id)
       .reactorScript()
       .update(payload)
   })
@@ -19,7 +19,7 @@ const describeReactorScriptTests = () => {
     
     let status = { updating: true }
     while(status.updating) {
-      status = await operator.projects(project.id).applications(application.id)
+      status = await operator.project(project.id).application(application.id)
         .reactorScript()
         .status()
         .read()
@@ -29,7 +29,7 @@ const describeReactorScriptTests = () => {
   })
 
   it('should read the Reactor script', async () => {
-    const res = await operator.projects(project.id).applications(application.id)
+    const res = await operator.project(project.id).application(application.id)
       .reactorScript()
       .read()
 
@@ -48,8 +48,8 @@ const describeReactorScheduleTests = () => {
       description: 'Example Reactor schedule', 
       enabled: true 
     }
-    const res = await operator.projects(project.id).applications(application.id)
-      .reactorSchedules()
+    const res = await operator.project(project.id).application(application.id)
+      .reactorSchedule()
       .create(payload)
 
     expect(res).to.be.an('object')
@@ -58,8 +58,8 @@ const describeReactorScheduleTests = () => {
   })
 
   it('should read all Reactor schedules', async () => {
-    const res = await operator.projects(project.id).applications(application.id)
-      .reactorSchedules()
+    const res = await operator.project(project.id).application(application.id)
+      .reactorSchedule()
       .read()
 
     schedule = res[0]
@@ -70,8 +70,8 @@ const describeReactorScheduleTests = () => {
   })
 
   it('should read a single Reactor schedule', async () => {
-    const res = await operator.projects(project.id).applications(application.id)
-      .reactorSchedules(schedule.id)
+    const res = await operator.project(project.id).application(application.id)
+      .reactorSchedule(schedule.id)
       .read()
 
     expect(res).to.be.an('object')
@@ -79,8 +79,8 @@ const describeReactorScheduleTests = () => {
   })
 
   it('should update a single Reactor schedule', async () => {
-    const res = await operator.projects(project.id).applications(application.id)
-      .reactorSchedules(schedule.id)
+    const res = await operator.project(project.id).application(application.id)
+      .reactorSchedule(schedule.id)
       .update({ enabled: false })
 
     expect(res).to.be.an('object')
@@ -89,8 +89,8 @@ const describeReactorScheduleTests = () => {
   })
 
   it('should delete a single Reactor schedule', async () => {
-    await operator.projects(project.id).applications(application.id)
-      .reactorSchedules(schedule.id)
+    await operator.project(project.id).application(application.id)
+      .reactorSchedule(schedule.id)
       .delete()
   })
 }
@@ -100,14 +100,14 @@ module.exports = (scopeType) => {
     before(async () => {
       operator = getScope('operator')
 
-      project = await operator.projects().create({ name: NAME })
+      project = await operator.project().create({ name: NAME })
       const appPayload = { name: NAME, socialNetworks: {} }
-      application = await operator.projects(project.id).applications().create(appPayload)
+      application = await operator.project(project.id).application().create(appPayload)
     })
 
     after(async () => {
-      await operator.projects(project.id).applications(application.id).delete()
-      await operator.projects(project.id).delete()
+      await operator.project(project.id).application(application.id).delete()
+      await operator.project(project.id).delete()
     })
 
     describeReactorScriptTests()

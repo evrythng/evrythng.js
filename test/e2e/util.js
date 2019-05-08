@@ -15,9 +15,9 @@ const setup = async () => {
   const operator = new Operator(OPERATOR_API_KEY)
   await operator.init()
 
-  const appProject = await operator.projects().create({ name: 'Test Project' })
+  const appProject = await operator.project().create({ name: 'Test Project' })
   const payload = { name: 'Test App', socialNetworks: {} }
-  const appResource = await operator.projects(appProject.id).applications().create(payload)
+  const appResource = await operator.project(appProject.id).application().create(payload)
   const application = new Application(appResource.appApiKey)
   await application.init()
 
@@ -28,10 +28,10 @@ const setup = async () => {
   const trustedApplication = new TrustedApplication(secretApiKey)
   await trustedApplication.init()
 
-  const anonUser = await application.appUsers().create({ anonymous: true })
+  const anonUser = await application.appUser().create({ anonymous: true })
   await anonUser.init()
 
-  const deviceThng = await operator.thngs().create({ name: 'Test Device' })
+  const deviceThng = await operator.thng().create({ name: 'Test Device' })
   const { thngApiKey } = await api({
     url: '/auth/evrythng/thngs',
     method: 'post',
@@ -58,8 +58,8 @@ const setup = async () => {
  * Clean up resources set up in setup().
  */
 const teardown = async () => {
-  await scopes.operator.thngs(resources.deviceThng.id).delete()
-  await scopes.operator.projects(resources.appProject.id).delete()
+  await scopes.operator.thng(resources.deviceThng.id).delete()
+  await scopes.operator.project(resources.appProject.id).delete()
 }
 
 const getScope = type => scopes[type]

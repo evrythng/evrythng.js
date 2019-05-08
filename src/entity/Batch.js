@@ -18,11 +18,11 @@ export default class Batch extends BatchResources(Entity) {
    * Return simple resource factory for Batches.
    *
    * @static
-   * @return {{batches: Function}}
+   * @return {{batch: Function}}
    */
   static resourceFactory () {
     return {
-      batches: Resource.factoryFor(Batch, path, BatchResources)
+      batch: Resource.factoryFor(Batch, path, BatchResources)
     }
   }
 }

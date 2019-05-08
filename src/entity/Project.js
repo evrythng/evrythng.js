@@ -18,11 +18,11 @@ export default class Project extends ProjectResources(Entity) {
    * Return simple resource factory for Projects.
    *
    * @static
-   * @return {{projects: Function}}
+   * @return {{project: Function}}
    */
   static resourceFactory () {
     return {
-      projects: Resource.factoryFor(Project, path, ProjectResources)
+      project: Resource.factoryFor(Project, path, ProjectResources)
     }
   }
 }

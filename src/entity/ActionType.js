@@ -18,11 +18,11 @@ export default class ActionType extends Entity {
    * use a filter as there is no single action type resource endpoint.
    *
    * @static
-   * @return {{actionTypes: Function}}
+   * @return {{actionType: Function}}
    */
   static resourceFactory () {
     return {
-      actionTypes (id) {
+      actionType (id) {
         return Object.assign(
           Resource.factoryFor(ActionType, path).call(this, id),
           {

@@ -12,7 +12,7 @@ module.exports = (scopeType) => {
     })
 
     it('should create a project', async () => {
-      project = await scope.projects().create({ name: PROJECT_NAME })
+      project = await scope.project().create({ name: PROJECT_NAME })
 
       expect(project).to.be.an('object')
       expect(project.name).to.equal(PROJECT_NAME)
@@ -20,14 +20,14 @@ module.exports = (scopeType) => {
     })
 
     it('should read all projects', async () => {
-      const res = await scope.projects().read()
+      const res = await scope.project().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
     })
 
     it('should read a project', async () => {
-      const res = await scope.projects(project.id).read()
+      const res = await scope.project(project.id).read()
 
       expect(res).to.be.an('object')
       expect(res.id).to.equal(project.id)
@@ -35,14 +35,14 @@ module.exports = (scopeType) => {
 
     it('should update a project', async () => {
       const payload = { tags: ['updated'] }
-      const res = await scope.projects(project.id).update(payload)
+      const res = await scope.project(project.id).update(payload)
 
       expect(res).to.be.an('object')
       expect(res.tags).to.deep.equal(payload.tags)
     })
 
     it('should delete a project', async () => {
-      await scope.projects(project.id).delete()
+      await scope.project(project.id).delete()
     })
   })
 }

@@ -18,21 +18,21 @@ module.exports = (scopeType) => {
         }
       }
 
-      resources.thng = await scope.thngs().create(payload)
+      resources.thng = await scope.thng().create(payload)
 
       expect(resources.thng).to.be.an('object')
       expect(resources.thng.customFields).to.deep.equal(payload.customFields)
     })
 
     it('should read a Thng', async () => {
-      const res = await scope.thngs(resources.thng.id).read()
+      const res = await scope.thng(resources.thng.id).read()
 
       expect(res).to.be.an('object')
       expect(res.id).to.equal(resources.thng.id)
     })
 
     it('should read all Thngs', async () => {
-      const res = await scope.thngs().read()
+      const res = await scope.thng().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
@@ -40,7 +40,7 @@ module.exports = (scopeType) => {
 
     it('should update a Thng', async () => {
       const payload = { tags: ['updated'] }
-      const res = await scope.thngs(resources.thng.id).update(payload)
+      const res = await scope.thng(resources.thng.id).update(payload)
 
       expect(res).to.be.an('object')
       expect(res.tags).to.deep.equal(payload.tags)
@@ -48,7 +48,7 @@ module.exports = (scopeType) => {
 
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should delete a Thng', async () => {
-        await scope.thngs(resources.thng.id).delete()
+        await scope.thng(resources.thng.id).delete()
       })
     }
   })

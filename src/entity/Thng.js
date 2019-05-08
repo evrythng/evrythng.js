@@ -22,11 +22,11 @@ export default class Thng extends ThngResources(Entity) {
    * Return simple resource factory for Thngs.
    *
    * @static
-   * @return {{thngs: Function}}
+   * @return {{thng: Function}}
    */
   static resourceFactory () {
     return {
-      thngs: Resource.factoryFor(Thng, path, ThngResources)
+      thng: Resource.factoryFor(Thng, path, ThngResources)
     }
   }
 }

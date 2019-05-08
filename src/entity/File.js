@@ -13,13 +13,13 @@ export default class File extends Entity {
    * Return simple resource factory for Files.
    *
    * @static
-   * @return {{files: Function}}
+   * @return {{file: Function}}
    */
   static resourceFactory () {
     // TODO enable Node.js File streams and multipart/form-data files/blobs
 
     return {
-      files: Resource.factoryFor(File, path)
+      file: Resource.factoryFor(File, path)
     }
   }
 }

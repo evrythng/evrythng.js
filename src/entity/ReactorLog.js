@@ -16,7 +16,7 @@ const path = '/reactor/logs'
 export default class ReactorLog extends Entity {
   static resourceFactory () {
     return {
-      reactorLogs (id) {
+      reactorLog (id) {
         // Reactor logs don't have single resource endpoint (e.g.: /logs/:id)
         if (isString(arguments[0])) {
           throw new TypeError('There is no single resource for Reactor Logs')

@@ -10,7 +10,7 @@ module.exports = (scopeType) => {
     })
 
     it('should read all roles', async () => {
-      const res = await scope.roles().read()
+      const res = await scope.role().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(0)
@@ -19,14 +19,14 @@ module.exports = (scopeType) => {
     if (scopeType === 'operator') {
       it('should create a role', async () => {
         const payload = { name: 'Test Role' }
-        role = await scope.roles().create(payload)
+        role = await scope.role().create(payload)
 
         expect(role).to.be.an('object')
         expect(role.name).to.equal(payload.name)
       })
 
       it('should read a role', async () => {
-        const res = await scope.roles(role.id).read()
+        const res = await scope.role(role.id).read()
 
         expect(res).to.be.an('object')
         expect(res.id).to.equal(role.id)
@@ -34,14 +34,14 @@ module.exports = (scopeType) => {
 
       it('should update a role', async () => {
         const payload = { description: 'updated' }
-        const res = await scope.roles(role.id).update(payload)
+        const res = await scope.role(role.id).update(payload)
 
         expect(res).to.be.an('object')
         expect(res.description).to.deep.equal(payload.description)
       })
 
       it('should delete a role', async () => {
-        await scope.roles(role.id).delete()
+        await scope.role(role.id).delete()
       })
     }
   })

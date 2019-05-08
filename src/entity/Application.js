@@ -23,11 +23,11 @@ export default class Application extends ApplicationResources(Entity) {
    * Return simple resource factory for Applications.
    *
    * @static
-   * @return {{applications: Function}}
+   * @return {{application: Function}}
    */
   static resourceFactory () {
     return {
-      applications (id) {
+      application (id) {
         // Only allowed on Entities and Resources.
         if (this instanceof Scope) {
           throw new Error('Application is not a top-level resource.')

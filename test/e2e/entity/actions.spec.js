@@ -11,16 +11,16 @@ module.exports = (scopeType) => {
       scope = getScope(scopeType)
       operatorScope = getScope('operator')
 
-      thng = await scope.thngs().create({ name: 'test' })
+      thng = await scope.thng().create({ name: 'test' })
     })
 
     after(async () => {
-      await operatorScope.thngs(thng.id).delete()
+      await operatorScope.thng(thng.id).delete()
     })
 
     it('should create an action', async () => {
       const payload = { type: ACTION_TYPE, thng: thng.id, tags: ['foo'] }
-      const res = await scope.actions(ACTION_TYPE).create(payload)
+      const res = await scope.action(ACTION_TYPE).create(payload)
 
       expect(res).to.be.an('object')
       expect(res.id).to.be.a('string')
@@ -28,7 +28,7 @@ module.exports = (scopeType) => {
     })
 
     it('should read all actions of a type', async () => {
-      const res = await scope.actions(ACTION_TYPE).read()
+      const res = await scope.action(ACTION_TYPE).read()
       action = res[0]
 
       expect(res).to.be.an('array')
@@ -36,13 +36,13 @@ module.exports = (scopeType) => {
     })
 
     it('should create an aliased action', async () => {
-      const res = await thng.actions(ACTION_TYPE).create({ type: ACTION_TYPE })
+      const res = await thng.action(ACTION_TYPE).create({ type: ACTION_TYPE })
 
       expect(res).to.be.an('object')
     })
 
     it('should read all aliased actions', async () => {
-      const res = await thng.actions(ACTION_TYPE).read()
+      const res = await thng.action(ACTION_TYPE).read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
@@ -50,7 +50,7 @@ module.exports = (scopeType) => {
 
     if (scopeType === 'operator') {
       it('should read a single action', async () => {
-        const res = await scope.actions(ACTION_TYPE, action.id).read()
+        const res = await scope.action(ACTION_TYPE, action.id).read()
 
         expect(res).to.be.an('object')
         expect(res.id).to.be.a('string')
@@ -58,7 +58,7 @@ module.exports = (scopeType) => {
       })
 
       it('should delete an action', async () => {
-        await scope.actions(ACTION_TYPE, action.id).delete()
+        await scope.action(ACTION_TYPE, action.id).delete()
       })
     }
   })

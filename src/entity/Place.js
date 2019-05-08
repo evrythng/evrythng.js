@@ -13,11 +13,11 @@ export default class Place extends Entity {
    * Return simple resource factory for Places.
    *
    * @static
-   * @return {{places: Function}}
+   * @return {{place: Function}}
    */
   static resourceFactory () {
     return {
-      places: Resource.factoryFor(Place, path)
+      place: Resource.factoryFor(Place, path)
     }
   }
 }

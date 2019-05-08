@@ -22,11 +22,11 @@ export default class Action extends Entity {
    * pre-populates the action payload with the Resource type.
    *
    * @static
-   * @return {{actions: Function}}
+   * @return {{action: Function}}
    */
   static resourceFactory () {
     return {
-      actions (actionType, id) {
+      action (actionType, id) {
         if (!actionType) {
           throw new TypeError('Action type cannot be empty.')
         }

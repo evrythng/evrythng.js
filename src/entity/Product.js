@@ -20,11 +20,11 @@ export default class Product extends ProductResources(Entity) {
    * Return simple resource factory for Products.
    *
    * @static
-   * @return {{products: Function}}
+   * @return {{product: Function}}
    */
   static resourceFactory () {
     return {
-      products: Resource.factoryFor(Product, path, ProductResources)
+      product: Resource.factoryFor(Product, path, ProductResources)
     }
   }
 }
