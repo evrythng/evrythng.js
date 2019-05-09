@@ -19,21 +19,21 @@ module.exports = (scopeType) => {
       const payload = [{
         position: { type: 'Point', coordinates: [-17.3, 36] }
       }]
-      const res = await scope.thng(thng.id).location().update(payload)
+      const res = await scope.thng(thng.id).locations().update(payload)
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
     })
 
     it('should read a Thng\'s location', async () => {
-      const res = await scope.thng(thng.id).location().read()
+      const res = await scope.thng(thng.id).locations().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
     })
 
     it('should delete a Thng\'s location', async () => {
-      await scope.thng(thng.id).location().delete()
+      await scope.thng(thng.id).locations().delete()
     })
   })
 }
