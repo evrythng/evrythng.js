@@ -7,8 +7,7 @@
     "lint": "standard",
     "build": "webpack --config webpack.config.js --mode production",
     "build-dev": "webpack --config webpack.config.js --mode development",
-    "test": "gulp test",
-    "deploy": "sh ./node_modules/gulp-evrythng-tasks/bin/deploy.sh"
+    "deploy": "terraform apply"
   },
   "repository": {
     "type": "git",
