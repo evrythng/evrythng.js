@@ -241,7 +241,7 @@ const params = {
   filter: {
     tags: 'test'
   },
-  // Mote items per page
+  // More items per page
   perPage: 100
 }
 
@@ -265,3 +265,8 @@ user.thng().create(payload, { params })
 For specific resource examples, see the relevant section of the
 [API Reference](https://developers.evrythng.com/reference), or look in the 
 `examples` directory in this repository.
+
+
+## Build and Deploy
+
+See `./jenkins/deploy.sh` for instructions on deploying new versions.
