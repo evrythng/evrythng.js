@@ -40,6 +40,7 @@ describe('evrythng.js', () => {
     require('./entity/products.spec')('trustedApplication')
     require('./entity/properties.spec')('trustedApplication', 'product')
     require('./entity/properties.spec')('trustedApplication', 'thng')
+    require('./entity/secretKey.spec')()
     require('./entity/thngs.spec')('trustedApplication')
   })
 
