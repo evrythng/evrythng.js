@@ -23,7 +23,6 @@ module.exports = () => {
       const res = await operator.project(project.id).application(application.id)
         .redirector()
         .read()
-      console.log(res)
 
       expect(res).to.be.an('object')
       expect(res.rules).to.be.an('array')
@@ -36,7 +35,6 @@ module.exports = () => {
       const res = await operator.project(project.id).application(application.id)
         .redirector()
         .update(payload)
-      console.log(res)
 
       expect(res.rules).to.deep.equal(payload.rules)
     })
