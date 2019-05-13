@@ -9,9 +9,6 @@
 #   AWS_ACCESS_KEY_ID - AWS Access Key ID with permission to put to the bucket.
 #   AWS_SECRET_ACCESS_KEY - AWS Secret Key ID corresponding to the AWS_ACCESS_KEY_ID.
 
-AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id --profile ${AWS_PROFILE})
-AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key --profile ${AWS_PROFILE})
-
 docker build -t evrythng-js-deploy .
 
 docker run \
