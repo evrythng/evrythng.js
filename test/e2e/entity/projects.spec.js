@@ -3,16 +3,16 @@ const { getScope } = require('../util')
 
 const PROJECT_NAME = 'test'
 
-module.exports = (scopeType) => {
+module.exports = () => {
   describe('Projects', () => {
-    let scope, project
+    let operator, project
 
     before(() => {
-      scope = getScope(scopeType)
+      operator = getScope('operator')
     })
 
     it('should create a project', async () => {
-      project = await scope.project().create({ name: PROJECT_NAME })
+      project = await operator.project().create({ name: PROJECT_NAME })
 
       expect(project).to.be.an('object')
       expect(project.name).to.equal(PROJECT_NAME)
@@ -20,14 +20,14 @@ module.exports = (scopeType) => {
     })
 
     it('should read all projects', async () => {
-      const res = await scope.project().read()
+      const res = await operator.project().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
     })
 
     it('should read a project', async () => {
-      const res = await scope.project(project.id).read()
+      const res = await operator.project(project.id).read()
 
       expect(res).to.be.an('object')
       expect(res.id).to.equal(project.id)
@@ -35,14 +35,14 @@ module.exports = (scopeType) => {
 
     it('should update a project', async () => {
       const payload = { tags: ['updated'] }
-      const res = await scope.project(project.id).update(payload)
+      const res = await operator.project(project.id).update(payload)
 
       expect(res).to.be.an('object')
       expect(res.tags).to.deep.equal(payload.tags)
     })
 
     it('should delete a project', async () => {
-      await scope.project(project.id).delete()
+      await operator.project(project.id).delete()
     })
   })
 }

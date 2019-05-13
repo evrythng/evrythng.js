@@ -6,6 +6,7 @@ import Collection from '../entity/Collection'
 import Action from '../entity/Action'
 import ActionType from '../entity/ActionType'
 import Project from '../entity/Project'
+import Redirector from '../entity/Redirector'
 import Role from '../entity/Role'
 import User from '../entity/User'
 import Batch from '../entity/Batch'
@@ -27,6 +28,7 @@ const OperatorAccess = mixinResources([
   Action, // CR
   ActionType, // CRUD
   Project, // CRUD
+  Redirector, // RU
   Role, // CRUD
   User, // R
   Batch, // CRUD
