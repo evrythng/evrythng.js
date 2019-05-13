@@ -10,6 +10,8 @@
 #   AWS_SECRET_ACCESS_KEY - AWS Secret Key ID corresponding to the AWS_ACCESS_KEY_ID.
 
 AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id --profile ${AWS_PROFILE})
+echo "Key ID: $AWS_SECRET_ACCESS_KEY"
+echo "AWS_PROFILE: ${AWS_PROFILE}"
 AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key --profile ${AWS_PROFILE})
 
 docker build -t evrythng-js-deploy .
