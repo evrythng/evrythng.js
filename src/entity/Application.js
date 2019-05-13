@@ -2,6 +2,7 @@ import Entity from './Entity'
 import ReactorScript from './ReactorScript'
 import ReactorSchedule from './ReactorSchedule'
 import ReactorLog from './ReactorLog'
+import Redirector from './Redirector'
 import Resource from '../resource/Resource'
 import SecretKey from './SecretKey'
 import Scope from '../scope/Scope'
@@ -12,6 +13,7 @@ const ApplicationResources = mixinResources([
   ReactorScript,
   ReactorSchedule,
   ReactorLog,
+  Redirector,
   SecretKey,
 ])
 
