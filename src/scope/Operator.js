@@ -1,4 +1,5 @@
 import Scope from './Scope'
+import Account from '../entity/Account'
 import Product from '../entity/Product'
 import Thng from '../entity/Thng'
 import Collection from '../entity/Collection'
@@ -19,6 +20,7 @@ import symbols from '../symbols'
  * @mixin
  */
 const OperatorAccess = mixinResources([
+  Account, // RU
   Product, // CRUD
   Thng, // CRUD
   Collection, // CRUD
