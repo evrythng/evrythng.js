@@ -121,7 +121,13 @@ export default class Resource {
   deserialize (response) {
     if (response && this.type) {
       if (Array.isArray(response)) {
-        return response.map(this.deserialize.bind(this))
+        if (typeof response[0] === 'object') {
+          // Deserialise each item, if they're objects
+          return response.map(this.deserialize.bind(this))
+        } else {
+          // Basic string type
+          return response
+        }
       }
 
       if (response.body) {

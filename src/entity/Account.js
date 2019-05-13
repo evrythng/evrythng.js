@@ -1,11 +1,13 @@
 import Domain from './Domain'
 import Entity from './Entity'
+import ShortDomain from './ShortDomain'
 import Resource from '../resource/Resource'
 import { mixinResources } from '../util/mixin'
 
 const path = '/accounts'
 const AccountResources = mixinResources([
   Domain, // R
+  ShortDomain, // R
 ])
 
 /**
