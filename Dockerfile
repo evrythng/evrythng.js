@@ -12,4 +12,4 @@ RUN npm i
 RUN npm run build
 
 # Deploy
-CMD ["sh", "-c", "~/.local/bin/aws s3 cp /srv/dist/evrythng.browser.js s3://$BUCKET/js/evrythng/$VERSION/evrythng-$VERSION.js --acl public-read"]
+CMD ["sh", "-c", "~/.local/bin/aws s3 cp /srv/dist/evrythng.browser.js s3://$BUCKET/js/evrythng/$VERSION/evrythng-$VERSION.js --acl public-read --profile evt_prod"]
