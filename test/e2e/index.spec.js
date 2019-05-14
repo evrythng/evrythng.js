@@ -84,6 +84,7 @@ describe('evrythng.js', () => {
 
   describe('Misc', () => {
     require('./misc/api.spec')('operator')
+    require('./misc/alias.spec')()
     require('./misc/pages.spec')('operator')
   })
 })
