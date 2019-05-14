@@ -1,3 +1,4 @@
+import Access from './Access'
 import Domain from './Domain'
 import Entity from './Entity'
 import ShortDomain from './ShortDomain'
@@ -8,6 +9,7 @@ const path = '/accounts'
 const AccountResources = mixinResources([
   Domain, // R
   ShortDomain, // R
+  Access // RU
 ])
 
 /**
