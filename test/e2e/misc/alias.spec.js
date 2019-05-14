@@ -2,7 +2,7 @@ const { expect } = require('chai')
 const { resources, getScope } = require('../util')
 const evrythng = require('evrythng')
 
-module.exports = (scopeType) => {
+module.exports = () => {
   describe('alias', () => {
     let operator, sku
 

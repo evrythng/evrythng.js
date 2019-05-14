@@ -89,6 +89,9 @@ export default class Resource {
     // Setup path and allow to omit leading '/'.
     this.path = `${path[0] !== '/' ? '/' : ''}${path}`
 
+    // Allow chainable parameter hepers
+    this.preParams = {}
+
     // Setup entity for serializing and deserializing results. It must
     // implement *toJSON()* method, as defined in the Entity base class.
     if (type && (type === Entity || type.prototype instanceof Entity)) {
@@ -152,6 +155,69 @@ export default class Resource {
     }
 
     return response
+  }
+
+  /**
+   * Helper for the 'withScopes=true' param.
+   *
+   * E.g: user.thng().setWithScopes().read()
+   *
+   * @returns {Resource} this
+   */
+  setWithScopes () {
+    this.preParams.withScopes = true
+    return this
+  }
+
+  /**
+   * Helper for the 'context=true' param.
+   *
+   * E.g: user.action('scans').setContext().read()
+   *
+   * @returns {Resource} this
+   */
+  setContext () {
+    this.preParams.context = true
+    return this
+  }
+
+  /**
+   * Helper for the 'perPage' param.
+   *
+   * E.g: user.product().setPerPage(100).read()
+   *
+   * @param {number} value - The value to set to the 'perPage' parameter.
+   * @returns {Resource} this
+   */
+  setPerPage (value) {
+    this.preParams.perPage = value
+    return this
+  }
+
+  /**
+   * Helper for the 'project' param.
+   *
+   * E.g: user.product().setProject('U6N4KcNNCSdyVHRaRmryhtPm').read()
+   *
+   * @param {string} id - The value to set to the 'project' parameter.
+   * @returns {Resource} this
+   */
+  setProject (id) {
+    this.preParams.project = id
+    return this
+  }
+
+  /**
+   * Helper for the 'filter' param.
+   *
+   * E.g: user.product().setFilter('tags=load2').read()
+   *
+   * @param {number} value - The value to set to the 'filter' parameter.
+   * @returns {Resource} this
+   */
+  setFilter (value) {
+    this.preParams.filter = value
+    return this
   }
 
   /**
@@ -290,6 +356,12 @@ export default class Resource {
     // Serialize Entity into JSON payload.
     if (options.body) {
       options.body = await this.serialize(options.body)
+    }
+
+    // Any preParams set?
+    if (Object.keys(this.preParams).length) {
+      Object.assign(options, { params: this.preParams })
+      this.preParams = {}
     }
 
     // Execute callback after deserialization.
