@@ -15,7 +15,7 @@ or in client-side web applications in modern browsers.
 ## Installation
 
 `evrythng.js` is distributed via [NPM](https://www.npmjs.com/package/evrythng)
-and the EVRYTHNG CDN. This ensures you can manage the version of the library 
+and the EVRYTHNG CDN. This ensures you can manage the version of the library
 that your application or scripts uses.
 
 
@@ -28,7 +28,7 @@ npm install --save evrythng
 or as a development dependency
 
 ```
-npm install -save-dev evrythng
+npm install --save-dev evrythng
 ```
 
 Then require it into any module:
@@ -57,7 +57,7 @@ import * as evrythng from 'evrythng'
 Or use a simple script tag to load it from the CDN.
 
 ```html
-<script src="https://cdn.evrythng.com/js/evrythng/v5.0.0-beta.1/evrythng.js"></script>
+<script src="https://d10ka0m22z5ju5.cloudfront.net/js/evrythng/5.0.0-beta.1/evrythng-5.0.0-beta.1.js"></script>
 <script>
   evrythng.api({ url: '/time' })
     .then(console.log)
@@ -127,7 +127,7 @@ app.appUser().create({ anonymous: true })
 ```
 
 For any scope, if the scope's own data (such as an Application's `customFields`)
-is required immediately, use the `init()` method to wait until this data is 
+is required immediately, use the `init()` method to wait until this data is
 available. If not, this step can be ignored:
 
 ```js
@@ -168,7 +168,7 @@ Where:
   etc. found in the
   [API Reference](https://developers.evrythng.com/reference).
   * `id` - specified if manipulating a specific resource of this type.
-* `METHOD` - one of `create`, `read`, `update`, or `delete`. 
+* `METHOD` - one of `create`, `read`, `update`, or `delete`.
   * `payload` - JSON payload object if performing a create or update.
   * `params` - Parameters object used if required.
 
@@ -259,11 +259,24 @@ user.thng().create(payload, { params })
   .then(thng => console.log(`Created Thng ${thng.id} in project ${projectId}`))
 ```
 
+Parameters can also be specified using chainable parameter setter methods:
+
+```js
+user.product()
+  .setFilter({ tags: 'test' })
+  .setPerPage(100)
+  .read()
+  .then(products => console.log(`Found ${products.length} 'test' products`))
+```
+
+Other parameter setters include `setWithScopes()`, `setContext()`,
+`setPerPage()`, `setProject()` and `setFilter()`.
+
 
 ## Documentation and Examples
 
 For specific resource examples, see the relevant section of the
-[API Reference](https://developers.evrythng.com/reference), or look in the 
+[API Reference](https://developers.evrythng.com/reference), or look in the
 `examples` directory in this repository.
 
 
