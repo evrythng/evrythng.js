@@ -347,6 +347,38 @@ export default class Resource {
     return this.update({ scopes })
   }
 
+  /**
+   * Update a resource by an identifier key-value pair, and create it if it does not exist.
+   *
+   * If more than one match is found and the 'allowPlural' parameter is not set to 'true', 
+   * an error will be thrown. If it is set, the *first* item returned will be updated.
+   *
+   * @param {object} data - Create/update payload to use.
+   * @param {object} updateKey - Key-value identifier pair to search with.
+   * @param {boolean} [allowPlural] - Flag to not throw an error if more than one result is found.
+   * @returns {Promise} Promise that resolves once complete.
+   */
+  async upsert (data, updateKey, allowPlural) {
+    if (!updateKey || typeof updateKey !== 'object' || Array.isArray(updateKey)) {
+      throw new Error('updateKey must be an object, eg: { shortId: \'a7ysf8hd\' }')
+    }
+
+    const [key, value] = Object.entries(updateKey)[0]
+    const params = { filter: `identifiers.${key}=${value}` }
+    const found = await this.read({ params })
+    if (found.length > 1) {
+      if (!allowPlural) {
+        throw new Error('More than one resource for this identifier was found. Set \'allowPlural\' to \'true\' as third parameter to update the first returned.')
+      }
+    }
+
+    if (found.length) {
+      return found[0].update(data)
+    }
+
+    return this.create(data)
+  }
+
   // PRIVATE
 
   /**
