@@ -179,7 +179,7 @@ Where:
   etc. found in the
   [API Reference](https://developers.evrythng.com/reference).
   * `id` - specified if manipulating a specific resource of this type.
-* `METHOD` - one of `create`, `read`, `update`, `delete`, `rescope`, or `upsert`.
+* `METHOD` - one of `create`, `read`, `update`, `delete`, `rescope`, `find`, or `upsert`.
   * `payload` - JSON payload object if performing a create or update.
   * `params` - Parameters object used if required.
 

@@ -338,7 +338,7 @@ export default class Resource {
 
     const params = { withScopes: true }
     const { scopes } = await this.read({ params })
-    
+
     scopes.projects = projects
     if (Array.isArray(users)) {
       scopes.users = users
@@ -350,7 +350,7 @@ export default class Resource {
   /**
    * Update a resource by an identifier key-value pair, and create it if it does not exist.
    *
-   * If more than one match is found and the 'allowPlural' parameter is not set to 'true', 
+   * If more than one match is found and the 'allowPlural' parameter is not set to 'true',
    * an error will be thrown. If it is set, the *first* item returned will be updated.
    *
    * @param {object} data - Create/update payload to use.
@@ -377,6 +377,24 @@ export default class Resource {
     }
 
     return this.create(data)
+  }
+
+  /**
+   * Find some of the resources by a single identifier key-value pair.
+   * A convenience method for using the 'filter' parameter.
+   *
+   * @param {object} identifier - Object containing single key-value pair.
+   * @returns {Promise} Promise that resolves when the request returns.
+   */
+  async find (identifier) {
+    const pairs = Object.entries(identifier)
+    if (pairs.length > 1) {
+      throw new Error('Only one key-value pair may be specified for find()')
+    }
+
+    const [key, value] = pairs[0]
+    const params = { filter: `identifiers.${key}=${value}` }
+    return this.read({ params })
   }
 
   // PRIVATE

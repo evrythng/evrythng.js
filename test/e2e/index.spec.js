@@ -44,12 +44,12 @@ describe('evrythng.js', () => {
   })
 
   describe('as Operator', () => {
-    require('./entity/accounts.spec')()
-    require('./entity/accountRedirector.spec')()
     require('./entity/accesses.spec')()
-    require('./entity/applicationRedirector.spec')()
+    require('./entity/accountRedirector.spec')()
+    require('./entity/accounts.spec')()
     require('./entity/actions.spec')('operator')
     require('./entity/actionTypes.spec')('operator')
+    require('./entity/applicationRedirector.spec')()
     require('./entity/applications.spec')('operator')
     require('./entity/batches.spec')()
     require('./entity/collections.spec')('operator')
@@ -64,8 +64,8 @@ describe('evrythng.js', () => {
     require('./entity/properties.spec')('operator', 'product')
     require('./entity/properties.spec')('operator', 'thng')
     require('./entity/reactor.spec')('operator')
-    require('./entity/redirection.spec')('operator', 'thng')
     require('./entity/redirection.spec')('operator', 'product')
+    require('./entity/redirection.spec')('operator', 'thng')
     require('./entity/roles.spec')('operator')
     require('./entity/secretKey.spec')()
     require('./entity/shortDomains.spec')()
@@ -86,6 +86,7 @@ describe('evrythng.js', () => {
   describe('Misc', () => {
     require('./misc/alias.spec')()
     require('./misc/api.spec')('operator')
+    require('./misc/find.spec')()
     require('./misc/pages.spec')('operator')
     require('./misc/paramSetters.spec')()
     require('./misc/rescope.spec')()
