@@ -15,23 +15,25 @@ or in client-side web applications in modern browsers.
 ## Installation
 
 `evrythng.js` is distributed via [NPM](https://www.npmjs.com/package/evrythng)
-and the EVRYTHNG CDN. This ensures you can manage the version of the library
-that your application or scripts uses.
+and the EVRYTHNG CDN, allowing you to manage the version of the library that
+your application or scripts uses.
 
 
 ### NPM
+
+Install as an app dependency:
 
 ```
 npm install --save evrythng
 ```
 
-or as a development dependency
+or as a development dependency:
 
 ```
 npm install --save-dev evrythng
 ```
 
-Then require it into any module:
+Then require it in any module:
 
 ```js
 const evrythng = require('evrythng')
@@ -58,6 +60,11 @@ Or use a simple script tag to load it from the CDN.
 
 ```html
 <script src="https://d10ka0m22z5ju5.cloudfront.net/js/evrythng/5.0.0-beta.1/evrythng-5.0.0-beta.1.js"></script>
+```
+
+Then use in a browser `script` tag using the `evrythng` global variable:
+
+```html
 <script>
   evrythng.api({ url: '/time' })
     .then(console.log)
@@ -86,7 +93,7 @@ resource in an EVRYTHNG account.
   sets and should not be hard-coded - ideally encrypted in configuration files
   or fetched at runtime from a server.
 
-In a nutshell, `evrythng.js` provides the following Scopes. Once a scope is
+In a nutshell, `evrythng.js` provides the following scopes. Once a scope is
 created it provides an appropriate API for the resources it can manage
 (see [API](#api) below):
 
@@ -112,8 +119,8 @@ const application = new evrythng.Application(APPLICATION_API_KEY)
 const trustedApplication = new evrythng.TrustedApplication(TRUSTED_APP_API_KEY)
 ```
 
-* `User` - usually not instantiated explicitly. It's returned from
-  authentication via an `Application` scope:
+* `User` - Usually returned from authentication via an `Application` scope, but
+  can also be created manually with an Application User API Key:
 
 ```js
 // Registered user with email + password
@@ -124,6 +131,10 @@ app.login(credentials)
 // Or, an anonymous user
 app.appUser().create({ anonymous: true })
   .then(anonUser => console.log(anonUser.apiKey))
+
+// Or using a pre-existing API key
+const userApiKey = localStorage.getItem('user_api_key')
+const user = new evrythng.User(userApiKey)
 ```
 
 For any scope, if the scope's own data (such as an Application's `customFields`)
@@ -280,6 +291,6 @@ For specific resource examples, see the relevant section of the
 `examples` directory in this repository.
 
 
-## Build and Deploy
+## Build and Deploy
 
 See `./jenkins/deploy.sh` for instructions on deploying new versions.

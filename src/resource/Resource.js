@@ -322,6 +322,31 @@ export default class Resource {
     }
   }
 
+  /**
+   * Set a new list of project scopes, and optionally a new list of user scopes.
+   * Existing project scopes are replaced, not augmented. Empty array is accepted to fully descope.
+   * If 'users' is not specified, existing user scopes are preserved.
+   *
+   * @param {string[]} projects - Array of project IDs to set as the resource's 'projects' scope.
+   * @param {string[]} [users] - Optional array of Application User IDs to set as the 'users' scope.
+   * @returns {Promise} Promise that resolves once the scope update has been completed.
+   */
+  async rescope (projects, users) {
+    if (!projects) {
+      throw new Error('An array of project IDs to be scoped to must be provided')
+    }
+
+    const params = { withScopes: true }
+    const { scopes } = await this.read({ params })
+    
+    scopes.projects = projects
+    if (Array.isArray(users)) {
+      scopes.users = users
+    }
+
+    return this.update({ scopes })
+  }
+
   // PRIVATE
 
   /**
