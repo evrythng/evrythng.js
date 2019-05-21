@@ -33,7 +33,6 @@
 * [x] - Browser + NPM package + Rollup (module + browser field) -> ESM + ES6
 * [x] - Browser + NPM package + Browserify (browser field) -> UMD + ES5 + polyfill
 
-
 evrythng.js facilitates the communication with the [EVRYTHNG](https://developers.evrythng.com) REST API thanks to its fluent and
 resource oriented API. It can be used both for server-side scripting (Node.js) or in client-side web applications.
 
@@ -58,6 +57,9 @@ npm install evrythng --save
 ```
 
 or
+
+Create a new scope object of the required actor type to begin making API 
+requests with it:
 
 ```javascript
 yarn add evrythng
