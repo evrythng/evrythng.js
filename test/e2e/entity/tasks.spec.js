@@ -8,7 +8,7 @@ let operator
 const getTaskThng = async () => {
   let found
 
-  while(!found) {
+  while (!found) {
     const thngs = await operator.thng().read()
     found = thngs.find(p => (p.name.includes(THNG_NAME)) && ((Date.now() - p.createdAt) < MIN_AGE))
   }

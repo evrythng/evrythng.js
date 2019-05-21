@@ -16,9 +16,9 @@ const describeReactorScriptTests = () => {
 
   it('should read the Reactor script status', async function () {
     this.timeout(30000)
-    
+
     let status = { updating: true }
-    while(status.updating) {
+    while (status.updating) {
       status = await operator.project(project.id).application(application.id)
         .reactorScript()
         .status()
@@ -41,12 +41,12 @@ const describeReactorScriptTests = () => {
 
 const describeReactorScheduleTests = () => {
   it('should create a Reactor schedule', async () => {
-    const payload = { 
-      function: 'onScheduledEvent', 
-      event: {}, 
-      cron: '0 0 * * * ?', 
-      description: 'Example Reactor schedule', 
-      enabled: true 
+    const payload = {
+      function: 'onScheduledEvent',
+      event: {},
+      cron: '0 0 * * * ?',
+      description: 'Example Reactor schedule',
+      enabled: true
     }
     const res = await operator.project(project.id).application(application.id)
       .reactorSchedule()

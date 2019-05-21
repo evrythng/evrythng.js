@@ -14,7 +14,7 @@ const ApplicationResources = mixinResources([
   ReactorSchedule,
   ReactorLog,
   Redirector,
-  SecretKey,
+  SecretKey
 ])
 
 /**
