@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { resources, getScope } = require('../util')
+const { getScope } = require('../util')
 const evrythng = require('evrythng')
 
 module.exports = () => {

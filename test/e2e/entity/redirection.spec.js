@@ -34,7 +34,7 @@ module.exports = (scopeType, targetType) => {
 
     it(`should update a ${targetType} redirection`, async () => {
       const payload = { defaultRedirectUrl: 'https://google.com/updated?item={shortId}' }
-      const res = await scope[targetType](target.id).redirection().update(payload);
+      const res = await scope[targetType](target.id).redirection().update(payload)
 
       expect(res.updatedAt).to.be.lte(Date.now())
     })

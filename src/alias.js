@@ -7,7 +7,7 @@ const SCOPES = {
   Operator,
   Application,
   TrustedApplication,
-  User,
+  User
 }
 
 /**
