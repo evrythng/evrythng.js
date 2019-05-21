@@ -1,38 +1,57 @@
 {
   "name": "evrythng",
-  "version": "4.7.2",
-  "main": "lib/evrythng.js",
-  "description": "Javascript SDK to communicate with EVRYTHNG REST API",
+  "version": "5.0.0-beta.2",
+  "description": "Official Javascript SDK for the EVRYTHNG API.",
+  "main": "./dist/evrythng.node.js",
+  "scripts": {
+    "lint": "standard",
+    "build": "webpack --config webpack.config.js --mode production",
+    "build-dev": "webpack --config webpack.config.js --mode development",
+    "show-notice": "echo '\n    New to evrythng.js v5? Make sure to read the migration guide:\n    https://developers.evrythng.com/docs/evrythngjs-v500\n'",
+    "postinstall": "npm run --silent show-notice"
+  },
   "repository": {
     "type": "git",
-    "url": "git://github.com/evrythng/evrythng.js.git"
+    "url": "git+https://github.com/evrythng/evrythng.js.git"
   },
   "keywords": [
     "evrythng",
-    "everything",
-    "thng",
-    "evt",
     "iot",
-    "internet of things",
     "wot",
-    "web of things",
-    "thng-hub",
-    "hub",
-    "mqtt",
-    "thng-scan",
-    "scanthng"
+    "internet of things",
+    "web of things"
   ],
-  "licenses": [
-    {
-      "type": "Apache-2.0",
-      "url": "https://github.com/evrythng/evrythng.js/blob/master/LICENSE"
-    }
-  ],
-  "readmeFilename": "README.md",
-  "dependencies": {
-    "request": "^2.53.0"
+  "author": "EVRYTHNG Ltd. <support@evrythng.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/evrythng/evrythng.js/issues"
   },
-  "ignore": [
-    "dist"
-  ]
+  "homepage": "https://github.com/evrythng/evrythng.js#readme",
+  "dependencies": {
+    "@babel/runtime": "^7.4.3",
+    "isomorphic-fetch": "^2.2.1",
+    "node-fetch": "^2.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "@babel/plugin-transform-runtime": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "acorn": "^6.1.1",
+    "ajv": "^6.10.0",
+    "babel-loader": "^8.0.5",
+    "fetch-mock": "^5.8.1",
+    "lodash-es": "^4.17.2",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  },
+  "standard": {
+    "globals": [
+      "fetch",
+      "Response",
+      "FormData"
+    ],
+    "env": [
+      "mocha"
+    ]
+  }
 }

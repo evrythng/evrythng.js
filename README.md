@@ -1,526 +1,296 @@
-# [EVRYTHNG](https://www.evrythng.com) Client Javascript SDK
+# evrythng.js [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
-**evrythng.js** is a Javascript library that facilitates the interaction with the EVRYTHNG REST API thanks to its 
-fluent API. It helps EVRYTHNG Application developers to build client apps faster and easier.
+The official `evrythng.js` SDK facilitates communication with the
+[EVRYTHNG](https://developers.evrythng.com) REST API thanks to its fluent and
+resource oriented API. It can be used both for server-side scripting (Node.js)
+or in client-side web applications in modern browsers.
 
-**evrythng.js** can be used both in Web applications (Browser) and embedded/server applications using Node.js. The
-difference being the transport layer - Browser's XHR vs Node's HTTP.
+* [Installation](#installation)
+* [Compatibility](#compatibility)
+* [Scopes](#scopes)
+* [API](#api)
+* [Documentation and Examples](#documentation-and-examples)
 
-> **evrythng.js** is intended to be used with EVRYTHNG [Applications](https://developers.evrythng.com/reference#applications-1)
-and corresponding [Application Users](https://developers.evrythng.com/reference#application-users-1) or with 
-[Devices](https://developers.evrythng.com/reference#section-thngs-as-devices). 
-Be sure to only include your EVRYTHNG **Application API key** and **not** your Operator, User or Device key in any 
-public source code (read more about [Scope Permissions](https://developers.evrythng.com/docs/scope-api-and-permissions)).
-
-> See [Related Tools](#related-tools) below for other usages.
 
 ## Installation
 
-### Browser
+`evrythng.js` is distributed via [NPM](https://www.npmjs.com/package/evrythng)
+and the EVRYTHNG CDN, allowing you to manage the version of the library that
+your application or scripts uses.
 
-##### With [Bower](http://bower.io/)
 
-    bower install evrythng --save
-    
-The Bower package is [AMD](http://requirejs.org/docs/whyamd.html)-compatible. This means you can load 
-it asynchronously using tools like [Require.js](http://requirejs.org/) or simply dropping the script tag 
-into your HTML page:
+### NPM
 
-    <script src="bower_components/evrythng/dist/evrythng.js"></script>
+Install as an app dependency:
 
-See [Usage](#usage) below for more details.
-
-##### Load from CDN
-
-Add the script tag into your HTML page:
-
-    <script src="//cdn.evrythng.com/toolkit/evrythng-js-sdk/evrythng-4.7.2.min.js"></script>
- 
-Or always get the latest release (warning, new releases might break your code!):
-
-    <script src="//cdn.evrythng.com/toolkit/evrythng-js-sdk/evrythng.js"></script>
-    <script src="//cdn.evrythng.com/toolkit/evrythng-js-sdk/evrythng.min.js"></script>
-    
-For HTTPS you need to use:
-
-    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng-4.7.2.min.js"></script>
-    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng.js"></script>
-    <script src="//d10ka0m22z5ju5.cloudfront.net/toolkit/evrythng-js-sdk/evrythng.min.js"></script>
-    
-### Node.js
-
-    npm install evrythng --save
-
-## Usage
-
-For advanced usage and options, see [Documentation](#documentation) below.
-
-#### RequireJS (AMD)
-
-```javascript
-requirejs.config({
-  paths: {
-    evrythng: '../bower_components/evrythng/dist/evrythng'
-  }
-});
-    
-require(['evrythng'], function (EVT) {
-
-  var app = new EVT.App(APP_API_KEY);
-  ...
-  
-});
+```
+npm install --save evrythng
 ```
 
-#### Node.js
+or as a development dependency:
 
-Create a new scope object of the required actor type to begin making API 
-requests with it:
-
-```javascript
-var EVT = require('evrythng');
-
-var app = new EVT.App(APP_API_KEY);
-...
+```
+npm install --save-dev evrythng
 ```
 
-The scope can be used immediately to make other API calls (that do not
-require information about the scope beyond the API key used to construct it):
+Then require it in any module:
 
-```javascript
-var app = new EVT.App(APP_API_KEY);
+```js
+const evrythng = require('evrythng')
 
-// Read all products
-app.product().read().then(console.log);
+evrythng.api({ url: '/time' })
+  .then(console.log)
+  .error(console.error)
 ```
 
-However, if information about the scope itself (such as the application ID for 
-an `EVT.App` scope, for example) is required as soon as possible, use the 
-returned promise to be notified when the scope is ready for use. 
+Or using ES6 `import`/`export` syntax when available:
 
-**Note**: This applies to all scopes (including `EVT.Operator`, 
-`EVT.TrustedApp`, `EVT.User`, and `EVT.Device`). 
+```js
+import { Application } from 'evrythng'
+```
 
-Below is an example of this mode of usage:
-
-```javascript
-var app = new EVT.App(APP_API_KEY);
-
-app.$init.then((app) => {
-  // The scope 'id' property is now ready for use
-  console.log(app.id);
-});
+```js
+import * as evrythng from 'evrythng'
 ```
 
 
-#### Globals
+### CDN
 
-If you aren't using any of the above script loading mechanisms, the EVT module is available
-as a global (`EVT`):
+Or use a simple script tag to load it from the CDN.
 
-```javascript
-var app = new EVT.App(APP_API_KEY);
-...
+```html
+<script src="https://d10ka0m22z5ju5.cloudfront.net/js/evrythng/5.0.0-beta.2/evrythng-5.0.0-beta.2.js"></script>
 ```
 
-## Examples
+Then use in a browser `script` tag using the `evrythng` global variable:
 
-#### General
-
-Setup global settings ([see all options](http://evrythng.github.io/evrythng-source.js/src/core.html)):
-
-```javascript
-EVT.setup({
-  apiUrl: 'https://api.evrythng.com'
-});
+```html
+<script>
+  evrythng.api({ url: '/time' })
+    .then(console.log)
+    .catch(console.error)
+</script>
 ```
 
-Access resources using the Promise API:
 
-```javascript
-app.product('57bad69fc18104025b292da8').read().then(function(product) {
-  console.log(product);
-});
+## Compatibility
+
+`evrythng.js` relies on the standard resource fetching API (`fetch`) to
+communicate with the EVRYTHNG API. `fetch` has already been shipped in all the
+major browsers (see http://caniuse.com/#feat=fetch). The `isomorphic-fetch`
+dependency of this project should take care of this for you.
+
+
+## Scopes
+
+There are several types of
+[Scopes and API Keys](https://developers.evrythng.com/docs/api-scope-and-key-permissions)
+that are used to interact with the API. Each represents a type of user or
+resource in an EVRYTHNG account.
+
+> Note: Only the **Application API Key** can be safely versioned in public code!
+  The other API key types are secret and secure API Keys with higher permission
+  sets and should not be hard-coded - ideally encrypted in configuration files
+  or fetched at runtime from a server.
+
+In a nutshell, `evrythng.js` provides the following scopes. Once a scope is
+created it provides an appropriate API for the resources it can manage
+(see [API](#api) below):
+
+* `Operator` - Highest level scope that can manage the account structure, all
+  its resources and projects, etc.
+
+```js
+const operator = new evrythng.Operator(OPERATOR_API_KEY)
 ```
 
-#### Products and Properties
+* `Application` - Public application scopes used for Identifier Recognition and
+  to authenticate Application Users.
 
-Update single product property:
-
-```javascript
-product.property('status').update('off');
-```
-      
-Update multiple properties:
-
-```javascript
-product.property().update({
-  status: 'off',
-  level: '80'
-});
-```
-  
-Read current property:
-
-```javascript
-console.log(product.properties['status']);
-```
-  
-Read property history:
-
-```javascript
-product.property('status').read().then(function(statusHistory) {
-  console.log(statusHistory);
-});
+```js
+const application = new evrythng.Application(APPLICATION_API_KEY)
 ```
 
-#### Users
+* `TrustedApplication` - Secret type of `Application` scope with expended
+  permissions, intended for use for scripting and backend integrations on behalf
+  of the application (e.g. trigger rules or system integration functionality).
 
-Login an existing user (with Evrythng Auth) and create user scope:
-
-```javascript
-app.login({
-  email: 'myemail',
-  password: 'mypass'
-}).then(function(response) {
-  // every call using user will use its User Api Key
-  var user = response.user;
-});
+```js
+const trustedApplication = new evrythng.TrustedApplication(TRUSTED_APP_API_KEY)
 ```
 
-Log the user out:
+* `User` - Usually returned from authentication via an `Application` scope, but
+  can also be created manually with an Application User API Key:
 
-```javascript  
-user.logout();
-```  
+```js
+// Registered user with email + password
+const credentials = { email: 'example@evrythng.com', password }
+app.login(credentials)
+  .then(user => console.log(user.apiKey))
 
-#### Thngs
+// Or, an anonymous user
+app.appUser().create({ anonymous: true })
+  .then(anonUser => console.log(anonUser.apiKey))
 
-Create a Thng:
-
-```javascript
-user.thng().create({
-  name: 'name',
-  description: 'desc'
-});
+// Or using a pre-existing API key
+const userApiKey = localStorage.getItem('user_api_key')
+const user = new evrythng.User(userApiKey)
 ```
 
-Read all thngs and update first Thng's description:
+For any scope, if the scope's own data (such as an Application's `customFields`)
+is required immediately, use the `init()` method to wait until this data is
+available. If not, this step can be ignored:
 
-```javascript
-user.thng().read().then(function(thngs) {
-  thngs[0].description = 'newDesc';              
-  return thngs[0].update();
-}).then(function(thng) {
-  console.log('thng 0 updated');
-});
-```
-  
-Update existing Thng:
+```js
+import { Application } from 'evrythng'
 
-```javascript
-user.thng('123').update({
-  description: 'new desc'
-});
+const application = new Application(apiKey)
+application.init()
+  .then(() => console.log(application.customFields))
 ```
 
-#### Actions
 
-Create a new action:
+## API
 
-```javascript  
-// Actions request device geolocation by default (if available)
-// Use 'geolocation: false' option globally or per request to turn it off
-thng.action('scans').create();
+The methods available for each of the above scope types matches the general
+access level defined for each type of
+[API Key](https://developers.evrythng.com/docs/api-scope-and-key-permissions).
+For example - the `Application` scope can read products in its project, but can
+only create `User`s who in turn have higher access to manage resources.
+
+
+### Methods
+
+The API for each scope follows a fluent pattern that decreases the time required
+to begin making effective use of the SDK. In general, the format is:
+
+```
+SCOPE
+  .RESOURCE(id)
+  .METHOD(payload, params)
+  .then(...)
+  .catch(console.error)
 ```
 
-Create a custom action:
+Where:
 
-```javascript
-thng.action('_customAction').create({
-  customFields: {
-    foo: 'bar'
-  }
-});
+* `SCOPE` - One of the scope types shown above.
+* `RESOURCE` - can be any resource type, such as `thng`, `product`, `collection`
+  etc. found in the
+  [API Reference](https://developers.evrythng.com/reference).
+  * `id` - specified if manipulating a specific resource of this type.
+* `METHOD` - one of `create`, `read`, `update`, `delete`, `rescope`, `find`, or `upsert`.
+  * `payload` - JSON payload object if performing a create or update.
+  * `params` - Parameters object used if required.
+
+
+Therefore to read all Thngs as a `TrustedApplication` scope:
+
+```js
+trustedApplication.thng().read()
+  .then(thngs => console.log(`Read ${thngs.length} Thngs!`))
 ```
 
-### Using request options 
+or to create a product as a `User`:
 
-([Read more about options](http://evrythng.github.io/evrythng-source.js/src/ajax.html)):
+```js
+const payload = { name: 'Test Product', tags: ['evrythng.js'] }
+user.product().create(payload)
+  .then(product => console.log(`Created product ${product.id}!`))
+```
 
-```javascript
-app.product().read({
-  fullResponse: true,
-  params: {
-    perPage: 100,
-    project: '123',
-    context: true     // actions only
-    ...
+or to read a known Thng using its `id` as an Operator:
+
+```js
+const thngId = 'UqKWAsTpdxCA3KwaaGmTxAhp'
+
+operator.thng(thngId).read()
+  .then(thng => console.log(`Thng tags: ${thng.tags.join(', ')}`))
+```
+
+
+### Promises
+
+All methods return Promises, making chaining operations and catching errors very
+simple:
+
+```js
+user.thng().create(payload)
+  .then(res => console.log('Success!'))
+  .catch(err => console.log(`Oh no! Error: ${err.message}`))
+```
+
+Users of modern browsers and Node.js 8+ can take advantage `async`/`await`
+syntax as an alternative to Promise chaining when performing sequences of
+operations:
+
+```js
+const testThngUpdate = async () => {
+  // Read all Thngs and find one
+  const thngs = await operator.thng().read()
+  const testThng = thngs.find(p => p.tags.includes('test'))
+
+  // Update its tags
+  const payload = { tags: ['updated'] }
+  const updatedThng = await operator.thng(testThng.id).update(payload)
+
+  // Check the update was successful
+  expect(updatedThng.tags).to.equal(payload.tags)
+}
+```
+
+
+### Parameters
+
+Each of the methods described above can accept parameters identical to those
+available when using the REST API, and are placed in the `params` object as
+shown below:
+
+```js
+const params = {
+  // Only with these tags
+  filter: {
+    tags: 'test'
   },
-  headers: {
-    authorization: 'anotherApiKey',
-    accepts: 'image/png'
-  }
-}).then(function(result) {
-  // Using fullResponse, result contains 'data', 'headers' and 'status'
-  console.log(result.headers['x-result-count'] + ' Products:', result.data);
-});
-```
-
-### Using filters
-
-Specify filter `params` to limit the returned results to matched criteria:
-
-```javascript
-app.product().read({
-  params: {
-    filter: 'name=My Product&tags=shipped'   // regular parameter string notation
-  }
-});
-
-app.product().read({
-  params: {
-    filter: {
-      name: 'My Product',   // object notation
-      tags: 'shipped'
-    }
-  } 
-});
-```
-
-### Facebook login
-
-In order to use FB login, the application needs to be initialized with `facebook` property having truthy value:
-
-```javascript
-app = new EVT.App({
-  apiKey: APP_API_KEY,
-  facebook: true
-});
-
-app.login('facebook').then(function(response) {
-  var user = response.user;
-  
-  console.log(app.socialNetworks.facebook.appId);
-  
-  user.logout('facebook');
-});
-```
-It's possible to pass custom configuration to `FB.init` via `faceboook` config property:
-```javascript
-app = new EVT.App({
-  apiKey: APP_API_KEY,
-  facebook: { 
-    version: 'v2.8'
-    cookie: false,
-    fbml: true
-  }
-});
-```
-For more options see the method [reference](https://developers.facebook.com/docs/javascript/reference/FB.init).
-
-#### New app users
-
-Create and validate a new app user:
-
-```javascript
-app.appUser().create({
-  email: 'someone@anyone.com',
-  password: 'password', // don't put this one in the code :)
-  firstName: 'Some',
-  lastName: 'One'
-}).then(function(appUser) {
-  console.log('Created user: ', appUser);
-
-  // validate app user
-  return appUser.validate();
-}).then(function(appUser) {
-  // validated user and his api key
-  console.log('Validated app user: ', appUser);
-});
-```
-
-#### Create an anonymous user
-
-Track a device without creating a full app user:
-
-```javascript
-// Create anonymous user
-app.appUser().create({
-  anonymous: true
-}).then(function(anonymousUser) {
-  console.log('Created anonymous user: ', anonymousUser); // good to go, doesn't need validation
-
-  // store anonymous user details locally
-  if (window.localStorage) {
-    localStorage['userId'] = anonymousUser.id;
-    localStorage['apiKey'] = anonymousUser.apiKey;
-  }
-});
-```
-
-Restore a user from saved details:
-
-```javascript
-var anonymousUser = new EVT.User({
-  id: localStorage['userId'],
-  apiKey: localStorage['apiKey']
-}, app);
-```
-
-#### As a [Device](https://developers.evrythng.com/reference#section-thngs-as-devices)
-
-Create a `Device` scope to manage a Thng and allow it to update itself: 
-
-```javascript
-var device = new EVT.Device({
-  apiKey: DEVICE_API_KEY,
-  id: 'thngId'
-});
-
-// update the related thng
-device.update({
-  customFields: {
-    foo: 'bar'
-  }
-}).then(function(updated) {
-  console.log('updated device details: ', updated);
-});
-
-// CRUD properties
-device.property('temperature').update(32);
-device.property('humidity').read().then(function(results) {
-  console.log('humidity readings:', results);
-});
-
-// CR actions
-device.action('_turnOn').create();
-```
-
-
-#### Iterator API
-
-The Iterator API is an [Async Generator Function](https://github.com/tc39/proposal-async-iteration) added to each Resource.
-
-```javascript
-// Initialize app using appApiKey
-var app = new EVT.App('APP_API_KEY');
-
-var it = app.product().iterator();
-
-// .next() returns a promise with the next generator value (page value from API).
-// result.done denotes when the iterator reached the end.
-
-// Get page by page
-it.next().then(function(result){
-  console.log(result.value);
-  return it.next();
-}).then(result){
-  console.log(result.value);
-  console.log(result.done);
-});
-
-// The iterator can be initialized with the same options as any CRUD request.
-// This will iterate through all the Products in the Application's project scope,
-// that are tagged with 'test', with the result in ascending order and in chunks of 100
-
-var it = app.product().iterator({
-  params: {
-    perPage: 100,
-    sortOrder: 'ASCENDING',
-    filter: {
-      tags: 'test'
-    }
-  }
-});
-
-it.next().then(function(result){
-  console.log(result.value);
-});
-
-
-// In order to easily loop through all the items, we provide a utility function
-// that asynchronously iterates through all the generated pages in order, until
-// there are no more results
-
-EVT.Utils.forEachAsync(it, function(val){
-  val.forEach(function(product){
-    console.log(product.name);
-  });
-});
-
-```
-
-#### Spawn Generators
-
-[Generator functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) and the `yield`
-keyword arrived with great excitement in Node v0.11.2 and the latest evergreen browsers.
-
-This allows people targeting these platforms to write asynchrounous code that looks synchronous. 
-[ES7 Async Functions](https://jakearchibald.com/2014/es7-async-functions/) will give you a quick introduction.
-
-```javascript
-function *apiCalls(){
-  try{
-    
-    // Yield promise to thngs (i.e. wait for it to resolve/reject)
-    var thngs = yield user.thng().read();
-    console.log(thngs.length);
-    
-    // Yield promise to thng properties
-    var properties = yield thngs[0].property().read();
-    console.info(properties);
-    
-  } catch(e){
-  
-    // Will catch every rejected request as well as exceptions
-    console.info('Caught: ', e);
-    
-  }
+  // More items per page
+  perPage: 100
 }
 
-// Iterate through generator
-EVT.Utils.spawn(apiCalls());
+user.product().read({ params })
+  .then(products => console.log(`Found ${products.length} 'test' products`))
 ```
 
----
+Another example is creating resources in a specific project scope:
 
-## Documentation
+```js
+const params = { project: projectId }
+const payload = { name: 'Test Thng' }
 
-The [EVRYTHNG API](https://developers.evrythng.com/docs/api-overview) has *evrythng.js* examples whenever applicable.
-If you'd like to see what's going on under the hood, check out the [Annotated Source](http://evrythng.github.io/evrythng-source.js/src/evrythng.html).
+user.thng().create(payload, { params })
+  .then(thng => console.log(`Created Thng ${thng.id} in project ${projectId}`))
+```
 
-## Source Maps
+Parameters can also be specified using chainable parameter setter methods:
 
-Source Maps are available, which means that when using the minified version, if you open 
-Developer Tools (Chrome, Safari, Firefox), *.map* files will be downloaded to help you debug code using the 
-original uncompressed version of the library.
+```js
+user.product()
+  .setFilter({ tags: 'test' })
+  .setPerPage(100)
+  .read()
+  .then(products => console.log(`Found ${products.length} 'test' products`))
+```
 
-## Related tools
+Other parameter setters include `setWithScopes()`, `setContext()`,
+`setPerPage()`, `setProject()` and `setFilter()`.
 
-#### evrythng-extended.js
 
-[`evrythng-extended.js`](https://github.com/evrythng/evrythng-extended.js) is an extended version of *evrythng.js* which 
-includes Operator access to the API.
+## Documentation and Examples
 
-#### evrythng-scan.js
+For specific resource examples, see the relevant section of the
+[API Reference](https://developers.evrythng.com/reference), or look in the
+`examples` directory in this repository.
 
-[`evrythng-scan.js`](https://github.com/evrythng/evrythng-scan.js) is an *evrythng.js* plugin that lets you identify 
-Products and Thngs right from your browser, without using a standalone QR Code scanning app. It also supports 
-[Image Recognition](https://developers.evrythng.com/docs/identifier-recognition).
 
-#### evrythng-mqtt.js
+## Build and Deploy
 
-[`evrythng-mqtt`](https://www.npmjs.com/package/evrythng-mqtt) is an *evrythng.js* plugin for Node.js that adds support
-for real-time MQTT methods to any resource.
-
-#### evrythng-hub.js
-
-[`evrythng-hub`](https://github.com/evrythng/evrythng-hub.js) is an *evrythng.js* plugin for both Browser and Node.js that
-adds smart routing of local requests when in the context of a Thng-Hub Gateway.
-
-## License
-
-Apache 2.0 License, check `LICENSE.txt`
-
-Copyright (c) EVRYTHNG Ltd.
+See `./jenkins/deploy.sh` for instructions on deploying new versions.
