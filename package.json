@@ -7,7 +7,8 @@
     "lint": "standard",
     "build": "webpack --config webpack.config.js --mode production",
     "build-dev": "webpack --config webpack.config.js --mode development",
-    "deploy": "terraform apply"
+    "show-notice": "echo '\n    New to evrythng.js v5? Make sure to read the migration guide:\n    https://developers.evrythng.com/docs/evrythngjs-v500\n'",
+    "postinstall": "npm run --silent show-notice"
   },
   "repository": {
     "type": "git",

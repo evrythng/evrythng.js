@@ -5,7 +5,7 @@ const chaiAsPromised = require('chai-as-promised')
 const { expect } = chai
 chai.use(chaiAsPromised)
 
-const payload = { name: 'Test Thng', identifiers: { serial: 'a78sd6dahhak23' } }
+const payload = { name: 'Test Thng', identifiers: { serial: `s-${Date.now()}` } }
 
 module.exports = () => {
   describe('upsert', () => {
