@@ -1,0 +1,14 @@
+{
+  "name": "evrythng.js-browser-npm-browserify",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "browserify": "^16.2.3",
+    "evrythng": "file:../.."
+  },
+  "scripts": {
+    "postinstall": "npm run build",
+    "build": "mkdir -p dist && ./node_modules/.bin/browserify index.js -o dist/index.js"
+  }
+}

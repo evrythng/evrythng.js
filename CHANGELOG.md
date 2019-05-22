@@ -1,3 +1,30 @@
+# v5.0.0 (23-5-2019)
+
+## Breaking Changes
+
+> If you are updating from a previous version, please see the 
+> [Migration Guide](https://developers.evrythng.com/docs/evrythngjs-v500).
+
+- **evrythng-extended.js**: `evrythng-extended.js` is no longer required as a separate dependency.
+- **Browser global**: The `EVT` browser global is now `evrythng`.
+- **Scope names**: The `App` and `TrustedApp` scopes are now `Application` and `TrustedApplication`.
+- **User scope**: Manual creation of a `User` scope using a pre-existing API key now only requires the key as a parameter.
+- **$init**: The `$init` promise property has been formalised as the `init()` method, and behaves the same way.
+- **Request options**: The `authorization` parameter for `api()` is now `apiKey`.
+- **Iterators**: The `EVT.Utils.forEachAsync()` and `iterator()` resource method is now `pages()`, and is an [async generator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*).
+
+## Features
+
+- **Redirections**: The `thng()` and `product()` resources now have a `redirection()` resource for managing redirections.
+- **Accounts**: Added a `sharedAccount()` resource with `access()` sub-resource for reading and updating accounts.
+- **Domains**: The `sharedAccount()` resource also includes `shortDomain()` and `domain()` resources for reading available short domains and domains.
+- **Secret key**: The `application()` resource now has a `secretKey()` resource for reading its Trusted Application API Key as an `Operator`.
+- **Redirector**: The `Operator` scope and `application()` resource now have a `redirector()` resource for reading and updating Redirector rules.
+- **Resource aliases**: The `alias()` method allows simple aliasing of existing resource types to better suit a use-case or environment, such as naming collections 'pallets'.
+- **Parameter setters**: Instead of creating a `params` object, chainable setters such as `setPerPage()` are available on most resources to easily build complex requests.
+- **Resource methods**: The `rescope()`, `upsert()`, and `find()` methods have been added to most resources to allow easier _changing of project/user scopes_, _updating by key else creating_, and _finding by identifiers_ as common operations.
+
+
 # v4.7.2 (11-15-2017)
 
 ## Bug fixes
