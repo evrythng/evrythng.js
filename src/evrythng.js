@@ -3,6 +3,7 @@ export { default as settings } from './settings'
 export { default as setup } from './setup'
 export { default as api } from './api'
 export { default as alias } from './alias'
+export { default as use } from './use'
 
 // Scopes
 export { default as Operator } from './scope/Operator'
