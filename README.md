@@ -9,6 +9,7 @@ or in client-side web applications in modern browsers.
 * [Compatibility](#compatibility)
 * [Scopes](#scopes)
 * [API](#api)
+* [Plugins](#plugins)
 * [Documentation and Examples](#documentation-and-examples)
 
 
@@ -282,6 +283,46 @@ user.product()
 
 Other parameter setters include `setWithScopes()`, `setContext()`,
 `setPerPage()`, `setProject()` and `setFilter()`.
+
+
+## Plugins
+
+This SDK can be extended with plugins that enhance existing functionality by
+modifying the capabilities of Scopes and Entities. This is done by supplying an
+object with at least an `install()` method, that is provided an `api` object 
+(see `src/use.js` for details of this API). 
+
+For example, adding a `getSummary()` method to Thngs: 
+
+```js
+const SummaryPlugin = {
+  // Required method
+  install: (api) => {
+    // Add new functionality to all Thng entities
+    api.entities.Thng.prototype.getSummary = function () {
+      return `${this.name} (${this.id})`
+    }
+  }
+};
+```
+
+The plugin is then installed using `use()`:
+
+```js
+const SummaryPlugin = require('summary-plugin');
+
+evrythng.use(SummaryPlugin);
+```
+
+Then, the plugin's functionality can be used:
+
+```js
+// Read one Thng
+const [thng] = await user.thng().setPerPage(1).read()
+
+// Use the newly installed method
+console.log(thng.getSummary())
+```
 
 
 ## Documentation and Examples
