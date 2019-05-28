@@ -9,7 +9,7 @@ or in client-side web applications in modern browsers.
 * [Compatibility](#compatibility)
 * [Scopes](#scopes)
 * [API](#api)
-* [Plugnins](#plugins)
+* [Plugins](#plugins)
 * [Documentation and Examples](#documentation-and-examples)
 
 
