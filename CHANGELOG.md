@@ -1,3 +1,10 @@
+# v5.1.0 (30-5-2019)
+
+## Features
+
+- **plugins**: Added the `use()` method in order to support plugins. See `src/use.js` for API details.
+
+
 # v5.0.0 (23-5-2019)
 
 ## Breaking Changes
