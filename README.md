@@ -303,15 +303,15 @@ const SummaryPlugin = {
       return `${this.name} (${this.id})`
     }
   }
-};
+}
 ```
 
 The plugin is then installed using `use()`:
 
 ```js
-const SummaryPlugin = require('summary-plugin');
+const SummaryPlugin = require('summary-plugin')
 
-evrythng.use(SummaryPlugin);
+evrythng.use(SummaryPlugin)
 ```
 
 Then, the plugin's functionality can be used:
@@ -322,6 +322,10 @@ const [thng] = await user.thng().setPerPage(1).read()
 
 // Use the newly installed method
 console.log(thng.getSummary())
+```
+
+```
+Test Thng (U6ssDxRBD8kQATawwGrEyaRm)
 ```
 
 
