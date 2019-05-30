@@ -4,8 +4,6 @@ import Operator from './scope/Operator'
 import TrustedApplication from './scope/TrustedApplication'
 import User from './scope/User'
 
-import Access from './entity/Access'
-import Account from './entity/Account'
 import Action from './entity/Action'
 import ActionType from './entity/ActionType'
 import ApplicationEntity from './entity/Application'
@@ -30,7 +28,7 @@ import UserEntity from './entity/User'
 
 /**
  * The items that the plugin may access and manipulate to install new functionality.
- * 
+ *
  * Think carefully before changing this contract!
  */
 const API = {
