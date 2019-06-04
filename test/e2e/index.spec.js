@@ -67,6 +67,7 @@ describe('evrythng.js', () => {
     require('./entity/redirection.spec')('operator', 'product')
     require('./entity/redirection.spec')('operator', 'thng')
     require('./entity/roles.spec')('operator')
+    require('./entity/rules.spec')()
     require('./entity/secretKey.spec')()
     require('./entity/shortDomains.spec')()
     require('./entity/tasks.spec')()
