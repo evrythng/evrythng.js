@@ -10,6 +10,7 @@ import ApplicationEntity from './entity/Application'
 import AppUser from './entity/AppUser'
 import Batch from './entity/Batch'
 import Collection from './entity/Collection'
+import Entity from './entity/Entity';
 import File from './entity/File'
 import Location from './entity/Location'
 import Permission from './entity/Permission'
@@ -46,6 +47,7 @@ const API = {
     AppUser,
     Batch,
     Collection,
+    Entity,
     File,
     Location,
     Permission,
