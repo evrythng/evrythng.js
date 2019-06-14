@@ -1,5 +1,7 @@
 # evrythng.js
 
+> Requires Node.js v10+
+
 The official `evrythng.js` SDK facilitates communication with the
 [EVRYTHNG](https://developers.evrythng.com) REST API thanks to its fluent and
 resource oriented API. It can be used both for server-side scripting (Node.js)
