@@ -1,7 +1,5 @@
 # evrythng.js
 
-> Requires Node.js v10+
-
 The official `evrythng.js` SDK facilitates communication with the
 [EVRYTHNG](https://developers.evrythng.com) REST API thanks to its fluent and
 resource oriented API. It can be used both for server-side scripting (Node.js)
@@ -82,6 +80,8 @@ Then use in a browser `script` tag using the `evrythng` global variable:
 communicate with the EVRYTHNG API. `fetch` has already been shipped in all the
 major browsers (see http://caniuse.com/#feat=fetch). The `isomorphic-fetch`
 dependency of this project should take care of this for you.
+
+When using Node.js, version 10 and above is required.
 
 
 ## Scopes
