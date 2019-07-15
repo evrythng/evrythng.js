@@ -59,6 +59,14 @@ module.exports = () => {
       expect(res).to.have.length.gte(1)
     })
 
+    it('should set ids via setIds', async () => {
+      const thng2 = await operator.thng().create({ name: 'Test' })
+      const ids = (await operator.thng().read()).map(p => p.id)
+
+      const res = await operator.thng().setIds(ids).read()
+      expect(res.length).to.equal(ids.length)
+    })
+
     it('should allow chaining of multiple param setters', async () => {
       const res = await operator.thng()
         .setProject(project.id)
