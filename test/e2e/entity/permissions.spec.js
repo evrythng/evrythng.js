@@ -21,6 +21,23 @@ const describeOperatorPermissionTests = () => {
       expect(res).to.have.length.gte(2)
       expect(res[0].name).to.equal('global_read')
     })
+
+    it('should read a single role permission', async () => {
+      const name = 'global_read'
+      const res = await operator.role(role.id).permission(name).read()
+
+      expect(res).to.be.an('object')
+      expect(res.name).to.equal(name)
+    })
+
+    it('should update a single role permission', async () => {
+      const name = 'global_read'
+      const payload = { name, enabled: false }
+      const res = await operator.role(role.id).permission(name).update(payload)
+
+      expect(res).to.be.an('object')
+      expect(res.enabled).to.equal(false)
+    })
   })
 }
 
