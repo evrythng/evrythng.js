@@ -16,10 +16,36 @@ export default class File extends Entity {
    * @return {{file: Function}}
    */
   static resourceFactory () {
-    // TODO enable Node.js File streams and multipart/form-data files/blobs
-
     return {
-      file: Resource.factoryFor(File, path)
+      file (id) {
+        return Object.assign(
+          Resource.factoryFor(File, path).call(this, id),
+          {
+            upload
+          }
+        )
+      }
     }
   }
+}
+
+/**
+ * Upload file data, previously obtained from disk or the user.
+ *
+ * Note: Only text or encoded text is currently supported here.
+ *
+ * @param {*} data - Data as buffer or string.
+ */
+async function upload (data) {
+  const resource = await this.read()
+  const opts = {
+    method: 'put',
+    headers: {
+      'Content-Type': resource.type,
+      'x-amz-acl': resource.privateAccess ? 'private' : 'public-read'
+    },
+    body: data
+  }
+
+  return fetch(resource.uploadUrl, opts)
 }

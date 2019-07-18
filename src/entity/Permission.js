@@ -19,18 +19,13 @@ export default class Permission extends Entity {
    */
   static resourceFactory () {
     return {
-      permission () {
-        // Permissions don't have single resource endpoint (e.g.: /permissions/:id)
-        if (isString(arguments[0])) {
-          throw new TypeError('There is no single resource for Permissions')
-        }
-
+      permission (name) {
         // Only allowed on Entities and Resources.
         if (this instanceof Scope) {
           throw new Error('Permission is not a top-level resource.')
         }
 
-        return Resource.factoryFor(Permission, path).call(this)
+        return Resource.factoryFor(Permission, path).call(this, name)
       }
     }
   }

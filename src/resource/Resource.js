@@ -221,6 +221,19 @@ export default class Resource {
   }
 
   /**
+   * Helper for the 'ids' param.
+   *
+   * E.g: user.thng().setIds(['UNREK4bCUSCdGpRwaKMfdPfs', 'U7xPy2xqkbHyskaaR3MQUgrh']).read()
+   *
+   * @param {string[]} ids - Array of IDs.
+   * @returns {Resource} this
+   */
+  setIds (ids) {
+    this.preParams.ids = ids
+    return this
+  }
+
+  /**
    * Create a new entity for this resource.
    *
    * @param {Object|Entity} data - Entity to create
