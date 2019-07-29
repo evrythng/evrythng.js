@@ -361,30 +361,33 @@ export default class Resource {
   }
 
   /**
-   * Update a resource by an identifier key-value pair, and create it if it does not exist.
+   * Update a resource by 'name' or an identifier key-value pair, and create it if it does not exist.
    *
    * If more than one match is found and the 'allowPlural' parameter is not set to 'true',
    * an error will be thrown. If it is set, the *first* item returned will be updated.
    *
    * @param {object} data - Create/update payload to use.
-   * @param {object} updateKey - Key-value identifier pair to search with.
+   * @param {object|string} updateKey - Name string or key-value identifier pair to search with.
    * @param {boolean} [allowPlural] - Flag to not throw an error if more than one result is found.
    * @returns {Promise} Promise that resolves once complete.
    */
   async upsert (data, updateKey, allowPlural) {
-    if (!updateKey || typeof updateKey !== 'object' || Array.isArray(updateKey)) {
-      throw new Error('updateKey must be an object, eg: { shortId: \'a7ysf8hd\' }')
+    if (!updateKey || !(typeof updateKey === 'string' || typeof updateKey === 'object')) {
+      throw new Error('updateKey must be a \'name\' string or an object, eg: { shortId: \'a7ysf8hd\' }')
     }
 
-    const [key, value] = Object.entries(updateKey)[0]
-    const params = { filter: `identifiers.${key}=${value}` }
+    const params = { filter: `name=${updateKey}` }
+    if (typeof updateKey === 'object') {
+      const [key, value] = Object.entries(updateKey)[0]
+      params.filter = `identifiers.${key}=${value}`
+    }
+
     const found = await this.read({ params })
     if (found.length > 1) {
       if (!allowPlural) {
-        throw new Error('More than one resource for this identifier was found. Set \'allowPlural\' to \'true\' as third parameter to update the first returned.')
+        throw new Error('More than one resource was found. Set \'allowPlural\' to \'true\' as third parameter to update the first returned.')
       }
     }
-
     if (found.length) {
       return found[0].update(data)
     }
@@ -393,20 +396,24 @@ export default class Resource {
   }
 
   /**
-   * Find some of the resources by a single identifier key-value pair.
+   * Find some of the resources by 'name' or a single identifier key-value pair.
    * A convenience method for using the 'filter' parameter.
    *
-   * @param {object} identifier - Object containing single key-value pair.
+   * @param {object|string} updateKey - String 'name' or object containing single key-value pair.
    * @returns {Promise} Promise that resolves when the request returns.
    */
-  async find (identifier) {
-    const pairs = Object.entries(identifier)
-    if (pairs.length > 1) {
-      throw new Error('Only one key-value pair may be specified for find()')
+  async find (updateKey) {
+    const params = { filter: `name=${updateKey}` }
+    if (typeof updateKey === 'object') {
+      const pairs = Object.entries(updateKey);
+      if (pairs.length > 1) {
+        throw new Error('Only one key-value pair may be specified for find()')
+      }
+
+      const [key, value] = pairs[0]
+      params.filter = `identifiers.${key}=${value}`
     }
 
-    const [key, value] = pairs[0]
-    const params = { filter: `identifiers.${key}=${value}` }
     return this.read({ params })
   }
 
