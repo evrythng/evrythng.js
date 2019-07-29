@@ -21,7 +21,7 @@ module.exports = () => {
       await operator.thng(thng.id).delete()
     })
 
-    it('should find Thngs', async () => {
+    it('should find Thngs by identifiers', async () => {
       const res = await operator.thng().find(payload.identifiers)
 
       expect(res).to.be.an('array')
@@ -33,6 +33,13 @@ module.exports = () => {
 
       const attempt = operator.thng().find(payload.identifiers)
       return expect(attempt).to.eventually.be.rejected
+    })
+
+    it('should find Thngs by name', async () => {
+      const res = await operator.thng().find(payload.name)
+
+      expect(res).to.be.an('array')
+      expect(res).to.have.length.gte(1)
     })
   })
 }
