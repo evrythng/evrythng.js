@@ -28,6 +28,8 @@ export default class Redirection extends Entity {
           throw new Error('Redirection is not a top-level resource.')
         }
 
+        const _this = this
+
         /**
          * Helper for repetitive shortDomain focussed requests.
          *
@@ -44,9 +46,13 @@ export default class Redirection extends Entity {
           }, changes))
 
         // Special case: use the shortDomain API instead of the /redirector API.
-        const _this = this
         return {
-          create (payload) {
+          /**
+           * Create the redirection.
+           *
+           * @param {object} payload - Redirection payload.
+           */
+          async create (payload) {
             payload.evrythngId = _this.id
             payload.type = _this.typeName
 
@@ -55,12 +61,22 @@ export default class Redirection extends Entity {
               body: JSON.stringify(payload)
             })
           },
+
+          /**
+           * Read the redirection.
+           */
           async read () {
             const [first] = await shortDomainRequest({
               params: { evrythngId: _this.id }
             })
             return first
           },
+
+          /**
+           * Update the redirection. If it doesn't exist, it is created.
+           *
+           * @param {object} payload - Redirection update payload.
+           */
           async update (payload) {
             const existing = await this.read()
             if (!existing) {
@@ -74,6 +90,10 @@ export default class Redirection extends Entity {
               body: JSON.stringify(payload)
             })
           },
+
+          /**
+           * Delete the redirection, if it exists.
+           */
           async delete () {
             const existing = await this.read()
             if (!existing) {

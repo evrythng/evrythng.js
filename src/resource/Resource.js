@@ -24,7 +24,7 @@ export default class Resource {
    * @param {string} path - Path for new resource
    * @param {Function} MixinNestedResources - Mixin that extends Resource class
    *                                          with nested resources.
-   * @param {string} typeName - Name of the entity posessing this resource.
+   * @param {string} [typeName] - Name of the entity posessing this resource.
    * @return {Function} - Resource factory function
    */
   static factoryFor (type, path = '', MixinNestedResources, typeName) {
@@ -75,7 +75,7 @@ export default class Resource {
    * @param {string} path - Relative path to API resource
    * @param {Entity} [type] - Reference to Entity class (constructor)
    * @param {string} [id] - The resource ID, if specified.
-   * @param {string} typeName - Name of the entity posessing this resource.
+   * @param {string} [typeName] - Name of the entity posessing this resource.
    */
   constructor (scope, path, type, id, typeName) {
     if (!(scope && scope instanceof Scope)) {
