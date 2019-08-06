@@ -129,20 +129,28 @@ function makeFetch (options) {
  * @returns {Promise} - Promise to {Response} or {Object}
  */
 function handleResponse (options) {
-  return response => {
+  return async (response) => {
     const res = options.fullResponse
+      // Full response requested by user
       ? Promise.resolve(response)
       : response.status === 204 || options.method.toLowerCase() === 'delete'
+        // Accepted or DELETE requests have no body
         ? Promise.resolve()
+        // Attempt to decode the response JSON body
         : response.json()
 
-    return res.then(data => {
-      if (response.ok) {
-        return data
-      } else {
-        throw data
-      }
-    })
+    let data = ''
+    try {
+      data = await res
+    } catch (e) {
+      // Non-standard empty body response, allow it
+    }
+
+    if (!response.ok) {
+      throw data
+    }
+
+    return data
   }
 }
 
