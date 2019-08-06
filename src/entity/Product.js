@@ -26,7 +26,7 @@ export default class Product extends ProductResources(Entity) {
    */
   static resourceFactory () {
     return {
-      product: Resource.factoryFor(Product, path, ProductResources)
+      product: Resource.factoryFor(Product, path, ProductResources, 'product')
     }
   }
 }

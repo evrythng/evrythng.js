@@ -23,10 +23,11 @@ export default class Resource {
    * @param {Entity} type - Entity sub-class
    * @param {string} path - Path for new resource
    * @param {Function} MixinNestedResources - Mixin that extends Resource class
-   * with nested resources
+   *                                          with nested resources.
+   * @param {string} typeName - Name of the entity posessing this resource.
    * @return {Function} - Resource factory function
    */
-  static factoryFor (type, path = '', MixinNestedResources) {
+  static factoryFor (type, path = '', MixinNestedResources, typeName) {
     if (!type) {
       throw new Error('Entity type is necessary for resource factory.')
     }
@@ -60,7 +61,7 @@ export default class Resource {
       const XResource = MixinNestedResources
         ? MixinNestedResources(Resource)
         : Resource
-      return new XResource(parentScope, newPath, type)
+      return new XResource(parentScope, newPath, type, id, typeName)
     }
   }
 
@@ -73,8 +74,10 @@ export default class Resource {
    * @param {Scope} scope - Scope containing API Key
    * @param {string} path - Relative path to API resource
    * @param {Entity} [type] - Reference to Entity class (constructor)
+   * @param {string} [id] - The resource ID, if specified.
+   * @param {string} typeName - Name of the entity posessing this resource.
    */
-  constructor (scope, path, type) {
+  constructor (scope, path, type, id, typeName) {
     if (!(scope && scope instanceof Scope)) {
       throw new TypeError('Scope should inherit from Scope (e.g. EVT.Application).')
     }
@@ -91,6 +94,12 @@ export default class Resource {
 
     // Allow chainable parameter hepers
     this.preParams = {}
+
+    // Remember the resource ID if specified
+    this.id = id
+
+    // Some sub-resources need to know what they belong to
+    this.typeName = typeName
 
     // Setup entity for serializing and deserializing results. It must
     // implement *toJSON()* method, as defined in the Entity base class.

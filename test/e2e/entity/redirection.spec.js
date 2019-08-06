@@ -1,7 +1,8 @@
 const { expect } = require('chai')
 const { getScope } = require('../util')
 
-const defaultRedirectUrl = 'https://google.com?item={shortId}'
+const shortDomain = 'tn.gg'
+const defaultRedirectUrl = 'https://google.com'
 
 module.exports = (scopeType, targetType) => {
   let scope, target
@@ -19,14 +20,14 @@ module.exports = (scopeType, targetType) => {
 
     it(`should create a ${targetType} redirection`, async () => {
       const payload = { defaultRedirectUrl }
-      const res = await scope[targetType](target.id).redirection().create(payload)
+      const res = await scope[targetType](target.id).redirection(shortDomain).create(payload)
 
       expect(res).to.be.an('object')
       expect(res.updatedAt).to.be.lte(Date.now())
     })
 
     it(`should read a ${targetType} redirection`, async () => {
-      const res = await scope[targetType](target.id).redirection().read()
+      const res = await scope[targetType](target.id).redirection(shortDomain).read()
 
       expect(res.updatedAt).to.be.lte(Date.now())
       expect(res.hits).to.equal(0)
@@ -34,13 +35,13 @@ module.exports = (scopeType, targetType) => {
 
     it(`should update a ${targetType} redirection`, async () => {
       const payload = { defaultRedirectUrl: 'https://google.com/updated?item={shortId}' }
-      const res = await scope[targetType](target.id).redirection().update(payload)
+      const res = await scope[targetType](target.id).redirection(shortDomain).update(payload)
 
       expect(res.updatedAt).to.be.lte(Date.now())
     })
 
     it(`should delete a ${targetType} redirection`, async () => {
-      await scope[targetType](target.id).redirection().delete()
+      await scope[targetType](target.id).redirection(shortDomain).delete()
     })
   })
 }

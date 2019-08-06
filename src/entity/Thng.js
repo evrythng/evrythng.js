@@ -28,7 +28,7 @@ export default class Thng extends ThngResources(Entity) {
    */
   static resourceFactory () {
     return {
-      thng: Resource.factoryFor(Thng, path, ThngResources)
+      thng: Resource.factoryFor(Thng, path, ThngResources, 'thng')
     }
   }
 }
