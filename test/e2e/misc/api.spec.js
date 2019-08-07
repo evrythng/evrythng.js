@@ -39,5 +39,18 @@ module.exports = () => {
       // Delete
       await _api(`/thngs/${thng.id}`, 'delete')
     })
+
+    it('should throw a native Error', async () => {
+      try {
+        await _api('/thngs', 'post', { foo: 'bar' })
+      } catch (e) {
+        expect(e.message).to.be.a('string')
+
+        const json = JSON.parse(e.message)
+        expect(json.errors).to.be.an('array')
+        expect(json.moreInfo).to.be.a('string')
+        expect(json.status).to.be.a('number')
+      }
+    })
   })
 }

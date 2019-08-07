@@ -20,6 +20,9 @@ export function success (callback) {
 export function failure (callback) {
   return err => {
     if (callback) callback(err)
-    throw err
+
+    // Throw a native Error to play nicer with error handling/retry libraries
+    // Bonus: no need to check both e.message and e.errors
+    throw new Error(err.message || JSON.stringify(err))
   }
 }
