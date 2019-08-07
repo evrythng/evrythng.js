@@ -1,7 +1,8 @@
 const { expect } = require('chai')
 const { getScope } = require('../util')
 
-const defaultRedirectUrl = 'https://google.com?item={shortId}'
+const shortDomain = 'tn.gg'
+const defaultRedirectUrl = 'https://google.com'
 
 module.exports = (scopeType, targetType) => {
   let scope, target
@@ -27,6 +28,13 @@ module.exports = (scopeType, targetType) => {
 
     it(`should read a ${targetType} redirection`, async () => {
       const res = await scope[targetType](target.id).redirection().read()
+
+      expect(res.updatedAt).to.be.lte(Date.now())
+      expect(res.hits).to.equal(0)
+    })
+
+    it(`should read a ${targetType} redirection with explicit shortDomain`, async () => {
+      const res = await scope[targetType](target.id).redirection(shortDomain).read()
 
       expect(res.updatedAt).to.be.lte(Date.now())
       expect(res.hits).to.equal(0)
