@@ -92,7 +92,7 @@ export default class Resource {
     // Setup path and allow to omit leading '/'.
     this.path = `${path[0] !== '/' ? '/' : ''}${path}`
 
-    // Allow chainable parameter hepers
+    // Allow chainable parameter helpers
     this.preParams = {}
 
     // Remember the resource ID if specified
