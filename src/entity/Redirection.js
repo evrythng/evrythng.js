@@ -1,7 +1,8 @@
+import isString from 'lodash-es/isString'
 import Entity from './Entity'
 import Resource from '../resource/Resource'
 import Scope from '../scope/Scope'
-import isString from 'lodash-es/isString'
+import settings from '../settings'
 
 /**
  * Represents a Redirection entity.
@@ -17,12 +18,7 @@ export default class Redirection extends Entity {
    */
   static resourceFactory () {
     return {
-      redirection (shortDomain) {
-        // Redirections don't have single resource endpoint
-        if (!isString(arguments[0])) {
-          throw new TypeError('You must specify a shortDomain in redirection()')
-        }
-
+      redirection (shortDomain = settings.defaultShortDomain) {
         // Only allowed on Entities and Resources.
         if (this instanceof Scope) {
           throw new Error('Redirection is not a top-level resource.')
