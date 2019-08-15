@@ -440,9 +440,9 @@ export default class Resource {
     let page
     let willStop
 
-    while ((!(page = await iterator.next()).done)) {
+    while (!(page = await iterator.next()).done) {
       for (let i = 0; i < page.value.length; i += 1) {
-        if (willStop) {
+        if (typeof willStop === 'boolean' && willStop) {
           return
         }
 
