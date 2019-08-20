@@ -84,6 +84,10 @@ describe('evrythng.js', () => {
     require('./scope/device.spec')()
   })
 
+  describe('as ActionApp', () => {
+    require('./scope/actionApp.spec')()
+  })
+
   describe('Misc', () => {
     require('./misc/alias.spec')()
     require('./misc/api.spec')('operator')
