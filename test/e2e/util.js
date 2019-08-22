@@ -1,5 +1,8 @@
 const { Operator, Application, TrustedApplication, Device, api } = require('evrythng')
+const nock = require('nock')
+
 const { OPERATOR_API_KEY } = process.env
+const API_URL = 'https://api.evrythng.com'
 
 let scopes = {}
 let resources = {}
@@ -64,9 +67,12 @@ const teardown = async () => {
 
 const getScope = type => scopes[type]
 
+const mockApi = () => nock(API_URL)
+
 module.exports = {
   resources,
   setup,
   teardown,
-  getScope
+  getScope,
+  mockApi
 }

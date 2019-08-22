@@ -49,6 +49,7 @@ describe('evrythng.js', () => {
     require('./entity/accounts.spec')()
     require('./entity/actions.spec')('operator')
     require('./entity/actionTypes.spec')('operator')
+    require('./entity/adiOrders.spec')()
     require('./entity/applicationRedirector.spec')()
     require('./entity/applications.spec')('operator')
     require('./entity/batches.spec')()
