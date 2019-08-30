@@ -426,6 +426,33 @@ export default class Resource {
     return this.read({ params })
   }
 
+  /**
+   * Stream a set of resources, calling an async function for each item.
+   *
+   * The callback is passed the item and cumulative item index. If iteration should
+   * stop, the callback should return `true`.
+   *
+   * @param {function} eachItemCb - Async function to call for each item.
+   */
+  async stream (eachItemCb) {
+    const iterator = this.pages()
+    let totalSoFar = 0
+    let page
+    let willStop
+
+    while (!(page = await iterator.next()).done) {
+      for (let i = 0; i < page.value.length; i += 1) {
+        if (typeof willStop === 'boolean' && willStop) {
+          return
+        }
+
+        willStop = await eachItemCb(page.value[i], totalSoFar + i)
+      }
+
+      totalSoFar += page.value.length
+    }
+  }
+
   // PRIVATE
 
   /**
