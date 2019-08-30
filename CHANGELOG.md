@@ -1,3 +1,38 @@
+# v5.5.0 (29-8-2019)
+
+## Features
+
+- **ADI Orders**: Added `adiOrder()` resources to Operator scope for creating and reading ADI Orders. Also includes `event()` for creating ADI Order events.
+
+
+# v5.4.0 (7-8-2019)
+
+## Changes
+
+- **redirections**:`redirection()` resource now allows nominating the `shortDomain` in that call, and no longer requires some templating (`{shortId}`/`{productId}`) as part of the URL submitted.
+- **redirections**: `settings` now includes `defaultShortDomain` to allow setting the default short domain used for `redirection()` requests.
+
+
+## Fixes
+
+- **api**: Better handle parts of the API that return non-standard empty response bodies.
+
+
+# v5.3.0 (29-7-2019)
+
+## Features
+
+- **entities**: Export `Entity` through the plugin `api`.
+- **files**: Add `upload()` method for files to upload file data.
+- **upsert**: `upsert()` can now be performed by `name` in addition to an identifier object where a resource supports filtering by `name`.
+
+
+## Fixes
+
+- **param setters**: Add missing `setIds()` param setter.
+- **permissions**: Support referring to permission by name, such as `permission('global_read')`
+
+
 # v5.1.0 (30-5-2019)
 
 ## Features
