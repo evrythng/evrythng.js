@@ -1,3 +1,4 @@
+import CommissionState from './CommissionState'
 import Entity from './Entity'
 import Property from './Property'
 import Action from './Action'
@@ -11,7 +12,8 @@ const ThngResources = mixinResources([
   Property,
   Action,
   Location,
-  Redirection
+  Redirection,
+  CommissionState
 ])
 
 /**
