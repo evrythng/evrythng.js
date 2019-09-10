@@ -9,8 +9,11 @@ let resources = {}
 
 /**
  * Mock an API response with nock.
+ *
+ * @param {string} [apiUrl] - Override API URL from the default.
+ * @returns {object} nock mock.
  */
-const mockApi = () => nock(API_URL)
+const mockApi = (apiUrl = API_URL) => nock(apiUrl)
 
 /**
  * Initialise reusable entities in the specified Platform account.

@@ -1,54 +1,58 @@
 const { expect } = require('chai')
-const { getScope } = require('../util')
+const { getScope, mockApi } = require('../util')
 
-const shortDomain = 'tn.gg'
-const defaultRedirectUrl = 'https://google.com'
 
 module.exports = (scopeType, targetType) => {
-  let scope, target
+  let scope
 
   describe(`Redirection (${targetType})`, () => {
     before(async () => {
       scope = getScope(scopeType)
-      target = await scope[targetType]().create({ name: 'test' })
-    })
-
-    after(async () => {
-      const operator = getScope('operator')
-      await operator[targetType](target.id).delete()
     })
 
     it(`should create a ${targetType} redirection`, async () => {
-      const payload = { defaultRedirectUrl }
-      const res = await scope[targetType](target.id).redirection().create(payload)
+      const payload = { defaultRedirectUrl: 'https://www.google.com' }
+      mockApi('https://tn.gg').post('/redirections', payload)
+        .reply(201, payload)
+      const res = await scope[targetType]('targetId').redirection().create(payload)
 
       expect(res).to.be.an('object')
-      expect(res.updatedAt).to.be.lte(Date.now())
+      expect(res.defaultRedirectUrl).to.be.a('string')
     })
 
     it(`should read a ${targetType} redirection`, async () => {
-      const res = await scope[targetType](target.id).redirection().read()
+      mockApi('https://tn.gg').get('/redirections?evrythngId=targetId')
+        .reply(200, [{ hits: 0 }])
+      const res = await scope[targetType]('targetId').redirection().read()
 
-      expect(res.updatedAt).to.be.lte(Date.now())
       expect(res.hits).to.equal(0)
     })
 
     it(`should read a ${targetType} redirection with explicit shortDomain`, async () => {
-      const res = await scope[targetType](target.id).redirection(shortDomain).read()
+      mockApi('https://abc.tn.gg').get('/redirections?evrythngId=targetId')
+        .reply(200, [{ hits: 0 }])
+      const res = await scope[targetType]('targetId').redirection('abc.tn.gg').read()
 
-      expect(res.updatedAt).to.be.lte(Date.now())
       expect(res.hits).to.equal(0)
     })
 
     it(`should update a ${targetType} redirection`, async () => {
       const payload = { defaultRedirectUrl: 'https://google.com/updated?item={shortId}' }
-      const res = await scope[targetType](target.id).redirection().update(payload)
+      mockApi('https://tn.gg').get('/redirections?evrythngId=targetId')
+        .reply(200, [{ hits: 0, shortId: 'shortId' }])
+      mockApi('https://tn.gg').put('/redirections/shortId', payload)
+        .reply(200, payload)
+      const res = await scope[targetType]('targetId').redirection().update(payload)
 
-      expect(res.updatedAt).to.be.lte(Date.now())
+      expect(res).to.be.an('object')
     })
 
     it(`should delete a ${targetType} redirection`, async () => {
-      await scope[targetType](target.id).redirection().delete()
+      mockApi('https://tn.gg').get('/redirections?evrythngId=targetId')
+        .reply(200, [{ hits: 0, shortId: 'shortId' }])
+      mockApi('https://tn.gg').delete('/redirections/shortId')
+        .reply(200)
+      await scope[targetType]('targetId').redirection().delete()
     })
   })
 }

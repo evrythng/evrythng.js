@@ -1,31 +1,23 @@
 const { expect } = require('chai')
-const { getScope } = require('../util')
+const { getScope, mockApi } = require('../util')
 
 module.exports = () => {
   describe('Secret Key', () => {
-    let operator, project, application
+    let operator
 
     before(async () => {
       operator = getScope('operator')
-
-      const payload = { name: 'Test' }
-      project = await operator.project().create(payload)
-      payload.socialNetworks = {}
-      application = await operator.project(project.id).application().create(payload)
-    })
-
-    after(async () => {
-      await operator.project(project.id).application(application.id).delete()
-      await operator.project(project.id).delete()
     })
 
     it('should read an application\'s secret key', async () => {
-      const res = await operator.project(project.id).application(application.id)
+      mockApi().get('/projects/projectId/applications/applicationId/secretKey')
+        .reply(200, { secretApiKey: 'secretApiKey' })
+      const res = await operator.project('projectId').application('applicationId')
         .secretKey()
         .read()
 
       expect(res).to.be.an('object')
-      expect(res.secretApiKey).to.have.length(80)
+      expect(res.secretApiKey).to.be.a('string')
     })
   })
 }
