@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { resources, getScope } = require('../util')
+const { resources, getScope, mockApi } = require('../util')
 
 const USER = {
   firstName: 'Test',
