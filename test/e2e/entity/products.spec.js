@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { resources, getScope } = require('../util')
+const { getScope, mockApi } = require('../util')
 
 module.exports = (scopeType) => {
   describe('Products', () => {
@@ -10,28 +10,27 @@ module.exports = (scopeType) => {
     })
 
     it('should create a product', async () => {
-      const payload = {
-        name: 'Test Product',
-        customFields: {
-          color: 'red',
-          serial: Date.now()
-        }
-      }
+      const payload = { name: 'Test Product' }
+      mockApi().post('/products', payload)
+        .reply(201, payload)
+      const res = await scope.product().create(payload)
 
-      resources.product = await scope.product().create(payload)
-
-      expect(resources.product).to.be.an('object')
-      expect(resources.product.customFields).to.deep.equal(payload.customFields)
+      expect(res).to.be.an('object')
+      expect(res.name).to.equal(payload.name)
     })
 
     it('should read a product', async () => {
-      const res = await scope.product(resources.product.id).read()
+      mockApi().get('/products/productId')
+        .reply(200, { id: 'productId' })
+      const res = await scope.product('productId').read()
 
       expect(res).to.be.an('object')
-      expect(res.id).to.equal(resources.product.id)
+      expect(res.id).to.equal('productId')
     })
 
     it('should read all products', async () => {
+      mockApi().get('/products')
+        .reply(200, [{ id: 'productId' }])
       const res = await scope.product().read()
 
       expect(res).to.be.an('array')
@@ -40,15 +39,19 @@ module.exports = (scopeType) => {
 
     it('should update a product', async () => {
       const payload = { tags: ['updated'] }
-      const res = await scope.product(resources.product.id).update(payload)
+      mockApi().put('/products/productId', payload)
+        .reply(200, payload)
+      const res = await scope.product('productId').update(payload)
 
       expect(res).to.be.an('object')
-      expect(res.tags).to.deep.equal(payload.tags)
+      expect(res.tags).to.deep.equal(['updated'])
     })
 
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should delete a product', async () => {
-        await scope.product(resources.product.id).delete()
+        mockApi().delete('/products/productId')
+          .reply(200)
+        await scope.product('productId').delete()
       })
     }
   })

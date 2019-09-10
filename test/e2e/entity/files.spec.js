@@ -1,29 +1,28 @@
-const fs = require('fs')
 const { expect } = require('chai')
-const { getScope } = require('../util')
+const nock = require('nock')
+const { getScope, mockApi } = require('../util')
 
 module.exports = () => {
   describe('Files', () => {
-    let operator, file
+    let operator
 
     before(() => {
       operator = getScope('operator')
     })
 
     it('should create a file', async () => {
-      const payload = {
-        name: 'TestFile.txt',
-        type: 'text/plain',
-        privateAccess: false
-      }
+      const payload = { name: 'TestFile.txt' }
+      mockApi().post('/files', payload)
+        .reply(201, payload)
+      const res = await operator.file().create(payload)
 
-      file = await operator.file().create(payload)
-
-      expect(file).to.be.an('object')
-      expect(file.type).to.deep.equal(payload.type)
+      expect(res).to.be.an('object')
+      expect(res.name).to.equal(payload.name)
     })
 
     it('should read all files', async () => {
+      mockApi().get('/files')
+        .reply(200, [{ id: 'fileId' }])
       const res = await operator.file().read()
 
       expect(res).to.be.an('array')
@@ -31,27 +30,38 @@ module.exports = () => {
     })
 
     it('should read a file', async () => {
-      const res = await operator.file(file.id).read()
+      mockApi().get('/files/fileId')
+        .reply(200, { id: 'fileId' })
+      const res = await operator.file('fileId').read()
 
       expect(res).to.be.an('object')
-      expect(res.id).to.equal(file.id)
+      expect(res.id).to.equal('fileId')
     })
 
     it('should upload file content - text', async () => {
-      const data = 'This is example text file content'
+      const fileData = 'This is example text file content'
 
-      await operator.file(file.id).upload(data)
+      mockApi().get('/files/fileId')
+        .reply(200, { id: 'fileId', uploadUrl: 'https://s3.amazonaws.com' })
+      await operator.file('fileId').upload(fileData)
 
-      const resource = await operator.file(file.id).read()
+      mockApi().get('/files/fileId')
+        .reply(200, { contentUrl: 'https://s3.amazonaws.com/upload' })
+      const resource = await operator.file('fileId').read()
+      nock('https://s3.amazonaws.com')
+        .get('/upload')
+        .reply(200, fileData)
       const readData = await fetch(resource.contentUrl).then(res => res.text())
 
-      expect(readData).to.equal(data)
+      expect(readData).to.equal(fileData)
     })
 
     it('should upload file content - image data')
 
     it('should delete a file', async () => {
-      await operator.file(file.id).delete()
+      mockApi().delete('/files/fileId')
+        .reply(200)
+      await operator.file('fileId').delete()
     })
   })
 }

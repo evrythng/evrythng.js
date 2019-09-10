@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { resources, getScope } = require('../util')
+const { getScope, mockApi } = require('../util')
 
 module.exports = (scopeType) => {
   describe('Collections', () => {
@@ -10,28 +10,27 @@ module.exports = (scopeType) => {
     })
 
     it('should create a collection', async () => {
-      const payload = {
-        name: 'Test Collection',
-        customFields: {
-          color: 'red',
-          serial: Date.now()
-        }
-      }
+      const payload = { name: 'Test Collection' }
+      mockApi().post('/collections', payload)
+        .reply(200, payload)
+      const res = await scope.collection().create(payload)
 
-      resources.collection = await scope.collection().create(payload)
-
-      expect(resources.collection).to.be.an('object')
-      expect(resources.collection.customFields).to.deep.equal(payload.customFields)
+      expect(res).to.be.an('object')
+      expect(res.name).to.equal('Test Collection')
     })
 
     it('should read a collection', async () => {
-      const res = await scope.collection(resources.collection.id).read()
+      mockApi().get('/collections/collectionId')
+        .reply(200, { id: 'collectionId' })
+      const res = await scope.collection('collectionId').read()
 
       expect(res).to.be.an('object')
-      expect(res.id).to.equal(resources.collection.id)
+      expect(res.id).to.equal('collectionId')
     })
 
     it('should read all collections', async () => {
+      mockApi().get('/collections')
+        .reply(200, [{ id: 'collectionId' }])
       const res = await scope.collection().read()
 
       expect(res).to.be.an('array')
@@ -40,15 +39,19 @@ module.exports = (scopeType) => {
 
     it('should update a collection', async () => {
       const payload = { tags: ['updated'] }
-      const res = await scope.collection(resources.collection.id).update(payload)
+      mockApi().put('/collections/collectionId')
+        .reply(200, { tags: ['updated'] })
+      const res = await scope.collection('collectionId').update(payload)
 
       expect(res).to.be.an('object')
-      expect(res.tags).to.deep.equal(payload.tags)
+      expect(res.tags).to.deep.equal(['updated'])
     })
 
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should delete a collection', async () => {
-        await scope.collection(resources.collection.id).delete()
+        mockApi().delete('/collections/collectionId')
+          .reply(200)
+        await scope.collection('collectionId').delete()
       })
     }
   })

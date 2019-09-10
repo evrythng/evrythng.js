@@ -1,19 +1,12 @@
 const { expect } = require('chai')
-const nock = require('nock')
 const { getScope, mockApi } = require('../util')
 
 module.exports = () => {
   describe('ADI Orders', () => {
-    let operator, order
+    let operator
 
     before(() => {
       operator = getScope('operator')
-    })
-
-    after(() => {
-      // Last use of nock right now
-      nock.cleanAll()
-      nock.enableNetConnect()
     })
 
     it('should create an ADI Order', async () => {
@@ -25,45 +18,32 @@ module.exports = () => {
         purchaseOrder: '234567890',
         metadata: {
           identifierKey: 'gs1:21',
-          customFields: {
-            factory: '0400321'
-          },
-          tags: [
-            'factory:0400321'
-          ],
+          customFields: { factory: '0400321' },
+          tags: ['factory:0400321'],
           shortDomain: 'tn.gg',
           defaultRedirectUrl: 'https://evrythng.com?id={shortId}'
         },
-        identifiers: {
-          internalId: 'X7JF'
-        },
-        tags: [
-          'X7JF'
-        ]
+        identifiers: { internalId: 'X7JF' },
+        tags: ['X7JF']
       }
 
       mockApi()
         .post('/adis/orders', payload)
-        .reply(201, Object.assign({
-          id: 'UEp4rDGsnpCAF6xABbys5Amc'
-        }, payload))
+        .reply(201, { id: 'UEp4rDGsnpCAF6xABbys5Amc' })
+      const res = await operator.adiOrder().create(payload)
 
-      order = await operator.adiOrder().create(payload)
-
-      expect(order).to.be.an('object')
-      expect(order.id).to.have.length(24)
-      expect(order.metadata.identifierKey).to.equal(payload.metadata.identifierKey)
+      expect(res).to.be.an('object')
+      expect(res.id).to.have.length(24)
     })
 
     it('should read an ADI Order by ID', async () => {
       mockApi()
-        .get(`/adis/orders/${order.id}`)
-        .reply(200, order)
+        .get('/adis/orders/adiOrderId')
+        .reply(200, { id: 'adiOrderId' })
+      const res = await operator.adiOrder('adiOrderId').read()
 
-      const res = await operator.adiOrder(order.id).read()
-
-      expect(order).to.be.an('object')
-      expect(order.id).to.have.length(24)
+      expect(res).to.be.an('object')
+      expect(res.id).to.be.a('string')
     })
 
     it('should create an ADI Order event', async () => {
@@ -76,21 +56,17 @@ module.exports = () => {
           'serial1',
           'serial2'
         ],
-        customFields: {
-          internalId: 'X7JF'
-        },
+        customFields: { internalId: 'X7JF' },
         tags: ['X7JF']
       }
 
       mockApi()
-        .post(`/adis/orders/${order.id}/events`, payload)
-        .reply(201, Object.assign({ id: 'UrCPgMhMMmPEY6awwEf6gKfb' }, payload))
-
-      const res = await operator.adiOrder(order.id).event().create(payload)
+        .post('/adis/orders/adiOrderId/events', payload)
+        .reply(201, { id: 'UrCPgMhMMmPEY6awwEf6gKfb' })
+      const res = await operator.adiOrder('adiOrderId').event().create(payload)
 
       expect(res).to.be.an('object')
-      expect(res.id).to.have.length(24)
-      expect(res.metadata.type).to.equal(payload.metadata.type)
+      expect(res.id).to.be.a('string')
     })
   })
 }
