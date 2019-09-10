@@ -72,13 +72,13 @@ describe('evrythng.js', () => {
     require('./entity/user.spec')('operator')
   })
 
-  // describe('as Device', () => {
-  //   require('./scope/device.spec')()
-  // })
+  describe('as Device', () => {
+    require('./scope/device.spec')()
+  })
 
-  // describe('as ActionApp', () => {
-  //   require('./scope/actionApp.spec')()
-  // })
+  describe('as ActionApp', () => {
+    require('./scope/actionApp.spec')()
+  })
 
   // describe('Misc', () => {
   //   require('./misc/alias.spec')()
