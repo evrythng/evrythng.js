@@ -34,7 +34,17 @@ export default class ActionApp extends ApplicationAccess(Scope) {
   constructor (apiKey) {
     super(apiKey)
 
-    this.init()
+    this.initPromise = super.readAccess()
+      .then(access => {
+        this.id = access.actor.id
+        this.project = access.project
+        this[symbols.path] = this._getPath()
+      })
+      .then(() => this.read())
+      .then(() => this._getAnonUser())
+      .then(anonUser => {
+        this.anonUser = anonUser
+      })
   }
 
   /**
@@ -42,14 +52,8 @@ export default class ActionApp extends ApplicationAccess(Scope) {
    *
    * @returns {Promise}
    */
-  async init () {
-    const access = await super.init()
-    this.id = access.actor.id
-    this.project = access.project
-    this[symbols.path] = this._getPath()
-
-    await this.read()
-    this.anonUser = await this._getAnonUser()
+  init () {
+    return this.initPromise
   }
 
   /**
