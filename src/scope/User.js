@@ -54,7 +54,7 @@ export default class User extends AppUser(Scope) {
    * @returns {Promise}
    */
   init () {
-    return super.init()
+    return super.readAccess()
       .then(access => {
         this.id = access.actor.id
         this[symbols.path] = this._getPath()

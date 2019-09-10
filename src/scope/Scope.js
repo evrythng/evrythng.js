@@ -30,7 +30,7 @@ export default class Scope {
    *
    * @returns {Promise}
    */
-  init () {
+  readAccess () {
     return api({
       url: '/access',
       apiKey: this.apiKey

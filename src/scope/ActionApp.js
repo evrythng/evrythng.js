@@ -43,7 +43,7 @@ export default class ActionApp extends ApplicationAccess(Scope) {
    * @returns {Promise}
    */
   async init () {
-    const access = await super.init()
+    const access = await super.readAccess()
     this.id = access.actor.id
     this.project = access.project
     this[symbols.path] = this._getPath()

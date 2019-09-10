@@ -66,12 +66,11 @@ export default class Operator extends OperatorAccess(Scope) {
    * @returns {Promise}
    */
   init () {
-    return super.init()
+    return super.readAccess()
       .then(access => {
         this.id = access.actor.id
         this[symbols.path] = this._getPath()
       })
-      .then(() => this.read())
   }
 
   // PRIVATE

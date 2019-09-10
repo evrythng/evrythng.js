@@ -55,7 +55,7 @@ export default class Application extends ApplicationAccess(Scope) {
    * @returns {Promise}
    */
   init () {
-    return super.init()
+    return super.readAccess()
       .then(access => {
         this.id = access.actor.id
         this.project = access.project
