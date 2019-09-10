@@ -33,7 +33,12 @@ export default class Device extends DeviceAccess(Scope) {
   constructor (apiKey, data = {}) {
     super(apiKey, data)
 
-    this.init()
+    this.initPromise = super.readAccess()
+      .then(access => {
+        this.id = access.actor.id
+        this[symbols.path] = this._getPath()
+      })
+      .then(() => this.read())
   }
 
   /**
@@ -42,12 +47,7 @@ export default class Device extends DeviceAccess(Scope) {
    * @returns {Promise}
    */
   init () {
-    return super.readAccess()
-      .then(access => {
-        this.id = access.actor.id
-        this[symbols.path] = this._getPath()
-      })
-      .then(() => this.read())
+    return this.initPromise
   }
 
   // PRIVATE

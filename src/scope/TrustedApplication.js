@@ -53,7 +53,8 @@ export default class TrustedApplication extends ApplicationAccess(Application) {
   constructor (apiKey, data = {}) {
     super(apiKey, data)
 
-    this.init()
+    // Operation is the same as for Application scope.
+    this.initPromise = super.init()
   }
 
   /**
@@ -62,8 +63,7 @@ export default class TrustedApplication extends ApplicationAccess(Application) {
    * @returns {Promise}
    */
   init () {
-    // Operation is the same as for Application scope.
-    return super.init()
+    return this.initPromise
   }
 
   /**
