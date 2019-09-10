@@ -57,7 +57,7 @@ describe('evrythng.js', () => {
     require('./entity/permissions.spec')('userInApp')
     require('./entity/places.spec')('operator')
     require('./entity/products.spec')('operator')
-  //   require('./entity/projects.spec')()
+    require('./entity/projects.spec')()
     require('./entity/properties.spec')('operator', 'product')
     require('./entity/properties.spec')('operator', 'thng')
   //   require('./entity/reactor.spec')('operator')
