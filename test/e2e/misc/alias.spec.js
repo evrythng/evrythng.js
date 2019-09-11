@@ -1,10 +1,10 @@
 const { expect } = require('chai')
-const { getScope } = require('../util')
+const { getScope, mockApi } = require('../util')
 const evrythng = require('evrythng')
 
 module.exports = () => {
   describe('alias', () => {
-    let operator, sku
+    let operator
 
     before(() => {
       operator = getScope('operator')
@@ -17,6 +17,8 @@ module.exports = () => {
     })
 
     it('should use the alias to read all \'sku\'s', async () => {
+      mockApi().get('/products')
+        .reply(200, [{ id: 'productId' }])
       const skus = await operator.sku().read()
 
       expect(skus).to.be.an('array')
@@ -25,32 +27,37 @@ module.exports = () => {
 
     it('should use the alias to create a \'sku\'', async () => {
       const payload = { name: 'Example SKU' }
-      sku = await operator.sku().create(payload)
+      mockApi().post('/products', payload)
+        .reply(200, { id: 'productId' })
+      const res = await operator.sku().create(payload)
 
-      expect(sku).to.be.an('object')
-      expect(sku.id).to.have.length(24)
-      expect(sku.name).to.equal(payload.name)
+      expect(res).to.be.an('object')
+      expect(res.id).to.be.a('string')
     })
 
     it('should use the alias to read a \'sku\'', async () => {
-      const res = await operator.sku(sku.id).read()
+      mockApi().get('/products/productId')
+        .reply(200, { id: 'productId' })
+      const res = await operator.sku('productId').read()
 
       expect(res).to.be.an('object')
-      expect(res.id).to.equal(sku.id)
-      expect(res.name).to.equal(sku.name)
+      expect(res.id).to.equal('productId')
     })
 
     it('should use the alias to update a \'sku\'', async () => {
       const payload = { tags: ['updated'] }
-      const res = await operator.sku(sku.id).update(payload)
+      mockApi().put('/products/productId', payload)
+        .reply(200, { id: 'productId' })
+      const res = await operator.sku('productId').update(payload)
 
       expect(res).to.be.an('object')
-      expect(res.id).to.equal(sku.id)
-      expect(res.tags).to.deep.equal(payload.tags)
+      expect(res.id).to.equal('productId')
     })
 
     it('should use the alias to delete a \'sku\'', async () => {
-      await operator.sku(sku.id).delete()
+      mockApi().delete('/products/productId')
+        .reply(200)
+      await operator.sku('productId').delete()
     })
   })
 }
