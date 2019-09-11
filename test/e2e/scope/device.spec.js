@@ -11,7 +11,7 @@ module.exports = () => {
 
     it('should represent a Thng', async () => {
       mockApi().get('/thngs/deviceThngId')
-        .reply({ id: 'deviceThngId', apiKey: 'apiKey' })
+        .reply(200, { id: 'deviceThngId', apiKey: 'apiKey' })
       const res = await device.init()
 
       expect(res).to.be.an('object')

@@ -1,4 +1,4 @@
-const { Operator, Application, TrustedApplication, Device, api } = require('evrythng')
+const { Operator, Application, TrustedApplication, Device, api } = require('../..')
 const nock = require('nock')
 
 const OPERATOR_API_KEY = 'OPERATOR_API_KEY'

@@ -1,6 +1,6 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
-const { ActionApp } = require('evrythng')
+const { ActionApp } = require('../../../')
 
 // Mocks
 global.localStorage = {

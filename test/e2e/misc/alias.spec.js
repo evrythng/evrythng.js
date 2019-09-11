@@ -1,6 +1,6 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
-const evrythng = require('evrythng')
+const evrythng = require('../../../')
 
 module.exports = () => {
   describe('alias', () => {

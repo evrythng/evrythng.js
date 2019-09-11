@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { api } = require('evrythng')
+const { api } = require('../../../')
 const { mockApi } = require('../util')
 
 const apiKey = process.env.OPERATOR_API_KEY
