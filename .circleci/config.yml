@@ -6,14 +6,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: 'Install SDK dependencies'
+          name: 'Install dependencies'
           command: 'npm ci'
       - run:
           name: 'Build SDK'
           command: 'npm run build'
-      - run:
-          name: 'Install test dependencies'
-          command: 'cd test/e2e && npm ci'
       - run:
           name: 'E2E tests'
           command: 'npm test'
