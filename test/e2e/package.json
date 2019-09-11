@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.spec.js",
   "scripts": {
-    "test": "mocha index.spec.js --timeout 10000"
+    "test": "mocha index.spec.js"
   },
   "keywords": [],
   "author": "",
