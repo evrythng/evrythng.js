@@ -7,7 +7,6 @@ process.on('unhandledRejection', console.error)
 
 describe('evrythng.js', () => {
   before(setup)
-  // after(teardown)
 
   describe('as Application', () => {
     require('./entity/user.spec')('application')

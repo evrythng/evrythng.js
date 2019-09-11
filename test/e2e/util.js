@@ -80,20 +80,11 @@ const setup = async () => {
   }
 }
 
-/**
- * Clean up resources set up in setup().
- */
-const teardown = async () => {
-  await scopes.operator.thng(resources.deviceThng.id).delete()
-  await scopes.operator.project(resources.appProject.id).delete()
-}
-
 const getScope = type => scopes[type]
 
 module.exports = {
   resources,
   setup,
-  teardown,
   getScope,
   mockApi
 }
