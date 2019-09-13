@@ -35,7 +35,7 @@ module.exports = (scopeType) => {
       const res = await scope.purchaseOrder().read()
 
       expect(res).to.be.an('array')
-      expect(res).to.have.length.gte(1)
+      expect(res).to.have.length.gte(0)
     })
 
     if (scopeType === 'operator') {
