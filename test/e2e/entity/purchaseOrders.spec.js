@@ -31,7 +31,14 @@ module.exports = (scopeType) => {
       scope = getScope(scopeType)
     })
 
-    if (['operator'].includes(scopeType)) {
+    it('should read all purchase orders', async () => {
+      const res = await scope.purchaseOrder().read()
+
+      expect(res).to.be.an('array')
+      expect(res).to.have.length.gte(1)
+    })
+
+    if (scopeType === 'operator') {
       it('should create a purchase order', async () => {
         purchaseOrder = await scope.purchaseOrder().create(payload)
 
@@ -44,16 +51,7 @@ module.exports = (scopeType) => {
         expect(res).to.be.an('object')
         expect(res.id).to.equal(purchaseOrder.id)
       })
-    }
 
-    it('should read all purchase orders', async () => {
-      const res = await scope.purchaseOrder().read()
-
-      expect(res).to.be.an('array')
-      expect(res).to.have.length.gte(1)
-    })
-
-    if (scopeType === 'operator') {
       it('should update a purchase order', async () => {
         payload.lines[0].quantity = 150
         const res = await scope.purchaseOrder(purchaseOrder.id).update(payload)
