@@ -66,6 +66,7 @@ describe('evrythng.js', () => {
     require('./entity/rules.spec')()
     require('./entity/secretKey.spec')()
     require('./entity/shipmentNotice.spec')()
+    require('./entity/shipmentNoticeContainer.spec')()
     require('./entity/shortDomains.spec')()
     require('./entity/tasks.spec')()
     require('./entity/thngs.spec')('operator')
