@@ -1,78 +1,85 @@
 const chai = require('chai')
-const { getScope } = require('../util')
+const { getScope, mockApi } = require('../util')
 const chaiAsPromised = require('chai-as-promised')
 
 const { expect } = chai
 chai.use(chaiAsPromised)
 
-const payload = { name: 'Test Thng', identifiers: { serial: `s-${Date.now()}` } }
+const payload = { name: 'Test Thng', identifiers: { serial: '8230947' } }
 
 module.exports = () => {
   describe('upsert', () => {
-    let operator, thng1, thng2, thng3
+    let operator
 
     before(async () => {
       operator = getScope('operator')
     })
 
-    after(async () => {
-      await operator.thng(thng1.id).delete()
-      await operator.thng(thng2.id).delete()
-      await operator.thng(thng3.id).delete()
-    })
-
     it('should create a Thng by identifiers', async () => {
-      thng1 = await operator.thng().upsert(payload, payload.identifiers)
+      mockApi().get('/thngs?filter=identifiers.serial%3D8230947')
+        .reply(200, [])
+      mockApi().post('/thngs', payload)
+        .reply(201, payload)
+      const res = await operator.thng().upsert(payload, payload.identifiers)
 
-      expect(thng1).to.be.an('object')
-      expect(thng1.name).to.equal(payload.name)
-      expect(thng1.identifiers).to.deep.equal(payload.identifiers)
+      expect(res).to.be.an('object')
+      expect(res.name).to.equal(payload.name)
+      expect(res.identifiers).to.deep.equal(payload.identifiers)
     })
 
     it('should update the same Thng by identifiers', async () => {
       payload.name = 'Updated Thng'
+      mockApi().get('/thngs?filter=identifiers.serial%3D8230947')
+        .reply(200, [{ id: 'thngId', name: 'Updated Thng' }])
+      mockApi().put('/thngs/thngId', payload)
+        .reply(200, payload)
       const res = await operator.thng().upsert(payload, payload.identifiers)
 
       expect(res).to.be.an('object')
-      expect(res.id).to.equal(thng1.id)
       expect(res.name).to.equal(payload.name)
-      expect(res.createdAt).to.not.equal(res.updatedAt)
     })
 
     it('should refuse to update if more than one Thng is found', async () => {
-      thng2 = await operator.thng().create(payload)
-
+      mockApi().get('/thngs?filter=identifiers.serial%3D8230947')
+        .reply(200, [{ id: 'thngId' }, { id: 'thngId2' }])
       const attempt = operator.thng().upsert(payload, payload.identifiers)
       return expect(attempt).to.eventually.be.rejected
     })
 
     it('should allow overriding with allowPlural', async () => {
       payload.name = 'Twice Updated Thng'
+      mockApi().get('/thngs?filter=identifiers.serial%3D8230947')
+        .reply(200, [{ id: 'thngId' }, { id: 'thngId2' }])
+      mockApi().put('/thngs/thngId', payload)
+        .reply(200, { id: 'thngId' })
       const res = await operator.thng().upsert(payload, payload.identifiers, true)
 
       expect(res).to.be.an('object')
-      expect(res.id).to.equal(thng2.id)
-      expect(res.name).to.equal(payload.name)
-      expect(res.createdAt).to.not.equal(res.updatedAt)
+      expect(res.id).to.equal('thngId')
     })
 
     it('should create a Thng by name', async () => {
-      payload.name = `Thng ${Date.now()}`
-      thng3 = await operator.thng().upsert(payload, payload.name)
+      payload.name = `New Thng Name`
+      mockApi().get('/thngs?filter=name%3DNew%20Thng%20Name')
+        .reply(200, [])
+      mockApi().post('/thngs', payload)
+        .reply(200, { id: 'thngId', name: 'New Thng Name' })
+      const res = await operator.thng().upsert(payload, payload.name)
 
-      expect(thng3).to.be.an('object')
-      expect(thng3.name).to.equal(payload.name)
-      expect(thng3.identifiers).to.deep.equal(payload.identifiers)
+      expect(res).to.be.an('object')
+      expect(res.name).to.equal(payload.name)
     })
 
     it('should update a Thng by name', async () => {
       payload.tags = ['test', 'tags']
+      mockApi().get('/thngs?filter=name%3DNew%20Thng%20Name')
+        .reply(200, [{ id: 'thngId' }])
+      mockApi().put('/thngs/thngId', payload)
+        .reply(200, payload)
       const res = await operator.thng().upsert(payload, payload.name)
 
       expect(res).to.be.an('object')
-      expect(res.id).to.equal(thng3.id)
       expect(res.name).to.equal(payload.name)
-      expect(res.createdAt).to.not.equal(res.updatedAt)
       expect(res.tags).to.deep.equal(payload.tags)
     })
   })

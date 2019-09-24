@@ -1,42 +1,39 @@
 const { expect } = require('chai')
-const { getScope } = require('../util')
+const { getScope, mockApi } = require('../util')
 
 module.exports = () => {
   describe('Accesses', () => {
-    let operator, account, access
+    let operator
 
     before(async () => {
       operator = getScope('operator')
-
-      const accounts = await operator.sharedAccount().read()
-      account = accounts[0]
     })
 
     it('should read all account accesses', async () => {
-      const res = await operator.sharedAccount(account.id).access().read()
-      access = res[0]
+      mockApi().get('/accounts/accountId/accesses')
+        .reply(200, [{ id: 'accessId' }])
+      const res = await operator.sharedAccount('accountId').access().read()
 
       expect(res).to.have.length.gte(1)
-      expect(access.account).to.equal(account.id)
-      expect(access.apiKey).to.have.length(80)
     })
 
     it('should read a single account access', async () => {
-      const res = await operator.sharedAccount(account.id).access(access.id).read()
+      mockApi().get('/accounts/accountId/accesses/accessId')
+        .reply(200, { id: 'accessId' })
+      const res = await operator.sharedAccount('accountId').access('accessId').read()
 
       expect(res).to.be.an('object')
-      expect(res.id).to.equal(access.id)
-      expect(res.account).to.equal(account.id)
-      expect(res.apiKey).to.have.length(80)
+      expect(res.id).to.be.a('string')
     })
 
     it('should update a single account access', async () => {
-      const payload = { role: access.role }
-      const res = await operator.sharedAccount(account.id).access(access.id).update(payload)
+      const payload = { role: 'admin' }
+      mockApi().put('/accounts/accountId/accesses/accessId', payload)
+        .reply(200, { id: 'accessId' })
+      const res = await operator.sharedAccount('accountId').access('accessId').update(payload)
 
       expect(res).to.be.an('object')
-      expect(res.id).to.equal(access.id)
-      expect(res.role).to.equal(payload.role)
+      expect(res.id).to.equal('accessId')
     })
   })
 }

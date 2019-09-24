@@ -1,39 +1,37 @@
 const { expect } = require('chai')
-const { getScope } = require('../util')
+const { getScope, mockApi } = require('../util')
 
 const describeOperatorPermissionTests = () => {
   describe('Permissions (Operator Roles)', () => {
-    let operator, role
+    let operator
 
     before(async () => {
       operator = getScope('operator')
-      role = await operator.role().create({ name: 'test role' })
-    })
-
-    after(async () => {
-      await operator.role(role.id).delete()
     })
 
     it('should read all role permissions', async () => {
-      const res = await operator.role(role.id).permission().read()
+      mockApi().get('/roles/roleId/permissions')
+        .reply(200, [{ name: 'global_read' }])
+      const res = await operator.role('roleId').permission().read()
 
       expect(res).to.be.an('array')
-      expect(res).to.have.length.gte(2)
-      expect(res[0].name).to.equal('global_read')
+      expect(res).to.have.length.gte(1)
     })
 
     it('should read a single role permission', async () => {
-      const name = 'global_read'
-      const res = await operator.role(role.id).permission(name).read()
+      mockApi().get('/roles/roleId/permissions/global_read')
+        .reply(200, { name: 'global_read' })
+      const res = await operator.role('roleId').permission('global_read').read()
 
       expect(res).to.be.an('object')
-      expect(res.name).to.equal(name)
+      expect(res.name).to.equal('global_read')
     })
 
     it('should update a single role permission', async () => {
-      const name = 'global_read'
-      const payload = { name, enabled: false }
-      const res = await operator.role(role.id).permission(name).update(payload)
+      const payload = { name: 'global_read', enabled: false }
+      mockApi().put('/roles/roleId/permissions/global_read', payload)
+        .reply(200, payload)
+      const res = await operator.role('roleId').permission('global_read').update(payload)
 
       expect(res).to.be.an('object')
       expect(res.enabled).to.equal(false)
@@ -43,44 +41,38 @@ const describeOperatorPermissionTests = () => {
 
 const describeAppUserPermissionTests = () => {
   describe('Permissions (App User Roles)', () => {
-    let operator, role
+    let operator
 
     before(async () => {
       operator = getScope('operator')
-
-      const payload = {
-        name: 'test role',
-        type: 'userInApp',
-        version: 2
-      }
-      role = await operator.role().create(payload)
-    })
-
-    after(async () => {
-      await operator.role(role.id).delete()
     })
 
     it('should read all role permissions', async () => {
-      const res = await operator.role(role.id).permission().read()
+      mockApi().get('/roles/roleId/permissions')
+        .reply(200, [{ access: 'cru', path: '/thngs' }])
+      const res = await operator.role('roleId').permission().read()
 
       expect(res).to.be.an('array')
-      expect(res).to.have.length.gte(5)
+      expect(res).to.have.length.gte(1)
     })
 
     it('should update role permissions', async () => {
       const payload = [{ path: '/thngs', access: 'cr' }]
-      const res = await operator.role(role.id).permission().update(payload)
+      mockApi().put('/roles/roleId/permissions', payload)
+        .reply(200, payload)
+      const res = await operator.role('roleId').permission().update(payload)
 
       expect(res).to.be.an('array')
-      expect(res).to.have.length.gte(6)
+      expect(res).to.have.length.gte(1)
     })
 
     it('should minimise role permissions', async () => {
       const payload = []
-      const res = await operator.role(role.id).permission().update(payload)
+      mockApi().put('/roles/roleId/permissions', payload)
+        .reply(200, payload)
+      const res = await operator.role('roleId').permission().update(payload)
 
       expect(res).to.be.an('array')
-      expect(res).to.have.length.gte(5)
     })
   })
 }

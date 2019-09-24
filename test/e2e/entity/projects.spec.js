@@ -1,25 +1,28 @@
 const { expect } = require('chai')
-const { getScope } = require('../util')
-
-const PROJECT_NAME = 'test'
+const { getScope, mockApi } = require('../util')
 
 module.exports = () => {
   describe('Projects', () => {
-    let operator, project
+    let operator
 
     before(() => {
       operator = getScope('operator')
     })
 
     it('should create a project', async () => {
-      project = await operator.project().create({ name: PROJECT_NAME })
+      const payload = { name: 'Test Project' }
+      mockApi().post('/projects', payload)
+        .reply(201, payload)
 
-      expect(project).to.be.an('object')
-      expect(project.name).to.equal(PROJECT_NAME)
-      expect(project.id).to.have.length(24)
+      const res = await operator.project().create(payload)
+
+      expect(res).to.be.an('object')
+      expect(res.name).to.equal('Test Project')
     })
 
     it('should read all projects', async () => {
+      mockApi().get('/projects')
+        .reply(200, [{ id: 'projectId' }])
       const res = await operator.project().read()
 
       expect(res).to.be.an('array')
@@ -27,22 +30,28 @@ module.exports = () => {
     })
 
     it('should read a project', async () => {
-      const res = await operator.project(project.id).read()
+      mockApi().get('/projects/projectId')
+        .reply(200, { id: 'projectId' })
+      const res = await operator.project('projectId').read()
 
       expect(res).to.be.an('object')
-      expect(res.id).to.equal(project.id)
+      expect(res.id).to.be.a('string')
     })
 
     it('should update a project', async () => {
       const payload = { tags: ['updated'] }
-      const res = await operator.project(project.id).update(payload)
+      mockApi().put('/projects/projectId', payload)
+        .reply(200, payload)
+      const res = await operator.project('projectId').update(payload)
 
       expect(res).to.be.an('object')
-      expect(res.tags).to.deep.equal(payload.tags)
+      expect(res.tags).to.deep.equal(['updated'])
     })
 
     it('should delete a project', async () => {
-      await operator.project(project.id).delete()
+      mockApi().delete('/projects/projectId')
+        .reply(200)
+      await operator.project('projectId').delete()
     })
   })
 }

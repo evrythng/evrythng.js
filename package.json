@@ -8,7 +8,8 @@
     "build": "webpack --config webpack.config.js --mode production",
     "build-dev": "webpack --config webpack.config.js --mode development",
     "show-notice": "echo '\n    New to evrythng.js v5? Make sure to read the migration guide:\n    https://developers.evrythng.com/docs/evrythngjs-v500\n'",
-    "postinstall": "npm run --silent show-notice"
+    "postinstall": "npm run --silent show-notice",
+    "test": "mocha test/e2e/index.spec.js"
   },
   "repository": {
     "type": "git",
@@ -39,8 +40,12 @@
     "acorn": "^6.1.1",
     "ajv": "^6.10.0",
     "babel-loader": "^8.0.5",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "fetch-mock": "^5.8.1",
     "lodash-es": "^4.17.2",
+    "mocha": "^6.2.0",
+    "nock": "^11.3.3",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
   },

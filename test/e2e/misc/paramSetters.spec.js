@@ -1,28 +1,23 @@
 const { expect } = require('chai')
-const { getScope } = require('../util')
+const { getScope, mockApi } = require('../util')
 
 module.exports = () => {
   describe('Param Setters', () => {
-    let operator, project, thng
+    let operator
 
     before(async () => {
       operator = getScope('operator')
-
-      const payload = { name: 'Test' }
-      project = await operator.project().create(payload)
-
-      const params = { project: project.id }
-      thng = await operator.thng().create(payload, { params })
-
-      await operator.action('scans').create({ type: 'scans', thng: thng.id })
-    })
-
-    after(async () => {
-      await operator.thng(thng.id).delete()
-      await operator.project(project.id).delete()
     })
 
     it('should set withScopes via setWithScopes', async () => {
+      mockApi().get('/thngs?withScopes=true')
+        .reply(200, [{
+          name: 'Thng 1',
+          scopes: {
+            project: [],
+            users: ['all']
+          }
+        }])
       const res = await operator.thng().setWithScopes().read()
 
       expect(res).to.be.an('array')
@@ -31,6 +26,11 @@ module.exports = () => {
     })
 
     it('should set context via setContext', async () => {
+      mockApi().get('/actions/all?context=true')
+        .reply(200, [{
+          type: 'scans',
+          context: { countryCode: 'GB' }
+        }])
       const res = await operator.action('all').setContext().read()
 
       expect(res).to.be.an('array')
@@ -39,6 +39,8 @@ module.exports = () => {
     })
 
     it('should set perPage via setPerPage', async () => {
+      mockApi().get('/thngs?perPage=1')
+        .reply(200, [{ name: 'Thng 1' }])
       const res = await operator.thng().setPerPage(1).read()
 
       expect(res).to.be.an('array')
@@ -46,13 +48,17 @@ module.exports = () => {
     })
 
     it('should set project via setProject', async () => {
-      const res = await operator.thng().setProject(project.id).read()
+      mockApi().get('/thngs?project=projectId')
+        .reply(200, [{ name: 'Thng 1' }])
+      const res = await operator.thng().setProject('projectId').read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
     })
 
     it('should set filter via setFilter', async () => {
+      mockApi().get('/thngs?filter=name%3DTest')
+        .reply(200, [{ name: 'Test' }])
       const res = await operator.thng().setFilter('name=Test').read()
 
       expect(res).to.be.an('array')
@@ -60,16 +66,25 @@ module.exports = () => {
     })
 
     it('should set ids via setIds', async () => {
-      const thng2 = await operator.thng().create({ name: 'Test' })
-      const ids = (await operator.thng().read()).map(p => p.id)
+      const payload = [{ id: 'thngId1' }, { id: 'thngId2' }]
+      mockApi().get('/thngs?ids=thngId1%2CthngId2')
+        .reply(200, payload)
+      const res = await operator.thng().setIds(payload.map(p => p.id)).read()
 
-      const res = await operator.thng().setIds(ids).read()
-      expect(res.length).to.equal(ids.length)
+      expect(res.length).to.equal(payload.length)
     })
 
     it('should allow chaining of multiple param setters', async () => {
+      mockApi().get('/thngs?project=projectId&filter=name%3DTest&perPage=1&withScopes=true')
+        .reply(200, [{
+          name: 'Test',
+          scopes: {
+            project: [],
+            users: ['all']
+          }
+        }])
       const res = await operator.thng()
-        .setProject(project.id)
+        .setProject('projectId')
         .setFilter('name=Test')
         .setPerPage(1)
         .setWithScopes()
