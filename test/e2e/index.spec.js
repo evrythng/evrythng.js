@@ -21,6 +21,7 @@ describe('evrythng.js', () => {
     require('./entity/products.spec')('anonUser')
     require('./entity/properties.spec')('anonUser', 'product')
     require('./entity/properties.spec')('anonUser', 'thng')
+    require('./entity/purchaseOrders.spec')('anonUser')
     require('./entity/roles.spec')('anonUser')
     require('./entity/thngs.spec')('anonUser')
   })
@@ -34,6 +35,7 @@ describe('evrythng.js', () => {
     require('./entity/products.spec')('trustedApplication')
     require('./entity/properties.spec')('trustedApplication', 'product')
     require('./entity/properties.spec')('trustedApplication', 'thng')
+    require('./entity/purchaseOrders.spec')('trustedApplication')
     require('./entity/thngs.spec')('trustedApplication')
   })
 
@@ -59,6 +61,7 @@ describe('evrythng.js', () => {
     require('./entity/projects.spec')()
     require('./entity/properties.spec')('operator', 'product')
     require('./entity/properties.spec')('operator', 'thng')
+    require('./entity/purchaseOrders.spec')('operator')
     require('./entity/reactor.spec')('operator')
     require('./entity/redirection.spec')('operator', 'product')
     require('./entity/redirection.spec')('operator', 'thng')

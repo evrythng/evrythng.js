@@ -7,6 +7,7 @@ import ActionType from '../entity/ActionType'
 import Role from '../entity/Role'
 import Rule from '../entity/Rule'
 import Place from '../entity/Place'
+import PurchaseOrder from '../entity/PurchaseOrder'
 import { mixinResources } from '../util/mixin'
 import api from '../api'
 import symbols from '../symbols'
@@ -22,6 +23,7 @@ const AppUser = mixinResources([
   Collection, // CRU
   Action, // CR
   ActionType, // R
+  PurchaseOrder, // R
   Role, // R
   Rule,
   Place // R
