@@ -3,6 +3,7 @@ import Thng from '../entity/Thng'
 import Collection from '../entity/Collection'
 import ActionType from '../entity/ActionType'
 import User from '../entity/User'
+import PurchaseOrder from '../entity/PurchaseOrder'
 import ReactorSchedule from '../entity/ReactorSchedule'
 import ReactorLog from '../entity/ReactorLog'
 import { mixinResources } from '../util/mixin'
@@ -27,6 +28,7 @@ const ApplicationAccess = mixinResources([
   Collection, // CRUD
   ActionType, // CR
   User, // R
+  PurchaseOrder, // R
   ReactorSchedule, // C
   ReactorLog // C
 
