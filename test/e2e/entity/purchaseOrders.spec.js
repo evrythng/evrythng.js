@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { getScope } = require('../util')
+const { getScope, mockApi } = require('../util')
 
 const payload = {
   id: `${Date.now()}`,
@@ -25,43 +25,57 @@ const payload = {
 
 module.exports = (scopeType) => {
   describe('Purchase Orders', () => {
-    let scope, purchaseOrder
+    let scope
 
     before(() => {
       scope = getScope(scopeType)
     })
 
     it('should read all purchase orders', async () => {
+      mockApi().get('/purchaseOrders')
+        .reply(200, [payload])
+
       const res = await scope.purchaseOrder().read()
 
       expect(res).to.be.an('array')
-      expect(res).to.have.length.gte(0)
+      expect(res).to.have.length.gte(1)
     })
 
     if (scopeType === 'operator') {
       it('should create a purchase order', async () => {
-        purchaseOrder = await scope.purchaseOrder().create(payload)
+        mockApi().post('/purchaseOrders', payload)
+          .reply(201, payload)
 
-        expect(purchaseOrder).to.be.an('object')
+        const res = await scope.purchaseOrder().create(payload)
+
+        expect(res).to.be.an('object')
       })
 
       it('should read a purchase order', async () => {
-        const res = await scope.purchaseOrder(purchaseOrder.id).read()
+        mockApi().get('/purchaseOrders/purchaseOrderId')
+          .reply(200, payload)
+
+        const res = await scope.purchaseOrder('purchaseOrderId').read()
 
         expect(res).to.be.an('object')
-        expect(res.id).to.equal(purchaseOrder.id)
+        expect(res.id).to.equal(payload.id)
       })
 
       it('should update a purchase order', async () => {
-        payload.lines[0].quantity = 150
-        const res = await scope.purchaseOrder(purchaseOrder.id).update(payload)
+        mockApi().put('/purchaseOrders/purchaseOrderId', payload)
+          .reply(200, payload)
+
+        const res = await scope.purchaseOrder('purchaseOrderId').update(payload)
 
         expect(res).to.be.an('object')
         expect(res.tags).to.deep.equal(payload.tags)
       })
 
       it('should delete a purchaseOrder', async () => {
-        await scope.purchaseOrder(purchaseOrder.id).delete()
+        mockApi().delete('/purchaseOrders/purchaseOrderId')
+          .reply(204)
+
+        await scope.purchaseOrder('purchaseOrderId').delete()
       })
     }
   })
