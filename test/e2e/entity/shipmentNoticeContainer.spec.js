@@ -1,5 +1,4 @@
 const { expect } = require('chai')
-const nock = require('nock')
 const { getScope, mockApi } = require('../util')
 
 const payload = {
@@ -19,16 +18,10 @@ const payload = {
 
 module.exports = () => {
   describe('Shipment Notice Containers', () => {
-    let operator, container
+    let operator
 
     before(() => {
       operator = getScope('operator')
-    })
-
-    after(() => {
-      // Last use of nock right now
-      nock.cleanAll()
-      nock.enableNetConnect()
     })
 
     it('should create a shipment notice container', async () => {
@@ -36,39 +29,40 @@ module.exports = () => {
         .post('/shipmentNotices/containers', payload)
         .reply(201, payload)
 
-      container = await operator.shipmentNoticeContainer().create(payload)
+      const res = await operator.shipmentNoticeContainer().create(payload)
 
-      expect(container).to.be.an('object')
+      expect(res).to.be.an('object')
+      expect(res.containerId).to.equal(payload.containerId)
     })
 
     it('should read a shipment notice container', async () => {
       mockApi()
-        .get(`/shipmentNotices/containers/${container.containerId}`)
-        .reply(200, container)
+        .get('/shipmentNotices/containers/containerId')
+        .reply(200, payload)
 
-      const res = await operator.shipmentNoticeContainer(container.containerId).read()
+      const res = await operator.shipmentNoticeContainer('containerId').read()
 
       expect(res).to.be.an('object')
-      expect(res.containerId).to.equal(container.containerId)
+      expect(res.containerId).to.equal(payload.containerId)
     })
 
     it('should update a shipment notice container', async () => {
       mockApi()
-        .put(`/shipmentNotices/containers/${container.containerId}`)
-        .reply(200, container)
+        .put('/shipmentNotices/containers/containerId')
+        .reply(200, payload)
 
-      const res = await operator.shipmentNoticeContainer(container.containerId).update(container)
+      const res = await operator.shipmentNoticeContainer('containerId').update(payload)
 
       expect(res).to.be.an('object')
-      expect(res.tags).to.deep.equal(container.tags)
+      expect(res.tags).to.deep.equal(payload.tags)
     })
 
     it('should delete a shipment notice container', async () => {
       mockApi()
-        .delete(`/shipmentNotices/containers/${container.containerId}`)
+        .delete('/shipmentNotices/containers/containerId')
         .reply(204)
 
-      await operator.shipmentNoticeContainer(container.containerId).delete()
+      await operator.shipmentNoticeContainer('containerId').delete()
     })
   })
 }
