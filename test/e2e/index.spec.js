@@ -1,5 +1,5 @@
 const { resources, getScope, setup, teardown } = require('./util')
-const evrythng = require('evrythng')
+const evrythng = require('../../')
 
 evrythng.setup({ geolocation: false })
 
@@ -7,7 +7,6 @@ process.on('unhandledRejection', console.error)
 
 describe('evrythng.js', () => {
   before(setup)
-  after(teardown)
 
   describe('as Application', () => {
     require('./entity/user.spec')('application')
@@ -24,13 +23,6 @@ describe('evrythng.js', () => {
     require('./entity/properties.spec')('anonUser', 'thng')
     require('./entity/roles.spec')('anonUser')
     require('./entity/thngs.spec')('anonUser')
-
-    after(async () => {
-      const operator = getScope('operator')
-      await operator.thng(resources.thng.id).delete()
-      await operator.product(resources.product.id).delete()
-      await operator.collection(resources.collection.id).delete()
-    })
   })
 
   describe('as Trusted Application', () => {
@@ -77,11 +69,6 @@ describe('evrythng.js', () => {
     require('./entity/tasks.spec')()
     require('./entity/thngs.spec')('operator')
     require('./entity/user.spec')('operator')
-
-    after(async () => {
-      const operator = getScope('operator')
-      await operator.user(resources.namedUser.id).delete()
-    })
   })
 
   describe('as Device', () => {

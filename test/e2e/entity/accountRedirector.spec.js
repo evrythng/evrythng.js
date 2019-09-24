@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { getScope } = require('../util')
+const { getScope, mockApi } = require('../util')
 
 module.exports = () => {
   describe('Account Redirector', () => {
@@ -10,6 +10,8 @@ module.exports = () => {
     })
 
     it('should read the account Redirector', async () => {
+      mockApi().get('/redirector')
+        .reply(200, { rules: [] })
       const res = await operator.redirector().read()
 
       expect(res).to.be.an('object')
@@ -20,6 +22,8 @@ module.exports = () => {
       const payload = {
         rules: [{ match: 'thng.name=test' }]
       }
+      mockApi().put('/redirector', payload)
+        .reply(200, payload)
       const res = await operator.redirector().update(payload)
 
       expect(res.rules).to.deep.equal(payload.rules)

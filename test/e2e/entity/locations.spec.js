@@ -1,39 +1,41 @@
 const { expect } = require('chai')
-const { getScope } = require('../util')
+const { getScope, mockApi } = require('../util')
 
 module.exports = (scopeType) => {
-  let scope, thng
+  let scope
 
   describe('Locations', () => {
     before(async () => {
       scope = getScope(scopeType)
-      thng = await scope.thng().create({ name: 'test' })
-    })
-
-    after(async () => {
-      const operator = getScope('operator')
-      await operator.thng(thng.id).delete()
     })
 
     it('should update a Thng\'s location', async () => {
       const payload = [{
         position: { type: 'Point', coordinates: [-17.3, 36] }
       }]
-      const res = await scope.thng(thng.id).locations().update(payload)
+      mockApi().put('/thngs/thngId/location', payload)
+        .reply(200, payload)
+      const res = await scope.thng('thngId').locations().update(payload)
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
     })
 
     it('should read a Thng\'s location', async () => {
-      const res = await scope.thng(thng.id).locations().read()
+      mockApi().get('/thngs/thngId/location')
+        .reply(200, [{
+          position: { type: 'Point', coordinates: [-17.3, 36] }
+        }])
+      const res = await scope.thng('thngId').locations().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
     })
 
     it('should delete a Thng\'s location', async () => {
-      await scope.thng(thng.id).locations().delete()
+      mockApi().delete('/thngs/thngId/location')
+        .reply(200)
+      await scope.thng('thngId').locations().delete()
     })
   })
 }

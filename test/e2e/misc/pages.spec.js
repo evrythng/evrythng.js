@@ -1,39 +1,41 @@
 const { expect } = require('chai')
-const { getScope } = require('../util')
-
-const PER_PAGE = 2
-const NUM_TEST_THNGS = 5
+const { getScope, mockApi } = require('../util')
 
 module.exports = (scopeType) => {
   describe('pages', () => {
     let scope
-    const thngs = []
 
     before(async () => {
       scope = getScope(scopeType)
-
-      for (let i = 0; i < NUM_TEST_THNGS; i += 1) {
-        thngs.push(await scope.thng().create({ name: 'test' }))
-      }
-    })
-
-    after(async () => {
-      for (let i = 0; i < NUM_TEST_THNGS; i += 1) {
-        await scope.thng(thngs[i].id).delete()
-      }
     })
 
     it('should read thngs through an async iterator', async () => {
-      const params = { perPage: PER_PAGE }
+      const params = { perPage: 2 }
       const it = scope.thng().pages({ params })
+      mockApi().get('/thngs?perPage=2')
+        .reply(
+          200,
+          [{ name: 'Thng 1' }, { name: 'Thng 2' }],
+          {
+            link: '<https%3A%2F%2Fapi.evrythng.com%2Fthngs%3FperPage%3D2%26sortOrder%3DDESCENDING%26nextPageToken%3DU7hXyw5DVQ8QT7fYsbyEpdAp>; rel="next"'
+          }
+        )
       let page = await it.next()
 
-      expect(page.value.length).to.equal(PER_PAGE)
+      expect(page.value.length).to.equal(2)
       expect(page.done).to.equal(false)
 
+      mockApi().get('/thngs?perPage=2&sortOrder=DESCENDING&nextPageToken=U7hXyw5DVQ8QT7fYsbyEpdAp')
+        .reply(
+          200,
+          [{ name: 'Thng 3' }, { name: 'Thng 4' }],
+          {
+            link: '<https%3A%2F%2Fapi.evrythng.com%2Fthngs%3FperPage%3D2%26sortOrder%3DDESCENDING%26nextPageToken%3DUprntQaysgRph8aRwFTAKPtn>; rel="next"'
+          }
+        )
       page = await it.next()
 
-      expect(page.value.length).to.equal(PER_PAGE)
+      expect(page.value.length).to.equal(2)
       expect(page.done).to.equal(false)
     })
   })

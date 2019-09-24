@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { resources, getScope } = require('../util')
+const { getScope, mockApi } = require('../util')
 
 module.exports = (scopeType) => {
   describe('Thngs', () => {
@@ -10,28 +10,27 @@ module.exports = (scopeType) => {
     })
 
     it('should create a Thng', async () => {
-      const payload = {
-        name: 'Test Thng',
-        customFields: {
-          color: 'red',
-          serial: Date.now()
-        }
-      }
+      const payload = { name: 'Test Thng' }
+      mockApi().post('/thngs', payload)
+        .reply(201, payload)
+      const res = await scope.thng().create(payload)
 
-      resources.thng = await scope.thng().create(payload)
-
-      expect(resources.thng).to.be.an('object')
-      expect(resources.thng.customFields).to.deep.equal(payload.customFields)
+      expect(res).to.be.an('object')
+      expect(res.name).to.equal(payload.name)
     })
 
     it('should read a Thng', async () => {
-      const res = await scope.thng(resources.thng.id).read()
+      mockApi().get('/thngs/thngId')
+        .reply(200, { id: 'thngId' })
+      const res = await scope.thng('thngId').read()
 
       expect(res).to.be.an('object')
-      expect(res.id).to.equal(resources.thng.id)
+      expect(res.id).to.equal('thngId')
     })
 
     it('should read all Thngs', async () => {
+      mockApi().get('/thngs')
+        .reply(200, [{ id: 'thngId' }])
       const res = await scope.thng().read()
 
       expect(res).to.be.an('array')
@@ -40,15 +39,19 @@ module.exports = (scopeType) => {
 
     it('should update a Thng', async () => {
       const payload = { tags: ['updated'] }
-      const res = await scope.thng(resources.thng.id).update(payload)
+      mockApi().put('/thngs/thngId', payload)
+        .reply(200, payload)
+      const res = await scope.thng('thngId').update(payload)
 
       expect(res).to.be.an('object')
-      expect(res.tags).to.deep.equal(payload.tags)
+      expect(res.tags).to.deep.equal(['updated'])
     })
 
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should delete a Thng', async () => {
-        await scope.thng(resources.thng.id).delete()
+        mockApi().delete('/thngs/thngId')
+          .reply(200)
+        await scope.thng('thngId').delete()
       })
     }
   })

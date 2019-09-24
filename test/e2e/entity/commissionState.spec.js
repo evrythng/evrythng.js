@@ -1,30 +1,18 @@
 const { expect } = require('chai')
-const { getScope } = require('../util')
-
-const thngTemplate = {
-  name: 'test',
-  identifiers: {
-    'gs1:21': '23984736'
-  }
-}
+const { getScope, mockApi } = require('../util')
 
 module.exports = (scopeType) => {
-  let scope, thng
+  let scope
 
   describe('Commission State', () => {
     before(async () => {
       scope = getScope(scopeType)
-      thng = await scope.thng().create(thngTemplate)
-    })
-
-    after(async () => {
-      const operator = getScope('operator')
-      await operator.thng(thng.id).delete()
     })
 
     it('should read a Thng\'s commissioning state', async () => {
-      const thngIdentifier = `gs1:21:${thngTemplate.identifiers['gs1:21']}`
-      const res = await scope.thng(thngIdentifier).commissionState().read()
+      mockApi().get('/thngs/gs1%3A21%3A23984736/commissionState')
+        .reply(200, { state: 'not_commissioned' })
+      const res = await scope.thng('gs1:21:23984736').commissionState().read()
 
       expect(res).to.be.an('object')
       expect(res.state).to.equal('not_commissioned')

@@ -1,47 +1,57 @@
 const { expect } = require('chai')
-const { getScope } = require('../util')
+const { getScope, mockApi } = require('../util')
 
 module.exports = (scopeType) => {
   describe('Roles', () => {
-    let scope, role
+    let scope
 
     before(() => {
       scope = getScope(scopeType)
     })
 
     it('should read all roles', async () => {
+      mockApi().get('/roles')
+        .reply(200, [{ id: 'roleId' }])
       const res = await scope.role().read()
 
       expect(res).to.be.an('array')
-      expect(res).to.have.length.gte(0)
+      expect(res).to.have.length.gte(1)
     })
 
     if (scopeType === 'operator') {
       it('should create a role', async () => {
         const payload = { name: 'Test Role' }
-        role = await scope.role().create(payload)
+        mockApi().post('/roles', payload)
+          .reply(201, payload)
+        const res = await scope.role().create(payload)
 
-        expect(role).to.be.an('object')
-        expect(role.name).to.equal(payload.name)
+        expect(res).to.be.an('object')
+        expect(res.name).to.equal('Test Role')
       })
 
       it('should read a role', async () => {
-        const res = await scope.role(role.id).read()
+        mockApi().get('/roles/roleId')
+          .reply(200, { id: 'roleId' })
+        const res = await scope.role('roleId').read()
 
         expect(res).to.be.an('object')
-        expect(res.id).to.equal(role.id)
+        expect(res.id).to.equal('roleId')
       })
 
       it('should update a role', async () => {
         const payload = { description: 'updated' }
-        const res = await scope.role(role.id).update(payload)
+        mockApi().put('/roles/roleId', payload)
+          .reply(200, payload)
+        const res = await scope.role('roleId').update(payload)
 
         expect(res).to.be.an('object')
-        expect(res.description).to.deep.equal(payload.description)
+        expect(res.description).to.equal(payload.description)
       })
 
       it('should delete a role', async () => {
-        await scope.role(role.id).delete()
+        mockApi().delete('/roles/roleId')
+          .reply(200)
+        await scope.role('roleId').delete()
       })
     }
   })

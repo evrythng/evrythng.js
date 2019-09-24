@@ -1,6 +1,6 @@
 const { expect } = require('chai')
-const { getScope } = require('../util')
-const evrythng = require('evrythng')
+const { getScope, mockApi } = require('../util')
+const evrythng = require('../../../')
 
 const TestPlugin = {
   install: (api) => {
@@ -21,11 +21,10 @@ module.exports = () => {
     before(async () => {
       operator = getScope('operator')
 
-      thng = await operator.thng().create({ name: 'test' })
-    })
-
-    after(async () => {
-      await operator.thng(thng.id).delete()
+      const payload = { name: 'test' }
+      mockApi().post('/thngs', payload)
+        .reply(201, payload)
+      thng = await operator.thng().create(payload)
     })
 
     it('should not throw when installing a plugin', async () => {
