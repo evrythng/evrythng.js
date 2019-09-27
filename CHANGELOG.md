@@ -1,3 +1,10 @@
+# v5.6.0 (27-9-2019)
+
+## Features
+
+- **Shipment Notices**: Add `shipmentNotice()` and `shipmentNotice().container()` for shipment notices API to Operator scope.
+
+
 # v5.5.0 (29-8-2019)
 
 ## Features
