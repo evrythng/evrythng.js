@@ -1,3 +1,17 @@
+# v5.6.0 (27-9-2019)
+
+## Features
+
+- **Purchase Orders**: Add `purchaseOrder()` for purchase orders API to Operator scope.
+
+- **Shipment Notices**: Add `shipmentNotice()` and `shipmentNotice().container()` for shipment notices API to Operator scope.
+
+
+## Fixes
+
+- **Scopes**: Prevent scopes from reading access twice when using `init()`.
+
+
 # v5.5.0 (29-8-2019)
 
 ## Features

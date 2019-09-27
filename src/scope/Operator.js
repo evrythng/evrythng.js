@@ -11,6 +11,7 @@ import PurchaseOrder from '../entity/PurchaseOrder'
 import Redirector from '../entity/Redirector'
 import Role from '../entity/Role'
 import Rule from '../entity/Rule'
+import ShipmentNotice from '../entity/ShipmentNotice'
 import User from '../entity/User'
 import Batch from '../entity/Batch'
 import Place from '../entity/Place'
@@ -36,6 +37,7 @@ const OperatorAccess = mixinResources([
   Redirector, // RU
   Role, // CRUD
   Rule,
+  ShipmentNotice, // CRUD
   User, // R
   Batch, // CRUD
   Place, // CRUD
