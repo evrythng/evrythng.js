@@ -453,6 +453,31 @@ export default class Resource {
     }
   }
 
+  /**
+   * Stream a set of resources, calling an async function for each item.
+   * Similar to stream(), but the callback presents each page.
+   *
+   * The callback is passed the page and cumulative item total (before the current page).
+   * If iteration should stop, the callback should return `true`.
+   *
+   * @param {function} eachPageCb - Async function to call for each page of items.
+   */
+  async streamPages (eachPageCb) {
+    const iterator = this.pages()
+    let totalSoFar = 0
+    let page
+    let willStop
+
+    while (!(page = await iterator.next()).done) {
+      willStop = await eachPageCb(page.value, totalSoFar)
+
+      totalSoFar += page.value.length
+      if (typeof willStop === 'boolean' && willStop) {
+        return
+      }
+    }
+  }
+
   // PRIVATE
 
   /**

@@ -91,6 +91,7 @@ describe('evrythng.js', () => {
     require('./misc/paramSetters.spec')()
     require('./misc/rescope.spec')()
     require('./misc/stream.spec')()
+    require('./misc/streamPages.spec')()
     require('./misc/upsert.spec')()
     require('./misc/use.spec')()
   })

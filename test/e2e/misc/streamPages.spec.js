@@ -2,14 +2,14 @@ const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
 module.exports = () => {
-  describe('stream', () => {
+  describe('streamPages', () => {
     let operator
 
     before(async () => {
       operator = getScope('operator')
     })
 
-    it('should stream Thngs once at a time', (done) => {
+    it('should stream pages of Thngs', (done) => {
       mockApi().get('/thngs')
         .reply(
           200,
@@ -26,17 +26,19 @@ module.exports = () => {
             link: '<https%3A%2F%2Fapi.evrythng.com%2Fthngs%3FperPage%3D2%26sortOrder%3DDESCENDING%26nextPageToken%3DUprntQaysgRph8aRwFTAKPtn>; rel="next"'
           }
         )
-      const cb = (item, index) => {
-        expect(item.name).to.be.a('string')
-        expect(index).to.be.a('number')
+      const eachPageCb = (page, totalSoFar) => {
+        expect(page.length).to.equal(2)
 
-        if (index === 2) {
+        const [item] = page;
+        expect(item.name).to.be.a('string')
+
+        if (totalSoFar === 2) {
           done()
           return true
         }
       }
 
-      operator.thng().stream(cb)
+      operator.thng().streamPages(eachPageCb)
     })
   })
 }
