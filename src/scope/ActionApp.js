@@ -81,7 +81,7 @@ export default class ActionApp extends ApplicationAccess(Scope) {
       throw new Error('Anonymous user not yet prepared. Use actionApp.init() to wait for this.')
     }
 
-    if (type.includes('_')) {
+    if (type.startsWith('_')) {
       // Check the custom action type is visible to the user
       try {
         await this.anonUser.actionType(type).read()
