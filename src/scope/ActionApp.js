@@ -72,22 +72,45 @@ export default class ActionApp extends ApplicationAccess(Scope) {
    * Helper function to create an action with extra data.
    *
    * @param {string} type - Action Type. Must exist in Application project scope.
-   * @param {object} [data] - Optional extra action data associated with the web page.
+   * @param {Object} [data] - Optional extra action data associated with the web page.
+   * @param {string} thng - Thng to use as the target. Must exist in Application project scope.
    * @returns {Promise}
    */
-  async createAction (type, data = {}) {
+  async createAction (type, data = {}, thng) {
     if (!this.anonUser) {
-      throw new Error('Anonymous not yet loaded. Use ActionApp.init() to wait for this.')
+      throw new Error('Anonymous user not yet prepared. Use actionApp.init() to wait for this.')
     }
 
-    // Check the action type is visible to the user
-    try {
-      await this.anonUser.actionType(type).read()
-    } catch (e) {
-      throw new Error('The action type was not found. Is it in project scope?')
+    if (type.includes('_')) {
+      // Check the custom action type is visible to the user
+      try {
+        await this.anonUser.actionType(type).read()
+      } catch (e) {
+        console.error(e);
+        throw new Error('The action type was not found. Is it in project scope?')
+      }
     }
 
-    return this.anonUser.action(type).create({ type, customFields: data })
+    const payload = { type, customFields: data }
+    if (thng) {
+      payload.thng = thng
+    }
+
+    return this.anonUser.action(type).create(payload)
+  }
+
+  /**
+   * Get the underlyiny anonymous Application User maintained in localStorage
+   * by this ActionApp.
+   *
+   * @returns {User} Anonymous Application User SDK Scope.
+   */
+  async getAnonymousUser () {
+    if (!this.anonUser) {
+      throw new Error('Anonymous user not yet prepared. Use actionApp.init() to wait for this.')
+    }
+
+    return this.anonUser;
   }
 
   // PRIVATE
