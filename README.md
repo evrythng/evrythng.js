@@ -140,6 +140,26 @@ const userApiKey = localStorage.getItem('user_api_key')
 const user = new evrythng.User(userApiKey)
 ```
 
+* `ActionApp` - Special version of the Application scope designed to make it as
+  simple as possible to create instrumentation actions in web apps. It creates
+  and remembers an anonymous Application User in LocalStorage and provides a
+  simple interface for creating actions:
+
+```js
+import { ActionApp } from 'evrythng'
+
+const actionApp = new ActionApp(appApiKey)
+await actionApp.init()
+
+// Create a scan action on a Thng identified in the query
+const data = { platform: 'android' }
+const thngId = getQueryParam('thng')
+const action = await actionApp.createAction('scans', data, thngId)
+
+// Retrieve the managed Application User
+const anonymousUser = await actionApp.getAnonymousUser()
+```
+
 For any scope, if the scope's own data (such as an Application's `customFields`)
 is required immediately, use the `init()` method to wait until this data is
 available. If not, this step can be ignored:
