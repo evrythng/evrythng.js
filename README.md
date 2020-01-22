@@ -152,9 +152,9 @@ const actionApp = new ActionApp(appApiKey)
 await actionApp.init()
 
 // Create a scan action on a Thng identified in the query
-const data = { platform: 'android' }
-const thngId = getQueryParam('thng')
-const action = await actionApp.createAction('scans', data, thngId)
+const thng = getQueryParam('thng')
+const data = { thng, userAgent }
+const action = await actionApp.createAction('scans', data)
 
 // Log a page was visited (the current URL)
 await actionApp.pageVisited()

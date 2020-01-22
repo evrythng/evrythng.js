@@ -73,10 +73,10 @@ export default class ActionApp extends ApplicationAccess(Scope) {
    *
    * @param {string} type - Action Type. Must exist in Application project scope.
    * @param {Object} [data] - Optional extra action data associated with the web page.
-   * @param {string} thng - Thng to use as the target. Must exist in Application project scope.
-   * @returns {Promise}
+   *                          Add 'thng' or 'product' to set that ID as the action target.
+   * @returns {Promise<Object>} The action that was created.
    */
-  async createAction (type, data = {}, thng) {
+  async createAction (type, data = {}) {
     if (!this.anonUser) {
       throw new Error('Anonymous user not yet prepared. Use actionApp.init() to wait for this.')
     }
@@ -91,9 +91,17 @@ export default class ActionApp extends ApplicationAccess(Scope) {
       }
     }
 
-    const payload = { type, customFields: data }
+    const { thng, product, ...customFields } = data;
+    if (thng && product) {
+      throw new Error('Either thng or product can be specified as target, not both');
+    }
+
+    const payload = { type, customFields }
     if (thng) {
       payload.thng = thng
+    }
+    if (product) {
+      payload.product = product
     }
 
     return this.anonUser.action(type).create(payload)

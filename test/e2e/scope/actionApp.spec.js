@@ -103,11 +103,33 @@ module.exports = () => {
           customFields: { foo: 'bar' }
         })
 
-      const res = await actionApp.createAction('scans', { foo: 'bar' }, thng)
+      const res = await actionApp.createAction('scans', { thng, foo: 'bar' })
 
       expect(res.type).to.equal('scans')
       expect(res.customFields.foo).to.equal('bar')
       expect(res.thng).to.equal('UKYDHeYCQbgDppRwRkHVMHhg')
+    })
+
+    it('should create an scans action with a product specified', async () => {
+      const product = 'UKYDHeYCQbgDppRwRkHVMHhg'
+      mockApi()
+        .post('/actions/scans', {
+          type: 'scans',
+          customFields: { foo: 'bar' },
+          product,
+        })
+        .reply(201, {
+          id: 'actionId',
+          type: 'scans',
+          product,
+          customFields: { foo: 'bar' }
+        })
+
+      const res = await actionApp.createAction('scans', { product, foo: 'bar' })
+
+      expect(res.type).to.equal('scans')
+      expect(res.customFields.foo).to.equal('bar')
+      expect(res.product).to.equal('UKYDHeYCQbgDppRwRkHVMHhg')
     })
 
     it('should re-use previous Application User credentials', async () => {
