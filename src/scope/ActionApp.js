@@ -108,7 +108,7 @@ export default class ActionApp extends ApplicationAccess(Scope) {
   }
 
   /**
-   * Get the underlyiny anonymous Application User maintained in localStorage
+   * Get the underlying anonymous Application User maintained in localStorage
    * by this ActionApp.
    *
    * @returns {User} Anonymous Application User SDK Scope.
