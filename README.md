@@ -156,6 +156,9 @@ const data = { platform: 'android' }
 const thngId = getQueryParam('thng')
 const action = await actionApp.createAction('scans', data, thngId)
 
+// Log a page was visited (the current URL)
+await actionApp.pageVisited()
+
 // Retrieve the managed Application User
 const anonymousUser = await actionApp.getAnonymousUser()
 ```
