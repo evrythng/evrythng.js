@@ -60,7 +60,7 @@ import * as evrythng from 'evrythng'
 Or use a simple script tag to load it from the CDN.
 
 ```html
-<script src="https://d10ka0m22z5ju5.cloudfront.net/js/evrythng/5.7.1/evrythng-5.7.1.js"></script>
+<script src="https://d10ka0m22z5ju5.cloudfront.net/js/evrythng/5.8.0/evrythng-5.8.0.js"></script>
 ```
 
 Then use in a browser `script` tag using the `evrythng` global variable:
@@ -138,6 +138,29 @@ app.appUser().create({ anonymous: true })
 // Or using a pre-existing API key
 const userApiKey = localStorage.getItem('user_api_key')
 const user = new evrythng.User(userApiKey)
+```
+
+* `ActionApp` - Special version of the Application scope designed to make it as
+  simple as possible to create instrumentation actions in web apps. It creates
+  and remembers an anonymous Application User in LocalStorage and provides a
+  simple interface for creating actions:
+
+```js
+import { ActionApp } from 'evrythng'
+
+const actionApp = new ActionApp(appApiKey)
+await actionApp.init()
+
+// Create a scan action on a Thng identified in the query
+const thng = getQueryParam('thng')
+const data = { thng, userAgent }
+const action = await actionApp.createAction('scans', data)
+
+// Log a page was visited (the current URL)
+await actionApp.pageVisited()
+
+// Retrieve the managed Application User
+const anonymousUser = await actionApp.getAnonymousUser()
 ```
 
 For any scope, if the scope's own data (such as an Application's `customFields`)
