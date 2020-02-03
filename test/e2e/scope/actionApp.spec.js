@@ -79,7 +79,7 @@ module.exports = () => {
       expect(res.customFields.foo).to.equal('bar')
     })
 
-    it('should provide access to the undelying anonymous Application User', async () => {
+    it('should provide access to the underlying anonymous Application User', async () => {
       const anonUser = await actionApp.getAnonymousUser()
 
       expect(anonUser.id).to.be.a('string')
@@ -88,7 +88,7 @@ module.exports = () => {
       expect(anonUser.apiKey).to.have.length(80)
     })
 
-    it('should create an scans action with a Thng specified', async () => {
+    it('should create a scans action with a Thng specified', async () => {
       const thng = 'UKYDHeYCQbgDppRwRkHVMHhg'
       mockApi()
         .post('/actions/scans', {
@@ -110,7 +110,7 @@ module.exports = () => {
       expect(res.thng).to.equal('UKYDHeYCQbgDppRwRkHVMHhg')
     })
 
-    it('should create an scans action with a product specified', async () => {
+    it('should create a scans action with a product specified', async () => {
       const product = 'UKYDHeYCQbgDppRwRkHVMHhg'
       mockApi()
         .post('/actions/scans', {

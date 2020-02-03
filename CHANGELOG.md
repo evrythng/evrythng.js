@@ -1,3 +1,24 @@
+# v5.8.0 (3-2-2020)
+
+## Features
+
+- **ActionApp**: Allow `createAction()` to target a `thng` or `product` by including an ID in the `data` parameter.
+
+- **ActionApp**: All `getAnonymousUser()` to allow usage of the managed anonymous Application User.
+
+
+## Fixes
+
+- **ActionApp**: Fix bug preventing use of built-in action types.
+
+
+# v5.7.1 (14-1-2020)
+
+## Features
+
+- **Pagination**: Add `streamPages()` to all resources to allow asynchronously streaming pages of resources.
+
+
 # v5.6.0 (27-9-2019)
 
 ## Features
