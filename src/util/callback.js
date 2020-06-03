@@ -21,6 +21,10 @@ export function failure (callback) {
   return err => {
     if (callback) callback(err)
 
+    if (!err) {
+      throw new Error(`No error message available, err was: ${JSON.stringify(err)}`);
+    }
+
     // Throw a native Error to play nicer with error handling/retry libraries
     // Bonus: no need to check both e.message and e.errors
     throw new Error(err.message || JSON.stringify(err))

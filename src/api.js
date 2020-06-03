@@ -147,7 +147,8 @@ function handleResponse (options) {
     }
 
     if (!response.ok) {
-      throw data
+      // If a request we expect to have no response body fails, we are still interested in the error
+      throw (typeof data === 'object') ? data : await response.json()
     }
 
     return data
