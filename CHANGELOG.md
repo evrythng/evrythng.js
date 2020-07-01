@@ -1,3 +1,9 @@
+# v5.9.0 (1-7-2020)
+
+## Features
+
+- **Files**: Add `files()` resources to User scope for creating and reading by file ID.
+
 # v5.8.0 (3-2-2020)
 
 ## Features
