@@ -4,7 +4,7 @@ const { mockApi } = require('../util')
 
 const apiKey = process.env.OPERATOR_API_KEY
 
-const _api = (url, method = 'get', data = {}) => api({ url, method, apiKey, data })
+const _api = (url, method = 'get', data) => api({ url, method, apiKey, data })
 
 module.exports = () => {
   describe('api', () => {

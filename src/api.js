@@ -1,4 +1,5 @@
 import isFunction from 'lodash-es/isFunction'
+import fetch from 'node-fetch'
 import settings from './settings'
 import buildUrl from './util/buildUrl'
 import { success, failure } from './util/callback'
