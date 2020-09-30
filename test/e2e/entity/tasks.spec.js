@@ -29,7 +29,7 @@ module.exports = () => {
         .reply(202)
       const res = await operator.batch('batchId').task().create(payload, { fullResponse: true })
 
-      expect(res).to.be.an('object')
+      expect(typeof res).to.equal('object')
       expect(res.status).to.equal(202)
     })
 

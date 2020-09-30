@@ -1,6 +1,6 @@
 {
   "name": "evrythng",
-  "version": "5.9.0",
+  "version": "5.9.1",
   "description": "Official Javascript SDK for the EVRYTHNG API.",
   "main": "./dist/evrythng.node.js",
   "scripts": {
@@ -31,19 +31,19 @@
   "homepage": "https://github.com/evrythng/evrythng.js#readme",
   "dependencies": {
     "@babel/runtime": "^7.4.3",
-    "isomorphic-fetch": "^2.2.1",
-    "node-fetch": "^2.3.0"
+    "cross-fetch": "^3.0.6",
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",
     "@babel/plugin-transform-runtime": "^7.4.3",
-    "@babel/preset-env": "^7.4.3",
+    "@babel/preset-env": "^7.11.5",
     "acorn": "^6.4.1",
     "ajv": "^6.10.0",
     "babel-loader": "^8.0.5",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "fetch-mock": "^5.8.1",
+    "fetch-mock": "^9.10.7",
     "lodash-es": "^4.17.15",
     "mocha": "^7.2.0",
     "nock": "^11.3.3",
