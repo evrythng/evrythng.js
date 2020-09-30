@@ -1,7 +1,7 @@
 const { resolve } = require('path')
 
 const path = resolve(__dirname, 'dist')
-const entry = './src/evrythng.main.js'
+const entry = './src/evrythng.polyfill.js'
 const library = 'evrythng'
 
 const babelrc = {

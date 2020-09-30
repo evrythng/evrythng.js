@@ -1,4 +1,3 @@
-import fetch from 'node-fetch'
 import Entity from './Entity'
 import Resource from '../resource/Resource'
 

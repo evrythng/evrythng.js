@@ -1,5 +1,4 @@
 const { expect } = require('chai')
-const fetch = require('node-fetch');
 const nock = require('nock')
 const { getScope, mockApi } = require('../util')
 
