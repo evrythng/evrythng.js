@@ -28,6 +28,15 @@ module.exports = (scopeType) => {
       expect(res.id).to.equal('thngId')
     })
 
+    it('should read nested Thng', async () => {
+      mockApi().get('/thngs/thngId/thngs')
+        .reply(200, { id: 'childThngId' })
+      const res = await scope.thng('thngId').thng().read()
+
+      expect(res).to.be.an('object')
+      expect(res.id).to.equal('childThngId')
+    })
+
     it('should read all Thngs', async () => {
       mockApi().get('/thngs')
         .reply(200, [{ id: 'thngId' }])
