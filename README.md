@@ -51,6 +51,9 @@ import { Application } from 'evrythng'
 ```
 
 ```js
+import evrythng from 'evrythng'
+
+// Alternatively
 import * as evrythng from 'evrythng'
 ```
 
