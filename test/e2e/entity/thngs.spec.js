@@ -30,11 +30,12 @@ module.exports = (scopeType) => {
 
     it('should read nested Thng', async () => {
       mockApi().get('/thngs/thngId/thngs')
-        .reply(200, { id: 'childThngId' })
+        .reply(200,  [{ id: 'child1Id' }, { id: 'child2Id' }])
       const res = await scope.thng('thngId').thng().read()
 
-      expect(res).to.be.an('object')
-      expect(res.id).to.equal('childThngId')
+      expect(res).to.be.an('array')
+      expect(res[0].id).to.equal('child1Id')
+      expect(res[1].id).to.equal('child2Id')
     })
 
     it('should read all Thngs', async () => {
