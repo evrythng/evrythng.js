@@ -9,7 +9,9 @@ const maximumAge = 5 * 60 * 1000;
  */
 export default function getCurrentPosition () {
   return new Promise((resolve, reject) => {
-    if (!window.navigator.geolocation) throw new Error('Geolocation API not available.')
+    if (typeof window === 'undefined' || !window.navigator.geolocation) {
+      throw new Error('Geolocation API not available.')
+    }
 
     const geolocationOptions = {
       maximumAge,
