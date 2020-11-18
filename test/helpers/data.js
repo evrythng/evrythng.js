@@ -121,3 +121,8 @@ export const userAccessTemplate = {
   evrythngUser: 'userId',
   activationCode: 'activactionCode'
 }
+
+export const accountTemplate = {
+  id: 'accountId',
+  name: 'accountName'
+}

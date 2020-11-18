@@ -1,12 +1,12 @@
 const { resources, getScope, setup, teardown } = require('./util')
 const evrythng = require('../../')
 
-evrythng.setup({ geolocation: false })
-
-process.on('unhandledRejection', console.error)
+ evrythng.setup({ geolocation: false })
+ //console.log(`merged: ${b}`)
+// process.on('unhandledRejection', console.error)
 
 describe('evrythng.js', () => {
-  before(setup)
+  //before(setup)
 
   describe('as Application', () => {
     require('./entity/user.spec')('application')
@@ -39,8 +39,10 @@ describe('evrythng.js', () => {
     require('./entity/thngs.spec')('trustedApplication')
   })
 
-  describe('as Operator', () => {
+  describe.only('as Operator', () => {
     require('./entity/accesses.spec')()
+    require('./entity/accessPolicies.spec')('operator')
+    require('./entity/accessTokens.spec')('operator')
     require('./entity/accountRedirector.spec')()
     require('./entity/accounts.spec')()
     require('./entity/actions.spec')('operator')
@@ -54,6 +56,8 @@ describe('evrythng.js', () => {
     require('./entity/domains.spec')()
     require('./entity/files.spec')('operator')
     require('./entity/locations.spec')('operator')
+    require('./entity/me.spec')()
+    require('./entity/operatorAccesses.spec')('operator')
     require('./entity/permissions.spec')('operator')
     require('./entity/permissions.spec')('userInApp')
     require('./entity/places.spec')('operator')

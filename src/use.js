@@ -3,6 +3,7 @@ import Device from './scope/Device'
 import Operator from './scope/Operator'
 import TrustedApplication from './scope/TrustedApplication'
 import User from './scope/User'
+//import AccessToken from './scope/AccessToken'
 
 import Action from './entity/Action'
 import ActionType from './entity/ActionType'
@@ -26,6 +27,11 @@ import Resource from './resource/Resource'
 import Role from './entity/Role'
 import Thng from './entity/Thng'
 import UserEntity from './entity/User'
+import OperatorAccess from './entity/OperatorAccess'
+import AccessPolicy from './entity/AccessPolicies'
+import Me from './entity/Me'
+import AccessTokens from './entity/AccessTokens'
+
 
 /**
  * The items that the plugin may access and manipulate to install new functionality.
@@ -38,7 +44,8 @@ const API = {
     Application,
     TrustedApplication,
     User,
-    Device
+    Device,
+    //AccessToken
   },
   entities: {
     Action,
@@ -61,7 +68,11 @@ const API = {
     Redirector,
     Role,
     Thng,
-    User: UserEntity
+    User: UserEntity,
+    OperatorAccess,
+    AccessPolicy,
+    Me,
+    AccessTokens,
   },
   resources: {
     Resource

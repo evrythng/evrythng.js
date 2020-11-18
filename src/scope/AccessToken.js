@@ -9,14 +9,11 @@ import ActionType from '../entity/ActionType'
 import Project from '../entity/Project'
 import PurchaseOrder from '../entity/PurchaseOrder'
 import Redirector from '../entity/Redirector'
-import Role from '../entity/Role'
 import Rule from '../entity/Rule'
 import ShipmentNotice from '../entity/ShipmentNotice'
-import User from '../entity/User'
-import Batch from '../entity/Batch'
 import Place from '../entity/Place'
 import File from '../entity/File'
-import AccessOperator from '../entity/OperatorAccess'
+import OperatorAccess from '../entity/OperatorAccess'
 import AccessPolicy from '../entity/AccessPolicies'
 import AccessTokens from '../entity/AccessTokens'
 import Me from '../entity/Me'
@@ -24,11 +21,11 @@ import { mixinResources } from '../util/mixin'
 import symbols from '../symbols'
 
 /**
- * Mixin with all the top-level Operator resources.
+ * Mixin with all the access tokens resources.
  *
  * @mixin
  */
-const OperatorAccess = mixinResources([
+const AccessToken = mixinResources([
   Account, // RU
   ADIOrder,  // CR
   Product, // CRUD
@@ -39,60 +36,57 @@ const OperatorAccess = mixinResources([
   Project, // CRUD
   PurchaseOrder, // CRUD
   Redirector, // RU
-  Role, // CRUD
   Rule,
   ShipmentNotice, // CRUD
-  User, // R
-  Batch, // CRUD
   Place, // CRUD
-  File, // CRUD
-  AccessOperator, // CRUD
+  File, // CRD
+  OperatorAccess, // CRUD
   AccessPolicy, // CRUD
   Me, // R
   AccessTokens // CRUD
 ])
 
 /**
- * Operator is the Scope with highest permissions that can manage the account
+ * AccessToken is the Scope with permissions that can manage the account
  * resources. Should be used with caution in server-side code.
  *
  * @extends Scope
- * @mixes OperatorAccess
+ * @mixes AccessToken
  */
-export default class Operator extends OperatorAccess(Scope) {
+export default class Token extends AccessToken(Scope) {
   /**
-   * Creates an instance of Operator.
+   * Creates an instance of Token.
    *
    * @param {string} apiKey - API Key of scope
    * @param {Object} [data={}] - Optional operator data
    */
-  constructor (apiKey, data = {}) {
-    super(apiKey, data)
+  // constructor (apiKey, data = {}) {
+  //   super(apiKey, data)
 
-    this.initPromise = super.readAccess()
-      .then(access => {
-        this.id = access.actor.id
-        this[symbols.path] = this._getPath()
-      })
-  }
+  //   this.initPromise = super.readAccess()
+  //     .then(access => {
+  //       //this.id = access.actor.id
+  //       this[symbols.path] = this._getPath()
+  //     })
+  // }
 
-  /**
-   * Read the operator's data asynchronously.
-   *
-   * @returns {Promise}
-   */
-  init () {
-    return this.initPromise
-  }
+  // /**
+  //  * Read the operator's data asynchronously.
+  //  *
+  //  * @returns {Promise}
+  //  */
+  // init () {
+  //   return this.initPromise
+  // }
 
-  // PRIVATE
+  // // PRIVATE
 
-  /**
-   * Return operator access endpoint.
-   *
-   * @return {string}
-   */
-  _getPath () {
-    return '/access'
-  }
+  // /**
+  //  * Return operator access endpoint.
+  //  *
+  //  * @return {string}
+  //  */
+  // _getPath () {
+  //   return '/access'
+  // }
 }

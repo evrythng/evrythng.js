@@ -23,6 +23,7 @@
  * @property {Object} headers - Headers to send with request
  * @property {Interceptor[]} interceptors - List of request/response interceptors
  * @property {string} defaultShortDomain - Default short domain to use for redirections
+ * @property {string} apiVersion - Default short domain to use for redirections
  */
 
 /**
@@ -31,7 +32,7 @@
  * @type {Settings}
  */
 const defaultSettings = {
-  apiUrl: 'https://api.evrythng.com',
+  apiUrl: 'https://api.evrythng.io/v2',
   apiKey: '',
   fullResponse: false,
   geolocation: true,
@@ -40,7 +41,8 @@ const defaultSettings = {
     'content-type': 'application/json'
   },
   interceptors: [],
-  defaultShortDomain: 'tn.gg'
+  defaultShortDomain: 'tn.gg',
+  apiVersion: 2
 }
 
 // Initialize settings with defaults.

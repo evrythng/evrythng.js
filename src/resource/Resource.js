@@ -3,9 +3,11 @@ import isFunction from 'lodash-es/isFunction'
 import Scope from '../scope/Scope'
 import Entity from '../entity/Entity'
 import api from '../api'
+
 import { success, failure } from '../util/callback'
 import symbols from '../symbols'
 import parseLinkHeader from '../util/parseLinkHeader'
+// import ensureSupportedScopeForApiVersionV2 from '../util/ensureSupportedScope'
 
 /**
  * A Resource is the base class that implements the CRUD methods behavior.
@@ -78,6 +80,9 @@ export default class Resource {
    * @param {string} [typeName] - Name of the entity posessing this resource.
    */
   constructor (scope, path, type, id, typeName) {
+    // if (settings.apiVersion == 2) {
+    //   ensureSupportedScopeForApiVersionV2();
+    // }
     if (!(scope && scope instanceof Scope)) {
       throw new TypeError('Scope should inherit from Scope (e.g. EVT.Application).')
     }

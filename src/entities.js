@@ -12,6 +12,10 @@ import Permission from './entity/Permission'
 import Project from './entity/Project'
 import Role from './entity/Role'
 import Task from './entity/Task'
+import OperatorAccess from './entity/OperatorAccess'
+import AccessPolicy from './entity/AccessPolicies'
+import AccessTokens from './entity/AccessTokens'
+import Me from './entity/Me'
 
 export default {
   Product,
@@ -27,5 +31,9 @@ export default {
   Permission,
   Project,
   Role,
-  Task
+  Task,
+  OperatorAccess,
+  AccessPolicy,
+  Me,
+  AccessTokens,
 }

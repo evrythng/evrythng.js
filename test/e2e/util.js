@@ -3,6 +3,7 @@ const nock = require('nock')
 
 const OPERATOR_API_KEY = 'OPERATOR_API_KEY'
 const API_URL = 'https://api.evrythng.com'
+// const API_URL_v2 = 'https://api.evrythng.io/v2'
 
 let scopes = {}
 let resources = {}

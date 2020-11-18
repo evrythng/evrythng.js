@@ -2,7 +2,8 @@ import {
   operatorTemplate,
   projectTemplate,
   applicationTemplate,
-  userAccessTemplate
+  userAccessTemplate,
+  accountTemplate,
 } from './data'
 
 export default {
@@ -20,6 +21,7 @@ export default {
   locations: '/locations',
   operators: '/operators',
   operator: `/operators/${operatorTemplate.id}`,
+  operatorAccess: `/accounts/${accountTemplate.id}/operatorAccess`,
   permissions: '/permissions',
   places: '/places',
   products: '/products',
