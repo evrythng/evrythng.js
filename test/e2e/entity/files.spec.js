@@ -38,7 +38,9 @@ module.exports = () => {
       expect(res.id).to.equal('fileId')
     })
 
-    it('should upload file content - text', async () => {
+    it('should upload file content - text', async function () {
+      this.timeout(10000);
+
       const fileData = 'This is example text file content'
 
       mockApi().get('/files/fileId')
