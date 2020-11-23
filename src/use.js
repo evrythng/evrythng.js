@@ -3,7 +3,7 @@ import Device from './scope/Device'
 import Operator from './scope/Operator'
 import TrustedApplication from './scope/TrustedApplication'
 import User from './scope/User'
-//import AccessToken from './scope/AccessToken'
+import AccessToken from './scope/AccessToken'
 
 import Action from './entity/Action'
 import ActionType from './entity/ActionType'
@@ -45,9 +45,11 @@ const API = {
     TrustedApplication,
     User,
     Device,
-    //AccessToken
+    AccessToken
   },
   entities: {
+    AccessPolicy,
+    AccessTokens,
     Action,
     ActionType,
     Application: ApplicationEntity,
@@ -57,6 +59,8 @@ const API = {
     Entity,
     File,
     Location,
+    Me,
+    OperatorAccess,
     Permission,
     Place,
     Product,
@@ -69,10 +73,6 @@ const API = {
     Role,
     Thng,
     User: UserEntity,
-    OperatorAccess,
-    AccessPolicy,
-    Me,
-    AccessTokens,
   },
   resources: {
     Resource

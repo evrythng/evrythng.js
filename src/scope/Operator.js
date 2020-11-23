@@ -16,10 +16,21 @@ import User from '../entity/User'
 import Batch from '../entity/Batch'
 import Place from '../entity/Place'
 import File from '../entity/File'
-import AccessOperator from '../entity/OperatorAccess'
+import OpeatorAccess from '../entity/OperatorAccess'
 import AccessPolicy from '../entity/AccessPolicies'
 import AccessTokens from '../entity/AccessTokens'
 import Me from '../entity/Me'
+import Access from '../entity/Access'
+import ADIOrderEvent from '../entity/ADIOrderEvent'
+import Application from '../entity/Application'
+import CommissionState from '../entity/CommissionState'
+import Domain from '../entity/Domain'
+import Property from '../entity/Property'
+import ReactorLog from '../entity/ReactorLog'
+import ReactorSchedule from '../entity/ReactorSchedule'
+import ReactorScript from '../entity/ReactorScript'
+import Redirection from '../entity/Redirection'
+import ShortDomain from '../entity/ShortDomain'
 import { mixinResources } from '../util/mixin'
 import symbols from '../symbols'
 
@@ -29,27 +40,39 @@ import symbols from '../symbols'
  * @mixin
  */
 const OperatorAccess = mixinResources([
-  Account, // RU
-  ADIOrder,  // CR
-  Product, // CRUD
-  Thng, // CRUD
-  Collection, // CRUD
-  Action, // CR
-  ActionType, // CRUD
-  Project, // CRUD
-  PurchaseOrder, // CRUD
-  Redirector, // RU
+
+  Access, // LR
+  AccessPolicy, // CRUDL
+  AccessTokens, // CL
+  Account, // LRU
+  Action, // CRLD
+  ActionType, // CRULD
+  ADIOrder,  // CRL
+  ADIOrderEvent, //CRL
+  Application, //CRUDL
+  Batch, // CRUD
+  Collection, //CRUDL
+  CommissionState, // R
+  Domain, // L
+  File, // CRUD
+  Me, // R
+  OpeatorAccess, // CRUDL
+  Place, // CRUDL
+  Product, // CRUDL
+  Project, // CRUDL
+  Property, // CRUDL
+  PurchaseOrder, // CRUDL
+  ReactorLog, // RD
+  ReactorSchedule, //CRUD
+  ReactorScript, // RU
+  Redirection, // CRUD
+  Redirector, // RUD
   Role, // CRUD
   Rule,
-  ShipmentNotice, // CRUD
+  ShipmentNotice, // CRUDL
+  ShortDomain, // L
+  Thng, // CRUDL
   User, // R
-  Batch, // CRUD
-  Place, // CRUD
-  File, // CRUD
-  AccessOperator, // CRUD
-  AccessPolicy, // CRUD
-  Me, // R
-  AccessTokens // CRUD
 ])
 
 /**
