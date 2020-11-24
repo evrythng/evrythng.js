@@ -42,7 +42,7 @@ const defaultSettings = {
   },
   interceptors: [],
   defaultShortDomain: 'tn.gg',
-  apiVersion: 2
+  apiVersion: 2,
 }
 
 // Initialize settings with defaults.

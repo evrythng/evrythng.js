@@ -3,7 +3,7 @@ import settings from './settings'
 /**
  * Override global settings. Ignore unknown settings.
  *
- * @param {Object} customSettings - Custom settings
+ * @param {Object} [customSettings] - Custom settings
  * @returns {Object} new
  */
 export default function setup (customSettings) {
@@ -16,6 +16,7 @@ export default function setup (customSettings) {
     customSettings.apiUrl = 'https://api.evrythng.com'
   }
   else if(!customSettings.apiVersion) {
+    console.log(settings.apiVersion)
    settings.apiVersion;
   }
   else {

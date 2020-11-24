@@ -9,8 +9,8 @@ describe.only('evrythng.js', () => {
   before(setupForApiVersion2)
 
   describe('as Operator', () => {
-   // require('./entity/accessTokens.spec')()
-    require('./entity/accesses.spec')('operator')
+   require('./entity/accessTokens.spec')()
+   //require('./entity/accesses.spec')('operator')
     // require('./entity/accountRedirector.spec')()
     // require('./entity/accounts.spec')()
     // require('./entity/actions.spec')('operator')

@@ -37,7 +37,7 @@ module.exports = () => {
       this.timeout = 5000;
       
       const customSettings = { 
-        apiVersion: 2,
+        //apiVersion: 2,
         apiKey: 's8A2I0YRNbcmQIuf9Dy7lk9TR78ZiWAbiGasLnihY2UAPTIJEteKdACzYaovlqdchNPik30krKnIxlXs',
       };
 
