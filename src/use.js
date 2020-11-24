@@ -31,7 +31,16 @@ import OperatorAccess from './entity/OperatorAccess'
 import AccessPolicy from './entity/AccessPolicies'
 import Me from './entity/Me'
 import AccessTokens from './entity/AccessTokens'
-
+import Account from './entity/Account'
+import Access from './entity/Access'
+import ADIOrder from './entity/ADIOrder'
+import ADIOrderEvent from './entity/ADIOrderEvent'
+import CommissionState from './entity/CommissionState'
+import Domain from './entity/Domain'
+import PurchaseOrder from './entity/PurchaseOrder'
+import ReactorLog from './entity/ReactorLog'
+import ShipmentNotice from './entity/ShipmentNotice'
+import ShortDomain from './entity/ShortDomain'
 
 /**
  * The items that the plugin may access and manipulate to install new functionality.
@@ -40,22 +49,28 @@ import AccessTokens from './entity/AccessTokens'
  */
 const API = {
   scopes: {
+    AccessToken,
     Operator,
     Application,
     TrustedApplication,
     User,
     Device,
-    AccessToken
   },
   entities: {
+    Access,
     AccessPolicy,
     AccessTokens,
+    Account, 
     Action,
     ActionType,
+    ADIOrder,
+    ADIOrderEvent,
     Application: ApplicationEntity,
     AppUser,
     Batch,
     Collection,
+    CommissionState,
+    Domain,
     Entity,
     File,
     Location,
@@ -66,11 +81,15 @@ const API = {
     Product,
     Project,
     Property,
+    PurchaseOrder,
+    ReactorLog,
     ReactorSchedule,
     ReactorScript,
     Redirection,
     Redirector,
     Role,
+    ShipmentNotice,
+    ShortDomain,
     Thng,
     User: UserEntity,
   },

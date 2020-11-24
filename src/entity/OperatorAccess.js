@@ -4,13 +4,13 @@ import Resource from '../resource/Resource'
 const path = '/operatorAccess'
 
 /**
- * Represents an Operator Access entity.
+ * Represents an Access entity.
  *
  * @extends Entity
  */
-export default class OpeatorAccess extends Entity {
+export default class OperatorAccess extends Entity {
   /**
-   * Return simple resource factory for Operator Accesses.
+   * Return simple resource factory for  Accesses.
    *
    * @static
    * @return {{operatorAccess: Function}}
@@ -18,8 +18,7 @@ export default class OpeatorAccess extends Entity {
   static resourceFactory () {
     return {
       operatorAccess (id) {
-        // добавить проверки на неправильный url и scope
-     return Resource.factoryFor(OpeatorAccess, path).call(this, id)
+     return Resource.factoryFor(OperatorAccess, path).call(this, id)
     }
   }
 }
