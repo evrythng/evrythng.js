@@ -1,18 +1,24 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-module.exports = (scopeType, targetType) => {
-  let scope
+module.exports = (scopeType, targetType, url) => {
+  let scope, api
 
   describe(`Properties (${targetType})`, () => {
     before(async () => {
       scope = getScope(scopeType)
+      api = mockApi(url)
     })
 
     it(`should create a ${targetType} property`, async () => {
       const payload = { key: 'temp_c', value: 42 }
-      mockApi().post(`/${targetType}s/targetId/properties`)
+      api.post(`/${targetType}s/targetId/properties`)
         .reply(200, [payload])
+      //   for (var key in scope) {
+      //     if (scope.hasOwnProperty(key)) {
+      //       console.log(key)
+      //     }
+      // }
       const res = await scope[targetType]('targetId').property().create(payload)
 
       expect(res).to.be.an('array')
@@ -20,7 +26,7 @@ module.exports = (scopeType, targetType) => {
     })
 
     it(`should read all ${targetType} properties`, async () => {
-      mockApi().get(`/${targetType}s/targetId/properties`)
+      api.get(`/${targetType}s/targetId/properties`)
         .reply(200, [{ key: 'temp_c', value: 42 }])
       const res = await scope[targetType]('targetId').property().read()
 
@@ -29,7 +35,7 @@ module.exports = (scopeType, targetType) => {
     })
 
     it(`should read a single ${targetType} property`, async () => {
-      mockApi().get(`/${targetType}s/targetId/properties/temp_c`)
+      api.get(`/${targetType}s/targetId/properties/temp_c`)
         .reply(200, [{ value: 42 }])
       const res = await scope[targetType]('targetId').property('temp_c').read()
 
@@ -38,7 +44,7 @@ module.exports = (scopeType, targetType) => {
     })
 
     it(`should update a single ${targetType} property`, async () => {
-      mockApi().put(`/${targetType}s/targetId/properties/temp_c`, [{ value: 43 }])
+      api.put(`/${targetType}s/targetId/properties/temp_c`, [{ value: 43 }])
         .reply(200, [{ value: 43 }])
       const res = await scope[targetType]('targetId').property('temp_c').update(43)
 
@@ -48,7 +54,7 @@ module.exports = (scopeType, targetType) => {
 
     if (scopeType !== 'anonUser') {
       it(`should delete a single ${targetType} property`, async () => {
-        mockApi().delete(`/${targetType}s/targetId/properties/temp_c`)
+        api.delete(`/${targetType}s/targetId/properties/temp_c`)
           .reply(200)
         await scope[targetType]('targetId').property('temp_c').delete()
       })

@@ -1,9 +1,7 @@
-const { Operator, Application, TrustedApplication, Device, api, AccessToken } = require('../..')
+const { Operator, Application, TrustedApplication, Device, api, AccessToken } = require('../../dist/evrythng.node')
 const nock = require('nock')
 
-const OPERATOR_API_KEY = 's8A2I0YRNbcmQIuf9Dy7lk9TR78ZiWAbiGasLnihY2UAPTIJEteKdACzYaovlqdchNPik30krKnIxlXs'
-const API_URL = 'https://api.evrythng.com'
-const API_URL_v2 = 'https://api.us.evrythng.io/v2'
+const OPERATOR_API_KEY = 'OPERATOR_API_KEY'
 
 let scopes = {}
 let resources = {}
@@ -15,25 +13,23 @@ let resources = {}
  * @returns {object} nock mock.
  */
 
-const mockApi = (apiUrl=API_URL) => {
-  console.log(apiUrl)
-  return nock(apiUrl)}
+const mockApi = (apiUrl) => nock(apiUrl)
 
 
 /**
  * Initialise reusable entities in the specified Platform account.
  */
-const setupForApiVersion1 = async () => {
-  mockApi().get('/access').reply(200, { actor: { id: 'operatorId' } })
+const setupForApiVersion1 = async (apiUrl) => {
+  mockApi(apiUrl).get('/access').reply(200, { actor: { id: 'operatorId' } })
   const operator = new Operator(OPERATOR_API_KEY)
 
   const projectPayload = { name: 'Test Project' }
-  mockApi().post('/projects', projectPayload)
+  mockApi(apiUrl).post('/projects', projectPayload)
     .reply(201, { name: 'Test Project', id: 'projectId' })
   const appProject = await operator.project().create(projectPayload)
 
   const appPayload = { name: 'Test App', socialNetworks: {} }
-  mockApi().post('/projects/projectId/applications', appPayload)
+  mockApi(apiUrl).post('/projects/projectId/applications', appPayload)
     .reply(201, {
       name: 'Test App',
       socialNetworks: {},
@@ -42,29 +38,29 @@ const setupForApiVersion1 = async () => {
     })
   const appResource = await operator.project(appProject.id).application()
     .create(appPayload)
-  mockApi().get('/access').reply(200, { actor: { id: 'applicationId' } })
-  mockApi().get('/applications/me').reply(200, { id: 'applicationId' })
+  mockApi(apiUrl).get('/access').reply(200, { actor: { id: 'applicationId' } })
+  mockApi(apiUrl).get('/applications/me').reply(200, { id: 'applicationId' })
   const application = new Application(appResource.appApiKey)
 
-  mockApi().get('/projects/projectId/applications/applicationId/secretKey')
+  mockApi(apiUrl).get('/projects/projectId/applications/applicationId/secretKey')
     .reply(200, { secretApiKey: 'secretApiKey' })
   const { secretApiKey } = await api({
     url: '/projects/projectId/applications/applicationId/secretKey',
     apiKey: operator.apiKey
   })
-  mockApi().get('/access').reply(200, { actor: { id: 'applicationId' } })
-  mockApi().get('/applications/me').reply(200, { id: 'applicationId' })
+  mockApi(apiUrl).get('/access').reply(200, { actor: { id: 'applicationId' } })
+  mockApi(apiUrl).get('/applications/me').reply(200, { id: 'applicationId' })
   const trustedApplication = new TrustedApplication(secretApiKey)
 
-  mockApi().post('/auth/evrythng/users?anonymous=true')
+  mockApi(apiUrl).post('/auth/evrythng/users?anonymous=true')
     .reply(201, { id: 'evrythngUser', evrythngApiKey: 'evrythngApiKey' })
-  mockApi().get('/access').reply(200, { actor: { id: 'evrythngUser' } })
-  mockApi().get('/users/evrythngUser').reply(200, { id: 'evrythngUser' })
+  mockApi(apiUrl).get('/access').reply(200, { actor: { id: 'evrythngUser' } })
+  mockApi(apiUrl).get('/users/evrythngUser').reply(200, { id: 'evrythngUser' })
   const anonUser = await application.appUser().create({ anonymous: true })
 
-  mockApi().post('/thngs').reply(201, { id: 'deviceThngId' })
+  mockApi(apiUrl).post('/thngs').reply(201, { id: 'deviceThngId' })
   const deviceThng = await operator.thng().create({ name: 'Test Device' })
-  mockApi().post('/auth/evrythng/thngs', { thngId: 'deviceThngId' })
+  mockApi(apiUrl).post('/auth/evrythng/thngs', { thngId: 'deviceThngId' })
     .reply(201, { thngId: 'deviceThngId', thngApiKey: 'thngApiKey'})
   const { thngApiKey } = await api({
     url: '/auth/evrythng/thngs',
@@ -72,8 +68,8 @@ const setupForApiVersion1 = async () => {
     apiKey: operator.apiKey,
     data: { thngId: deviceThng.id }
   })
-  mockApi().get('/access').reply(200, { actor: { id: 'deviceThngId' } })
-  mockApi().get('/thngs/deviceThngId').reply(200, { id: 'deviceThngId' })
+  mockApi(apiUrl).get('/access').reply(200, { actor: { id: 'deviceThngId' } })
+  mockApi(apiUrl).get('/thngs/deviceThngId').reply(200, { id: 'deviceThngId' })
   const device = new Device(thngApiKey)
 
   scopes = {
@@ -85,37 +81,38 @@ const setupForApiVersion1 = async () => {
   }
 }
 
-const setupForApiVersion2 = async () => {
-  mockApi(API_URL_v2).get('/access').reply(200, { actor: { id: 'operatorId' } })
+const setupForApiVersion2 = async (apiUrl) => {
+  mockApi(apiUrl).get('/access').reply(200, { actor: { id: 'operatorId' } })
   const operator = new Operator(OPERATOR_API_KEY)
-console.log(operator)
 
-  const accessTokenPayload = {
-    conditions: [],
-    name: "AccessTokenName",
-    policies: ["UPb7E6shapktcaaabfahfpds"],
-    tags: [
-      'operatorAccess'
-      ],
-    identifiers: {},
-    customFields: {}
-  };
+//   mockApi(apiUrl).post('/thngs').reply(201, { id: 'thngId' })
+//  await operator.thng().create({ name: 'Test thng' })
+
+  // const accessTokenPayload = {
+  //   conditions: [],
+  //   name: "AccessTokenName",
+  //   policies: ["UPb7E6shapktcaaabfahfpds"],
+  //   tags: [
+  //     'operatorAccess'
+  //     ],
+  //   identifiers: {},
+  //   customFields: {}
+  // };
 
   // mockApi(API_URL_v2).post('/accessTokens', accessTokenPayload).reply(201, { id: 'accessTokenId', apiKey: 'accessTokenApiKey'})
 
-  const accessTokenResource = await operator.accessTokens().create(accessTokenPayload)
-  const accessToken = new AccessToken(accessTokenResource.apiKey)
+  // const accessTokenResource = await operator.accessTokens().create(accessTokenPayload)
+  // const accessToken = new AccessToken(accessTokenResource.apiKey)
 
   scopes = {
     operator,
-    accessToken
+   // accessToken
   }
 }
 
 const getScope = type => scopes[type]
 
 module.exports = {
-  resources,
   setupForApiVersion1,
   setupForApiVersion2,
   getScope,

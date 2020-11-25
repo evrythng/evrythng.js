@@ -6,10 +6,11 @@ module.exports = () => {
     let operator
 
     before(async () => {
-      operator = getScope('operator')
+      operator = await getScope('operator')
     })
 
     it('should read all account accesses', async () => {
+      //this.timeout(10000);
       mockApi().get('/accounts/accountId/accesses')
         .reply(200, [{ id: 'accessId' }])
       const res = await operator.sharedAccount('accountId').access().read()
@@ -17,7 +18,7 @@ module.exports = () => {
       expect(res).to.have.length.gte(1)
     })
 
-    it('should read a single account access', async () => {
+    it.only('should read a single account access', async () => {
       mockApi().get('/accounts/accountId/accesses/accessId')
         .reply(200, { id: 'accessId' })
       const res = await operator.sharedAccount('accountId').access('accessId').read()

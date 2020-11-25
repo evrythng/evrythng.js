@@ -1,9 +1,6 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-const evrythng = require('../../../dist/evrythng.node');
-
-
 const payload = {
   name: 'accessTokens',
   description: 'create accessTokens',
@@ -16,61 +13,60 @@ const payload = {
     customFields: {}
 }
 
-module.exports = () => {
+module.exports = (scopeType, settings) => {
   describe('AccessTokens', () => {
-    let operator
-    let api
+    let scope, api
 
     before(async () => {
-    
+      scope = getScope(scopeType);
+      api = mockApi(settings.apiUrl);
     })
 
-    it('should create operatorAccess', async () => {
-      api.post('/accounts/accountId/operatorAccess', payload)
-        .reply(201, payload)
-      const res = await operator.operatorAccess().create(payload)
+    if(settings.apiVersion == 2) {
+      it('should create access token', async () => {
+        api.post('/accessTokens', payload)
+          .reply(201, { id: 'accessTokenId' })
+        const res = await scope.accessTokens().create(payload)
 
-      expect(res).to.be.an('object')
-    })
+        expect(res).to.be.an('object')
+        expect(res.id).to.be.a('string')
+      })
 
-    it.only('test', async function test() {
-      this.timeout = 5000;
-      
-      const customSettings = { 
-        //apiVersion: 2,
-        apiKey: 's8A2I0YRNbcmQIuf9Dy7lk9TR78ZiWAbiGasLnihY2UAPTIJEteKdACzYaovlqdchNPik30krKnIxlXs',
-      };
+      it('should read access token by id', async () => {
+        api.get('/accessTokens/accessTokenId')
+          .reply(200, { id: 'accessTokenId' })
+        const res = await scope.accessTokens('accessTokenId').read()
 
-      //console.log(`!!!! ${a}`)
+        expect(res).to.be.an('object')
+        expect(res.id).to.be.a('string')
+      })
 
-      const setting = await evrythng.setup(customSettings);
+      it('should read all accessTokens', async () => {
+        api.get('/accessTokens')
+          .reply(200, [payload])
+        const res = await scope.accessTokens().read()
 
-      const operator = new evrythng.Operator(setting.apiKey)
-      
-      console.log(setting)
+        expect(res).to.be.an('array')
+        expect(res).to.have.length.gte(1)
+      })
 
-      const operatorAccessPayload = {
-        name: 'accessTokens',
-        description: 'create accessTokens',
-        policies: ['UPb7E6shapktcaaabfahfpds'],
-        conditions: [],
-        tags: [
-            'operatorAccess'
-            ],
-          identifiers: {},
-          customFields: {}
-      };
+      it('should update accessToken', async () => {
+        api.put('/accessTokens/accessTokenId',payload)
+          .reply(200, payload)
 
-      // const createNewOperatorAccess = await operator.sharedAccount('UQ4nDr2FDWQ7N2aRqcTc2Qch').access().read();
+        const res = await scope.accessTokens('accessTokenId').update(payload)
 
-      const createNewOperatorAccess = await operator.accessTokens().create(operatorAccessPayload);
-      
-       console.log(createNewOperatorAccess)
-//create(operatorAccessPayload)
-      // const a = await evrythng
-      //   .api({ url: '/time' })
-      //   .then(console.log)
-      //   .catch(console.error);
-    });
+        expect(res).to.be.an('object')
+        expect(res.name).to.deep.equal(payload.name)
+      })
+
+      it('should delete access policy', async () => {
+        api.delete('/accessTokens/accessTokenId')
+          .reply(204)
+        const res = await scope.accessTokens('accessTokenId').delete()
+
+        expect(res).to.not.exist
+      })
+  }
   })
 }

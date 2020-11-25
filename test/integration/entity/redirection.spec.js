@@ -3,7 +3,7 @@ const { getScope, mockApi } = require('../util')
 
 
 module.exports = (scopeType, targetType) => {
-  let scope
+  let scope, api
 
   describe(`Redirection (${targetType})`, () => {
     before(async () => {
@@ -52,7 +52,9 @@ module.exports = (scopeType, targetType) => {
         .reply(200, [{ hits: 0, shortId: 'shortId' }])
       mockApi('https://tn.gg').delete('/redirections/shortId')
         .reply(200)
-      await scope[targetType]('targetId').redirection().delete()
+      const res = await scope[targetType]('targetId').redirection().delete()
+
+      expect(res).to.not.exist
     })
   })
 }

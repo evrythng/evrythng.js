@@ -1,16 +1,17 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-module.exports = (scopeType) => {
+module.exports = (scopeType, url) => {
   describe('Places', () => {
-    let scope
+    let scope, api
 
     before(() => {
       scope = getScope(scopeType)
+      api = mockApi(url)
     })
 
     it('should read all places', async () => {
-      mockApi().get('/places')
+      api.get('/places')
         .reply(200, [{ id: 'placeId' }])
       const res = await scope.place().read()
 
@@ -21,7 +22,7 @@ module.exports = (scopeType) => {
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should create a place', async () => {
         const payload = { name: 'Test Place' }
-        mockApi().post('/places', payload)
+        api.post('/places', payload)
           .reply(201, payload)
         const res = await scope.place().create(payload)
 
@@ -30,7 +31,7 @@ module.exports = (scopeType) => {
       })
 
       it('should read a place', async () => {
-        mockApi().get('/places/placeId')
+        api.get('/places/placeId')
           .reply(200, { id: 'placeId' })
         const res = await scope.place('placeId').read()
 
@@ -40,7 +41,7 @@ module.exports = (scopeType) => {
 
       it('should update a place', async () => {
         const payload = { tags: ['updated'] }
-        mockApi().put('/places/placeId', payload)
+        api.put('/places/placeId', payload)
           .reply(200, payload)
         const res = await scope.place('placeId').update(payload)
 
@@ -49,7 +50,7 @@ module.exports = (scopeType) => {
       })
 
       it('should delete a place', async () => {
-        mockApi().delete('/places/placeId')
+        api.delete('/places/placeId')
           .reply(200)
         await scope.place('placeId').delete()
       })

@@ -23,16 +23,17 @@ const payload = {
   ]
 }
 
-module.exports = (scopeType) => {
+module.exports = (scopeType, url) => {
   describe('Purchase Orders', () => {
-    let scope
+    let scope, api
 
     before(() => {
       scope = getScope(scopeType)
+      api = mockApi(url)
     })
 
     it('should read all purchase orders', async () => {
-      mockApi().get('/purchaseOrders')
+      api.get('/purchaseOrders')
         .reply(200, [payload])
 
       const res = await scope.purchaseOrder().read()
@@ -43,7 +44,7 @@ module.exports = (scopeType) => {
 
     if (scopeType === 'operator') {
       it('should create a purchase order', async () => {
-        mockApi().post('/purchaseOrders', payload)
+        api.post('/purchaseOrders', payload)
           .reply(201, payload)
 
         const res = await scope.purchaseOrder().create(payload)
@@ -52,7 +53,7 @@ module.exports = (scopeType) => {
       })
 
       it('should read a purchase order', async () => {
-        mockApi().get('/purchaseOrders/purchaseOrderId')
+        api.get('/purchaseOrders/purchaseOrderId')
           .reply(200, payload)
 
         const res = await scope.purchaseOrder('purchaseOrderId').read()
@@ -62,7 +63,7 @@ module.exports = (scopeType) => {
       })
 
       it('should update a purchase order', async () => {
-        mockApi().put('/purchaseOrders/purchaseOrderId', payload)
+       api.put('/purchaseOrders/purchaseOrderId', payload)
           .reply(200, payload)
 
         const res = await scope.purchaseOrder('purchaseOrderId').update(payload)
@@ -72,10 +73,12 @@ module.exports = (scopeType) => {
       })
 
       it('should delete a purchaseOrder', async () => {
-        mockApi().delete('/purchaseOrders/purchaseOrderId')
+        api.delete('/purchaseOrders/purchaseOrderId')
           .reply(204)
 
-        await scope.purchaseOrder('purchaseOrderId').delete()
+        const res = await scope.purchaseOrder('purchaseOrderId').delete()
+        
+        expect(res).to.not.exist
       })
     }
   })

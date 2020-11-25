@@ -1,17 +1,18 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-module.exports = (scopeType) => {
+module.exports = (scopeType, url) => {
   describe('Products', () => {
-    let scope
+    let scope, api
 
     before(() => {
       scope = getScope(scopeType)
+      api = mockApi(url)
     })
 
     it('should create a product', async () => {
       const payload = { name: 'Test Product' }
-      mockApi().post('/products', payload)
+      api.post('/products', payload)
         .reply(201, payload)
       const res = await scope.product().create(payload)
 
@@ -20,7 +21,7 @@ module.exports = (scopeType) => {
     })
 
     it('should read a product', async () => {
-      mockApi().get('/products/productId')
+      api.get('/products/productId')
         .reply(200, { id: 'productId' })
       const res = await scope.product('productId').read()
 
@@ -29,7 +30,7 @@ module.exports = (scopeType) => {
     })
 
     it('should read all products', async () => {
-      mockApi().get('/products')
+      api.get('/products')
         .reply(200, [{ id: 'productId' }])
       const res = await scope.product().read()
 
@@ -39,7 +40,7 @@ module.exports = (scopeType) => {
 
     it('should update a product', async () => {
       const payload = { tags: ['updated'] }
-      mockApi().put('/products/productId', payload)
+      api.put('/products/productId', payload)
         .reply(200, payload)
       const res = await scope.product('productId').update(payload)
 
@@ -49,7 +50,7 @@ module.exports = (scopeType) => {
 
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should delete a product', async () => {
-        mockApi().delete('/products/productId')
+        api.delete('/products/productId')
           .reply(200)
         await scope.product('productId').delete()
       })

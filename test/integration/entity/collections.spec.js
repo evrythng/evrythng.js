@@ -1,17 +1,18 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-module.exports = (scopeType) => {
+module.exports = (scopeType, url) => {
   describe('Collections', () => {
-    let scope
+    let scope, api
 
     before(() => {
       scope = getScope(scopeType)
+      api = mockApi(url)
     })
 
     it('should create a collection', async () => {
       const payload = { name: 'Test Collection' }
-      mockApi().post('/collections', payload)
+      api.post('/collections', payload)
         .reply(200, payload)
       const res = await scope.collection().create(payload)
 
@@ -20,7 +21,7 @@ module.exports = (scopeType) => {
     })
 
     it('should read a collection', async () => {
-      mockApi().get('/collections/collectionId')
+      api.get('/collections/collectionId')
         .reply(200, { id: 'collectionId' })
       const res = await scope.collection('collectionId').read()
 
@@ -29,7 +30,7 @@ module.exports = (scopeType) => {
     })
 
     it('should read all collections', async () => {
-      mockApi().get('/collections')
+      api.get('/collections')
         .reply(200, [{ id: 'collectionId' }])
       const res = await scope.collection().read()
 
@@ -39,7 +40,7 @@ module.exports = (scopeType) => {
 
     it('should update a collection', async () => {
       const payload = { tags: ['updated'] }
-      mockApi().put('/collections/collectionId')
+      api.put('/collections/collectionId')
         .reply(200, { tags: ['updated'] })
       const res = await scope.collection('collectionId').update(payload)
 
@@ -49,9 +50,11 @@ module.exports = (scopeType) => {
 
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should delete a collection', async () => {
-        mockApi().delete('/collections/collectionId')
+        api.delete('/collections/collectionId')
           .reply(200)
-        await scope.collection('collectionId').delete()
+        const res = await scope.collection('collectionId').delete()
+        
+        expect(res).to.not.exist
       })
     }
   })

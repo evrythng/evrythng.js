@@ -1,4 +1,5 @@
 const { expect } = require('chai')
+const { mock } = require('fetch-mock')
 const { getScope, mockApi } = require('../util')
 
 const noticePayload = {
@@ -31,102 +32,108 @@ const containerPayload = {
   tags: ['important']
 }
 
-module.exports = () => {
+module.exports = (scopeType, url) => {
   describe('Shipment Notices', () => {
-    let operator
+    let scope, api
 
     before(() => {
-      operator = getScope('operator')
+      scope = getScope(scopeType)
+      api = mockApi(url)
     })
 
     it('should create a shipment notice', async () => {
-      mockApi()
+      api
         .post('/shipmentNotices', noticePayload)
         .reply(201, noticePayload)
 
-      const res = await operator.shipmentNotice().create(noticePayload)
+      const res = await scope.shipmentNotice().create(noticePayload)
 
       expect(res).to.be.an('object')
       expect(res.asnId).to.equal(noticePayload.asnId)
     })
 
     it('should read a shipment notice', async () => {
-      mockApi()
+      api
         .get('/shipmentNotices/shipmentNoticeId')
         .reply(200, noticePayload)
 
-      const res = await operator.shipmentNotice('shipmentNoticeId').read()
+      const res = await scope.shipmentNotice('shipmentNoticeId').read()
 
       expect(res).to.be.an('object')
       expect(res.asnId).to.equal(noticePayload.asnId)
     })
 
     it('should update a shipment notice', async () => {
-      mockApi()
+      api
         .put('/shipmentNotices/shipmentNoticeId')
         .reply(200, noticePayload)
 
-      const res = await operator.shipmentNotice('shipmentNoticeId').update(noticePayload)
+      const res = await scope.shipmentNotice('shipmentNoticeId').update(noticePayload)
 
       expect(res).to.be.an('object')
       expect(res.tags).to.deep.equal(noticePayload.tags)
     })
 
     it('should delete a shipment notice', async () => {
-      mockApi()
+      api
         .delete('/shipmentNotices/shipmentNoticeId')
         .reply(204)
 
-      await operator.shipmentNotice('shipmentNoticeId').delete()
+      const res = await scope.shipmentNotice('shipmentNoticeId').delete()
+
+      expect(res).to.not.exist
     })
   })
 
   describe('Shipment Notice Containers', () => {
-    let operator
+    let scope, api
 
     before(() => {
-      operator = getScope('operator')
+      scope = getScope(scopeType)
+      api = mockApi(url)
     })
 
     it('should create a shipment notice container', async () => {
-      mockApi()
+      api
         .post('/shipmentNotices/containers', containerPayload)
         .reply(201, containerPayload)
 
-      const res = await operator.shipmentNotice().container().create(containerPayload)
+      const res = await scope.shipmentNotice().container().create(containerPayload)
 
       expect(res).to.be.an('object')
       expect(res.containerId).to.equal(containerPayload.containerId)
     })
 
     it('should read a shipment notice container', async () => {
-      mockApi()
+      api
         .get('/shipmentNotices/containers/containerId')
         .reply(200, containerPayload)
 
-      const res = await operator.shipmentNotice().container('containerId').read()
+      const res = await scope.shipmentNotice().container('containerId').read()
 
       expect(res).to.be.an('object')
       expect(res.containerId).to.equal(containerPayload.containerId)
     })
 
     it('should update a shipment notice container', async () => {
-      mockApi()
+      api
         .put('/shipmentNotices/containers/containerId')
         .reply(200, containerPayload)
 
-      const res = await operator.shipmentNotice().container('containerId').update(containerPayload)
+      const res = await scope.shipmentNotice().container('containerId').update(containerPayload)
 
       expect(res).to.be.an('object')
       expect(res.tags).to.deep.equal(containerPayload.tags)
     })
 
     it('should delete a shipment notice container', async () => {
-      mockApi()
+      api
         .delete('/shipmentNotices/containers/containerId')
         .reply(204)
 
-      await operator.shipmentNotice().container('containerId').delete()
+      const res = await scope.shipmentNotice().container('containerId').delete()
+
+      expect(res).to.not.exist
     })
   })
 }

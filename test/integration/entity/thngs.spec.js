@@ -1,17 +1,18 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-module.exports = (scopeType) => {
+module.exports = (scopeType, url) => {
   describe('Thngs', () => {
-    let scope
+    let scope, api
 
     before(() => {
       scope = getScope(scopeType)
+      api = mockApi(url)
     })
 
     it('should create a Thng', async () => {
       const payload = { name: 'Test Thng' }
-      mockApi().post('/thngs', payload)
+      api.post('/thngs', payload)
         .reply(201, payload)
       const res = await scope.thng().create(payload)
 
@@ -20,7 +21,7 @@ module.exports = (scopeType) => {
     })
 
     it('should read a Thng', async () => {
-      mockApi().get('/thngs/thngId')
+      api.get('/thngs/thngId')
         .reply(200, { id: 'thngId' })
       const res = await scope.thng('thngId').read()
 
@@ -29,7 +30,7 @@ module.exports = (scopeType) => {
     })
 
     it('should read all Thngs', async () => {
-      mockApi().get('/thngs')
+      api.get('/thngs')
         .reply(200, [{ id: 'thngId' }])
       const res = await scope.thng().read()
 
@@ -39,7 +40,7 @@ module.exports = (scopeType) => {
 
     it('should update a Thng', async () => {
       const payload = { tags: ['updated'] }
-      mockApi().put('/thngs/thngId', payload)
+      api.put('/thngs/thngId', payload)
         .reply(200, payload)
       const res = await scope.thng('thngId').update(payload)
 
@@ -49,9 +50,11 @@ module.exports = (scopeType) => {
 
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should delete a Thng', async () => {
-        mockApi().delete('/thngs/thngId')
+        api.delete('/thngs/thngId')
           .reply(200)
-        await scope.thng('thngId').delete()
+        const res = await scope.thng('thngId').delete()
+        
+        expect(res).to.not.exist
       })
     }
   })

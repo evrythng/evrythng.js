@@ -1,17 +1,17 @@
 const { resources, getScope, setupForApiVersion1, teardown  } = require('./util')
 const evrythng = require('../../dist/evrythng.node')
 
- evrythng.setup({ apiVersion: 1, geolocation: false })
+ const settings = evrythng.setup({ apiVersion: 1, geolocation: false })
  process.on('unhandledRejection', console.error)
 
 describe('evrythng.js', () => {
-  before(setupForApiVersion1)
+  before(async () => {setupForApiVersion1(settings.apiUrl)})
 
-  describe('as Application', () => {
+  describe.skip('as Application', () => {
     require('./entity/user.spec')('application')
   })
 
-  describe('as anonymous Application User', () => {
+  describe.skip('as anonymous Application User', () => {
     require('./entity/actions.spec')('anonUser')
     require('./entity/actionTypes.spec')('anonUser')
     require('./entity/collections.spec')('anonUser')
@@ -25,7 +25,7 @@ describe('evrythng.js', () => {
     require('./entity/thngs.spec')('anonUser')
   })
 
-  describe('as Trusted Application', () => {
+  describe.skip('as Trusted Application', () => {
     require('./entity/actions.spec')('trustedApplication')
     require('./entity/actionTypes.spec')('trustedApplication')
     require('./entity/collections.spec')('trustedApplication')
@@ -38,51 +38,51 @@ describe('evrythng.js', () => {
     require('./entity/thngs.spec')('trustedApplication')
   })
 
-  describe('as Operator', () => {
-    require('./entity/accesses.spec')()
-    require('./entity/accountRedirector.spec')()
-    require('./entity/accounts.spec')()
-    require('./entity/actions.spec')('operator')
-    require('./entity/actionTypes.spec')('operator')
-    require('./entity/adiOrders.spec')()
-    require('./entity/applicationRedirector.spec')()
-    require('./entity/applications.spec')('operator')
-    require('./entity/batches.spec')()
-    require('./entity/commissionState.spec')('operator')
-    require('./entity/collections.spec')('operator')
-    require('./entity/domains.spec')()
-    require('./entity/files.spec')('operator')
-    require('./entity/locations.spec')('operator')
-    require('./entity/permissions.spec')('operator')
-    require('./entity/permissions.spec')('userInApp')
-    require('./entity/places.spec')('operator')
-    require('./entity/products.spec')('operator')
-    require('./entity/projects.spec')()
-    require('./entity/properties.spec')('operator', 'product')
-    require('./entity/properties.spec')('operator', 'thng')
-    require('./entity/purchaseOrders.spec')('operator')
-    require('./entity/reactor.spec')('operator')
-    require('./entity/redirection.spec')('operator', 'product')
-    require('./entity/redirection.spec')('operator', 'thng')
-    require('./entity/roles.spec')('operator')
-    require('./entity/rules.spec')()
-    require('./entity/secretKey.spec')()
-    require('./entity/shipmentNotice.spec')()
-    require('./entity/shortDomains.spec')()
-    require('./entity/tasks.spec')()
-    require('./entity/thngs.spec')('operator')
-    require('./entity/user.spec')('operator')
+  describe.only('as Operator', () => {
+    // require('./entity/accesses.spec')()
+    // require('./entity/accountRedirector.spec')()
+    // require('./entity/accounts.spec')()
+    // require('./entity/actions.spec')('operator')
+    // require('./entity/actionTypes.spec')('operator')
+    // require('./entity/adiOrders.spec')()
+    // require('./entity/applicationRedirector.spec')()
+    // require('./entity/applications.spec')('operator')
+    // require('./entity/batches.spec')()
+    // require('./entity/commissionState.spec')('operator')
+    // require('./entity/collections.spec')('operator')
+    // require('./entity/domains.spec')()
+    // require('./entity/files.spec')('operator')
+    // require('./entity/locations.spec')('operator')
+    // require('./entity/permissions.spec')('operator')
+    // require('./entity/permissions.spec')('userInApp')
+    // require('./entity/places.spec')('operator')
+    // require('./entity/products.spec')('operator')
+    // require('./entity/projects.spec')()
+    require('./entity/properties.spec')('operator', 'product', settings.apiUrl)
+    // require('./entity/properties.spec')('operator', 'thng')
+    // require('./entity/purchaseOrders.spec')('operator')
+    // require('./entity/reactor.spec')('operator')
+    // require('./entity/redirection.spec')('operator', 'product')
+    // require('./entity/redirection.spec')('operator', 'thng')
+    // require('./entity/roles.spec')('operator')
+    // require('./entity/rules.spec')()
+    // require('./entity/secretKey.spec')()
+    // require('./entity/shipmentNotice.spec')()
+    // require('./entity/shortDomains.spec')()
+    // require('./entity/tasks.spec')()
+    // require('./entity/thngs.spec')('operator')
+    // require('./entity/user.spec')('operator')
   })
 
-  describe('as Device', () => {
+  describe.skip('as Device', () => {
     require('./scope/device.spec')()
   })
 
-  describe('as ActionApp', () => {
+  describe.skip('as ActionApp', () => {
     require('./scope/actionApp.spec')()
   })
 
-  describe('Misc', () => {
+  describe.skip('Misc', () => {
     require('./misc/alias.spec')()
     require('./misc/api.spec')('operator')
     require('./misc/find.spec')()

@@ -16,7 +16,6 @@ export default function setup (customSettings) {
     customSettings.apiUrl = 'https://api.evrythng.com'
   }
   else if(!customSettings.apiVersion) {
-    console.log(settings.apiVersion)
    settings.apiVersion;
   }
   else {
