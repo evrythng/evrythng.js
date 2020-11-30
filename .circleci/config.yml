@@ -1,4 +1,7 @@
 version: 2.1
+orbs:
+  aws-cli: circleci/aws-cli@0.1.4
+
 jobs:
   build:
     docker:
@@ -12,5 +15,39 @@ jobs:
           name: 'Build SDK'
           command: 'npm run build'
       - run:
-          name: 'E2E tests'
+          name: 'Run integration tests'
           command: 'npm test'
+  
+  deploy:
+    docker:
+      - image: node:10.16-alpine
+    steps:
+      - run:
+          name: Setup build environment variables
+          command: |
+            echo 'export BUCKET=evtcdn' >> $BASH_ENV
+            echo 'export VERSION=$VERSION' >> $BASH_ENV
+            echo 'export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID' >> $BASH_ENV
+            echo 'export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY' >> $BASH_ENV
+            echo 'export AWS_DEFAULT_REGION=us-east-1' >> $BASH_ENV
+      - run
+          name: 'Push to S3'
+          command:
+            ./pipeline/upload.sh
+
+workflows:
+  version: 2
+  pipeline:
+    jobs:
+      - build
+      - production_approval:
+          type: approval
+          requires:
+            - build
+      - deploy:
+        requires:
+          - production_approval
+        filters:
+            branches:
+              only:
+                - master
