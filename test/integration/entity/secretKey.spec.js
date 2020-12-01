@@ -1,18 +1,19 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-module.exports = () => {
+module.exports = (scopeType, url) => {
   describe('Secret Key', () => {
-    let operator
+    let scope, api
 
     before(async () => {
-      operator = getScope('operator')
+      scope = getScope(scopeType)
+      api =  mockApi(url)
     })
 
     it('should read an application\'s secret key', async () => {
-      mockApi().get('/projects/projectId/applications/applicationId/secretKey')
+      api.get('/projects/projectId/applications/applicationId/secretKey')
         .reply(200, { secretApiKey: 'secretApiKey' })
-      const res = await operator.project('projectId').application('applicationId')
+      const res = await scope.project('projectId').application('applicationId')
         .secretKey()
         .read()
 

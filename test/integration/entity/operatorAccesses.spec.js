@@ -1,9 +1,6 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-const evrythng = require('../../../dist/evrythng.node');
-
-
 const payload = {
   email: 'operatorAccess@gmail.com',
   description: 'Create operator access',
@@ -17,58 +14,61 @@ const payload = {
     customFields: {}
 }
 
-module.exports = () => {
+module.exports = (scopeType, settings) => {
   describe('OperatorAccesses', () => {
-    let operator
-    let api
+    let scope, api
 
     before(async () => {
-      // const useApiV2 = true
-
-      // operator = getScope('operator');
-      // api = mockApi(useApiV2);
-      // console.log(operator)
+      scope = getScope(scopeType);
+      api = mockApi(settings.apiUrl);
     })
 
-    it('should create operatorAccess', async () => {
-      api.post('/accounts/accountId/operatorAccess', payload)
-        .reply(201, payload)
-      const res = await operator.operatorAccess().create(payload)
+    if(settings.apiVersion == 2) {
+      it('should create operator access', async () => {
+        api.post('/accounts/accountId/operatorAccess', payload)
+          .reply(201, { id: 'operatorAccessId' })
+        const res = await scope.sharedAccount('accountId').operatorAccess().create(payload)
 
-      expect(res).to.be.an('object')
-    })
+        expect(res).to.be.an('object')
+        expect(res.id).to.be.a('string')
+      })
 
-    it('test', async function test() {
-      const customSettings = { 
-        //useApiV2: true,
-        apiKey: 'sdEtrVGRrbKanKmnnlci6YfE8L7GonkSCWwzABgCQwlb2xgw7hTnjJnuAk2al7sZtaz6gztDapGp9BcN',
-      };
+      it('should read operator access by id', async () => {
+        api.get('/accounts/accountId/operatorAccess/operatorAccessId')
+          .reply(200, { id: 'operatorAccessId' })
+        const res = await scope.sharedAccount('accountId').operatorAccess('operatorAccessId').read()
 
-      const setting = await evrythng.setup(customSettings);
+        expect(res).to.be.an('object')
+        expect(res.id).to.be.a('string')
+      })
 
-      const operator = new evrythng.Operator(setting.apiKey)
-      // console.log(operator)
+      it('should read all operator accesses', async () => {
+        api.get('/accounts/accountId/operatorAccess')
+          .reply(200, [payload])
+        const res = await scope.sharedAccount('accountId').operatorAccess().read()
 
-      const operatorAccessPayload = {
-        email: "3dbml9j1ip@gmail.com",
-        policies: ["UPbNYMshapktcaaabfahfpdr"],
-        conditions: [],
-        operator: "UQnHkYPXpCAYhRbFbxs7abmd",
-        tags: [],
-        identifiers: {},
-        customFields: {}
-      };
+        expect(res).to.be.an('array')
+        expect(res).to.have.length.gte(1)
+      })
 
-      // const createNewOperatorAccess = await operator.sharedAccount('UQ4nDr2FDWQ7N2aRqcTc2Qch').access().read();
+      it('should update operator access', async () => {
+        api.put('/accounts/accountId/operatorAccess/operatorAccessId', payload)
+          .reply(200, payload)
 
-      const createNewOperatorAccess = await operator.sharedAccount('UQ4nDr2FDWQ7N2aRqcTc2Qch').operatorAccess('UQHnk2xVnWHRBQaabwreUaKq').read;
-      
-       console.log(createNewOperatorAccess)
-//create(operatorAccessPayload)
-      // const a = await evrythng
-      //   .api({ url: '/time' })
-      //   .then(console.log)
-      //   .catch(console.error);
-    });
+        const res = await scope.sharedAccount('accountId').operatorAccess('operatorAccessId').update(payload)
+
+        expect(res).to.be.an('object')
+        expect(res.name).to.deep.equal(payload.name)
+      })
+
+      it('should delete operator access', async () => {
+        api.delete('/accounts/accountId/operatorAccess/operatorAccessId')
+          .reply(204)
+        const res = await scope.sharedAccount('accountId').operatorAccess('operatorAccessId').delete()
+
+        expect(res).to.not.exist
+      })
+  }
   })
-}
+};
+

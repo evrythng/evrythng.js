@@ -3,12 +3,13 @@ const { getScope, mockApi } = require('../util')
 
 let operator
 
-module.exports = () => {
+module.exports = (scopeType, url) => {
   describe('Tasks', () => {
-    let batch, task
+    let scope, api
 
     before(async () => {
-      operator = getScope('operator')
+      scope = getScope(scopeType)
+      api =  mockApi(url)
     })
 
     it('should create a task', async () => {
@@ -25,27 +26,27 @@ module.exports = () => {
           shortIdTemplate: { type: 'THNG_ID' }
         }
       }
-      mockApi().post('/batches/batchId/tasks', payload)
+      api.post('/batches/batchId/tasks', payload)
         .reply(202)
-      const res = await operator.batch('batchId').task().create(payload, { fullResponse: true })
+      const res = await scope.batch('batchId').task().create(payload, { fullResponse: true })
 
       expect(typeof res).to.equal('object')
       expect(res.status).to.equal(202)
     })
 
     it('should read all tasks', async () => {
-      mockApi().get('/batches/batchId/tasks')
+      api.get('/batches/batchId/tasks')
         .reply(200, [{ id: 'taskId' }])
-      const res = await operator.batch('batchId').task().read()
+      const res = await scope.batch('batchId').task().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
     })
 
     it('should read a task', async () => {
-      mockApi().get('/batches/batchId/tasks/taskId')
+      api.get('/batches/batchId/tasks/taskId')
         .reply(200, { id: 'taskId' })
-      const res = await operator.batch('batchId').task('taskId').read()
+      const res = await scope.batch('batchId').task('taskId').read()
 
       expect(res).to.be.an('object')
       expect(res.id).to.equal('taskId')

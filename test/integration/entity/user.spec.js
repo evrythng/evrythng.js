@@ -8,21 +8,22 @@ const USER = {
   password: 'password'
 }
 
-module.exports = (scopeType) => {
+module.exports = (scopeType, url) => {
   describe('Application Users', () => {
-    let scope
+    let scope, api
 
     before(() => {
       scope = getScope(scopeType)
+      api =  mockApi(url)
     })
 
     if (scopeType === 'application') {
       it('should create an anonymous Application User', async () => {
-        mockApi().post('/auth/evrythng/users?anonymous=true')
+        api.post('/auth/evrythng/users?anonymous=true')
           .reply(201, { id: 'anonUser', evrythngApiKey: 'evrythngApiKey' })
-        mockApi().get('/access')
+        api.get('/access')
           .reply(200, { actor: { id: 'anonUser'} })
-        mockApi().get('/users/anonUser')
+          api.get('/users/anonUser')
           .reply(200, { id: 'anonUser'})
         const res = await scope.appUser().create({ anonymous: true })
         resources.anonUser = res
@@ -32,13 +33,13 @@ module.exports = (scopeType) => {
       })
 
       it('should create and validate a named user', async () => {
-        mockApi().post('/auth/evrythng/users', USER)
+        api.post('/auth/evrythng/users', USER)
           .reply(201, { evrythngUser: 'evrythngUser', activationCode: 'code' })
-        mockApi().post('/auth/evrythng/users/evrythngUser/validate', { activationCode: 'code' })
+          api.post('/auth/evrythng/users/evrythngUser/validate', { activationCode: 'code' })
           .reply(201, { id: 'evrythngUser', evrythngApiKey: 'evrythngApiKey' })
-        mockApi().get('/access')
+          api.get('/access')
           .reply(200, { actor: { id: 'evrythngUser'} })
-        mockApi().get('/users/evrythngUser')
+          api.get('/users/evrythngUser')
           .reply(200, { id: 'evrythngUser'})
         const res = await scope.appUser().create(USER)
           .then(res => res.validate())
@@ -51,11 +52,11 @@ module.exports = (scopeType) => {
       it('should login a named user', async () => {
         const loginDocument = { email: USER.email, password: USER.password }
 
-        mockApi().post('/users/login', loginDocument)
+        api.post('/users/login', loginDocument)
           .reply(201, { id: 'evrythngUser', access: { apiKey: 'evrythngApiKey' } })
-        mockApi().get('/access')
+          api.get('/access')
           .reply(200, { actor: { id: 'evrythngUser'} })
-        mockApi().get('/users/evrythngUser')
+          api.get('/users/evrythngUser')
           .reply(200, { id: 'evrythngUser'})
         const res = await scope.login(loginDocument)
 
@@ -64,7 +65,7 @@ module.exports = (scopeType) => {
       })
 
       it('should logout a named user', async () => {
-        mockApi().post('/auth/all/logout').reply(201, { logout: 'ok' })
+        api.post('/auth/all/logout').reply(201, { logout: 'ok' })
         const res = await resources.namedUser.logout()
 
         expect(res).to.be.an('object')
@@ -74,7 +75,7 @@ module.exports = (scopeType) => {
     }
 
     it('should read an Application User', async () => {
-      mockApi().get('/users/evrythngUser')
+      api.get('/users/evrythngUser')
         .reply(200, { id: 'evrythngUser'})
       const res = await scope.user('evrythngUser').read()
 
@@ -83,7 +84,7 @@ module.exports = (scopeType) => {
     })
 
     it('should read all Application Users', async () => {
-      mockApi().get('/users')
+      api.get('/users')
         .reply(200, [{ id: 'evrythngUser'}])
       const res = await scope.user().read()
 
@@ -93,7 +94,7 @@ module.exports = (scopeType) => {
 
     it('should update an Application User', async () => {
       const payload = { firstName: 'updated' }
-      mockApi().put('/users/evrythngUser', payload)
+      api.put('/users/evrythngUser', payload)
         .reply(200, payload)
       const res = await scope.user('evrythngUser').update(payload)
 
@@ -102,7 +103,7 @@ module.exports = (scopeType) => {
     })
 
     it('should delete an Application User', async () => {
-      mockApi().delete('/users/evrythngUser')
+      api.delete('/users/evrythngUser')
         .reply(200)
       await scope.user('evrythngUser').delete()
     })

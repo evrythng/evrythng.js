@@ -14,11 +14,7 @@ module.exports = (scopeType, targetType, url) => {
       const payload = { key: 'temp_c', value: 42 }
       api.post(`/${targetType}s/targetId/properties`)
         .reply(200, [payload])
-      //   for (var key in scope) {
-      //     if (scope.hasOwnProperty(key)) {
-      //       console.log(key)
-      //     }
-      // }
+    
       const res = await scope[targetType]('targetId').property().create(payload)
 
       expect(res).to.be.an('array')

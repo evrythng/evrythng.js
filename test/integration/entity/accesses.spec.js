@@ -1,27 +1,26 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-module.exports = () => {
+module.exports = (scopeType, url) => {
   describe('Accesses', () => {
-    let operator
-
-    before(async () => {
-      operator = await getScope('operator')
+    let scope, api
+    before(() => {
+      scope = getScope(scopeType)
+      api =  mockApi(url)
     })
 
     it('should read all account accesses', async () => {
-      //this.timeout(10000);
-      mockApi().get('/accounts/accountId/accesses')
+      api.get('/accounts/accountId/accesses')
         .reply(200, [{ id: 'accessId' }])
-      const res = await operator.sharedAccount('accountId').access().read()
+      const res = await scope.sharedAccount('accountId').access().read()
 
       expect(res).to.have.length.gte(1)
     })
 
-    it.only('should read a single account access', async () => {
-      mockApi().get('/accounts/accountId/accesses/accessId')
+    it('should read a single account access', async () => {
+     api.get('/accounts/accountId/accesses/accessId')
         .reply(200, { id: 'accessId' })
-      const res = await operator.sharedAccount('accountId').access('accessId').read()
+      const res = await scope.sharedAccount('accountId').access('accessId').read()
 
       expect(res).to.be.an('object')
       expect(res.id).to.be.a('string')
@@ -29,9 +28,9 @@ module.exports = () => {
 
     it('should update a single account access', async () => {
       const payload = { role: 'admin' }
-      mockApi().put('/accounts/accountId/accesses/accessId', payload)
+      api.put('/accounts/accountId/accesses/accessId', payload)
         .reply(200, { id: 'accessId' })
-      const res = await operator.sharedAccount('accountId').access('accessId').update(payload)
+      const res = await scope.sharedAccount('accountId').access('accessId').update(payload)
 
       expect(res).to.be.an('object')
       expect(res.id).to.equal('accessId')

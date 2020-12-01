@@ -18,11 +18,20 @@ export function success (callback) {
  * @returns {function} - Response handler function
  */
 export function failure (callback) {
-  return err => {
+  return async err => {
     if (callback) callback(err)
 
     if (!err) {
       throw new Error(`No error message available, err was: ${JSON.stringify(err)}`);
+    }
+
+    if (typeof err.ok !== 'undefined' && !err.ok) {
+      err = await err.text();
+    }
+    try {
+      err = JSON.parse(err)
+    } catch(e){
+      // display not json text for error
     }
 
     // Throw a native Error to play nicer with error handling/retry libraries

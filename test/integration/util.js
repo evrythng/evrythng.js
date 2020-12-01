@@ -4,7 +4,7 @@ const nock = require('nock')
 const OPERATOR_API_KEY = 'OPERATOR_API_KEY'
 
 let scopes = {}
-let resources = {}
+let resources = {};
 
 /**
  * Mock an API response with nock.
@@ -72,7 +72,7 @@ const setupForApiVersion1 = async (apiUrl) => {
   mockApi(apiUrl).get('/thngs/deviceThngId').reply(200, { id: 'deviceThngId' })
   const device = new Device(thngApiKey)
 
-  scopes = {
+  return scopes = {
     operator,
     application,
     trustedApplication,
@@ -85,28 +85,13 @@ const setupForApiVersion2 = async (apiUrl) => {
   mockApi(apiUrl).get('/access').reply(200, { actor: { id: 'operatorId' } })
   const operator = new Operator(OPERATOR_API_KEY)
 
-//   mockApi(apiUrl).post('/thngs').reply(201, { id: 'thngId' })
-//  await operator.thng().create({ name: 'Test thng' })
+  const accessTokenApiKey =  'accessTokenApiKey'
+  mockApi(apiUrl).get('/access').reply(200, { actor: { id: 'accessTokenId' } })
+  const accessToken = new AccessToken(accessTokenApiKey)
 
-  // const accessTokenPayload = {
-  //   conditions: [],
-  //   name: "AccessTokenName",
-  //   policies: ["UPb7E6shapktcaaabfahfpds"],
-  //   tags: [
-  //     'operatorAccess'
-  //     ],
-  //   identifiers: {},
-  //   customFields: {}
-  // };
-
-  // mockApi(API_URL_v2).post('/accessTokens', accessTokenPayload).reply(201, { id: 'accessTokenId', apiKey: 'accessTokenApiKey'})
-
-  // const accessTokenResource = await operator.accessTokens().create(accessTokenPayload)
-  // const accessToken = new AccessToken(accessTokenResource.apiKey)
-
-  scopes = {
+  return scopes = {
     operator,
-   // accessToken
+    accessToken
   }
 }
 
@@ -116,5 +101,6 @@ module.exports = {
   setupForApiVersion1,
   setupForApiVersion2,
   getScope,
-  mockApi
+  mockApi,
+  resources,
 }

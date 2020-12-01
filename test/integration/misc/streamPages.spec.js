@@ -1,29 +1,31 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-module.exports = () => {
+module.exports = (scopeType, url) => {
   describe('streamPages', () => {
-    let operator
+    let scope, api
 
     before(async () => {
-      operator = getScope('operator')
+      scope = getScope(scopeType)
+      api =  mockApi(url)
     })
 
     it('should stream pages of Thngs', (done) => {
-      mockApi().get('/thngs')
+      const linkUrl = encodeURIComponent(url)
+      api.get('/thngs')
         .reply(
           200,
           [{ name: 'Thng 1' }, { name: 'Thng 2' }],
           {
-            link: '<https%3A%2F%2Fapi.evrythng.com%2Fthngs%3FperPage%3D30%26sortOrder%3DDESCENDING%26nextPageToken%3DU7hXyw5DVQ8QT7fYsbyEpdAp>; rel="next"'
+            link: `<${linkUrl}%2Fthngs%3FperPage%3D30%26sortOrder%3DDESCENDING%26nextPageToken%3DU7hXyw5DVQ8QT7fYsbyEpdAp>; rel="next"`
           }
         )
-      mockApi().get('/thngs?perPage=30&sortOrder=DESCENDING&nextPageToken=U7hXyw5DVQ8QT7fYsbyEpdAp')
+      api.get('/thngs?perPage=30&sortOrder=DESCENDING&nextPageToken=U7hXyw5DVQ8QT7fYsbyEpdAp')
         .reply(
           200,
           [{ name: 'Thng 3' }, { name: 'Thng 4' }],
           {
-            link: '<https%3A%2F%2Fapi.evrythng.com%2Fthngs%3FperPage%3D2%26sortOrder%3DDESCENDING%26nextPageToken%3DUprntQaysgRph8aRwFTAKPtn>; rel="next"'
+            link: `<${linkUrl}%2Fthngs%3FperPage%3D2%26sortOrder%3DDESCENDING%26nextPageToken%3DUprntQaysgRph8aRwFTAKPtn>; rel="next"`
           }
         )
       const eachPageCb = (page, totalSoFar) => {
@@ -38,7 +40,7 @@ module.exports = () => {
         }
       }
 
-      operator.thng().streamPages(eachPageCb)
+      scope.thng().streamPages(eachPageCb)
     })
   })
 }

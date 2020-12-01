@@ -1,16 +1,17 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-module.exports = () => {
+module.exports = (scopeType, url) => {
   describe('Device', () => {
-    let device
+    let device, api
 
     before(() => {
-      device = getScope('device')
+      device = getScope(scopeType)
+      api =  mockApi(url)
     })
 
     it('should represent a Thng', async () => {
-      mockApi().get('/thngs/deviceThngId')
+      api.get('/thngs/deviceThngId')
         .reply(200, { id: 'deviceThngId', apiKey: 'apiKey' })
       const res = await device.init()
 

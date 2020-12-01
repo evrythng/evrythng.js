@@ -2,15 +2,16 @@ const { expect } = require('chai')
 const nock = require('nock')
 const { getScope, mockApi } = require('../util')
 
-module.exports = (scopeType, url) => {
+module.exports = (scopeType, settings) => {
   describe('Files', () => {
     let scope, api
+    let caughtError =false
 
     before(() => {
       scope = getScope(scopeType)
-      api = mockApi(url)
+      api = mockApi(settings.apiUrl)
     })
-
+    if(settings.apiVersion == 1) {
     it('should create a file', async () => {
       const payload = { name: 'TestFile.txt' }
       api.post('/files', payload)
@@ -21,9 +22,9 @@ module.exports = (scopeType, url) => {
       expect(res.name).to.equal(payload.name)
     })
 
-    it.only('should read all files', async () => {
+    it('should read all files', async () => {
       api.get('/files')
-        .reply(403, {})
+        .reply(200, [{ id: 'fileId' }])
       const res = await scope.file().read()
 
       expect(res).to.be.an('array')
@@ -57,12 +58,56 @@ module.exports = (scopeType, url) => {
       expect(readData).to.equal(fileData)
     })
 
-    it('should upload file content - image data')
-
-    it.only('should delete a file', async () => {
+    it('should delete a file', async () => {
       api.delete('/files/fileId')
-        .reply(403)
+        .reply(200)
       await scope.file('fileId').delete()
     })
+  }
+
+    if(settings.apiVersion == 2) {
+      it('should create a file', async () => {
+        const payload = { name: 'TestFile.txt' }
+        api.post('/files', payload)
+          .reply(201, payload)
+        const res = await scope.file().create(payload)
+  
+        expect(res).to.be.an('object')
+        expect(res.name).to.equal(payload.name)
+      })
+
+      it('should read a file', async () => {
+        api.get('/files/fileId')
+          .reply(200, { id: 'fileId' })
+        const res = await scope.file('fileId').read()
+  
+        expect(res).to.be.an('object')
+        expect(res.id).to.equal('fileId')
+      })
+
+      it('should NOT read all files', async () => {
+        try {
+        api.get('/files')
+          .reply(403, {})
+          const res = await scope.file().read()
+      } catch (err) {
+        caughtError = true;
+        expect(err);
+        }
+        expect(caughtError).to.be.equal(true);
+      })
+  
+      it('should  NOT delete a file', async () => {
+        try{
+        api.delete('/files/fileId')
+          .reply(403)
+        await scope.file('fileId').delete()
+      } catch (err) {
+        caughtError = true;
+        expect(err);
+        }
+        expect(caughtError).to.be.equal(true);
+      })
+    }
   })
 }

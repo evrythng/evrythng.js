@@ -57,52 +57,68 @@ module.exports = (scopeType, settings) => {
     })
   }
   if(settings.apiVersion == 2) {
-    it.only('should NOT create a batch', async () => {
+    it('should NOT create a batch', async () => {
       const payload = { name: 'Test Batch' }
       try{
       api.post('/batches', payload)
         .reply(403, {status: 403})
-      const res = await scope.batch().create(payload)
+      await scope.batch().create(payload)
       } catch (err) {
       caughtError = true;
-      console.log(err)
-     expect(err[0]).to.have.members({status: 403})
+      expect(err);
       }
       expect(caughtError).to.be.equal(true);
     })
 
-    it('should read all batches', async () => {
+    it('should NOT read all batches', async () => {
+      try{
       api.get('/batches')
         .reply(200, [{ id: 'batchId' }])
-      const res = await scope.batch().read()
+      await scope.batch().read()
 
-      expect(res).to.be.an('array')
-      expect(res).to.have.length.gte(1)
+    } catch (err) {
+      caughtError = true;
+      expect(err);
+      }
+      expect(caughtError).to.be.equal(true);
     })
 
-    it('should read a batch', async () => {
+    it('should NOT read a batch', async () => {
+      try{
       api.get('/batches/batchId')
         .reply(200, { id: 'batchId' })
-      const res = await scope.batch('batchId').read()
+       await scope.batch('batchId').read()
 
-      expect(res).to.be.an('object')
-      expect(res.id).to.equal('batchId')
+    } catch (err) {
+      caughtError = true;
+      expect(err);
+      }
+      expect(caughtError).to.be.equal(true);
     })
 
-    it('should update a batch', async () => {
+    it('should NOT update a batch', async () => {
       const payload = { tags: ['updated'] }
+      try {
       api.put('/batches/batchId', payload)
         .reply(200, payload)
       const res = await scope.batch('batchId').update(payload)
-
-      expect(res).to.be.an('object')
-      expect(res.tags).to.deep.equal(payload.tags)
+    } catch (err) {
+      caughtError = true;
+      expect(err);
+      }
+      expect(caughtError).to.be.equal(true);
     })
 
-    it('should delete a batch', async () => {
+    it('should NOT delete a batch', async () => {
+      try {
       api.delete('/batches/batchId')
         .reply(200)
       await scope.batch('batchId').delete()
+    } catch (err) {
+      caughtError = true;
+      expect(err);
+      }
+      expect(caughtError).to.be.equal(true);
     })
   }
   })

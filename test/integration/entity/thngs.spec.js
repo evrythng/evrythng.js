@@ -5,9 +5,10 @@ module.exports = (scopeType, url) => {
   describe('Thngs', () => {
     let scope, api
 
-    before(() => {
+    before(function() {
       scope = getScope(scopeType)
       api = mockApi(url)
+
     })
 
     it('should create a Thng', async () => {
