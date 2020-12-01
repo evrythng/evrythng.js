@@ -12,8 +12,7 @@ module.exports = (scopeType, url) => {
 
     it('should create an application', async () => {
       const payload = { name: 'Application Name', socialNetworks: {} }
-      api.post('/projects/projectId/applications')
-        .reply(201, payload)
+      api.post('/projects/projectId/applications').reply(201, payload)
       const res = await scope.project('projectId').application().create(payload)
 
       expect(res).to.be.an('object')
@@ -21,8 +20,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read all applications', async () => {
-      api.get('/projects/projectId/applications')
-        .reply(200, [{ id: 'applicationId' }])
+      api.get('/projects/projectId/applications').reply(200, [{ id: 'applicationId' }])
       const res = await scope.project('projectId').application().read()
 
       expect(res).to.be.an('array')
@@ -30,8 +28,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read an application', async () => {
-      api.get('/projects/projectId/applications/applicationId')
-        .reply(200, { id: 'applicationId' })
+      api.get('/projects/projectId/applications/applicationId').reply(200, { id: 'applicationId' })
       const res = await scope.project('projectId').application('applicationId').read()
 
       expect(res).to.be.an('object')
@@ -40,8 +37,7 @@ module.exports = (scopeType, url) => {
 
     it('should update an application', async () => {
       const payload = { tags: ['updated'] }
-      api.put('/projects/projectId/applications/applicationId')
-        .reply(200, payload)
+      api.put('/projects/projectId/applications/applicationId').reply(200, payload)
       const res = await scope.project('projectId').application('applicationId').update(payload)
 
       expect(res).to.be.an('object')
@@ -49,8 +45,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should delete an application', async () => {
-      api.delete('/projects/projectId/applications/applicationId')
-        .reply(200)
+      api.delete('/projects/projectId/applications/applicationId').reply(200)
       await scope.project('projectId').application('applicationId').delete()
     })
   })

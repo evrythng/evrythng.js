@@ -7,12 +7,11 @@ const describeOperatorPermissionTests = (url) => {
 
     before(async () => {
       operator = getScope('operator')
-      api =  mockApi(url)
+      api = mockApi(url)
     })
 
     it('should read all role permissions', async () => {
-      api.get('/roles/roleId/permissions')
-        .reply(200, [{ name: 'global_read' }])
+      api.get('/roles/roleId/permissions').reply(200, [{ name: 'global_read' }])
       const res = await operator.role('roleId').permission().read()
 
       expect(res).to.be.an('array')
@@ -20,8 +19,7 @@ const describeOperatorPermissionTests = (url) => {
     })
 
     it('should read a single role permission', async () => {
-      api.get('/roles/roleId/permissions/global_read')
-        .reply(200, { name: 'global_read' })
+      api.get('/roles/roleId/permissions/global_read').reply(200, { name: 'global_read' })
       const res = await operator.role('roleId').permission('global_read').read()
 
       expect(res).to.be.an('object')
@@ -30,8 +28,7 @@ const describeOperatorPermissionTests = (url) => {
 
     it('should update a single role permission', async () => {
       const payload = { name: 'global_read', enabled: false }
-      api.put('/roles/roleId/permissions/global_read', payload)
-        .reply(200, payload)
+      api.put('/roles/roleId/permissions/global_read', payload).reply(200, payload)
       const res = await operator.role('roleId').permission('global_read').update(payload)
 
       expect(res).to.be.an('object')
@@ -46,12 +43,11 @@ const describeAppUserPermissionTests = (url) => {
 
     before(async () => {
       operator = getScope('operator')
-      api =  mockApi(url)
+      api = mockApi(url)
     })
 
     it('should read all role permissions', async () => {
-      api.get('/roles/roleId/permissions')
-        .reply(200, [{ access: 'cru', path: '/thngs' }])
+      api.get('/roles/roleId/permissions').reply(200, [{ access: 'cru', path: '/thngs' }])
       const res = await operator.role('roleId').permission().read()
 
       expect(res).to.be.an('array')
@@ -60,8 +56,7 @@ const describeAppUserPermissionTests = (url) => {
 
     it('should update role permissions', async () => {
       const payload = [{ path: '/thngs', access: 'cr' }]
-      api.put('/roles/roleId/permissions', payload)
-        .reply(200, payload)
+      api.put('/roles/roleId/permissions', payload).reply(200, payload)
       const res = await operator.role('roleId').permission().update(payload)
 
       expect(res).to.be.an('array')
@@ -70,8 +65,7 @@ const describeAppUserPermissionTests = (url) => {
 
     it('should minimise role permissions', async () => {
       const payload = []
-      api.put('/roles/roleId/permissions', payload)
-        .reply(200, payload)
+      api.put('/roles/roleId/permissions', payload).reply(200, payload)
       const res = await operator.role('roleId').permission().update(payload)
 
       expect(res).to.be.an('array')
@@ -79,7 +73,7 @@ const describeAppUserPermissionTests = (url) => {
   })
 }
 
-module.exports = (type, url ) => {
+module.exports = (type, url) => {
   if (type === 'operator') {
     describeOperatorPermissionTests(url)
   }

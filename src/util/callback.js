@@ -5,7 +5,7 @@
  * @returns {function} - Response handler function
  */
 export function success (callback) {
-  return response => {
+  return (response) => {
     if (callback) callback(null, response)
     return response
   }
@@ -18,19 +18,19 @@ export function success (callback) {
  * @returns {function} - Response handler function
  */
 export function failure (callback) {
-  return async err => {
+  return async (err) => {
     if (callback) callback(err)
 
     if (!err) {
-      throw new Error(`No error message available, err was: ${JSON.stringify(err)}`);
+      throw new Error(`No error message available, err was: ${JSON.stringify(err)}`)
     }
 
     if (typeof err.ok !== 'undefined' && !err.ok) {
-      err = await err.text();
+      err = await err.text()
     }
     try {
       err = JSON.parse(err)
-    } catch(e){
+    } catch (e) {
       // display not json text for error
     }
 

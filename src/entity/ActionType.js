@@ -23,14 +23,11 @@ export default class ActionType extends Entity {
   static resourceFactory () {
     return {
       actionType (id) {
-        return Object.assign(
-          Resource.factoryFor(ActionType, path).call(this, id),
-          {
-            read (...args) {
-              return readActionType.call(this, id, ...args)
-            }
+        return Object.assign(Resource.factoryFor(ActionType, path).call(this, id), {
+          read (...args) {
+            return readActionType.call(this, id, ...args)
           }
-        )
+        })
       }
     }
   }
@@ -52,17 +49,16 @@ function readActionType (id, ...args) {
       // If reading an action type, only use the root of the path
       this.path = this.path.split('/').slice(0, 2).join('/')
 
-      Resource.prototype.read.call(this, ...normalizedArgs)
-        .then(actionTypes => {
-          if (!actionTypes.length) {
-            // Fake 404
-            reject({
-              status: 404,
-              errors: ['The action type was not found.']
-            })
-          }
-          resolve(actionTypes[0])
-        })
+      Resource.prototype.read.call(this, ...normalizedArgs).then((actionTypes) => {
+        if (!actionTypes.length) {
+          // Fake 404
+          reject({
+            status: 404,
+            errors: ['The action type was not found.']
+          })
+        }
+        resolve(actionTypes[0])
+      })
     })
   }
 }
@@ -78,7 +74,7 @@ function readActionType (id, ...args) {
 function normalizeArguments (id) {
   return (...args) => {
     let options
-    let firstArg = args[0]
+    const firstArg = args[0]
 
     if (isUndefined(firstArg) || isFunction(firstArg)) {
       options = {}
@@ -88,10 +84,7 @@ function normalizeArguments (id) {
     }
 
     options.url = path
-    options.params = Object.assign(
-      { filter: { name: decodeURIComponent(id) } },
-      options.params
-    )
+    options.params = Object.assign({ filter: { name: decodeURIComponent(id) } }, options.params)
 
     return args
   }

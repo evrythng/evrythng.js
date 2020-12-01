@@ -5,20 +5,18 @@ The official `evrythng.js` SDK facilitates communication with the
 resource oriented API. It can be used both for server-side scripting (Node.js)
 or in client-side web applications in modern browsers.
 
-* [Installation](#installation)
-* [Compatibility](#compatibility)
-* [Scopes](#scopes)
-* [API](#api)
-* [Plugins](#plugins)
-* [Documentation and Examples](#documentation-and-examples)
-
+- [Installation](#installation)
+- [Compatibility](#compatibility)
+- [Scopes](#scopes)
+- [API](#api)
+- [Plugins](#plugins)
+- [Documentation and Examples](#documentation-and-examples)
 
 ## Installation
 
 `evrythng.js` is distributed via [NPM](https://www.npmjs.com/package/evrythng)
 and the EVRYTHNG CDN, allowing you to manage the version of the library that
 your application or scripts uses.
-
 
 ### NPM
 
@@ -37,23 +35,20 @@ npm install --save-dev evrythng
 Then require it in any module:
 
 ```js
-const evrythng = require('evrythng')
+const evrythng = require('evrythng');
 
-evrythng.api({ url: '/time' })
-  .then(console.log)
-  .error(console.error)
+evrythng.api({ url: '/time' }).then(console.log).error(console.error);
 ```
 
 Or using ES6 `import`/`export` syntax when available:
 
 ```js
-import { Application } from 'evrythng'
+import { Application } from 'evrythng';
 ```
 
 ```js
-import * as evrythng from 'evrythng'
+import * as evrythng from 'evrythng';
 ```
-
 
 ### CDN
 
@@ -67,12 +62,9 @@ Then use in a browser `script` tag using the `evrythng` global variable:
 
 ```html
 <script>
-  evrythng.api({ url: '/time' })
-    .then(console.log)
-    .catch(console.error)
+  evrythng.api({ url: '/time' }).then(console.log).catch(console.error);
 </script>
 ```
-
 
 ## Compatibility
 
@@ -83,7 +75,6 @@ dependency of this project should take care of this for you.
 
 When using Node.js, version 10 and above is required.
 
-
 ## Scopes
 
 There are several types of
@@ -92,75 +83,76 @@ that are used to interact with the API. Each represents a type of user or
 resource in an EVRYTHNG account.
 
 > Note: Only the **Application API Key** can be safely versioned in public code!
-  The other API key types are secret and secure API Keys with higher permission
-  sets and should not be hard-coded - ideally encrypted in configuration files
-  or fetched at runtime from a server.
+> The other API key types are secret and secure API Keys with higher permission
+> sets and should not be hard-coded - ideally encrypted in configuration files
+> or fetched at runtime from a server.
 
 In a nutshell, `evrythng.js` provides the following scopes. Once a scope is
 created it provides an appropriate API for the resources it can manage
 (see [API](#api) below):
 
-* `Operator` - Highest level scope that can manage the account structure, all
+- `Operator` - Highest level scope that can manage the account structure, all
   its resources and projects, etc.
 
 ```js
-const operator = new evrythng.Operator(OPERATOR_API_KEY)
+const operator = new evrythng.Operator(OPERATOR_API_KEY);
 ```
 
-* `Application` - Public application scopes used for Identifier Recognition and
+- `Application` - Public application scopes used for Identifier Recognition and
   to authenticate Application Users.
 
 ```js
-const application = new evrythng.Application(APPLICATION_API_KEY)
+const application = new evrythng.Application(APPLICATION_API_KEY);
 ```
 
-* `TrustedApplication` - Secret type of `Application` scope with expended
+- `TrustedApplication` - Secret type of `Application` scope with expended
   permissions, intended for use for scripting and backend integrations on behalf
   of the application (e.g. trigger rules or system integration functionality).
 
 ```js
-const trustedApplication = new evrythng.TrustedApplication(TRUSTED_APP_API_KEY)
+const trustedApplication = new evrythng.TrustedApplication(TRUSTED_APP_API_KEY);
 ```
 
-* `User` - Usually returned from authentication via an `Application` scope, but
+- `User` - Usually returned from authentication via an `Application` scope, but
   can also be created manually with an Application User API Key:
 
 ```js
 // Registered user with email + password
-const credentials = { email: 'example@evrythng.com', password }
-app.login(credentials)
-  .then(user => console.log(user.apiKey))
+const credentials = { email: 'example@evrythng.com', password };
+app.login(credentials).then((user) => console.log(user.apiKey));
 
 // Or, an anonymous user
-app.appUser().create({ anonymous: true })
-  .then(anonUser => console.log(anonUser.apiKey))
+app
+  .appUser()
+  .create({ anonymous: true })
+  .then((anonUser) => console.log(anonUser.apiKey));
 
 // Or using a pre-existing API key
-const userApiKey = localStorage.getItem('user_api_key')
-const user = new evrythng.User(userApiKey)
+const userApiKey = localStorage.getItem('user_api_key');
+const user = new evrythng.User(userApiKey);
 ```
 
-* `ActionApp` - Special version of the Application scope designed to make it as
+- `ActionApp` - Special version of the Application scope designed to make it as
   simple as possible to create instrumentation actions in web apps. It creates
   and remembers an anonymous Application User in LocalStorage and provides a
   simple interface for creating actions:
 
 ```js
-import { ActionApp } from 'evrythng'
+import { ActionApp } from 'evrythng';
 
-const actionApp = new ActionApp(appApiKey)
-await actionApp.init()
+const actionApp = new ActionApp(appApiKey);
+await actionApp.init();
 
 // Create a scan action on a Thng identified in the query
-const thng = getQueryParam('thng')
-const data = { thng, userAgent }
-const action = await actionApp.createAction('scans', data)
+const thng = getQueryParam('thng');
+const data = { thng, userAgent };
+const action = await actionApp.createAction('scans', data);
 
 // Log a page was visited (the current URL)
-await actionApp.pageVisited()
+await actionApp.pageVisited();
 
 // Retrieve the managed Application User
-const anonymousUser = await actionApp.getAnonymousUser()
+const anonymousUser = await actionApp.getAnonymousUser();
 ```
 
 For any scope, if the scope's own data (such as an Application's `customFields`)
@@ -168,13 +160,11 @@ is required immediately, use the `init()` method to wait until this data is
 available. If not, this step can be ignored:
 
 ```js
-import { Application } from 'evrythng'
+import { Application } from 'evrythng';
 
-const application = new Application(apiKey)
-application.init()
-  .then(() => console.log(application.customFields))
+const application = new Application(apiKey);
+application.init().then(() => console.log(application.customFields));
 ```
-
 
 ## API
 
@@ -183,7 +173,6 @@ access level defined for each type of
 [API Key](https://developers.evrythng.com/docs/api-scope-and-key-permissions).
 For example - the `Application` scope can read products in its project, but can
 only create `User`s who in turn have higher access to manage resources.
-
 
 ### Methods
 
@@ -200,40 +189,44 @@ SCOPE
 
 Where:
 
-* `SCOPE` - One of the scope types shown above.
-* `RESOURCE` - can be any resource type, such as `thng`, `product`, `collection`
+- `SCOPE` - One of the scope types shown above.
+- `RESOURCE` - can be any resource type, such as `thng`, `product`, `collection`
   etc. found in the
   [API Reference](https://developers.evrythng.com/reference).
-  * `id` - specified if manipulating a specific resource of this type.
-* `METHOD` - one of `create`, `read`, `update`, `delete`, `rescope`, `find`, or `upsert`.
-  * `payload` - JSON payload object if performing a create or update.
-  * `params` - Parameters object used if required.
-
+  - `id` - specified if manipulating a specific resource of this type.
+- `METHOD` - one of `create`, `read`, `update`, `delete`, `rescope`, `find`, or `upsert`.
+  - `payload` - JSON payload object if performing a create or update.
+  - `params` - Parameters object used if required.
 
 Therefore to read all Thngs as a `TrustedApplication` scope:
 
 ```js
-trustedApplication.thng().read()
-  .then(thngs => console.log(`Read ${thngs.length} Thngs!`))
+trustedApplication
+  .thng()
+  .read()
+  .then((thngs) => console.log(`Read ${thngs.length} Thngs!`));
 ```
 
 or to create a product as a `User`:
 
 ```js
-const payload = { name: 'Test Product', tags: ['evrythng.js'] }
-user.product().create(payload)
-  .then(product => console.log(`Created product ${product.id}!`))
+const payload = { name: 'Test Product', tags: ['evrythng.js'] };
+user
+  .product()
+  .create(payload)
+  .then((product) => console.log(`Created product ${product.id}!`));
 ```
 
 or to read a known Thng using its `id` as an Operator:
 
 ```js
-const thngId = 'UqKWAsTpdxCA3KwaaGmTxAhp'
+const thngId = 'UqKWAsTpdxCA3KwaaGmTxAhp';
 
-operator.thng(thngId).read()
-  .then(thng => console.log(`Thng tags: ${thng.tags.join(', ')}`))
+operator
+  .thng(thngId)
+  .read()
+  .then((thng) => console.log(`Thng tags: ${thng.tags.join(', ')}`));
 ```
-
 
 ### Promises
 
@@ -241,9 +234,11 @@ All methods return Promises, making chaining operations and catching errors very
 simple:
 
 ```js
-user.thng().create(payload)
-  .then(res => console.log('Success!'))
-  .catch(err => console.log(`Oh no! Error: ${err.message}`))
+user
+  .thng()
+  .create(payload)
+  .then((res) => console.log('Success!'))
+  .catch((err) => console.log(`Oh no! Error: ${err.message}`));
 ```
 
 Users of modern browsers and Node.js 8+ can take advantage `async`/`await`
@@ -253,18 +248,17 @@ operations:
 ```js
 const testThngUpdate = async () => {
   // Read all Thngs and find one
-  const thngs = await operator.thng().read()
-  const testThng = thngs.find(p => p.tags.includes('test'))
+  const thngs = await operator.thng().read();
+  const testThng = thngs.find((p) => p.tags.includes('test'));
 
   // Update its tags
-  const payload = { tags: ['updated'] }
-  const updatedThng = await operator.thng(testThng.id).update(payload)
+  const payload = { tags: ['updated'] };
+  const updatedThng = await operator.thng(testThng.id).update(payload);
 
   // Check the update was successful
-  expect(updatedThng.tags).to.equal(payload.tags)
-}
+  expect(updatedThng.tags).to.equal(payload.tags);
+};
 ```
-
 
 ### Parameters
 
@@ -276,48 +270,52 @@ shown below:
 const params = {
   // Only with these tags
   filter: {
-    tags: 'test'
+    tags: 'test',
   },
   // More items per page
-  perPage: 100
-}
+  perPage: 100,
+};
 
-user.product().read({ params })
-  .then(products => console.log(`Found ${products.length} 'test' products`))
+user
+  .product()
+  .read({ params })
+  .then((products) => console.log(`Found ${products.length} 'test' products`));
 ```
 
 Another example is creating resources in a specific project scope:
 
 ```js
-const params = { project: projectId }
-const payload = { name: 'Test Thng' }
+const params = { project: projectId };
+const payload = { name: 'Test Thng' };
 
-user.thng().create(payload, { params })
-  .then(thng => console.log(`Created Thng ${thng.id} in project ${projectId}`))
+user
+  .thng()
+  .create(payload, { params })
+  .then((thng) => console.log(`Created Thng ${thng.id} in project ${projectId}`));
 ```
 
 Parameters can also be specified using chainable parameter setter methods:
 
 ```js
-user.product()
+user
+  .product()
   .setFilter({ tags: 'test' })
   .setPerPage(100)
   .read()
-  .then(products => console.log(`Found ${products.length} 'test' products`))
+  .then((products) => console.log(`Found ${products.length} 'test' products`));
 ```
 
 Other parameter setters include `setWithScopes()`, `setContext()`,
 `setPerPage()`, `setProject()` and `setFilter()`.
 
-
 ## Plugins
 
 This SDK can be extended with plugins that enhance existing functionality by
 modifying the capabilities of Scopes and Entities. This is done by supplying an
-object with at least an `install()` method, that is provided an `api` object 
-(see `src/use.js` for details of this API). 
+object with at least an `install()` method, that is provided an `api` object
+(see `src/use.js` for details of this API).
 
-For example, adding a `getSummary()` method to Thngs: 
+For example, adding a `getSummary()` method to Thngs:
 
 ```js
 const SummaryPlugin = {
@@ -325,41 +323,39 @@ const SummaryPlugin = {
   install: (api) => {
     // Add new functionality to all Thng entities
     api.entities.Thng.prototype.getSummary = function () {
-      return `${this.name} (${this.id})`
-    }
-  }
-}
+      return `${this.name} (${this.id})`;
+    };
+  },
+};
 ```
 
 The plugin is then installed using `use()`:
 
 ```js
-const SummaryPlugin = require('summary-plugin')
+const SummaryPlugin = require('summary-plugin');
 
-evrythng.use(SummaryPlugin)
+evrythng.use(SummaryPlugin);
 ```
 
 Then, the plugin's functionality can be used:
 
 ```js
 // Read one Thng
-const [thng] = await user.thng().setPerPage(1).read()
+const [thng] = await user.thng().setPerPage(1).read();
 
 // Use the newly installed method
-console.log(thng.getSummary())
+console.log(thng.getSummary());
 ```
 
 ```
 Test Thng (U6ssDxRBD8kQATawwGrEyaRm)
 ```
 
-
 ## Documentation and Examples
 
 For specific resource examples, see the relevant section of the
 [API Reference](https://developers.evrythng.com/reference), or look in the
 `examples` directory in this repository.
-
 
 ## Build and Deploy
 

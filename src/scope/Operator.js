@@ -40,18 +40,17 @@ import symbols from '../symbols'
  * @mixin
  */
 const OperatorAccess = mixinResources([
-
   Access, // LR
   AccessPolicy, // CRUDL
   AccessTokens, // CL
   Account, // LRU
   Action, // CRLD
   ActionType, // CRULD
-  ADIOrder,  // CRL
-  ADIOrderEvent, //CRL
-  Application, //CRUDL
+  ADIOrder, // CRL
+  ADIOrderEvent, // CRL
+  Application, // CRUDL
   Batch, // CRUD
-  Collection, //CRUDL
+  Collection, // CRUDL
   CommissionState, // R
   Domain, // L
   File, // CRUD
@@ -63,7 +62,7 @@ const OperatorAccess = mixinResources([
   Property, // CRUDL
   PurchaseOrder, // CRUDL
   ReactorLog, // RD
-  ReactorSchedule, //CRUD
+  ReactorSchedule, // CRUD
   ReactorScript, // RU
   Redirection, // CRUD
   Redirector, // RUD
@@ -72,7 +71,7 @@ const OperatorAccess = mixinResources([
   ShipmentNotice, // CRUDL
   ShortDomain, // L
   Thng, // CRUDL
-  User, // R
+  User // R
 ])
 
 /**
@@ -92,11 +91,10 @@ export default class Operator extends OperatorAccess(Scope) {
   constructor (apiKey, data = {}) {
     super(apiKey, data)
 
-    this.initPromise = super.readAccess()
-      .then(access => {
-        this.id = access.actor.id
-        this[symbols.path] = this._getPath()
-      })
+    this.initPromise = super.readAccess().then((access) => {
+      this.id = access.actor.id
+      this[symbols.path] = this._getPath()
+    })
   }
 
   /**

@@ -10,8 +10,9 @@ module.exports = (scopeType, url) => {
       api = mockApi(url)
     })
 
-    it('should read a Thng\'s commissioning state', async () => {
-      api.get('/thngs/gs1%3A21%3A23984736/commissionState')
+    it("should read a Thng's commissioning state", async () => {
+      api
+        .get('/thngs/gs1%3A21%3A23984736/commissionState')
         .reply(200, { state: 'not_commissioned' })
       const res = await scope.thng('gs1:21:23984736').commissionState().read()
 

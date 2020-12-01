@@ -15,7 +15,7 @@ export default function getCurrentPosition () {
 
       window.navigator.geolocation.getCurrentPosition(
         resolve,
-        err => reject(err),
+        (err) => reject(err),
         geolocationOptions
       )
     } else {

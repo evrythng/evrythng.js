@@ -11,11 +11,10 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read the application Redirector', async () => {
-      api.get('/projects/projectId/applications/applicationId/redirector')
+      api
+        .get('/projects/projectId/applications/applicationId/redirector')
         .reply(200, { rules: [] })
-      const res = await scope.project('projectId').application('applicationId')
-        .redirector()
-        .read()
+      const res = await scope.project('projectId').application('applicationId').redirector().read()
 
       expect(res).to.be.an('object')
       expect(res.rules).to.be.an('array')
@@ -25,9 +24,10 @@ module.exports = (scopeType, url) => {
       const payload = {
         rules: [{ match: 'thng.name=test' }]
       }
-      api.put('/projects/projectId/applications/applicationId/redirector')
-        .reply(200, payload)
-      const res = await scope.project('projectId').application('applicationId')
+      api.put('/projects/projectId/applications/applicationId/redirector').reply(200, payload)
+      const res = await scope
+        .project('projectId')
+        .application('applicationId')
         .redirector()
         .update(payload)
 
@@ -35,12 +35,10 @@ module.exports = (scopeType, url) => {
     })
 
     it('should delete the application redirector', async () => {
-      const payload = {
-        rules: [{ match: 'thng.name=test' }]
-      }
-      api.delete('/projects/projectId/applications/applicationId/redirector')
-        .reply(204)
-      const res = await scope.project('projectId').application('applicationId')
+      api.delete('/projects/projectId/applications/applicationId/redirector').reply(204)
+      const res = await scope
+        .project('projectId')
+        .application('applicationId')
         .redirector()
         .delete()
 

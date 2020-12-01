@@ -6,11 +6,9 @@ const payload = {
   description: 'create accessTokens',
   policies: ['UPb7E6shapktcaaabfahfpds'],
   conditions: [],
-  tags: [
-    	'operatorAccess'
-    	],
-    identifiers: {},
-    customFields: {}
+  tags: ['operatorAccess'],
+  identifiers: {},
+  customFields: {}
 }
 
 module.exports = (scopeType, settings) => {
@@ -18,14 +16,13 @@ module.exports = (scopeType, settings) => {
     let scope, api
 
     before(async () => {
-      scope = getScope(scopeType);
-      api = mockApi(settings.apiUrl);
+      scope = getScope(scopeType)
+      api = mockApi(settings.apiUrl)
     })
 
-    if(settings.apiVersion == 2) {
+    if (settings.apiVersion == 2) {
       it('should create access token', async () => {
-        api.post('/accessTokens', payload)
-          .reply(201, { id: 'accessTokenId' })
+        api.post('/accessTokens', payload).reply(201, { id: 'accessTokenId' })
         const res = await scope.accessTokens().create(payload)
 
         expect(res).to.be.an('object')
@@ -33,8 +30,7 @@ module.exports = (scopeType, settings) => {
       })
 
       it('should read access token by id', async () => {
-        api.get('/accessTokens/accessTokenId')
-          .reply(200, { id: 'accessTokenId' })
+        api.get('/accessTokens/accessTokenId').reply(200, { id: 'accessTokenId' })
         const res = await scope.accessTokens('accessTokenId').read()
 
         expect(res).to.be.an('object')
@@ -42,8 +38,7 @@ module.exports = (scopeType, settings) => {
       })
 
       it('should read all accessTokens', async () => {
-        api.get('/accessTokens')
-          .reply(200, [payload])
+        api.get('/accessTokens').reply(200, [payload])
         const res = await scope.accessTokens().read()
 
         expect(res).to.be.an('array')
@@ -51,8 +46,7 @@ module.exports = (scopeType, settings) => {
       })
 
       it('should update accessToken', async () => {
-        api.put('/accessTokens/accessTokenId',payload)
-          .reply(200, payload)
+        api.put('/accessTokens/accessTokenId', payload).reply(200, payload)
 
         const res = await scope.accessTokens('accessTokenId').update(payload)
 
@@ -61,12 +55,11 @@ module.exports = (scopeType, settings) => {
       })
 
       it('should delete access policy', async () => {
-        api.delete('/accessTokens/accessTokenId')
-          .reply(204)
+        api.delete('/accessTokens/accessTokenId').reply(204)
         const res = await scope.accessTokens('accessTokenId').delete()
 
         expect(res).to.not.exist
       })
-  }
+    }
   })
 }

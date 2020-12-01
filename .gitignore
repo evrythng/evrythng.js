@@ -7,3 +7,4 @@ dist
 report
 .idea
 *.DS_Store
+.vscode

@@ -8,9 +8,12 @@ let operator, api
 const describeReactorScriptTests = () => {
   it('should update the Reactor script', async () => {
     const payload = { script: SCRIPT }
-    api.put('/projects/projectId/applications/applicationId/reactor/script', payload)
+    api
+      .put('/projects/projectId/applications/applicationId/reactor/script', payload)
       .reply(200, payload)
-    const res = await operator.project('projectId').application('applicationId')
+    const res = await operator
+      .project('projectId')
+      .application('applicationId')
       .reactorScript()
       .update(payload)
 
@@ -18,9 +21,12 @@ const describeReactorScriptTests = () => {
   })
 
   it('should read the Reactor script status', async () => {
-    api.get('/projects/projectId/applications/applicationId/reactor/script/status')
+    api
+      .get('/projects/projectId/applications/applicationId/reactor/script/status')
       .reply(200, { updating: false })
-    const res = await operator.project('projectId').application('applicationId')
+    const res = await operator
+      .project('projectId')
+      .application('applicationId')
       .reactorScript()
       .status()
       .read()
@@ -29,9 +35,12 @@ const describeReactorScriptTests = () => {
   })
 
   it('should read the Reactor script', async () => {
-    api.get('/projects/projectId/applications/applicationId/reactor/script')
+    api
+      .get('/projects/projectId/applications/applicationId/reactor/script')
       .reply(200, { type: 'simple' })
-    const res = await operator.project('projectId').application('applicationId')
+    const res = await operator
+      .project('projectId')
+      .application('applicationId')
       .reactorScript()
       .read()
 
@@ -47,9 +56,12 @@ const describeReactorScheduleTests = () => {
       cron: '0 0 * * * ?',
       description: 'Example Reactor schedule'
     }
-    api.post('/projects/projectId/applications/applicationId/reactor/schedules', payload)
+    api
+      .post('/projects/projectId/applications/applicationId/reactor/schedules', payload)
       .reply(201, payload)
-    const res = await operator.project('projectId').application('applicationId')
+    const res = await operator
+      .project('projectId')
+      .application('applicationId')
       .reactorSchedule()
       .create(payload)
 
@@ -58,9 +70,12 @@ const describeReactorScheduleTests = () => {
   })
 
   it('should read all Reactor schedules', async () => {
-    api.get('/projects/projectId/applications/applicationId/reactor/schedules')
+    api
+      .get('/projects/projectId/applications/applicationId/reactor/schedules')
       .reply(200, [{ id: 'scheduleId' }])
-    const res = await operator.project('projectId').application('applicationId')
+    const res = await operator
+      .project('projectId')
+      .application('applicationId')
       .reactorSchedule()
       .read()
 
@@ -68,9 +83,12 @@ const describeReactorScheduleTests = () => {
   })
 
   it('should read a single Reactor schedule', async () => {
-    api.get('/projects/projectId/applications/applicationId/reactor/schedules/scheduleId')
+    api
+      .get('/projects/projectId/applications/applicationId/reactor/schedules/scheduleId')
       .reply(200, { id: 'scheduleId' })
-    const res = await operator.project('projectId').application('applicationId')
+    const res = await operator
+      .project('projectId')
+      .application('applicationId')
       .reactorSchedule('scheduleId')
       .read()
 
@@ -79,10 +97,12 @@ const describeReactorScheduleTests = () => {
 
   it('should update a single Reactor schedule', async () => {
     const payload = { enabled: false }
-     api
+    api
       .put('/projects/projectId/applications/applicationId/reactor/schedules/scheduleId', payload)
       .reply(200, { id: 'scheduleId', enabled: false })
-    const res = await operator.project('projectId').application('applicationId')
+    const res = await operator
+      .project('projectId')
+      .application('applicationId')
       .reactorSchedule('scheduleId')
       .update({ enabled: false })
 
@@ -95,11 +115,13 @@ const describeReactorScheduleTests = () => {
     api
       .delete('/projects/projectId/applications/applicationId/reactor/schedules/scheduleId')
       .reply(200)
-    const res = await operator.project('projectId').application('applicationId')
+    const res = await operator
+      .project('projectId')
+      .application('applicationId')
       .reactorSchedule('scheduleId')
       .delete()
 
-      expect(res).to.not.exist
+    expect(res).to.not.exist
   })
 }
 

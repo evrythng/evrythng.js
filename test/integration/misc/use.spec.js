@@ -20,11 +20,10 @@ module.exports = (scopeType, url) => {
 
     before(async () => {
       scope = getScope(scopeType)
-      api = mockApi(url);
+      api = mockApi(url)
 
       const payload = { name: 'test' }
-      api.post('/thngs', payload)
-        .reply(201, payload)
+      api.post('/thngs', payload).reply(201, payload)
       thng = await scope.thng().create(payload)
     })
 

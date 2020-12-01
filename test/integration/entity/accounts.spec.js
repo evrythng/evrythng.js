@@ -3,7 +3,7 @@ const { getScope, mockApi } = require('../util')
 
 module.exports = (scopeType, url) => {
   describe('Accounts', () => {
-    let scope, api;
+    let scope, api
 
     before(() => {
       scope = getScope(scopeType)
@@ -11,8 +11,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read all shared accounts', async () => {
-      api.get('/accounts')
-        .reply(200, [{ id: 'accountId' }])
+      api.get('/accounts').reply(200, [{ id: 'accountId' }])
       const res = await scope.sharedAccount().read()
 
       expect(res).to.be.an('array')
@@ -20,8 +19,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read a shared account', async () => {
-      api.get('/accounts/accountId')
-        .reply(200, { id: 'accountId' })
+      api.get('/accounts/accountId').reply(200, { id: 'accountId' })
       const res = await scope.sharedAccount('accountId').read()
 
       expect(res).to.be.an('object')
@@ -30,8 +28,7 @@ module.exports = (scopeType, url) => {
 
     it('should update a shared account', async () => {
       const payload = { customFields: { env: 'test' } }
-      api.put('/accounts/accountId', payload)
-        .reply(200, payload)
+      api.put('/accounts/accountId', payload).reply(200, payload)
       const res = await scope.sharedAccount('accountId').update(payload)
 
       expect(res).to.be.an('object')

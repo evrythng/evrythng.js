@@ -19,8 +19,8 @@ export default class AccessPolicy extends Entity {
     return {
       accessPolicy (id) {
         // добавить проверки на неправильный url и scope
-     return Resource.factoryFor(AccessPolicy, path).call(this, id)
+        return Resource.factoryFor(AccessPolicy, path).call(this, id)
+      }
     }
   }
-}
 }

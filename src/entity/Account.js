@@ -11,7 +11,7 @@ const AccountResources = mixinResources([
   Domain, // R
   ShortDomain, // R
   Access, // RU,
-  OpeatorAccess //CRUD,
+  OpeatorAccess // CRUD,
 ])
 
 /**

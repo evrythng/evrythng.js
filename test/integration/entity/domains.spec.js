@@ -11,8 +11,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read all domains', async () => {
-      api = mockApi(url)
-      .get('/accounts/accountId/domains')
+      api.get('/accounts/accountId/domains')
         .reply(200, [{ domain: 'wrxfq.tn.gg' }])
       const res = await scope.sharedAccount('accountId').domain().read()
 

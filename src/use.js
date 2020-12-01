@@ -11,7 +11,7 @@ import ApplicationEntity from './entity/Application'
 import AppUser from './entity/AppUser'
 import Batch from './entity/Batch'
 import Collection from './entity/Collection'
-import Entity from './entity/Entity';
+import Entity from './entity/Entity'
 import File from './entity/File'
 import Location from './entity/Location'
 import Permission from './entity/Permission'
@@ -54,13 +54,13 @@ const API = {
     Application,
     TrustedApplication,
     User,
-    Device,
+    Device
   },
   entities: {
     Access,
     AccessPolicy,
     AccessTokens,
-    Account, 
+    Account,
     Action,
     ActionType,
     ADIOrder,
@@ -91,7 +91,7 @@ const API = {
     ShipmentNotice,
     ShortDomain,
     Thng,
-    User: UserEntity,
+    User: UserEntity
   },
   resources: {
     Resource
@@ -108,7 +108,7 @@ const API = {
  */
 export default function use (plugin) {
   if (!plugin.install || typeof plugin.install !== 'function') {
-    throw new Error('Plugin must implement an \'install()\' method')
+    throw new Error("Plugin must implement an 'install()' method")
   }
 
   try {

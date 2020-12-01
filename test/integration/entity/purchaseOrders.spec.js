@@ -33,8 +33,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read all purchase orders', async () => {
-      api.get('/purchaseOrders')
-        .reply(200, [payload])
+      api.get('/purchaseOrders').reply(200, [payload])
 
       const res = await scope.purchaseOrder().read()
 
@@ -44,8 +43,7 @@ module.exports = (scopeType, url) => {
 
     if (scopeType === 'operator') {
       it('should create a purchase order', async () => {
-        api.post('/purchaseOrders', payload)
-          .reply(201, payload)
+        api.post('/purchaseOrders', payload).reply(201, payload)
 
         const res = await scope.purchaseOrder().create(payload)
 
@@ -53,8 +51,7 @@ module.exports = (scopeType, url) => {
       })
 
       it('should read a purchase order', async () => {
-        api.get('/purchaseOrders/purchaseOrderId')
-          .reply(200, payload)
+        api.get('/purchaseOrders/purchaseOrderId').reply(200, payload)
 
         const res = await scope.purchaseOrder('purchaseOrderId').read()
 
@@ -63,8 +60,7 @@ module.exports = (scopeType, url) => {
       })
 
       it('should update a purchase order', async () => {
-       api.put('/purchaseOrders/purchaseOrderId', payload)
-          .reply(200, payload)
+        api.put('/purchaseOrders/purchaseOrderId', payload).reply(200, payload)
 
         const res = await scope.purchaseOrder('purchaseOrderId').update(payload)
 
@@ -73,11 +69,10 @@ module.exports = (scopeType, url) => {
       })
 
       it('should delete a purchaseOrder', async () => {
-        api.delete('/purchaseOrders/purchaseOrderId')
-          .reply(204)
+        api.delete('/purchaseOrders/purchaseOrderId').reply(204)
 
         const res = await scope.purchaseOrder('purchaseOrderId').delete()
-        
+
         expect(res).to.not.exist
       })
     }

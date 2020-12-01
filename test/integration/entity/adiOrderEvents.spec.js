@@ -16,10 +16,7 @@ module.exports = (scopeType, url) => {
           type: 'encodings',
           tags: ['example']
         },
-        ids: [
-          'serial1',
-          'serial2'
-        ],
+        ids: ['serial1', 'serial2'],
         customFields: { internalId: 'X7JF' },
         tags: ['X7JF']
       }

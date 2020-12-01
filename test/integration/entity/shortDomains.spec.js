@@ -11,8 +11,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read all short domains', async () => {
-      api.get('/accounts/accountId/shortDomains')
-        .reply(200, ['tn.gg'])
+      api.get('/accounts/accountId/shortDomains').reply(200, ['tn.gg'])
       const res = await scope.sharedAccount('accountId').shortDomain().read()
 
       expect(res).to.be.an('array')

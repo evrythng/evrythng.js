@@ -19,8 +19,8 @@ export default class AccessTokens extends Entity {
     return {
       accessTokens (id) {
         // добавить проверки на неправильный url и scope
-     return Resource.factoryFor(AccessTokens, path).call(this, id)
+        return Resource.factoryFor(AccessTokens, path).call(this, id)
+      }
     }
   }
-}
 }

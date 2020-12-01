@@ -1,13 +1,12 @@
 const { expect } = require('chai')
-const { getScope, mockApi } = require('../util')
+const { getScope } = require('../util')
 
 module.exports = (scopeType, url) => {
   describe('Rules', () => {
-    let scope, api
+    let scope
 
     before(() => {
       scope = getScope(scopeType)
-      api =  mockApi(url)
     })
 
     it('should add a rule resource', async () => {

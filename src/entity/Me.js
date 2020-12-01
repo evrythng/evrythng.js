@@ -19,8 +19,8 @@ export default class Me extends Entity {
     return {
       me () {
         // добавить проверки на неправильный url и scope
-    return Resource.factoryFor(Me, path).call(this)
+        return Resource.factoryFor(Me, path).call(this)
+      }
     }
-    }
-}
+  }
 }

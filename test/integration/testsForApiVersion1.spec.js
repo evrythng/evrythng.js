@@ -1,27 +1,15 @@
-const { setupForApiVersion1  } = require('./util')
+const { setupForApiVersion1 } = require('./util')
 const evrythng = require('../../dist/evrythng.node')
-
-//const settings = evrythng.setup({ apiVersion: 1, geolocation: false })
-//process.on('unhandledRejection', console.error)
 
 describe('evrythng.js for apiVersion = 1', function () {
   let settings = evrythng.setup({ apiVersion: 1, geolocation: false })
- // await setupForApiVersion1(settings.apiUrl)
-  //process.on('unhandledRejection', console.error)
-before(async () => {
-  settings = await evrythng.setup({ apiVersion: 1, geolocation: false })
-  await setupForApiVersion1(settings.apiUrl)})
-//     settings = await evrythng.setup({ apiVersion: 1, geolocation: false })
-//     scopes = await setupForApiVersion1(settings.apiUrl)
-//    console.log(scopes)
-//     // console.log(a)
-//     // console.log('!!!!')
-//     //return a
-//     process.on('unhandledRejection', console.error)
-//   })
+
+  before(async () => {
+    settings = await evrythng.setup({ apiVersion: 1, geolocation: false })
+    await setupForApiVersion1(settings.apiUrl)
+  })
 
   describe(`as Application for ${settings.apiVersion}`, () => {
-   // scope = scopes.application
     require('./entity/user.spec')('application', settings.apiUrl)
   })
 
@@ -41,14 +29,14 @@ before(async () => {
   })
 
   describe(`as Trusted Application for ${settings.apiVersion}`, () => {
-    scope = 'trustedApplication'
+    const scope = 'trustedApplication'
     require('./entity/actions.spec')(scope, settings.apiUrl)
     require('./entity/actionTypes.spec')(scope, settings.apiUrl)
     require('./entity/collections.spec')(scope, settings.apiUrl)
     require('./entity/commissionState.spec')(scope, settings.apiUrl)
     require('./entity/places.spec')(scope, settings.apiUrl)
     require('./entity/products.spec')(scope, settings.apiUrl)
-    require('./entity/properties.spec')(scope,  'product', settings.apiUrl)
+    require('./entity/properties.spec')(scope, 'product', settings.apiUrl)
     require('./entity/properties.spec')(scope, 'thng', settings.apiUrl)
     require('./entity/purchaseOrders.spec')(scope, settings.apiUrl)
     require('./entity/thngs.spec')(scope, settings.apiUrl)
@@ -67,8 +55,7 @@ before(async () => {
     require('./entity/applications.spec')(scope, settings.apiUrl)
     require('./entity/batches.spec')(scope, settings)
     require('./entity/collections.spec')(scope, settings.apiUrl)
-    require('./entity/commissionState.spec')
-    (scope, settings.apiUrl)
+    require('./entity/commissionState.spec')(scope, settings.apiUrl)
     require('./entity/domains.spec')(scope, settings.apiUrl)
     require('./entity/files.spec')(scope, settings.apiUrl)
     require('./entity/locations.spec')(scope, settings.apiUrl)
@@ -78,7 +65,7 @@ before(async () => {
     require('./entity/places.spec')(scope, settings.apiUrl)
     require('./entity/products.spec')(scope, settings.apiUrl)
     require('./entity/projects.spec')(scope, settings.apiUrl)
-    require('./entity/properties.spec')(scope, 'product',  settings.apiUrl)
+    require('./entity/properties.spec')(scope, 'product', settings.apiUrl)
     require('./entity/properties.spec')(scope, 'thng', settings.apiUrl)
     require('./entity/purchaseOrders.spec')(scope, settings.apiUrl)
     require('./entity/reactor.spec')(scope, settings.apiUrl)

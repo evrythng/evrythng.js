@@ -12,8 +12,7 @@ module.exports = (scopeType, url) => {
 
     it('should create a project', async () => {
       const payload = { name: 'Test Project' }
-      api.post('/projects', payload)
-        .reply(201, payload)
+      api.post('/projects', payload).reply(201, payload)
 
       const res = await scope.project().create(payload)
 
@@ -22,8 +21,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read all projects', async () => {
-      api.get('/projects')
-        .reply(200, [{ id: 'projectId' }])
+      api.get('/projects').reply(200, [{ id: 'projectId' }])
       const res = await scope.project().read()
 
       expect(res).to.be.an('array')
@@ -31,8 +29,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read a project', async () => {
-      api.get('/projects/projectId')
-        .reply(200, { id: 'projectId' })
+      api.get('/projects/projectId').reply(200, { id: 'projectId' })
       const res = await scope.project('projectId').read()
 
       expect(res).to.be.an('object')
@@ -41,8 +38,7 @@ module.exports = (scopeType, url) => {
 
     it('should update a project', async () => {
       const payload = { tags: ['updated'] }
-      api.put('/projects/projectId', payload)
-        .reply(200, payload)
+      api.put('/projects/projectId', payload).reply(200, payload)
       const res = await scope.project('projectId').update(payload)
 
       expect(res).to.be.an('object')
@@ -50,8 +46,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should delete a project', async () => {
-      api.delete('/projects/projectId')
-        .reply(200)
+      api.delete('/projects/projectId').reply(200)
       await scope.project('projectId').delete()
     })
   })

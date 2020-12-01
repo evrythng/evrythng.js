@@ -12,8 +12,7 @@ module.exports = (scopeType, url) => {
 
     it('should create a collection', async () => {
       const payload = { name: 'Test Collection' }
-      api.post('/collections', payload)
-        .reply(200, payload)
+      api.post('/collections', payload).reply(200, payload)
       const res = await scope.collection().create(payload)
 
       expect(res).to.be.an('object')
@@ -21,8 +20,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read a collection', async () => {
-      api.get('/collections/collectionId')
-        .reply(200, { id: 'collectionId' })
+      api.get('/collections/collectionId').reply(200, { id: 'collectionId' })
       const res = await scope.collection('collectionId').read()
 
       expect(res).to.be.an('object')
@@ -30,8 +28,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read all collections', async () => {
-      api.get('/collections')
-        .reply(200, [{ id: 'collectionId' }])
+      api.get('/collections').reply(200, [{ id: 'collectionId' }])
       const res = await scope.collection().read()
 
       expect(res).to.be.an('array')
@@ -40,8 +37,7 @@ module.exports = (scopeType, url) => {
 
     it('should update a collection', async () => {
       const payload = { tags: ['updated'] }
-      api.put('/collections/collectionId')
-        .reply(200, { tags: ['updated'] })
+      api.put('/collections/collectionId').reply(200, { tags: ['updated'] })
       const res = await scope.collection('collectionId').update(payload)
 
       expect(res).to.be.an('object')
@@ -50,10 +46,9 @@ module.exports = (scopeType, url) => {
 
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should delete a collection', async () => {
-        api.delete('/collections/collectionId')
-          .reply(200)
+        api.delete('/collections/collectionId').reply(200)
         const res = await scope.collection('collectionId').delete()
-        
+
         expect(res).to.not.exist
       })
     }

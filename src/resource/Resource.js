@@ -60,9 +60,7 @@ export default class Resource {
         newPath += `/${encodeURIComponent(id)}`
       }
 
-      const XResource = MixinNestedResources
-        ? MixinNestedResources(Resource)
-        : Resource
+      const XResource = MixinNestedResources ? MixinNestedResources(Resource) : Resource
       return new XResource(parentScope, newPath, type, id, typeName)
     }
   }
@@ -150,8 +148,7 @@ export default class Resource {
       if (response.body) {
         // Full response, add deserialize method to deserialize the Response's
         // json body
-        response.deserialize = () => response.json()
-          .then(this.deserialize.bind(this))
+        response.deserialize = () => response.json().then(this.deserialize.bind(this))
       } else {
         // JSON response, base case.
         // Create new entity with updated resource derived from current.
@@ -276,10 +273,14 @@ export default class Resource {
    * @returns {Promise}
    */
   read (options, callback) {
-    return this._request({
-      url: this.path,
-      method: 'get'
-    }, options, callback)
+    return this._request(
+      {
+        url: this.path,
+        method: 'get'
+      },
+      options,
+      callback
+    )
   }
 
   /**
@@ -295,11 +296,15 @@ export default class Resource {
       throw new TypeError('Update method must have payload.')
     }
 
-    return this._request({
-      url: this.path,
-      data,
-      method: 'put'
-    }, options, callback)
+    return this._request(
+      {
+        url: this.path,
+        data,
+        method: 'put'
+      },
+      options,
+      callback
+    )
   }
 
   /**
@@ -310,10 +315,14 @@ export default class Resource {
    * @returns {Promise}
    */
   ['delete'] (options, callback) {
-    return this._request({
-      url: this.path,
-      method: 'delete'
-    }, options, callback)
+    return this._request(
+      {
+        url: this.path,
+        method: 'delete'
+      },
+      options,
+      callback
+    )
   }
 
   /**
@@ -387,7 +396,9 @@ export default class Resource {
    */
   async upsert (data, updateKey, allowPlural) {
     if (!updateKey || !(typeof updateKey === 'string' || typeof updateKey === 'object')) {
-      throw new Error('updateKey must be a \'name\' string or an object, eg: { shortId: \'a7ysf8hd\' }')
+      throw new Error(
+        "updateKey must be a 'name' string or an object, eg: { shortId: 'a7ysf8hd' }"
+      )
     }
 
     const params = { filter: `name=${updateKey}` }
@@ -399,7 +410,9 @@ export default class Resource {
     const found = await this.read({ params })
     if (found.length > 1) {
       if (!allowPlural) {
-        throw new Error('More than one resource was found. Set \'allowPlural\' to \'true\' as third parameter to update the first returned.')
+        throw new Error(
+          "More than one resource was found. Set 'allowPlural' to 'true' as third parameter to update the first returned."
+        )
       }
     }
     if (found.length) {
@@ -419,7 +432,7 @@ export default class Resource {
   async find (updateKey) {
     const params = { filter: `name=${updateKey}` }
     if (typeof updateKey === 'object') {
-      const pairs = Object.entries(updateKey);
+      const pairs = Object.entries(updateKey)
       if (pairs.length > 1) {
         throw new Error('Only one key-value pair may be specified for find()')
       }
@@ -505,14 +518,9 @@ export default class Resource {
     }
 
     // Merge options, priority to mandatory ones.
-    const options = Object.assign(
-      {},
-      userOptions,
-      requestOptions,
-      {
-        apiKey: this.scope.apiKey
-      }
-    )
+    const options = Object.assign({}, userOptions, requestOptions, {
+      apiKey: this.scope.apiKey
+    })
 
     // Serialize Entity into JSON payload.
     if (options.body) {

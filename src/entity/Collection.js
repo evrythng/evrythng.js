@@ -34,8 +34,7 @@ export default class Collection extends CollectionResources(Entity) {
       collection (id) {
         // Explicitly add Collection resource mixin to nested resource.
         return Object.assign(
-          Resource.factoryFor(Collection, path, CollectionResources)
-            .call(this, id),
+          Resource.factoryFor(Collection, path, CollectionResources).call(this, id),
           Collection.resourceFactory()
         )
       }

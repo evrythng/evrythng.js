@@ -1,19 +1,16 @@
-const { resources, setupForApiVersion2, teardown  } = require('./util')
+const { setupForApiVersion2 } = require('./util')
 const evrythng = require('../../dist/evrythng.node')
 
+describe('evrythng.js for apiVersion = 2', function () {
+  let settings = evrythng.setup({ apiVersion: 2, geolocation: false })
+  // await setupForApiVersion2(settings.apiUrl)
 
-//let settings  = evrythng.setup({ apiVersion: 2, geolocation: false })
- //process.on('unhandledRejection', console.error)
+  before(async () => {
+    settings = await evrythng.setup({ apiVersion: 2, geolocation: false })
+    await setupForApiVersion2(settings.apiUrl)
+  })
 
- describe('evrythng.js for apiVersion = 2', function () {
-   let settings  = evrythng.setup({ apiVersion: 2, geolocation: false })
-    //await setupForApiVersion2(settings.apiUrl)
-
-    before(async () => {
-      settings  = await evrythng.setup({ apiVersion: 2, geolocation: false })
-      await  setupForApiVersion2(settings.apiUrl)})
- 
-  describe('as Operator',() => {
+  describe('as Operator', () => {
     console.log(settings)
     const scope = 'operator'
     require('./entity/accessPolicies.spec')(scope, settings)
@@ -37,7 +34,7 @@ const evrythng = require('../../dist/evrythng.node')
     require('./entity/places.spec')(scope, settings.apiUrl)
     require('./entity/products.spec')(scope, settings.apiUrl)
     require('./entity/projects.spec')(scope, settings.apiUrl)
-    require('./entity/properties.spec')(scope, 'product',  settings.apiUrl)
+    require('./entity/properties.spec')(scope, 'product', settings.apiUrl)
     require('./entity/properties.spec')(scope, 'thng', settings.apiUrl)
     require('./entity/purchaseOrders.spec')(scope, settings.apiUrl)
     require('./entity/reactor.spec')(scope, settings.apiUrl)
@@ -47,7 +44,7 @@ const evrythng = require('../../dist/evrythng.node')
     require('./entity/shortDomains.spec')(scope, settings.apiUrl)
     require('./entity/thngs.spec')(scope, settings.apiUrl)
   })
-  describe('as Access Token',() => {
+  describe('as Access Token', () => {
     const scope = 'accessToken'
     require('./entity/accessPolicies.spec')(scope, settings)
     require('./entity/accessTokens.spec')(scope, settings)
@@ -70,7 +67,7 @@ const evrythng = require('../../dist/evrythng.node')
     require('./entity/places.spec')(scope, settings.apiUrl)
     require('./entity/products.spec')(scope, settings.apiUrl)
     require('./entity/projects.spec')(scope, settings.apiUrl)
-    require('./entity/properties.spec')(scope, 'product',  settings.apiUrl)
+    require('./entity/properties.spec')(scope, 'product', settings.apiUrl)
     require('./entity/properties.spec')(scope, 'thng', settings.apiUrl)
     require('./entity/purchaseOrders.spec')(scope, settings.apiUrl)
     require('./entity/reactor.spec')(scope, settings.apiUrl)

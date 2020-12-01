@@ -4,9 +4,7 @@ import Resource from '../resource/Resource'
 import { mixinResources } from '../util/mixin'
 
 const path = '/projects'
-const ProjectResources = mixinResources([
-  Application
-])
+const ProjectResources = mixinResources([Application])
 
 /**
  * Represents a Project entity object.

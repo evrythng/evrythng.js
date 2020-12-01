@@ -1,15 +1,13 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-let operator
-
 module.exports = (scopeType, url) => {
   describe('Tasks', () => {
     let scope, api
 
     before(async () => {
       scope = getScope(scopeType)
-      api =  mockApi(url)
+      api = mockApi(url)
     })
 
     it('should create a task', async () => {
@@ -26,8 +24,7 @@ module.exports = (scopeType, url) => {
           shortIdTemplate: { type: 'THNG_ID' }
         }
       }
-      api.post('/batches/batchId/tasks', payload)
-        .reply(202)
+      api.post('/batches/batchId/tasks', payload).reply(202)
       const res = await scope.batch('batchId').task().create(payload, { fullResponse: true })
 
       expect(typeof res).to.equal('object')
@@ -35,8 +32,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read all tasks', async () => {
-      api.get('/batches/batchId/tasks')
-        .reply(200, [{ id: 'taskId' }])
+      api.get('/batches/batchId/tasks').reply(200, [{ id: 'taskId' }])
       const res = await scope.batch('batchId').task().read()
 
       expect(res).to.be.an('array')
@@ -44,8 +40,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read a task', async () => {
-      api.get('/batches/batchId/tasks/taskId')
-        .reply(200, { id: 'taskId' })
+      api.get('/batches/batchId/tasks/taskId').reply(200, { id: 'taskId' })
       const res = await scope.batch('batchId').task('taskId').read()
 
       expect(res).to.be.an('object')

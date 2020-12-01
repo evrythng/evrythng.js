@@ -1,14 +1,14 @@
 const { expect } = require('chai')
-const { getScope, mockApi } = require('../util')
+const { mockApi } = require('../util')
 const { ActionApp } = require('../../../')
 
 // Mocks
 global.localStorage = {
   data: {},
-  getItem: key => global.localStorage.data[key],
+  getItem: (key) => global.localStorage.data[key],
   setItem: (key, value) => {
     global.localStorage.data[key] = value
-  },
+  }
 }
 global.window = {
   location: { href: 'mocha test location' }
@@ -20,14 +20,16 @@ module.exports = (url) => {
 
     before(async () => {
       api = mockApi(url)
-      api.get('/access').times(2)
+      api
+        .get('/access')
+        .times(2)
         .reply(200, { actor: { id: 'actorId' } })
-        api.get('/applications/me')
-        .reply(200, { id: 'applicationId' })
-        api.post('/auth/evrythng/users?anonymous=true')
-        .reply(201, { evrythngApiKey: '12341234123412341234123412341234123412341234123412341234123412341234123412341234' })
-        api.get('/users/actorId')
-        .reply(200, { id: 'U5FfSmUtQt4emDwaR3hw2tfc' })
+      api.get('/applications/me').reply(200, { id: 'applicationId' })
+      api.post('/auth/evrythng/users?anonymous=true').reply(201, {
+        evrythngApiKey:
+          '12341234123412341234123412341234123412341234123412341234123412341234123412341234'
+      })
+      api.get('/users/actorId').reply(200, { id: 'U5FfSmUtQt4emDwaR3hw2tfc' })
 
       actionApp = new ActionApp('actionAppApiKey')
       await actionApp.init()
@@ -39,10 +41,9 @@ module.exports = (url) => {
       expect(actionApp.getAnonymousUser).to.be.a('function')
     })
 
-    it('should create a \'_PageVisited\' action with pageVisited()', async () => {
-      api.get('/actions?filter=name%3D_PageVisited')
-        .reply(200, [{ name: '_PageVisited' }])
-        api
+    it("should create a '_PageVisited' action with pageVisited()", async () => {
+      api.get('/actions?filter=name%3D_PageVisited').reply(200, [{ name: '_PageVisited' }])
+      api
         .post('/actions/_PageVisited', {
           type: '_PageVisited',
           customFields: { url: global.window.location.href }
@@ -61,9 +62,8 @@ module.exports = (url) => {
     })
 
     it('should create an action with custom data', async () => {
-      api.get('/actions?filter=name%3D_PageVisited')
-        .reply(200, [{ name: '_PageVisited' }])
-        api
+      api.get('/actions?filter=name%3D_PageVisited').reply(200, [{ name: '_PageVisited' }])
+      api
         .post('/actions/_PageVisited', {
           type: '_PageVisited',
           customFields: { foo: 'bar' }
@@ -95,7 +95,7 @@ module.exports = (url) => {
         .post('/actions/scans', {
           type: 'scans',
           customFields: { foo: 'bar' },
-          thng,
+          thng
         })
         .reply(201, {
           id: 'actionId',
@@ -117,7 +117,7 @@ module.exports = (url) => {
         .post('/actions/scans', {
           type: 'scans',
           customFields: { foo: 'bar' },
-          product,
+          product
         })
         .reply(201, {
           id: 'actionId',
@@ -134,12 +134,12 @@ module.exports = (url) => {
     })
 
     it('should re-use previous Application User credentials', async () => {
-      api.get('/access').times(2)
+      api
+        .get('/access')
+        .times(2)
         .reply(200, { actor: { id: 'actorId' } })
-        api.get('/applications/me')
-        .reply(200, { id: 'applicationId' })
-        api.get('/users/actorId')
-        .reply(200, { id: 'U5FfSmUtQt4emDwaR3hw2tfc' })
+      api.get('/applications/me').reply(200, { id: 'applicationId' })
+      api.get('/users/actorId').reply(200, { id: 'U5FfSmUtQt4emDwaR3hw2tfc' })
       const otherActionApp = new ActionApp('actionAppApiKey')
       await otherActionApp.init()
 

@@ -18,8 +18,8 @@ export default class OperatorAccess extends Entity {
   static resourceFactory () {
     return {
       operatorAccess (id) {
-     return Resource.factoryFor(OperatorAccess, path).call(this, id)
+        return Resource.factoryFor(OperatorAccess, path).call(this, id)
+      }
     }
   }
-}
 }

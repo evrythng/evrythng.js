@@ -41,10 +41,10 @@ const AccessTokenResources = mixinResources([
   Account, // LRU
   Action, // CRLD
   ActionType, // CRLD
-  ADIOrder,  // CRL
-  ADIOrderEvent, //CRL
-  Application, //CRUDL
-  Collection, //CRUDL
+  ADIOrder, // CRL
+  ADIOrderEvent, // CRL
+  Application, // CRUDL
+  Collection, // CRUDL
   CommissionState, // R
   Domain, // L
   File, // RC
@@ -56,13 +56,13 @@ const AccessTokenResources = mixinResources([
   Property, // CRUDL
   PurchaseOrder, // CRUDL
   ReactorLog, // RD
-  ReactorSchedule, //CRUD
+  ReactorSchedule, // CRUD
   ReactorScript, // RU
   Redirection, // CRUD
   Redirector, // RUD
   ShipmentNotice, // CRUDL
   ShortDomain, // L
-  Thng, // CRUDL
+  Thng // CRUDL
 ])
 
 /**

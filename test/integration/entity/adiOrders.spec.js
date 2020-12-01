@@ -12,10 +12,7 @@ module.exports = (scopeType, url) => {
 
     it('should create an ADI Order', async () => {
       const payload = {
-        ids: [
-          'serial1',
-          'serial2'
-        ],
+        ids: ['serial1', 'serial2'],
         purchaseOrder: '234567890',
         metadata: {
           identifierKey: 'gs1:21',
@@ -28,9 +25,7 @@ module.exports = (scopeType, url) => {
         tags: ['X7JF']
       }
 
-      api
-        .post('/adis/orders', payload)
-        .reply(201, { id: 'UEp4rDGsnpCAF6xABbys5Amc' })
+      api.post('/adis/orders', payload).reply(201, { id: 'UEp4rDGsnpCAF6xABbys5Amc' })
       const res = await scope.adiOrder().create(payload)
 
       expect(res).to.be.an('object')
@@ -38,9 +33,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read an ADI Order by ID', async () => {
-      api
-        .get('/adis/orders/adiOrderId')
-        .reply(200, { id: 'adiOrderId' })
+      api.get('/adis/orders/adiOrderId').reply(200, { id: 'adiOrderId' })
       const res = await scope.adiOrder('adiOrderId').read()
 
       expect(res).to.be.an('object')
@@ -53,10 +46,7 @@ module.exports = (scopeType, url) => {
           type: 'encodings',
           tags: ['example']
         },
-        ids: [
-          'serial1',
-          'serial2'
-        ],
+        ids: ['serial1', 'serial2'],
         customFields: { internalId: 'X7JF' },
         tags: ['X7JF']
       }

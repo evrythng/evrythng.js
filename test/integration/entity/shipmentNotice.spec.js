@@ -1,5 +1,4 @@
 const { expect } = require('chai')
-const { mock } = require('fetch-mock')
 const { getScope, mockApi } = require('../util')
 
 const noticePayload = {
@@ -7,28 +6,33 @@ const noticePayload = {
   version: '1',
   issueDate: '2019-06-19T16:39:57-08:00',
   transportation: 'Expedited Freight',
-  parties: [{
-    id: 'gs1:414:01251',
-    type: 'ship-from'
-  }, {
-    name: 'The Landmark, Shop No. G14',
-    type: 'ship-to',
-    address: {
-      street: '113-114, Central',
-      city: 'Hong Kong'
+  parties: [
+    {
+      id: 'gs1:414:01251',
+      type: 'ship-from'
+    },
+    {
+      name: 'The Landmark, Shop No. G14',
+      type: 'ship-to',
+      address: {
+        street: '113-114, Central',
+        city: 'Hong Kong'
+      }
     }
-  }],
+  ],
   tags: ['ongoing']
 }
 
 const containerPayload = {
   containerId: '82347927',
   transportationType: 'Pallet',
-  products: [{
-    id: 'gs1:01:000000001234',
-    quantity: 562,
-    unitOfMeasure: 'piece'
-  }],
+  products: [
+    {
+      id: 'gs1:01:000000001234',
+      quantity: 562,
+      unitOfMeasure: 'piece'
+    }
+  ],
   tags: ['important']
 }
 
@@ -42,9 +46,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should create a shipment notice', async () => {
-      api
-        .post('/shipmentNotices', noticePayload)
-        .reply(201, noticePayload)
+      api.post('/shipmentNotices', noticePayload).reply(201, noticePayload)
 
       const res = await scope.shipmentNotice().create(noticePayload)
 
@@ -53,9 +55,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read a shipment notice', async () => {
-      api
-        .get('/shipmentNotices/shipmentNoticeId')
-        .reply(200, noticePayload)
+      api.get('/shipmentNotices/shipmentNoticeId').reply(200, noticePayload)
 
       const res = await scope.shipmentNotice('shipmentNoticeId').read()
 
@@ -64,9 +64,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should update a shipment notice', async () => {
-      api
-        .put('/shipmentNotices/shipmentNoticeId')
-        .reply(200, noticePayload)
+      api.put('/shipmentNotices/shipmentNoticeId').reply(200, noticePayload)
 
       const res = await scope.shipmentNotice('shipmentNoticeId').update(noticePayload)
 
@@ -75,9 +73,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should delete a shipment notice', async () => {
-      api
-        .delete('/shipmentNotices/shipmentNoticeId')
-        .reply(204)
+      api.delete('/shipmentNotices/shipmentNoticeId').reply(204)
 
       const res = await scope.shipmentNotice('shipmentNoticeId').delete()
 
@@ -94,9 +90,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should create a shipment notice container', async () => {
-      api
-        .post('/shipmentNotices/containers', containerPayload)
-        .reply(201, containerPayload)
+      api.post('/shipmentNotices/containers', containerPayload).reply(201, containerPayload)
 
       const res = await scope.shipmentNotice().container().create(containerPayload)
 
@@ -105,9 +99,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should read a shipment notice container', async () => {
-      api
-        .get('/shipmentNotices/containers/containerId')
-        .reply(200, containerPayload)
+      api.get('/shipmentNotices/containers/containerId').reply(200, containerPayload)
 
       const res = await scope.shipmentNotice().container('containerId').read()
 
@@ -116,9 +108,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should update a shipment notice container', async () => {
-      api
-        .put('/shipmentNotices/containers/containerId')
-        .reply(200, containerPayload)
+      api.put('/shipmentNotices/containers/containerId').reply(200, containerPayload)
 
       const res = await scope.shipmentNotice().container('containerId').update(containerPayload)
 
@@ -127,9 +117,7 @@ module.exports = (scopeType, url) => {
     })
 
     it('should delete a shipment notice container', async () => {
-      api
-        .delete('/shipmentNotices/containers/containerId')
-        .reply(204)
+      api.delete('/shipmentNotices/containers/containerId').reply(204)
 
       const res = await scope.shipmentNotice().container('containerId').delete()
 
