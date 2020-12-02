@@ -32,7 +32,7 @@
  * @type {Settings}
  */
 const defaultSettings = {
-  apiUrl: 'https://api.evrythng.io/v2',
+  apiUrl: `https://api.us.evrythng.io/v2`,
   apiKey: '',
   fullResponse: false,
   geolocation: true,
@@ -42,7 +42,8 @@ const defaultSettings = {
   },
   interceptors: [],
   defaultShortDomain: 'tn.gg',
-  apiVersion: 2
+  apiVersion: 2,
+  region: 'us',
 }
 
 // Initialize settings with defaults.

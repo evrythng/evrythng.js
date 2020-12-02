@@ -7,10 +7,34 @@ import settings from './settings'
  * @returns {Object} new
  */
 export default function setup (customSettings) {
-  if (customSettings.apiVersion == 2) {
-    customSettings.apiUrl = 'https://api.evrythng.io/v2'
+  if(customSettings.apiUrl) {
+      settings.apiUrl = customSettings.apiUrl
+   } else if (customSettings.apiVersion == 2 ) {
+    if (customSettings.regoin === 'us') {
+    customSettings.apiUrl = 'https://api.us.evrythng.io/v2'}
+    else if (customSettings.region === 'eu') {
+      customSettings.apiUrl = 'https://api.eu.evrythng.io/v2'}
+      else if (!customSettings.region) {
+        settings.region
+      } 
+      else {
+        throw new Error(
+          `Region ${customSettings.region} does not exist, please use region us or eu`
+        )
+      }
   } else if (customSettings.apiVersion == 1) {
-    customSettings.apiUrl = 'https://api.evrythng.com'
+    if (customSettings.region === 'us') {
+      customSettings.apiUrl = 'https://api.evrythng.com'}
+      else if (customSettings.region === 'eu') {
+        customSettings.apiUrl = 'https://api-eu.evrythng.com'}
+        else if (!customSettings.region) {
+          settings.region
+        } 
+        else {
+          throw new Error(
+            `Region ${customSettings.region} does not exist, please use region us or eu`
+          )
+        }
   } else if (!customSettings.apiVersion) {
     settings.apiVersion
   } else {

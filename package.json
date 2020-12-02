@@ -11,6 +11,7 @@
     "show-notice": "echo '\n    New to evrythng.js v5? Make sure to read the migration guide:\n    https://developers.evrythng.com/docs/evrythngjs-v500\n'",
     "postinstall": "npm run --silent show-notice",
     "test": "mocha test/integration/**.spec.js",
+    "test:e2e": "mocha test/e2e/**.spec.js",
     "prepublishOnly": "npm run build"
   },
   "husky": {
