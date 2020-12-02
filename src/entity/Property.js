@@ -31,19 +31,14 @@ export default class Property extends Entity {
         // Creates and returns Resource of type Property.
         // Override property resource create/update to allow custom value
         // params. See `normalizeArguments()`.
-        return Object.assign(
-          Resource.factoryFor(Property, thngPath + path).call(this, id),
-          {
-            create (...args) {
-              return Resource.prototype.create
-                .call(this, ...normalizeArguments(...args))
-            },
-            update (...args) {
-              return Resource.prototype.update
-                .call(this, ...normalizeArguments(...args))
-            }
+        return Object.assign(Resource.factoryFor(Property, thngPath + path).call(this, id), {
+          create (...args) {
+            return Resource.prototype.create.call(this, ...normalizeArguments(...args))
+          },
+          update (...args) {
+            return Resource.prototype.update.call(this, ...normalizeArguments(...args))
           }
-        )
+        })
       }
     }
   }
@@ -66,11 +61,7 @@ export default class Property extends Entity {
  * })
  */
 function normalizeArguments (data, ...rest) {
-  if (
-    isString(data) ||
-    typeof data === 'number' ||
-    typeof data === 'boolean'
-  ) {
+  if (isString(data) || typeof data === 'number' || typeof data === 'boolean') {
     // Convert simple property values to API format.
     data = [{ value: data }]
   } else if (isPlainObject(data)) {
@@ -79,7 +70,7 @@ function normalizeArguments (data, ...rest) {
       data = [data]
     } else {
       // Update multiple properties creating an object for each key-value pair.
-      data = Object.entries(data).map(val => ({
+      data = Object.entries(data).map((val) => ({
         key: val[0],
         value: val[1]
       }))

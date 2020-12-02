@@ -6,28 +6,33 @@ const noticePayload = {
   version: '1',
   issueDate: '2019-06-19T16:39:57-08:00',
   transportation: 'Expedited Freight',
-  parties: [{
-    id: 'gs1:414:01251',
-    type: 'ship-from'
-  }, {
-    name: 'The Landmark, Shop No. G14',
-    type: 'ship-to',
-    address: {
-      street: '113-114, Central',
-      city: 'Hong Kong'
+  parties: [
+    {
+      id: 'gs1:414:01251',
+      type: 'ship-from'
+    },
+    {
+      name: 'The Landmark, Shop No. G14',
+      type: 'ship-to',
+      address: {
+        street: '113-114, Central',
+        city: 'Hong Kong'
+      }
     }
-  }],
+  ],
   tags: ['ongoing']
 }
 
 const containerPayload = {
   containerId: '82347927',
   transportationType: 'Pallet',
-  products: [{
-    id: 'gs1:01:000000001234',
-    quantity: 562,
-    unitOfMeasure: 'piece'
-  }],
+  products: [
+    {
+      id: 'gs1:01:000000001234',
+      quantity: 562,
+      unitOfMeasure: 'piece'
+    }
+  ],
   tags: ['important']
 }
 
@@ -40,9 +45,7 @@ module.exports = () => {
     })
 
     it('should create a shipment notice', async () => {
-      mockApi()
-        .post('/shipmentNotices', noticePayload)
-        .reply(201, noticePayload)
+      mockApi().post('/shipmentNotices', noticePayload).reply(201, noticePayload)
 
       const res = await operator.shipmentNotice().create(noticePayload)
 
@@ -51,9 +54,7 @@ module.exports = () => {
     })
 
     it('should read a shipment notice', async () => {
-      mockApi()
-        .get('/shipmentNotices/shipmentNoticeId')
-        .reply(200, noticePayload)
+      mockApi().get('/shipmentNotices/shipmentNoticeId').reply(200, noticePayload)
 
       const res = await operator.shipmentNotice('shipmentNoticeId').read()
 
@@ -62,9 +63,7 @@ module.exports = () => {
     })
 
     it('should update a shipment notice', async () => {
-      mockApi()
-        .put('/shipmentNotices/shipmentNoticeId')
-        .reply(200, noticePayload)
+      mockApi().put('/shipmentNotices/shipmentNoticeId').reply(200, noticePayload)
 
       const res = await operator.shipmentNotice('shipmentNoticeId').update(noticePayload)
 
@@ -73,9 +72,7 @@ module.exports = () => {
     })
 
     it('should delete a shipment notice', async () => {
-      mockApi()
-        .delete('/shipmentNotices/shipmentNoticeId')
-        .reply(204)
+      mockApi().delete('/shipmentNotices/shipmentNoticeId').reply(204)
 
       await operator.shipmentNotice('shipmentNoticeId').delete()
     })
@@ -89,9 +86,7 @@ module.exports = () => {
     })
 
     it('should create a shipment notice container', async () => {
-      mockApi()
-        .post('/shipmentNotices/containers', containerPayload)
-        .reply(201, containerPayload)
+      mockApi().post('/shipmentNotices/containers', containerPayload).reply(201, containerPayload)
 
       const res = await operator.shipmentNotice().container().create(containerPayload)
 
@@ -100,9 +95,7 @@ module.exports = () => {
     })
 
     it('should read a shipment notice container', async () => {
-      mockApi()
-        .get('/shipmentNotices/containers/containerId')
-        .reply(200, containerPayload)
+      mockApi().get('/shipmentNotices/containers/containerId').reply(200, containerPayload)
 
       const res = await operator.shipmentNotice().container('containerId').read()
 
@@ -111,9 +104,7 @@ module.exports = () => {
     })
 
     it('should update a shipment notice container', async () => {
-      mockApi()
-        .put('/shipmentNotices/containers/containerId')
-        .reply(200, containerPayload)
+      mockApi().put('/shipmentNotices/containers/containerId').reply(200, containerPayload)
 
       const res = await operator.shipmentNotice().container('containerId').update(containerPayload)
 
@@ -122,9 +113,7 @@ module.exports = () => {
     })
 
     it('should delete a shipment notice container', async () => {
-      mockApi()
-        .delete('/shipmentNotices/containers/containerId')
-        .reply(204)
+      mockApi().delete('/shipmentNotices/containers/containerId').reply(204)
 
       await operator.shipmentNotice().container('containerId').delete()
     })

@@ -5,7 +5,7 @@ export const appApiKey = 'appApiKey'
 export const optionsTemplate = {
   fullResponse: true,
   headers: {
-    'Accept': '*/*'
+    Accept: '*/*'
   }
 }
 

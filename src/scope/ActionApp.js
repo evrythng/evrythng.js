@@ -1,6 +1,4 @@
 import { mixinResources } from '../util/mixin'
-import Action from '../entity/Action'
-import api from '../api'
 import AppUser from '../entity/AppUser'
 import Scope from './Scope'
 import symbols from '../symbols'
@@ -34,15 +32,16 @@ export default class ActionApp extends ApplicationAccess(Scope) {
   constructor (apiKey) {
     super(apiKey)
 
-    this.initPromise = super.readAccess()
-      .then(access => {
+    this.initPromise = super
+      .readAccess()
+      .then((access) => {
         this.id = access.actor.id
         this.project = access.project
         this[symbols.path] = this._getPath()
       })
       .then(() => this.read())
       .then(() => this._getAnonUser())
-      .then(anonUser => {
+      .then((anonUser) => {
         this.anonUser = anonUser
       })
   }
@@ -86,14 +85,14 @@ export default class ActionApp extends ApplicationAccess(Scope) {
       try {
         await this.anonUser.actionType(type).read()
       } catch (e) {
-        console.error(e);
+        console.error(e)
         throw new Error('The action type was not found. Is it in project scope?')
       }
     }
 
-    const { thng, product, ...customFields } = data;
+    const { thng, product, ...customFields } = data
     if (thng && product) {
-      throw new Error('Either thng or product can be specified as target, not both');
+      throw new Error('Either thng or product can be specified as target, not both')
     }
 
     const payload = { type, customFields }
@@ -118,7 +117,7 @@ export default class ActionApp extends ApplicationAccess(Scope) {
       throw new Error('Anonymous user not yet prepared. Use actionApp.init() to wait for this.')
     }
 
-    return this.anonUser;
+    return this.anonUser
   }
 
   // PRIVATE

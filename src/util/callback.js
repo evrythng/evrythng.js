@@ -5,7 +5,7 @@
  * @returns {function} - Response handler function
  */
 export function success (callback) {
-  return response => {
+  return (response) => {
     if (callback) callback(null, response)
     return response
   }
@@ -18,11 +18,11 @@ export function success (callback) {
  * @returns {function} - Response handler function
  */
 export function failure (callback) {
-  return err => {
+  return (err) => {
     if (callback) callback(err)
 
     if (!err) {
-      throw new Error(`No error message available, err was: ${JSON.stringify(err)}`);
+      throw new Error(`No error message available, err was: ${JSON.stringify(err)}`)
     }
 
     // Throw a native Error to play nicer with error handling/retry libraries

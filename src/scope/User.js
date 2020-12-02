@@ -49,8 +49,9 @@ export default class User extends AppUser(Scope) {
   constructor (apiKey, data = {}) {
     super(apiKey, data)
 
-    this.initPromise = super.readAccess()
-      .then(access => {
+    this.initPromise = super
+      .readAccess()
+      .then((access) => {
         this.id = access.actor.id
         this[symbols.path] = this._getPath()
       })

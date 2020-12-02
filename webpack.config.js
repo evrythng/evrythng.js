@@ -6,9 +6,7 @@ const library = 'evrythng'
 
 const babelrc = {
   presets: ['@babel/preset-env'],
-  plugins: [
-    ['@babel/transform-runtime', { regenerator: true }]
-  ]
+  plugins: [['@babel/transform-runtime', { regenerator: true }]]
 }
 
 const browserConfig = {
@@ -20,14 +18,16 @@ const browserConfig = {
     libraryTarget: 'var'
   },
   module: {
-    rules: [{
-      test: /\.js$/,
-      exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
-        options: babelrc
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: babelrc
+        }
       }
-    }]
+    ]
   }
 }
 
@@ -40,17 +40,16 @@ const nodeConfig = {
     filename: 'evrythng.node.js',
     libraryTarget: 'umd',
     umdNamedDefine: true,
-    globalObject: 'typeof self !== \'undefined\' ? self : this'
+    globalObject: "typeof self !== 'undefined' ? self : this"
   },
   module: {
-    rules: [{
-      test: /\.js$/,
-      exclude: /node_modules/
-    }]
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/
+      }
+    ]
   }
 }
 
-module.exports = [
-  browserConfig,
-  nodeConfig
-]
+module.exports = [browserConfig, nodeConfig]

@@ -71,36 +71,36 @@ describe('Entity', () => {
         spyOn(resource, 'update').and.returnValue(Promise.resolve(updatedEntity))
       })
 
-      it('should call resource update with entity\'s JSON', done => {
+      it("should call resource update with entity's JSON", (done) => {
         entity.update().then(() => {
           expect(resource.update.calls.mostRecent().args[0]).toEqual(entityTemplate)
           done()
         })
       })
 
-      it('should call resource update with provided body', done => {
+      it('should call resource update with provided body', (done) => {
         entity.update(dataToUpdate).then(() => {
           expect(resource.update.calls.mostRecent().args[0]).toEqual(dataToUpdate)
           done()
         })
       })
 
-      it('should allow callback in first argument', done => {
+      it('should allow callback in first argument', (done) => {
         entity.update(cb).then(() => {
           expect(resource.update.calls.mostRecent().args[0]).toEqual(cb)
           done()
         })
       })
 
-      it('should allow callback in second argument', done => {
+      it('should allow callback in second argument', (done) => {
         entity.update(dataToUpdate, cb).then(() => {
           expect(resource.update.calls.mostRecent().args[1]).toEqual(cb)
           done()
         })
       })
 
-      it('should update', done => {
-        entity.update().then(updated => {
+      it('should update', (done) => {
+        entity.update().then((updated) => {
           expect(entity.updated).toBe(true)
           expect(entity.foo).toBeDefined()
           expect(updated).toEqual(updatedEntity)
@@ -115,14 +115,14 @@ describe('Entity', () => {
         spyOn(resource, 'delete').and.returnValue(Promise.resolve())
       })
 
-      it('should call resource delete', done => {
+      it('should call resource delete', (done) => {
         entity.delete().then(() => {
           expect(resource.delete).toHaveBeenCalled()
           done()
         })
       })
 
-      it('should support callback', done => {
+      it('should support callback', (done) => {
         entity.delete(cb).then(() => {
           expect(resource.delete.calls.mostRecent().args[0]).toBe(cb)
           done()

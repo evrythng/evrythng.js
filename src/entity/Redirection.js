@@ -1,4 +1,3 @@
-import isString from 'lodash-es/isString'
 import Entity from './Entity'
 import Resource from '../resource/Resource'
 import Scope from '../scope/Scope'
@@ -32,14 +31,20 @@ export default class Redirection extends Entity {
          * @param {object} changes - Additional options.
          * @returns {Promise<object>} API response.
          */
-        const shortDomainRequest = async changes =>
-          Resource.prototype._request.call(_this, Object.assign({
-            apiUrl: `https://${shortDomain}`,
-            url: '/redirections',
-            headers: {
-              Accept: 'application/json'
-            }
-          }, changes))
+        const shortDomainRequest = async (changes) =>
+          Resource.prototype._request.call(
+            _this,
+            Object.assign(
+              {
+                apiUrl: `https://${shortDomain}`,
+                url: '/redirections',
+                headers: {
+                  Accept: 'application/json'
+                }
+              },
+              changes
+            )
+          )
 
         // Special case: use the shortDomain API instead of the /redirector API.
         return {

@@ -20,8 +20,9 @@ describe('ReactorSchedule', () => {
     it('should create new ReactorSchedule resource', () => {
       expect(reactorScheduleResource instanceof Resource).toBe(true)
       expect(reactorScheduleResource.type).toBe(ReactorSchedule)
-      expect(reactorScheduleResource.path)
-        .toEqual(`${paths.dummy}${paths.reactorSchedules}/${reactorScheduleTemplate.id}`)
+      expect(reactorScheduleResource.path).toEqual(
+        `${paths.dummy}${paths.reactorSchedules}/${reactorScheduleTemplate.id}`
+      )
     })
   })
 })

@@ -30,8 +30,7 @@ describe('ActionType', () => {
 
     it('should add action type to path', () => {
       actionTypeResource = scope.actionType(actionTypeTemplate.name)
-      expect(actionTypeResource.path)
-        .toEqual(`${paths.actions}/${actionTypeTemplate.name}`)
+      expect(actionTypeResource.path).toEqual(`${paths.actions}/${actionTypeTemplate.name}`)
     })
 
     describe('with normalization', () => {
@@ -44,14 +43,14 @@ describe('ActionType', () => {
 
       describe('read', () => {
         describe('plural', () => {
-          it('should support empty invocation', done => {
+          it('should support empty invocation', (done) => {
             actionTypeResource.read().then(() => {
               expect(Resource.prototype.read).toHaveBeenCalledWith()
               done()
             })
           })
 
-          it('should support flexible arguments', done => {
+          it('should support flexible arguments', (done) => {
             Promise.all([
               actionTypeResource.read(optionsTemplate).then(() => {
                 expect(Resource.prototype.read).toHaveBeenCalledWith(optionsTemplate)
@@ -71,7 +70,7 @@ describe('ActionType', () => {
             actionTypeResource = scope.actionType(actionTypeTemplate.name)
           })
 
-          it('should make a filter request to action types', done => {
+          it('should make a filter request to action types', (done) => {
             actionTypeResource.read().then(() => {
               expect(Resource.prototype.read).toHaveBeenCalledWith({
                 url: paths.actionTypes,
@@ -85,7 +84,7 @@ describe('ActionType', () => {
             })
           })
 
-          it('should support flexible arguments', done => {
+          it('should support flexible arguments', (done) => {
             Promise.all([
               actionTypeResource.read(optionsTemplate).then(() => {
                 expect(Resource.prototype.read).toHaveBeenCalledWith(
@@ -93,10 +92,7 @@ describe('ActionType', () => {
                 )
               }),
               actionTypeResource.read(cb).then(() => {
-                expect(Resource.prototype.read).toHaveBeenCalledWith(
-                  jasmine.any(Object),
-                  cb
-                )
+                expect(Resource.prototype.read).toHaveBeenCalledWith(jasmine.any(Object), cb)
               }),
               actionTypeResource.read(optionsTemplate, cb).then(() => {
                 expect(Resource.prototype.read).toHaveBeenCalledWith(
@@ -107,16 +103,16 @@ describe('ActionType', () => {
             ]).then(done)
           })
 
-          it('should respond with single entity', done => {
-            actionTypeResource.read().then(actionType => {
+          it('should respond with single entity', (done) => {
+            actionTypeResource.read().then((actionType) => {
               expect(actionType).toEqual(response[0])
               done()
             })
           })
 
-          it('should reject promise if not found', done => {
+          it('should reject promise if not found', (done) => {
             response = []
-            actionTypeResource.read().catch(err => {
+            actionTypeResource.read().catch((err) => {
               expect(err.status).toEqual(404)
               expect(err.errors).toBeDefined()
               expect(err.errors[0]).toEqual('The action type was not found.')

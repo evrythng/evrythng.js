@@ -32,8 +32,7 @@ module.exports = (scopeType) => {
     })
 
     it('should read all purchase orders', async () => {
-      mockApi().get('/purchaseOrders')
-        .reply(200, [payload])
+      mockApi().get('/purchaseOrders').reply(200, [payload])
 
       const res = await scope.purchaseOrder().read()
 
@@ -43,8 +42,7 @@ module.exports = (scopeType) => {
 
     if (scopeType === 'operator') {
       it('should create a purchase order', async () => {
-        mockApi().post('/purchaseOrders', payload)
-          .reply(201, payload)
+        mockApi().post('/purchaseOrders', payload).reply(201, payload)
 
         const res = await scope.purchaseOrder().create(payload)
 
@@ -52,8 +50,7 @@ module.exports = (scopeType) => {
       })
 
       it('should read a purchase order', async () => {
-        mockApi().get('/purchaseOrders/purchaseOrderId')
-          .reply(200, payload)
+        mockApi().get('/purchaseOrders/purchaseOrderId').reply(200, payload)
 
         const res = await scope.purchaseOrder('purchaseOrderId').read()
 
@@ -62,8 +59,7 @@ module.exports = (scopeType) => {
       })
 
       it('should update a purchase order', async () => {
-        mockApi().put('/purchaseOrders/purchaseOrderId', payload)
-          .reply(200, payload)
+        mockApi().put('/purchaseOrders/purchaseOrderId', payload).reply(200, payload)
 
         const res = await scope.purchaseOrder('purchaseOrderId').update(payload)
 
@@ -72,8 +68,7 @@ module.exports = (scopeType) => {
       })
 
       it('should delete a purchaseOrder', async () => {
-        mockApi().delete('/purchaseOrders/purchaseOrderId')
-          .reply(204)
+        mockApi().delete('/purchaseOrders/purchaseOrderId').reply(204)
 
         await scope.purchaseOrder('purchaseOrderId').delete()
       })

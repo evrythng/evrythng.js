@@ -37,8 +37,7 @@ export default class Application extends ApplicationResources(Entity) {
           throw new Error('Application is not a top-level resource.')
         }
 
-        return Resource.factoryFor(Application, path, ApplicationResources)
-          .call(this, id)
+        return Resource.factoryFor(Application, path, ApplicationResources).call(this, id)
       }
     }
   }

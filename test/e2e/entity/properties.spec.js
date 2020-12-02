@@ -11,8 +11,7 @@ module.exports = (scopeType, targetType) => {
 
     it(`should create a ${targetType} property`, async () => {
       const payload = { key: 'temp_c', value: 42 }
-      mockApi().post(`/${targetType}s/targetId/properties`)
-        .reply(200, [payload])
+      mockApi().post(`/${targetType}s/targetId/properties`).reply(200, [payload])
       const res = await scope[targetType]('targetId').property().create(payload)
 
       expect(res).to.be.an('array')
@@ -20,7 +19,8 @@ module.exports = (scopeType, targetType) => {
     })
 
     it(`should read all ${targetType} properties`, async () => {
-      mockApi().get(`/${targetType}s/targetId/properties`)
+      mockApi()
+        .get(`/${targetType}s/targetId/properties`)
         .reply(200, [{ key: 'temp_c', value: 42 }])
       const res = await scope[targetType]('targetId').property().read()
 
@@ -29,7 +29,8 @@ module.exports = (scopeType, targetType) => {
     })
 
     it(`should read a single ${targetType} property`, async () => {
-      mockApi().get(`/${targetType}s/targetId/properties/temp_c`)
+      mockApi()
+        .get(`/${targetType}s/targetId/properties/temp_c`)
         .reply(200, [{ value: 42 }])
       const res = await scope[targetType]('targetId').property('temp_c').read()
 
@@ -38,7 +39,8 @@ module.exports = (scopeType, targetType) => {
     })
 
     it(`should update a single ${targetType} property`, async () => {
-      mockApi().put(`/${targetType}s/targetId/properties/temp_c`, [{ value: 43 }])
+      mockApi()
+        .put(`/${targetType}s/targetId/properties/temp_c`, [{ value: 43 }])
         .reply(200, [{ value: 43 }])
       const res = await scope[targetType]('targetId').property('temp_c').update(43)
 
@@ -48,8 +50,7 @@ module.exports = (scopeType, targetType) => {
 
     if (scopeType !== 'anonUser') {
       it(`should delete a single ${targetType} property`, async () => {
-        mockApi().delete(`/${targetType}s/targetId/properties/temp_c`)
-          .reply(200)
+        mockApi().delete(`/${targetType}s/targetId/properties/temp_c`).reply(200)
         await scope[targetType]('targetId').property('temp_c').delete()
       })
     }

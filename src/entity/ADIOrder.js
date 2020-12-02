@@ -4,9 +4,7 @@ import Resource from '../resource/Resource'
 import { mixinResources } from '../util/mixin'
 
 const path = '/adis/orders'
-const ADIOrderResources = mixinResources([
-  ADIOrderEvent
-])
+const ADIOrderResources = mixinResources([ADIOrderEvent])
 
 /**
  * Represents a ADIOrder entity object.

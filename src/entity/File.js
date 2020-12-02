@@ -18,12 +18,9 @@ export default class File extends Entity {
   static resourceFactory () {
     return {
       file (id) {
-        return Object.assign(
-          Resource.factoryFor(File, path).call(this, id),
-          {
-            upload
-          }
-        )
+        return Object.assign(Resource.factoryFor(File, path).call(this, id), {
+          upload
+        })
       }
     }
   }

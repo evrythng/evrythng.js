@@ -4,9 +4,7 @@ import Resource from '../resource/Resource'
 import { mixinResources } from '../util/mixin'
 
 const path = '/roles'
-const RoleResources = mixinResources([
-  Permission
-])
+const RoleResources = mixinResources([Permission])
 
 /**
  * Represents a Role entity object.

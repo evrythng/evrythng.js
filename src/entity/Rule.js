@@ -23,14 +23,11 @@ export default class Rule extends Entity {
           throw new TypeError('Rule name must be a string')
         }
 
-        return Object.assign(
-          Resource.factoryFor(Rule, path).call(this, ruleName),
-          {
-            run (...args) {
-              return Resource.prototype.create.call(this, ...args)
-            }
+        return Object.assign(Resource.factoryFor(Rule, path).call(this, ruleName), {
+          run (...args) {
+            return Resource.prototype.create.call(this, ...args)
           }
-        )
+        })
       }
     }
   }

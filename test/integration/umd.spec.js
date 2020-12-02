@@ -7,7 +7,7 @@
   } else {
     factory(root.EVT)
   }
-}(this, function factory (EVT) {
+})(this, function factory (EVT) {
   /* eslint-env jasmine */
 
   describe('EVT Distribution', () => {
@@ -15,4 +15,4 @@
       expect(EVT).toBeDefined()
     })
   })
-}))
+})

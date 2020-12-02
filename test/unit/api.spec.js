@@ -17,7 +17,7 @@ const initialSettings = Object.assign({}, settings)
 describe('api', () => {
   mockApi()
 
-  afterEach(done => {
+  afterEach((done) => {
     setup(initialSettings)
     request.then(done).catch(done.fail)
   })
@@ -64,13 +64,11 @@ describe('api', () => {
       it('should merge nested headers', () => {
         const headers = {
           'content-type': 'text/plain',
-          'accept': 'application/json'
+          accept: 'application/json'
         }
         request = api({ headers }).then(() => {
-          expect(fetchMock.lastOptions().headers['content-type'])
-            .toEqual(headers['content-type'])
-          expect(fetchMock.lastOptions().headers.accept)
-            .toEqual(headers.accept)
+          expect(fetchMock.lastOptions().headers['content-type']).toEqual(headers['content-type'])
+          expect(fetchMock.lastOptions().headers.accept).toEqual(headers.accept)
         })
       })
 
@@ -116,7 +114,7 @@ describe('api', () => {
       }
       const asyncIncrementInterceptor = {
         request (options) {
-          return new Promise(resolve => {
+          return new Promise((resolve) => {
             setTimeout(() => {
               options.body = options.body || { count: 0 }
               options.body.count++
@@ -126,7 +124,7 @@ describe('api', () => {
         },
         response (res) {
           // assuming fullResponse: false
-          return new Promise(resolve => {
+          return new Promise((resolve) => {
             setTimeout(() => {
               res.count = res.count || 0
               res.count++
@@ -142,7 +140,7 @@ describe('api', () => {
       }
       const asyncCancelInterceptor = {
         request (options, cancel) {
-          return new Promise(resolve => {
+          return new Promise((resolve) => {
             setTimeout(() => {
               cancel()
               resolve()
@@ -159,7 +157,7 @@ describe('api', () => {
         response (res) {
           const json = res.json
           res.json = function () {
-            return json.apply(this, arguments).then(j => {
+            return json.apply(this, arguments).then((j) => {
               j.patch = 'patched'
               return j
             })
@@ -190,8 +188,7 @@ describe('api', () => {
           const interceptors = [mutatorInterceptor]
           request = api({ interceptors }).then(() => {
             expect(fetchMock.lastOptions().method).toEqual('post')
-            expect(fetchMock.lastOptions().headers.accept)
-              .toEqual('application/json')
+            expect(fetchMock.lastOptions().headers.accept).toEqual('application/json')
           })
         })
 
@@ -211,10 +208,7 @@ describe('api', () => {
         })
 
         it('should allow async interceptors (return promises)', () => {
-          const interceptors = [
-            asyncIncrementInterceptor,
-            asyncIncrementInterceptor
-          ]
+          const interceptors = [asyncIncrementInterceptor, asyncIncrementInterceptor]
           request = api({ interceptors }).then(() => {
             expect(fetchMock.lastOptions().body).toBeDefined()
             expect(fetchMock.lastOptions().body.count).toEqual(2)
@@ -224,7 +218,7 @@ describe('api', () => {
         it('should be able to cancel requests', () => {
           fetchMock.reset()
           const interceptors = [cancelInterceptor]
-          request = api({ interceptors }).catch(err => {
+          request = api({ interceptors }).catch((err) => {
             expect(err.cancelled).toBe(true)
             expect(fetchMock.called()).toBe(false)
           })
@@ -233,7 +227,7 @@ describe('api', () => {
         it('should be able to cancel request from async interceptor', () => {
           fetchMock.reset()
           const interceptors = [asyncCancelInterceptor]
-          request = api({ interceptors }).catch(err => {
+          request = api({ interceptors }).catch((err) => {
             expect(err.cancelled).toBe(true)
             expect(fetchMock.called()).toBe(false)
           })
@@ -273,7 +267,7 @@ describe('api', () => {
         it('should be able to mutate simple response', () => {
           const interceptors = [mutatorInterceptor]
           const url = paths.operators
-          request = api({ interceptors, url }).then(res => {
+          request = api({ interceptors, url }).then((res) => {
             expect(res.id).toBeDefined()
             expect(res.id).toEqual(operatorTemplate.id)
             expect(res.foo).toBeDefined()
@@ -283,18 +277,15 @@ describe('api', () => {
 
         it('should allow multiple interceptors that run in order', () => {
           const interceptors = [incrementInterceptor, incrementInterceptor]
-          request = api({ interceptors }).then(res => {
+          request = api({ interceptors }).then((res) => {
             expect(res.count).toBeDefined()
             expect(res.count).toEqual(2)
           })
         })
 
         it('should allow async interceptors (return promises)', () => {
-          const interceptors = [
-            asyncIncrementInterceptor,
-            asyncIncrementInterceptor
-          ]
-          request = api({ interceptors }).then(res => {
+          const interceptors = [asyncIncrementInterceptor, asyncIncrementInterceptor]
+          request = api({ interceptors }).then((res) => {
             expect(res.count).toBeDefined()
             expect(res.count).toEqual(2)
           })
@@ -310,8 +301,8 @@ describe('api', () => {
         it('should allow monkey patch of full responses', () => {
           const interceptors = [monkeyPatchInterceptor]
           request = api({ interceptors, fullResponse: true })
-            .then(res => res.json())
-            .then(res => {
+            .then((res) => res.json())
+            .then((res) => {
               expect(res.patch).toBeDefined()
               expect(res.patch).toEqual('patched')
             })
@@ -326,8 +317,7 @@ describe('api', () => {
           url: paths.dummy
         }
         request = api(customOptions).then(() => {
-          expect(fetchMock.lastUrl())
-            .toEqual(`${customOptions.apiUrl}${customOptions.url}`)
+          expect(fetchMock.lastUrl()).toEqual(`${customOptions.apiUrl}${customOptions.url}`)
         })
       })
 
@@ -352,7 +342,7 @@ describe('api', () => {
 
     describe('handle response', () => {
       it('should return json body by default', () => {
-        request = api().then(res => {
+        request = api().then((res) => {
           expect(res).toEqual(responses.ok.body)
         })
       })
@@ -361,7 +351,7 @@ describe('api', () => {
         request = api({
           method: 'delete',
           url: paths.dummy
-        }).then(res => {
+        }).then((res) => {
           expect(res).toBeUndefined()
         })
       })
@@ -369,16 +359,16 @@ describe('api', () => {
       it('should reject on HTTP error code', function () {
         request = api({ url: paths.error })
           .then(() => expect(true).toBe(false)) // should not get here
-          .catch(res => expect(res).toEqual(responses.error.generic.body))
+          .catch((res) => expect(res).toEqual(responses.error.generic.body))
       })
 
       it('should return full Response object with fullResponse option', () => {
-        request = api({ fullResponse: true }).then(res => {
+        request = api({ fullResponse: true }).then((res) => {
           expect(res instanceof Response).toBe(true)
           expect(res.headers).toBeDefined()
           expect(res.ok).toBe(true)
 
-          return res.json().then(body => {
+          return res.json().then((body) => {
             expect(body).toEqual(responses.ok.body)
           })
         })
@@ -390,11 +380,11 @@ describe('api', () => {
           fullResponse: true
         })
           .then(() => expect(true).toBe(false)) // should not get here
-          .catch(res => {
+          .catch((res) => {
             expect(res instanceof Response).toBe(true)
             expect(res.ok).toBe(false)
 
-            return res.json().then(body => {
+            return res.json().then((body) => {
               expect(body).toEqual(responses.error.generic.body)
             })
           })
@@ -408,15 +398,14 @@ describe('api', () => {
 
       it('should call callback without error on success', () => {
         request = api({ url: paths.dummy }, callbackSpy).then(() => {
-          expect(callbackSpy)
-            .toHaveBeenCalledWith(null, responses.entity.multiple.body)
+          expect(callbackSpy).toHaveBeenCalledWith(null, responses.entity.multiple.body)
         })
       })
 
       it('should call callback with error on error', () => {
-        request = api({ url: paths.error }, callbackSpy)
-          .catch(() => expect(callbackSpy)
-            .toHaveBeenCalledWith(responses.error.generic.body))
+        request = api({ url: paths.error }, callbackSpy).catch(() =>
+          expect(callbackSpy).toHaveBeenCalledWith(responses.error.generic.body)
+        )
       })
     })
   })

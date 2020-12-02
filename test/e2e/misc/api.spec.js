@@ -9,7 +9,8 @@ const _api = (url, method = 'get', data) => api({ url, method, apiKey, data })
 module.exports = () => {
   describe('api', () => {
     it('should read access information', async () => {
-      mockApi().get('/access')
+      mockApi()
+        .get('/access')
         .reply(200, { actor: { type: 'operator' } })
       const res = await _api('/access')
 
@@ -20,36 +21,33 @@ module.exports = () => {
     it('should manipulate some resource', async () => {
       // Create
       const payload = { name: 'test' }
-      mockApi().post('/thngs', payload)
-        .reply(201, { id: 'thngId' })
+      mockApi().post('/thngs', payload).reply(201, { id: 'thngId' })
       let res = await _api('/thngs', 'post', payload)
 
       expect(res.id).to.be.a('string')
 
       // Read
-      mockApi().get('/thngs/thngId')
-        .reply(200, { id: 'thngId' })
+      mockApi().get('/thngs/thngId').reply(200, { id: 'thngId' })
       res = await _api('/thngs/thngId')
 
       expect(res.id).to.be.a('string')
 
       // Update
       payload.name = 'updated'
-      mockApi().put('/thngs/thngId', payload)
-        .reply(200, payload)
+      mockApi().put('/thngs/thngId', payload).reply(200, payload)
       res = await _api('/thngs/thngId', 'put', payload)
 
       expect(res.name).to.equal(payload.name)
 
       // Delete
-      mockApi().delete('/thngs/thngId')
-        .reply(200)
+      mockApi().delete('/thngs/thngId').reply(200)
       await _api('/thngs/thngId', 'delete')
     })
 
     it('should throw a native Error', async () => {
       const payload = { foo: 'bar' }
-      mockApi().post('/thngs', payload)
+      mockApi()
+        .post('/thngs', payload)
         .reply(404, {
           errors: ['Thng was not found'],
           moreInfo: 'https://developers.evrythng.com',

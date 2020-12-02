@@ -1,0 +1,19 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2021": true,
+    "mocha": true
+  },
+  "extends": ["standard"],
+  "parserOptions": {
+    "ecmaVersion": 12
+  },
+  "rules": {
+    "eqeqeq": [0, "smart"],
+    "no-unused-expressions": "off",
+    "no-prototype-builtins": "off",
+    "prefer-promise-reject-errors": "off",
+    "operator-linebreak": "off"
+  }
+}

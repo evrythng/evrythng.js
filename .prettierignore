@@ -1,0 +1,7 @@
+terraform/*
+reports/*
+test-results/*
+mochawesome-report/*
+.nyc_output
+.vscode
+dist

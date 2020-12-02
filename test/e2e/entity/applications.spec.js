@@ -11,8 +11,7 @@ module.exports = (scopeType) => {
 
     it('should create an application', async () => {
       const payload = { name: 'Application Name', socialNetworks: {} }
-      mockApi().post('/projects/projectId/applications')
-        .reply(201, payload)
+      mockApi().post('/projects/projectId/applications').reply(201, payload)
       const res = await scope.project('projectId').application().create(payload)
 
       expect(res).to.be.an('object')
@@ -20,7 +19,8 @@ module.exports = (scopeType) => {
     })
 
     it('should read all applications', async () => {
-      mockApi().get('/projects/projectId/applications')
+      mockApi()
+        .get('/projects/projectId/applications')
         .reply(200, [{ id: 'applicationId' }])
       const res = await scope.project('projectId').application().read()
 
@@ -29,7 +29,8 @@ module.exports = (scopeType) => {
     })
 
     it('should read an application', async () => {
-      mockApi().get('/projects/projectId/applications/applicationId')
+      mockApi()
+        .get('/projects/projectId/applications/applicationId')
         .reply(200, { id: 'applicationId' })
       const res = await scope.project('projectId').application('applicationId').read()
 
@@ -39,8 +40,7 @@ module.exports = (scopeType) => {
 
     it('should update an application', async () => {
       const payload = { tags: ['updated'] }
-      mockApi().put('/projects/projectId/applications/applicationId')
-        .reply(200, payload)
+      mockApi().put('/projects/projectId/applications/applicationId').reply(200, payload)
       const res = await scope.project('projectId').application('applicationId').update(payload)
 
       expect(res).to.be.an('object')
@@ -48,8 +48,7 @@ module.exports = (scopeType) => {
     })
 
     it('should delete an application', async () => {
-      mockApi().delete('/projects/projectId/applications/applicationId')
-        .reply(200)
+      mockApi().delete('/projects/projectId/applications/applicationId').reply(200)
       await scope.project('projectId').application('applicationId').delete()
     })
   })

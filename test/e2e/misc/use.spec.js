@@ -22,8 +22,7 @@ module.exports = () => {
       operator = getScope('operator')
 
       const payload = { name: 'test' }
-      mockApi().post('/thngs', payload)
-        .reply(201, payload)
+      mockApi().post('/thngs', payload).reply(201, payload)
       thng = await operator.thng().create(payload)
     })
 

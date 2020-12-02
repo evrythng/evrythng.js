@@ -36,7 +36,7 @@ describe('ReactorLog', () => {
       })
 
       describe('create', () => {
-        it('should do nothing for single log', done => {
+        it('should do nothing for single log', (done) => {
           reactorLogResource = resource.reactorLog()
           reactorLogResource.create(reactorLogTemplate).then(() => {
             expect(Resource.prototype.create).toHaveBeenCalledWith(reactorLogTemplate)
@@ -44,17 +44,20 @@ describe('ReactorLog', () => {
           })
         })
 
-        it('should use bulk endpoint for multiple logs', done => {
+        it('should use bulk endpoint for multiple logs', (done) => {
           const data = [reactorLogTemplate, reactorLogTemplate]
-          resource.reactorLog().create(data).then(() => {
-            expect(Resource.prototype.create).toHaveBeenCalledWith(
-              data,
-              jasmine.objectContaining({
-                url: `${paths.dummy}${paths.reactorLogs}/bulk`
-              })
-            )
-            done()
-          })
+          resource
+            .reactorLog()
+            .create(data)
+            .then(() => {
+              expect(Resource.prototype.create).toHaveBeenCalledWith(
+                data,
+                jasmine.objectContaining({
+                  url: `${paths.dummy}${paths.reactorLogs}/bulk`
+                })
+              )
+              done()
+            })
         })
       })
     })

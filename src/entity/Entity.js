@@ -33,8 +33,7 @@ export default class Entity {
    * @returns {Object}
    */
   json () {
-    return Object.entries(this)
-      .reduce((ret, [k, v]) => Object.assign(ret, { [k]: v }), {})
+    return Object.entries(this).reduce((ret, [k, v]) => Object.assign(ret, { [k]: v }), {})
   }
 
   /**
@@ -46,12 +45,11 @@ export default class Entity {
    * @returns {Promise.<Object>}
    */
   update (body = this.json(), callback) {
-    return this[symbols.resource].update(body, callback)
-      .then(updated => {
-        // Update self and keep chaining with API response.
-        Object.assign(this, updated)
-        return updated
-      })
+    return this[symbols.resource].update(body, callback).then((updated) => {
+      // Update self and keep chaining with API response.
+      Object.assign(this, updated)
+      return updated
+    })
   }
 
   /**

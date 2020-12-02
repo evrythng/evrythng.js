@@ -97,11 +97,11 @@ describe('Resource', () => {
         expect(res[symbols.resource].path).toEqual(`${resource.path}/${newBody.id}`)
       })
 
-      it('should add serialize method if Response object', done => {
+      it('should add serialize method if Response object', (done) => {
         const response = new Response(JSON.stringify(entityTemplate))
         const res = resource.deserialize(response)
 
-        res.deserialize().then(res => {
+        res.deserialize().then((res) => {
           expect(res.foo).toEqual(entityTemplate.foo)
           done()
         })
@@ -110,7 +110,7 @@ describe('Resource', () => {
       it('should deserialize every element if array', () => {
         const res = resource.deserialize([entityTemplate, entityTemplate])
         expect(res.length).toEqual(2)
-        res.forEach(item => {
+        res.forEach((item) => {
           expect(item instanceof Entity).toBe(true)
           expect(item.foo).toEqual(entityTemplate.foo)
         })
@@ -125,7 +125,7 @@ describe('Resource', () => {
 
     describe('read', () => {
       describe('valid', () => {
-        it('should send get request to path', done => {
+        it('should send get request to path', (done) => {
           resource.read().then(() => {
             expect(fetchMock.lastUrl()).toEqual(apiUrl(paths.dummy))
             expect(fetchMock.lastOptions().method).toEqual('get')
@@ -135,10 +135,10 @@ describe('Resource', () => {
 
         // Bellow is testing the internal _request method
 
-        it('should deserialize response', done => {
-          resource.read().then(res => {
+        it('should deserialize response', (done) => {
+          resource.read().then((res) => {
             expect(res.length).toEqual(2)
-            res.forEach(item => {
+            res.forEach((item) => {
               expect(item instanceof Entity).toBe(true)
               expect(item.foo).toEqual(entityTemplate.foo)
             })
@@ -146,33 +146,31 @@ describe('Resource', () => {
           })
         })
 
-        it('should accept user options', done => {
+        it('should accept user options', (done) => {
           const headers = { accept: 'text/html' }
           resource.read({ headers }).then(() => {
-            expect(fetchMock.lastOptions().headers.accept)
-              .toEqual(headers.accept)
+            expect(fetchMock.lastOptions().headers.accept).toEqual(headers.accept)
             done()
           })
         })
 
-        it('should override user options with mandatory ones', done => {
+        it('should override user options with mandatory ones', (done) => {
           resource.read({ method: 'post' }).then(() => {
             expect(fetchMock.lastOptions().method).toEqual('get')
             done()
           })
         })
 
-        it('should use scope apiKey', done => {
+        it('should use scope apiKey', (done) => {
           resource.read().then(() => {
-            expect(fetchMock.lastOptions().headers.authorization)
-              .toEqual(scope.apiKey)
+            expect(fetchMock.lastOptions().headers.authorization).toEqual(scope.apiKey)
             done()
           })
         })
 
-        it('should allow callback in first param', done => {
+        it('should allow callback in first param', (done) => {
           const cb = jasmine.createSpy('callback')
-          resource.read(cb).then(res => {
+          resource.read(cb).then((res) => {
             expect(cb).toHaveBeenCalledWith(null, res)
             done()
           })
@@ -187,7 +185,7 @@ describe('Resource', () => {
       })
 
       describe('valid', () => {
-        it('should send post request to path', done => {
+        it('should send post request to path', (done) => {
           resource.create(entityTemplate).then(() => {
             expect(fetchMock.lastUrl()).toEqual(apiUrl(paths.dummy))
             expect(fetchMock.lastOptions().method).toEqual('post')
@@ -198,7 +196,7 @@ describe('Resource', () => {
 
         // Bellow is testing the internal _request method
 
-        it('should serialize body', done => {
+        it('should serialize body', (done) => {
           const newEntity = new Entity(resource, entityTemplate)
           resource.create(newEntity).then(() => {
             expect(fetchMock.lastOptions().body).toEqual(entityTemplate)
@@ -215,7 +213,7 @@ describe('Resource', () => {
       })
 
       describe('valid', () => {
-        it('should send put request to path', done => {
+        it('should send put request to path', (done) => {
           resource.update(entityTemplate).then(() => {
             expect(fetchMock.lastUrl()).toEqual(apiUrl(paths.dummy))
             expect(fetchMock.lastOptions().method).toEqual('put')
@@ -226,7 +224,7 @@ describe('Resource', () => {
     })
 
     describe('delete', () => {
-      it('should send delete request to path', done => {
+      it('should send delete request to path', (done) => {
         resource.delete().then(() => {
           expect(fetchMock.lastUrl()).toEqual(apiUrl(paths.dummy))
           expect(fetchMock.lastOptions().method).toEqual('delete')
@@ -305,9 +303,10 @@ describe('Resource', () => {
       })
 
       it('should allow extending the Resource with a Mixin', () => {
-        const Mixin = C => class extends C {
-          mixedIn () {}
-        }
+        const Mixin = (C) =>
+          class extends C {
+            mixedIn () {}
+          }
         factory = Resource.factoryFor(Entity, paths.dummy, Mixin)
         testMixin = { test: factory }
         extendedScope = Object.assign(dummyScope(), testMixin)

@@ -10,7 +10,8 @@ const describeOperatorPermissionTests = () => {
     })
 
     it('should read all role permissions', async () => {
-      mockApi().get('/roles/roleId/permissions')
+      mockApi()
+        .get('/roles/roleId/permissions')
         .reply(200, [{ name: 'global_read' }])
       const res = await operator.role('roleId').permission().read()
 
@@ -19,8 +20,7 @@ const describeOperatorPermissionTests = () => {
     })
 
     it('should read a single role permission', async () => {
-      mockApi().get('/roles/roleId/permissions/global_read')
-        .reply(200, { name: 'global_read' })
+      mockApi().get('/roles/roleId/permissions/global_read').reply(200, { name: 'global_read' })
       const res = await operator.role('roleId').permission('global_read').read()
 
       expect(res).to.be.an('object')
@@ -29,8 +29,7 @@ const describeOperatorPermissionTests = () => {
 
     it('should update a single role permission', async () => {
       const payload = { name: 'global_read', enabled: false }
-      mockApi().put('/roles/roleId/permissions/global_read', payload)
-        .reply(200, payload)
+      mockApi().put('/roles/roleId/permissions/global_read', payload).reply(200, payload)
       const res = await operator.role('roleId').permission('global_read').update(payload)
 
       expect(res).to.be.an('object')
@@ -48,7 +47,8 @@ const describeAppUserPermissionTests = () => {
     })
 
     it('should read all role permissions', async () => {
-      mockApi().get('/roles/roleId/permissions')
+      mockApi()
+        .get('/roles/roleId/permissions')
         .reply(200, [{ access: 'cru', path: '/thngs' }])
       const res = await operator.role('roleId').permission().read()
 
@@ -58,8 +58,7 @@ const describeAppUserPermissionTests = () => {
 
     it('should update role permissions', async () => {
       const payload = [{ path: '/thngs', access: 'cr' }]
-      mockApi().put('/roles/roleId/permissions', payload)
-        .reply(200, payload)
+      mockApi().put('/roles/roleId/permissions', payload).reply(200, payload)
       const res = await operator.role('roleId').permission().update(payload)
 
       expect(res).to.be.an('array')
@@ -68,8 +67,7 @@ const describeAppUserPermissionTests = () => {
 
     it('should minimise role permissions', async () => {
       const payload = []
-      mockApi().put('/roles/roleId/permissions', payload)
-        .reply(200, payload)
+      mockApi().put('/roles/roleId/permissions', payload).reply(200, payload)
       const res = await operator.role('roleId').permission().update(payload)
 
       expect(res).to.be.an('array')

@@ -10,7 +10,8 @@ module.exports = (scopeType) => {
     })
 
     it('should read all roles', async () => {
-      mockApi().get('/roles')
+      mockApi()
+        .get('/roles')
         .reply(200, [{ id: 'roleId' }])
       const res = await scope.role().read()
 
@@ -21,8 +22,7 @@ module.exports = (scopeType) => {
     if (scopeType === 'operator') {
       it('should create a role', async () => {
         const payload = { name: 'Test Role' }
-        mockApi().post('/roles', payload)
-          .reply(201, payload)
+        mockApi().post('/roles', payload).reply(201, payload)
         const res = await scope.role().create(payload)
 
         expect(res).to.be.an('object')
@@ -30,8 +30,7 @@ module.exports = (scopeType) => {
       })
 
       it('should read a role', async () => {
-        mockApi().get('/roles/roleId')
-          .reply(200, { id: 'roleId' })
+        mockApi().get('/roles/roleId').reply(200, { id: 'roleId' })
         const res = await scope.role('roleId').read()
 
         expect(res).to.be.an('object')
@@ -40,8 +39,7 @@ module.exports = (scopeType) => {
 
       it('should update a role', async () => {
         const payload = { description: 'updated' }
-        mockApi().put('/roles/roleId', payload)
-          .reply(200, payload)
+        mockApi().put('/roles/roleId', payload).reply(200, payload)
         const res = await scope.role('roleId').update(payload)
 
         expect(res).to.be.an('object')
@@ -49,8 +47,7 @@ module.exports = (scopeType) => {
       })
 
       it('should delete a role', async () => {
-        mockApi().delete('/roles/roleId')
-          .reply(200)
+        mockApi().delete('/roles/roleId').reply(200)
         await scope.role('roleId').delete()
       })
     }

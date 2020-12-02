@@ -11,8 +11,7 @@ module.exports = () => {
 
     it('should create a project', async () => {
       const payload = { name: 'Test Project' }
-      mockApi().post('/projects', payload)
-        .reply(201, payload)
+      mockApi().post('/projects', payload).reply(201, payload)
 
       const res = await operator.project().create(payload)
 
@@ -21,7 +20,8 @@ module.exports = () => {
     })
 
     it('should read all projects', async () => {
-      mockApi().get('/projects')
+      mockApi()
+        .get('/projects')
         .reply(200, [{ id: 'projectId' }])
       const res = await operator.project().read()
 
@@ -30,8 +30,7 @@ module.exports = () => {
     })
 
     it('should read a project', async () => {
-      mockApi().get('/projects/projectId')
-        .reply(200, { id: 'projectId' })
+      mockApi().get('/projects/projectId').reply(200, { id: 'projectId' })
       const res = await operator.project('projectId').read()
 
       expect(res).to.be.an('object')
@@ -40,8 +39,7 @@ module.exports = () => {
 
     it('should update a project', async () => {
       const payload = { tags: ['updated'] }
-      mockApi().put('/projects/projectId', payload)
-        .reply(200, payload)
+      mockApi().put('/projects/projectId', payload).reply(200, payload)
       const res = await operator.project('projectId').update(payload)
 
       expect(res).to.be.an('object')
@@ -49,8 +47,7 @@ module.exports = () => {
     })
 
     it('should delete a project', async () => {
-      mockApi().delete('/projects/projectId')
-        .reply(200)
+      mockApi().delete('/projects/projectId').reply(200)
       await operator.project('projectId').delete()
     })
   })

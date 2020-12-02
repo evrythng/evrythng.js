@@ -10,9 +10,12 @@ module.exports = () => {
     })
 
     it('should read the application Redirector', async () => {
-      mockApi().get('/projects/projectId/applications/applicationId/redirector')
+      mockApi()
+        .get('/projects/projectId/applications/applicationId/redirector')
         .reply(200, { rules: [] })
-      const res = await operator.project('projectId').application('applicationId')
+      const res = await operator
+        .project('projectId')
+        .application('applicationId')
         .redirector()
         .read()
 
@@ -24,9 +27,12 @@ module.exports = () => {
       const payload = {
         rules: [{ match: 'thng.name=test' }]
       }
-      mockApi().put('/projects/projectId/applications/applicationId/redirector')
+      mockApi()
+        .put('/projects/projectId/applications/applicationId/redirector')
         .reply(200, payload)
-      const res = await operator.project('projectId').application('applicationId')
+      const res = await operator
+        .project('projectId')
+        .application('applicationId')
         .redirector()
         .update(payload)
 
