@@ -16,7 +16,7 @@ export default class Permission extends Entity {
    * @static
    * @return {{permission: Function}}
    */
-  static      resourceFactory () {
+  static resourceFactory () {
     return {
       permission (name) {
         // Only allowed on Entities and Resources.
