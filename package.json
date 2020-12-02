@@ -11,7 +11,7 @@
     "show-notice": "echo '\n    New to evrythng.js v5? Make sure to read the migration guide:\n    https://developers.evrythng.com/docs/evrythngjs-v500\n'",
     "postinstall": "npm run --silent show-notice",
     "test": "mocha test/integration/**.spec.js",
-    "test:e2e": "mocha test/e2e/**.spec.js",
+    "test:unit": "mocha --require esm test/unit/**.spec.js",
     "prepublishOnly": "npm run build"
   },
   "husky": {
@@ -74,6 +74,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
+    "esm": "^3.2.25",
     "fetch-mock": "^9.10.7",
     "lodash-es": "^4.17.15",
     "mocha": "^7.2.0",

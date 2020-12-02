@@ -1,5 +1,5 @@
 // Maximum acceptable age of cached location from the browser
-const maximumAge = 5 * 60 * 1000;
+const maximumAge = 5 * 60 * 1000
 
 /**
  * Get browser's current position from Geolocation API.

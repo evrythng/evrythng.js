@@ -18,7 +18,7 @@ module.exports = (scopeType, url) => {
 
     it('should find Thngs by identifiers', async () => {
       const payload1 = { name: 'Test Thng', identifiers: { serial: '78fd6hsd' } }
-      api.get('/thngs?filter=identifiers.serial=78fd6hsd').reply(200, [payload])
+      api.get('/thngs?filter=identifiers.serial=78fd6hsd').reply(200, [payload1])
 
       const res = await operator.thng().find(payload1.identifiers)
 
