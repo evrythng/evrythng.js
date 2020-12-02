@@ -12,6 +12,7 @@
     "postinstall": "npm run --silent show-notice",
     "test": "mocha test/integration/**.spec.js",
     "test:unit": "mocha --require esm test/unit/**.spec.js",
+    "test:e2e": "mocha test/e2e/**.spec.js",
     "prepublishOnly": "npm run build"
   },
   "husky": {
@@ -69,6 +70,7 @@
     "babel-loader": "^8.0.5",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "chance": "^1.1.7",
     "eslint": "^7.14.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
