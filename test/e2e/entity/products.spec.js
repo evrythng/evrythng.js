@@ -11,8 +11,7 @@ module.exports = (scopeType) => {
 
     it('should create a product', async () => {
       const payload = { name: 'Test Product' }
-      mockApi().post('/products', payload)
-        .reply(201, payload)
+      mockApi().post('/products', payload).reply(201, payload)
       const res = await scope.product().create(payload)
 
       expect(res).to.be.an('object')
@@ -20,8 +19,7 @@ module.exports = (scopeType) => {
     })
 
     it('should read a product', async () => {
-      mockApi().get('/products/productId')
-        .reply(200, { id: 'productId' })
+      mockApi().get('/products/productId').reply(200, { id: 'productId' })
       const res = await scope.product('productId').read()
 
       expect(res).to.be.an('object')
@@ -29,7 +27,8 @@ module.exports = (scopeType) => {
     })
 
     it('should read all products', async () => {
-      mockApi().get('/products')
+      mockApi()
+        .get('/products')
         .reply(200, [{ id: 'productId' }])
       const res = await scope.product().read()
 
@@ -39,8 +38,7 @@ module.exports = (scopeType) => {
 
     it('should update a product', async () => {
       const payload = { tags: ['updated'] }
-      mockApi().put('/products/productId', payload)
-        .reply(200, payload)
+      mockApi().put('/products/productId', payload).reply(200, payload)
       const res = await scope.product('productId').update(payload)
 
       expect(res).to.be.an('object')
@@ -49,8 +47,7 @@ module.exports = (scopeType) => {
 
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should delete a product', async () => {
-        mockApi().delete('/products/productId')
-          .reply(200)
+        mockApi().delete('/products/productId').reply(200)
         await scope.product('productId').delete()
       })
     }

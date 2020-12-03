@@ -1,9 +1,4 @@
-import {
-  operatorTemplate,
-  projectTemplate,
-  applicationTemplate,
-  userAccessTemplate
-} from './data'
+import { operatorTemplate, projectTemplate, applicationTemplate, userAccessTemplate } from './data'
 
 export default {
   testBase: 'https://api-test.evrythng.net',

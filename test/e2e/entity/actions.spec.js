@@ -2,18 +2,16 @@ const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
 module.exports = (scopeType) => {
-  let scope, operatorScope
+  let scope
 
   describe('Actions', () => {
     before(async () => {
       scope = getScope(scopeType)
-      operatorScope = getScope('operator')
     })
 
     it('should create an action', async () => {
       const payload = { type: 'scans', thng: 'thngId', tags: ['foo'] }
-      mockApi().post('/actions/scans', payload)
-        .reply(201, { id: 'actionId' })
+      mockApi().post('/actions/scans', payload).reply(201, { id: 'actionId' })
       const res = await scope.action('scans').create(payload)
 
       expect(res).to.be.an('object')
@@ -21,7 +19,8 @@ module.exports = (scopeType) => {
     })
 
     it('should read all actions of a type', async () => {
-      mockApi().get('/actions/scans')
+      mockApi()
+        .get('/actions/scans')
         .reply(200, [{ id: 'actionId' }])
       const res = await scope.action('scans').read()
 
@@ -31,17 +30,16 @@ module.exports = (scopeType) => {
 
     it('should create an aliased action', async () => {
       const payload = { type: 'scans' }
-      mockApi().post('/thngs/thngId/actions/scans', payload)
-        .reply(201, { id: 'actionId' })
-      const res = await scope.thng('thngId').action('scans')
-        .create(payload)
+      mockApi().post('/thngs/thngId/actions/scans', payload).reply(201, { id: 'actionId' })
+      const res = await scope.thng('thngId').action('scans').create(payload)
 
       expect(res).to.be.an('object')
       expect(res.id).to.be.a('string')
     })
 
     it('should read all aliased actions', async () => {
-      mockApi().get('/thngs/thngId/actions/scans')
+      mockApi()
+        .get('/thngs/thngId/actions/scans')
         .reply(200, [{ id: 'actionId' }])
       const res = await scope.thng('thngId').action('scans').read()
 
@@ -51,8 +49,7 @@ module.exports = (scopeType) => {
 
     if (scopeType === 'operator') {
       it('should read a single action', async () => {
-        mockApi().get('/actions/scans/actionId')
-          .reply(200, { id: 'actionId' })
+        mockApi().get('/actions/scans/actionId').reply(200, { id: 'actionId' })
         const res = await scope.action('scans', 'actionId').read()
 
         expect(res).to.be.an('object')
@@ -60,8 +57,7 @@ module.exports = (scopeType) => {
       })
 
       it('should delete an action', async () => {
-        mockApi().delete('/actions/scans/actionId')
-          .reply(200)
+        mockApi().delete('/actions/scans/actionId').reply(200)
         await scope.action('scans', 'actionId').delete()
       })
     }

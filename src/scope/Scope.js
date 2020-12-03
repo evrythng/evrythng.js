@@ -80,6 +80,6 @@ export default class Scope {
    * @private
    */
   _request (options) {
-    return api(options).then(data => Object.assign(this, data))
+    return api(options).then((data) => Object.assign(this, data))
   }
 }

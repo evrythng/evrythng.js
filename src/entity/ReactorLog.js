@@ -24,14 +24,11 @@ export default class ReactorLog extends Entity {
 
         const appPath = this instanceof Scope ? this[symbols.path] : ''
 
-        return Object.assign(
-          Resource.factoryFor(ReactorLog, appPath + path).call(this, id),
-          {
-            create (...args) {
-              return createLogs.call(this, ...args)
-            }
+        return Object.assign(Resource.factoryFor(ReactorLog, appPath + path).call(this, id), {
+          create (...args) {
+            return createLogs.call(this, ...args)
           }
-        )
+        })
       }
     }
   }

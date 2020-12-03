@@ -44,14 +44,14 @@ describe('Action', () => {
 
     it('should add actions path', () => {
       const actionResource = resource.action(actionTemplate.type)
-      expect(actionResource.path)
-        .toEqual(`${paths.dummy}${paths.actions}/${actionTemplate.type}`)
+      expect(actionResource.path).toEqual(`${paths.dummy}${paths.actions}/${actionTemplate.type}`)
     })
 
     it('should add action to path', () => {
       const actionResource = resource.action(actionTemplate.type, actionTemplate.id)
-      expect(actionResource.path)
-        .toEqual(`${paths.dummy}${paths.actions}/${actionTemplate.type}/${actionTemplate.id}`)
+      expect(actionResource.path).toEqual(
+        `${paths.dummy}${paths.actions}/${actionTemplate.type}/${actionTemplate.id}`
+      )
     })
 
     describe('with normalization', () => {
@@ -66,7 +66,7 @@ describe('Action', () => {
             resource = Object.assign(dummyResource(), Action.resourceFactory())
           })
 
-          it('should support empty invocation', done => {
+          it('should support empty invocation', (done) => {
             actionResource = resource.action(actionTemplate.type)
             actionResource.create().then(() => {
               expect(Resource.prototype.create).toHaveBeenCalled()
@@ -74,55 +74,64 @@ describe('Action', () => {
             })
           })
 
-          it('should fill correct action type', done => {
+          it('should fill correct action type', (done) => {
             Promise.all([
-              resource.action(actionTemplate.type).create().then(() => {
-                expect(Resource.prototype.create).toHaveBeenCalledWith(
-                  jasmine.objectContaining({
-                    type: actionTemplate.type
-                  })
-                )
-              }),
-              resource.action('all').create().then(() => {
-                expect(Resource.prototype.create).toHaveBeenCalledWith(
-                  jasmine.objectContaining({
-                    type: ''
-                  })
-                )
-              }),
-              resource.action('all').create({ type: 'test' }).then(() => {
-                expect(Resource.prototype.create).toHaveBeenCalledWith(
-                  jasmine.objectContaining({
-                    type: 'test'
-                  })
-                )
-              }),
-              resource.action(actionTemplate.type).create([{ foo: 1 }, { foo: 2 }]).then(() => {
-                expect(Resource.prototype.create).toHaveBeenCalledWith([
-                  jasmine.objectContaining({
-                    type: actionTemplate.type,
-                    foo: 1
-                  }),
-                  jasmine.objectContaining({
-                    type: actionTemplate.type,
-                    foo: 2
-                  })
-                ])
-              })
+              resource
+                .action(actionTemplate.type)
+                .create()
+                .then(() => {
+                  expect(Resource.prototype.create).toHaveBeenCalledWith(
+                    jasmine.objectContaining({
+                      type: actionTemplate.type
+                    })
+                  )
+                }),
+              resource
+                .action('all')
+                .create()
+                .then(() => {
+                  expect(Resource.prototype.create).toHaveBeenCalledWith(
+                    jasmine.objectContaining({
+                      type: ''
+                    })
+                  )
+                }),
+              resource
+                .action('all')
+                .create({ type: 'test' })
+                .then(() => {
+                  expect(Resource.prototype.create).toHaveBeenCalledWith(
+                    jasmine.objectContaining({
+                      type: 'test'
+                    })
+                  )
+                }),
+              resource
+                .action(actionTemplate.type)
+                .create([{ foo: 1 }, { foo: 2 }])
+                .then(() => {
+                  expect(Resource.prototype.create).toHaveBeenCalledWith([
+                    jasmine.objectContaining({
+                      type: actionTemplate.type,
+                      foo: 1
+                    }),
+                    jasmine.objectContaining({
+                      type: actionTemplate.type,
+                      foo: 2
+                    })
+                  ])
+                })
             ]).then(done)
           })
         })
 
         describe('on Entity base', () => {
           beforeEach(() => {
-            entity = Object.assign(
-              dummyEntity(Entity, entityTemplate),
-              Action.resourceFactory()
-            )
+            entity = Object.assign(dummyEntity(Entity, entityTemplate), Action.resourceFactory())
             actionResource = entity.action(actionTemplate.type)
           })
 
-          it('should fill correct entity ID', done => {
+          it('should fill correct entity ID', (done) => {
             Promise.all([
               actionResource.create().then(() => {
                 expect(Resource.prototype.create).toHaveBeenCalledWith(
@@ -146,25 +155,29 @@ describe('Action', () => {
             ]).then(done)
           })
 
-          it('should support callback in first param', done => {
-            actionResource.create(cb).then(() => {
-              expect(Resource.prototype.create.calls.mostRecent().args[1])
-                .toEqual(cb)
-            }).then(done)
-          })
-
-          it('should support callback in second param', done => {
-            actionResource.create(actionTemplate, cb).then(() => {
-              expect(Resource.prototype.create.calls.mostRecent().args[1])
-                .toEqual(cb)
-            }).then(done)
-          })
-
-          it('should support callback in third param', done => {
-            actionResource.create(actionTemplate, optionsTemplate, cb)
+          it('should support callback in first param', (done) => {
+            actionResource
+              .create(cb)
               .then(() => {
-                expect(Resource.prototype.create.calls.mostRecent().args[2])
-                  .toEqual(cb)
+                expect(Resource.prototype.create.calls.mostRecent().args[1]).toEqual(cb)
+              })
+              .then(done)
+          })
+
+          it('should support callback in second param', (done) => {
+            actionResource
+              .create(actionTemplate, cb)
+              .then(() => {
+                expect(Resource.prototype.create.calls.mostRecent().args[1]).toEqual(cb)
+              })
+              .then(done)
+          })
+
+          it('should support callback in third param', (done) => {
+            actionResource
+              .create(actionTemplate, optionsTemplate, cb)
+              .then(() => {
+                expect(Resource.prototype.create.calls.mostRecent().args[2]).toEqual(cb)
               })
               .then(done)
           })
@@ -177,31 +190,35 @@ describe('Action', () => {
               actionResource = resource.action(actionTemplate.type)
             })
 
-            it('should request user location if local config is passed', done => {
-              spyOn(window.navigator.geolocation, 'getCurrentPosition')
-                .and.callFake(success => success(positionTemplate))
+            it('should request user location if local config is passed', (done) => {
+              spyOn(window.navigator.geolocation, 'getCurrentPosition').and.callFake((success) =>
+                success(positionTemplate)
+              )
 
-              actionResource.create(actionTemplate, { geolocation: true })
+              actionResource
+                .create(actionTemplate, { geolocation: true })
                 .then(() => {
-                  expect(window.navigator.geolocation.getCurrentPosition)
-                    .toHaveBeenCalled()
-                  expect(Resource.prototype.create.calls.mostRecent().args[0])
-                    .toEqual(jasmine.objectContaining({
+                  expect(window.navigator.geolocation.getCurrentPosition).toHaveBeenCalled()
+                  expect(Resource.prototype.create.calls.mostRecent().args[0]).toEqual(
+                    jasmine.objectContaining({
                       location: positionTemplate.coords
-                    }))
+                    })
+                  )
                 })
                 .then(done)
             })
 
-            it('should create action even if geolocation failed', done => {
-              spyOn(window.navigator.geolocation, 'getCurrentPosition')
-                .and.callFake((success, error) => error(new Error()))
+            it('should create action even if geolocation failed', (done) => {
+              spyOn(
+                window.navigator.geolocation,
+                'getCurrentPosition'
+              ).and.callFake((success, error) => error(new Error()))
               spyOn(console, 'info').and.callFake(() => {})
 
-              actionResource.create(actionTemplate, { geolocation: true })
+              actionResource
+                .create(actionTemplate, { geolocation: true })
                 .catch(() => {
-                  expect(window.navigator.geolocation.getCurrentPosition)
-                    .toHaveBeenCalled()
+                  expect(window.navigator.geolocation.getCurrentPosition).toHaveBeenCalled()
                   expect(Resource.prototype.create).toHaveBeenCalled()
                 })
                 .then(done)

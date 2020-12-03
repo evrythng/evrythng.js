@@ -16,7 +16,6 @@ describe('buildUrl', () => {
       baz: 1
     }
     const paramsStr = 'foo=bar&baz=1'
-    expect(buildUrl({ apiUrl, url, params }))
-      .toEqual(`${apiUrl}${url}?${paramsStr}`)
+    expect(buildUrl({ apiUrl, url, params })).toEqual(`${apiUrl}${url}?${paramsStr}`)
   })
 })

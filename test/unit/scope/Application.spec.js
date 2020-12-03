@@ -19,7 +19,7 @@ describe('Application', () => {
         application = new Application(appApiKey)
       })
 
-      it('should read itself', done => {
+      it('should read itself', (done) => {
         application[symbols.init].then(() => {
           expect(Application.prototype.read).toHaveBeenCalled()
           done()
@@ -32,21 +32,19 @@ describe('Application', () => {
         application = new Application('invalidKey')
       })
 
-      it('should throw error', done => {
-        application[symbols.init]
-          .catch(() => expect(true).toBe(true))
-          .then(done)
+      it('should throw error', (done) => {
+        application[symbols.init].catch(() => expect(true).toBe(true)).then(done)
       })
     })
   })
 
   describe('read', () => {
-    beforeEach(done => {
+    beforeEach((done) => {
       application = new Application(appApiKey)
       application[symbols.init].then(done)
     })
 
-    it('should send get request to project and application ID', done => {
+    it('should send get request to project and application ID', (done) => {
       application.read().then(() => {
         expect(fetchMock.lastUrl()).toEqual(apiUrl(paths.application))
         expect(fetchMock.lastOptions().method).toEqual('get')
@@ -54,8 +52,8 @@ describe('Application', () => {
       })
     })
 
-    it('should fill operator scope with details', done => {
-      application.read().then(response => {
+    it('should fill operator scope with details', (done) => {
+      application.read().then((response) => {
         expect(application).toBe(response)
         expect(application).toEqual(jasmine.objectContaining(applicationTemplate))
         done()
@@ -64,12 +62,12 @@ describe('Application', () => {
   })
 
   describe('update', () => {
-    beforeEach(done => {
+    beforeEach((done) => {
       application = new Application(appApiKey)
       application[symbols.init].then(done)
     })
 
-    it('should send get request to operator ID', done => {
+    it('should send get request to operator ID', (done) => {
       application.update(applicationTemplate).then(() => {
         expect(fetchMock.lastUrl()).toEqual(apiUrl(paths.application))
         expect(fetchMock.lastOptions().method).toEqual('put')
@@ -77,8 +75,8 @@ describe('Application', () => {
       })
     })
 
-    it('should fill operator scope with details', done => {
-      application.update(applicationTemplate).then(response => {
+    it('should fill operator scope with details', (done) => {
+      application.update(applicationTemplate).then((response) => {
         expect(application).toBe(response)
         expect(application).toEqual(jasmine.objectContaining(applicationTemplate))
         done()
@@ -87,19 +85,14 @@ describe('Application', () => {
   })
 
   describe('access', () => {
-    const operatorResources = [
-      'product',
-      'action',
-      'place',
-      'appUser'
-    ]
+    const operatorResources = ['product', 'action', 'place', 'appUser']
 
-    beforeEach(done => {
+    beforeEach((done) => {
       application = new Application(appApiKey)
       application[symbols.init].then(done)
     })
 
-    operatorResources.forEach(resource => {
+    operatorResources.forEach((resource) => {
       it(`should have ${resource} resource`, () => {
         expect(application[resource]).toBeDefined()
       })

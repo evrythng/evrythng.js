@@ -8,13 +8,7 @@ import Resource from '../resource/Resource'
 import { mixinResources } from '../util/mixin'
 
 const path = '/thngs'
-const ThngResources = mixinResources([
-  Property,
-  Action,
-  Location,
-  Redirection,
-  CommissionState
-])
+const ThngResources = mixinResources([Property, Action, Location, Redirection, CommissionState])
 
 /**
  * Represents a Thng entity object.

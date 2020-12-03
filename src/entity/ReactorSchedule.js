@@ -16,8 +16,7 @@ export default class ReactorSchedule extends Entity {
       reactorSchedule (id) {
         const appPath = this instanceof Scope ? this[symbols.path] : ''
 
-        return Resource.factoryFor(ReactorSchedule, appPath + path)
-          .call(this, id)
+        return Resource.factoryFor(ReactorSchedule, appPath + path).call(this, id)
       }
     }
   }

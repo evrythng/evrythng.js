@@ -10,8 +10,7 @@ module.exports = () => {
     })
 
     it('should read all short domains', async () => {
-      mockApi().get('/accounts/accountId/shortDomains')
-        .reply(200, ['tn.gg'])
+      mockApi().get('/accounts/accountId/shortDomains').reply(200, ['tn.gg'])
       const res = await operator.sharedAccount('accountId').shortDomain().read()
 
       expect(res).to.be.an('array')

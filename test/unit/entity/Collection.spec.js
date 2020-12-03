@@ -37,7 +37,9 @@ describe('Collection', () => {
 
     it('should have nested action resource', () => {
       expect(collectionResource.action).toBeDefined()
-      expect(collectionResource.action('all').path).toEqual(`${collectionPath}${paths.actions}/all`)
+      expect(collectionResource.action('all').path).toEqual(
+        `${collectionPath}${paths.actions}/all`
+      )
     })
   })
 

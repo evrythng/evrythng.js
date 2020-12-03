@@ -38,11 +38,8 @@ export default function alias (map, target) {
       throw new Error(`${existing} does not exist for ${target}`)
     }
 
-    Object.assign(
-      original.prototype,
-      {
-        [map[existing]]: original.prototype[existing]
-      }
-    )
+    Object.assign(original.prototype, {
+      [map[existing]]: original.prototype[existing]
+    })
   }
 }

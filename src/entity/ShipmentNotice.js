@@ -5,9 +5,7 @@ import Resource from '../resource/Resource'
 
 const path = '/shipmentNotices'
 
-const ShipmentNoticeResources = mixinResources([
-  Container
-])
+const ShipmentNoticeResources = mixinResources([Container])
 
 /**
  * Represents a ShipmentNotice entity object.

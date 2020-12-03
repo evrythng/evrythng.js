@@ -36,8 +36,9 @@ describe('Application', () => {
       it('should create new Product resource', () => {
         expect(applicationResource instanceof Resource).toBe(true)
         expect(applicationResource.type).toBe(Application)
-        expect(applicationResource.path)
-          .toEqual(`${paths.dummy}${paths.applications}/${applicationTemplate.id}`)
+        expect(applicationResource.path).toEqual(
+          `${paths.dummy}${paths.applications}/${applicationTemplate.id}`
+        )
       })
 
       it('should have nested reactorScript resource', () => {

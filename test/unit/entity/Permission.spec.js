@@ -35,8 +35,7 @@ describe('Permission', () => {
 
     it('should add permissions path', () => {
       permissionResource = resource.permission()
-      expect(permissionResource.path)
-        .toEqual(`${paths.dummy}${paths.permissions}`)
+      expect(permissionResource.path).toEqual(`${paths.dummy}${paths.permissions}`)
     })
   })
 })

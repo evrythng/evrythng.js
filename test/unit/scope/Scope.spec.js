@@ -44,7 +44,7 @@ describe('Scope', () => {
         expect(scope[symbols.init] instanceof Promise).toBe(true)
       })
 
-      it('should fetch scope access using scope apiKey', done => {
+      it('should fetch scope access using scope apiKey', (done) => {
         scope[symbols.init].then(() => {
           expect(fetchMock.lastUrl()).toEqual(apiUrl(paths.access))
           expect(fetchMock.lastOptions()).toEqual(

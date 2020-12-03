@@ -10,7 +10,8 @@ module.exports = () => {
     })
 
     it('should read all domains', async () => {
-      mockApi().get('/accounts/accountId/domains')
+      mockApi()
+        .get('/accounts/accountId/domains')
         .reply(200, [{ domain: 'wrxfq.tn.gg' }])
       const res = await operator.sharedAccount('accountId').domain().read()
 

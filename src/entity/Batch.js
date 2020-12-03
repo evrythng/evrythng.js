@@ -4,9 +4,7 @@ import Resource from '../resource/Resource'
 import { mixinResources } from '../util/mixin'
 
 const path = '/batches'
-const BatchResources = mixinResources([
-  Task
-])
+const BatchResources = mixinResources([Task])
 
 /**
  * Represents a Batch entity object.

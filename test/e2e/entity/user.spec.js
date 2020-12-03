@@ -18,12 +18,13 @@ module.exports = (scopeType) => {
 
     if (scopeType === 'application') {
       it('should create an anonymous Application User', async () => {
-        mockApi().post('/auth/evrythng/users?anonymous=true')
+        mockApi()
+          .post('/auth/evrythng/users?anonymous=true')
           .reply(201, { id: 'anonUser', evrythngApiKey: 'evrythngApiKey' })
-        mockApi().get('/access')
-          .reply(200, { actor: { id: 'anonUser'} })
-        mockApi().get('/users/anonUser')
-          .reply(200, { id: 'anonUser'})
+        mockApi()
+          .get('/access')
+          .reply(200, { actor: { id: 'anonUser' } })
+        mockApi().get('/users/anonUser').reply(200, { id: 'anonUser' })
         const res = await scope.appUser().create({ anonymous: true })
         resources.anonUser = res
 
@@ -32,16 +33,20 @@ module.exports = (scopeType) => {
       })
 
       it('should create and validate a named user', async () => {
-        mockApi().post('/auth/evrythng/users', USER)
+        mockApi()
+          .post('/auth/evrythng/users', USER)
           .reply(201, { evrythngUser: 'evrythngUser', activationCode: 'code' })
-        mockApi().post('/auth/evrythng/users/evrythngUser/validate', { activationCode: 'code' })
+        mockApi()
+          .post('/auth/evrythng/users/evrythngUser/validate', { activationCode: 'code' })
           .reply(201, { id: 'evrythngUser', evrythngApiKey: 'evrythngApiKey' })
-        mockApi().get('/access')
-          .reply(200, { actor: { id: 'evrythngUser'} })
-        mockApi().get('/users/evrythngUser')
-          .reply(200, { id: 'evrythngUser'})
-        const res = await scope.appUser().create(USER)
-          .then(res => res.validate())
+        mockApi()
+          .get('/access')
+          .reply(200, { actor: { id: 'evrythngUser' } })
+        mockApi().get('/users/evrythngUser').reply(200, { id: 'evrythngUser' })
+        const res = await scope
+          .appUser()
+          .create(USER)
+          .then((res) => res.validate())
         resources.namedUser = res
 
         expect(res).to.be.an('object')
@@ -51,12 +56,13 @@ module.exports = (scopeType) => {
       it('should login a named user', async () => {
         const loginDocument = { email: USER.email, password: USER.password }
 
-        mockApi().post('/users/login', loginDocument)
+        mockApi()
+          .post('/users/login', loginDocument)
           .reply(201, { id: 'evrythngUser', access: { apiKey: 'evrythngApiKey' } })
-        mockApi().get('/access')
-          .reply(200, { actor: { id: 'evrythngUser'} })
-        mockApi().get('/users/evrythngUser')
-          .reply(200, { id: 'evrythngUser'})
+        mockApi()
+          .get('/access')
+          .reply(200, { actor: { id: 'evrythngUser' } })
+        mockApi().get('/users/evrythngUser').reply(200, { id: 'evrythngUser' })
         const res = await scope.login(loginDocument)
 
         expect(res).to.be.an('object')
@@ -74,8 +80,7 @@ module.exports = (scopeType) => {
     }
 
     it('should read an Application User', async () => {
-      mockApi().get('/users/evrythngUser')
-        .reply(200, { id: 'evrythngUser'})
+      mockApi().get('/users/evrythngUser').reply(200, { id: 'evrythngUser' })
       const res = await scope.user('evrythngUser').read()
 
       expect(res).to.be.an('object')
@@ -83,8 +88,9 @@ module.exports = (scopeType) => {
     })
 
     it('should read all Application Users', async () => {
-      mockApi().get('/users')
-        .reply(200, [{ id: 'evrythngUser'}])
+      mockApi()
+        .get('/users')
+        .reply(200, [{ id: 'evrythngUser' }])
       const res = await scope.user().read()
 
       expect(res).to.be.an('array')
@@ -93,8 +99,7 @@ module.exports = (scopeType) => {
 
     it('should update an Application User', async () => {
       const payload = { firstName: 'updated' }
-      mockApi().put('/users/evrythngUser', payload)
-        .reply(200, payload)
+      mockApi().put('/users/evrythngUser', payload).reply(200, payload)
       const res = await scope.user('evrythngUser').update(payload)
 
       expect(res).to.be.an('object')
@@ -102,8 +107,7 @@ module.exports = (scopeType) => {
     })
 
     it('should delete an Application User', async () => {
-      mockApi().delete('/users/evrythngUser')
-        .reply(200)
+      mockApi().delete('/users/evrythngUser').reply(200)
       await scope.user('evrythngUser').delete()
     })
   })

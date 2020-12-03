@@ -15,9 +15,9 @@
  * @return {function(Scope)}
  */
 export function mixinResources (entities) {
-  const resourceFactories = entities.map(e => e.resourceFactory())
+  const resourceFactories = entities.map((e) => e.resourceFactory())
   const accessResources = Object.assign({}, ...resourceFactories)
-  return Superclass => mixin(accessResources)(class extends Superclass {})
+  return (Superclass) => mixin(accessResources)(class extends Superclass {})
 }
 
 /**
@@ -30,12 +30,10 @@ export function mixinResources (entities) {
  */
 export default function mixin (behaviour, proto = true) {
   return (target) => {
-    for (let property of Reflect.ownKeys(behaviour)) {
-      Object.defineProperty(
-        proto ? target.prototype : target,
-        property,
-        { value: behaviour[property] }
-      )
+    for (const property of Reflect.ownKeys(behaviour)) {
+      Object.defineProperty(proto ? target.prototype : target, property, {
+        value: behaviour[property]
+      })
     }
     return target
   }

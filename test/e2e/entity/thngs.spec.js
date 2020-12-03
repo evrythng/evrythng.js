@@ -11,8 +11,7 @@ module.exports = (scopeType) => {
 
     it('should create a Thng', async () => {
       const payload = { name: 'Test Thng' }
-      mockApi().post('/thngs', payload)
-        .reply(201, payload)
+      mockApi().post('/thngs', payload).reply(201, payload)
       const res = await scope.thng().create(payload)
 
       expect(res).to.be.an('object')
@@ -20,8 +19,7 @@ module.exports = (scopeType) => {
     })
 
     it('should read a Thng', async () => {
-      mockApi().get('/thngs/thngId')
-        .reply(200, { id: 'thngId' })
+      mockApi().get('/thngs/thngId').reply(200, { id: 'thngId' })
       const res = await scope.thng('thngId').read()
 
       expect(res).to.be.an('object')
@@ -29,7 +27,8 @@ module.exports = (scopeType) => {
     })
 
     it('should read all Thngs', async () => {
-      mockApi().get('/thngs')
+      mockApi()
+        .get('/thngs')
         .reply(200, [{ id: 'thngId' }])
       const res = await scope.thng().read()
 
@@ -39,8 +38,7 @@ module.exports = (scopeType) => {
 
     it('should update a Thng', async () => {
       const payload = { tags: ['updated'] }
-      mockApi().put('/thngs/thngId', payload)
-        .reply(200, payload)
+      mockApi().put('/thngs/thngId', payload).reply(200, payload)
       const res = await scope.thng('thngId').update(payload)
 
       expect(res).to.be.an('object')
@@ -49,8 +47,7 @@ module.exports = (scopeType) => {
 
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should delete a Thng', async () => {
-        mockApi().delete('/thngs/thngId')
-          .reply(200)
+        mockApi().delete('/thngs/thngId').reply(200)
         await scope.thng('thngId').delete()
       })
     }

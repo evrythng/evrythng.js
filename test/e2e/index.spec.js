@@ -1,4 +1,4 @@
-const { resources, getScope, setup, teardown } = require('./util')
+const { setup } = require('./util')
 const evrythng = require('../../')
 
 evrythng.setup({ geolocation: false })

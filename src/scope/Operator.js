@@ -26,7 +26,7 @@ import symbols from '../symbols'
  */
 const OperatorAccess = mixinResources([
   Account, // RU
-  ADIOrder,  // CR
+  ADIOrder, // CR
   Product, // CRUD
   Thng, // CRUD
   Collection, // CRUD
@@ -61,11 +61,10 @@ export default class Operator extends OperatorAccess(Scope) {
   constructor (apiKey, data = {}) {
     super(apiKey, data)
 
-    this.initPromise = super.readAccess()
-      .then(access => {
-        this.id = access.actor.id
-        this[symbols.path] = this._getPath()
-      })
+    this.initPromise = super.readAccess().then((access) => {
+      this.id = access.actor.id
+      this[symbols.path] = this._getPath()
+    })
   }
 
   /**

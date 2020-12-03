@@ -10,7 +10,8 @@ module.exports = () => {
     })
 
     it('should read all shared accounts', async () => {
-      mockApi().get('/accounts')
+      mockApi()
+        .get('/accounts')
         .reply(200, [{ id: 'accountId' }])
       const res = await operator.sharedAccount().read()
 
@@ -19,8 +20,7 @@ module.exports = () => {
     })
 
     it('should read a shared account', async () => {
-      mockApi().get('/accounts/accountId')
-        .reply(200, { id: 'accountId' })
+      mockApi().get('/accounts/accountId').reply(200, { id: 'accountId' })
       const res = await operator.sharedAccount('accountId').read()
 
       expect(res).to.be.an('object')
@@ -29,8 +29,7 @@ module.exports = () => {
 
     it('should update a shared account', async () => {
       const payload = { customFields: { env: 'test' } }
-      mockApi().put('/accounts/accountId', payload)
-        .reply(200, payload)
+      mockApi().put('/accounts/accountId', payload).reply(200, payload)
       const res = await operator.sharedAccount('accountId').update(payload)
 
       expect(res).to.be.an('object')

@@ -36,8 +36,9 @@ describe('Property', () => {
 
     it('should add property to path', () => {
       propertyResource = resource.property(propertyTemplate.key)
-      expect(propertyResource.path)
-        .toEqual(`${paths.dummy}${paths.properties}/${propertyTemplate.key}`)
+      expect(propertyResource.path).toEqual(
+        `${paths.dummy}${paths.properties}/${propertyTemplate.key}`
+      )
     })
 
     describe('with normalization', () => {
@@ -45,9 +46,8 @@ describe('Property', () => {
         propertyResource = resource.property(propertyTemplate.key)
         spyOn(Resource.prototype, 'create')
         spyOn(Resource.prototype, 'update')
-      })
-
-      ;['create', 'update'].forEach(method => {
+      });
+      ['create', 'update'].forEach((method) => {
         describe(method, () => {
           it('should support simple values', () => {
             propertyResource[method](1)
@@ -74,19 +74,21 @@ describe('Property', () => {
           it('should support shorthand object update', () => {
             const shortHandProp = { foo: 'bar', bar: 'foo' }
             propertyResource[method](shortHandProp)
-            expect(Resource.prototype[method]).toHaveBeenCalledWith([{
-              key: 'foo',
-              value: 'bar'
-            }, {
-              key: 'bar',
-              value: 'foo'
-            }])
+            expect(Resource.prototype[method]).toHaveBeenCalledWith([
+              {
+                key: 'foo',
+                value: 'bar'
+              },
+              {
+                key: 'bar',
+                value: 'foo'
+              }
+            ])
           })
 
           it('should support options', () => {
             propertyResource[method](1, optionsTemplate)
-            expect(Resource.prototype[method].calls.mostRecent().args[1])
-              .toEqual(optionsTemplate)
+            expect(Resource.prototype[method].calls.mostRecent().args[1]).toEqual(optionsTemplate)
           })
 
           it('should support callbacks', () => {

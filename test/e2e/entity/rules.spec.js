@@ -13,6 +13,6 @@ module.exports = () => {
       expect(operator.rule).to.be.a('function')
     })
 
-    it('should run a given rule');
+    it('should run a given rule')
   })
 }

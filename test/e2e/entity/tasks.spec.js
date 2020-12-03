@@ -5,8 +5,6 @@ let operator
 
 module.exports = () => {
   describe('Tasks', () => {
-    let batch, task
-
     before(async () => {
       operator = getScope('operator')
     })
@@ -25,8 +23,7 @@ module.exports = () => {
           shortIdTemplate: { type: 'THNG_ID' }
         }
       }
-      mockApi().post('/batches/batchId/tasks', payload)
-        .reply(202)
+      mockApi().post('/batches/batchId/tasks', payload).reply(202)
       const res = await operator.batch('batchId').task().create(payload, { fullResponse: true })
 
       expect(typeof res).to.equal('object')
@@ -34,7 +31,8 @@ module.exports = () => {
     })
 
     it('should read all tasks', async () => {
-      mockApi().get('/batches/batchId/tasks')
+      mockApi()
+        .get('/batches/batchId/tasks')
         .reply(200, [{ id: 'taskId' }])
       const res = await operator.batch('batchId').task().read()
 
@@ -43,8 +41,7 @@ module.exports = () => {
     })
 
     it('should read a task', async () => {
-      mockApi().get('/batches/batchId/tasks/taskId')
-        .reply(200, { id: 'taskId' })
+      mockApi().get('/batches/batchId/tasks/taskId').reply(200, { id: 'taskId' })
       const res = await operator.batch('batchId').task('taskId').read()
 
       expect(res).to.be.an('object')

@@ -9,10 +9,13 @@ module.exports = () => {
       operator = getScope('operator')
     })
 
-    it('should read an application\'s secret key', async () => {
-      mockApi().get('/projects/projectId/applications/applicationId/secretKey')
+    it("should read an application's secret key", async () => {
+      mockApi()
+        .get('/projects/projectId/applications/applicationId/secretKey')
         .reply(200, { secretApiKey: 'secretApiKey' })
-      const res = await operator.project('projectId').application('applicationId')
+      const res = await operator
+        .project('projectId')
+        .application('applicationId')
         .secretKey()
         .read()
 

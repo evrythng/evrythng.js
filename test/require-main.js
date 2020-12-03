@@ -1,13 +1,13 @@
 const paths = {
-  'evrythng': 'evrythng.polyfill',
+  evrythng: 'evrythng.polyfill',
   'isomorphic-fetch': '../node_modules/whatwg-fetch/fetch'
 }
 
 if (typeof module !== 'undefined') {
   module.exports = paths
 } else {
-  let tests = []
-  for (let file in window.__karma__.files) {
+  const tests = []
+  for (const file in window.__karma__.files) {
     if (window.__karma__.files.hasOwnProperty(file)) {
       if (/spec\.js$/.test(file)) {
         tests.push(file)
