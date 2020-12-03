@@ -20,6 +20,14 @@ const mockApi = (apiUrl = API_URL) => nock(apiUrl)
  */
 const setup = async () => {
   mockApi().get('/access').reply(200, { actor: { id: 'operatorId' } })
+  mockApi().get('/operators/operatorId').reply(200, {
+    id: 'operatorId',
+    createdAt: 1471862430968,
+    updatedAt: 1607002260749,
+    email: 'test.user@evrythng.com',
+    firstName: 'Test',
+    lastName: 'User',
+  })
   const operator = new Operator(OPERATOR_API_KEY)
   await operator.init()
 

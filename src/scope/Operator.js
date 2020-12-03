@@ -66,6 +66,7 @@ export default class Operator extends OperatorAccess(Scope) {
         this.id = access.actor.id
         this[symbols.path] = this._getPath()
       })
+      .then(() => this.read())
   }
 
   /**
@@ -96,11 +97,11 @@ export default class Operator extends OperatorAccess(Scope) {
   // PRIVATE
 
   /**
-   * Return operator access endpoint.
+   * Return operator endpoint.
    *
    * @return {string}
    */
   _getPath () {
-    return '/access'
+    return `/operators/${this.id}`
   }
 }
