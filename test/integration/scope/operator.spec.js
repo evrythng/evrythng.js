@@ -1,16 +1,17 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-module.exports = () => {
+module.exports = (url) => {
   describe('Operator', () => {
-    let operator
+    let operator, api
 
     before(() => {
       operator = getScope('operator')
+      api = mockApi(url)
     })
 
     it('should allow self-same Operator update', async () => {
-      mockApi().put('/operators/operatorId').reply(200, {})
+      api.put('/operators/operatorId').reply(200, {})
       const res = await operator.update({
         customFields: {
           foo: 'bar'
