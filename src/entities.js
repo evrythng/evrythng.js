@@ -12,20 +12,60 @@ import Permission from './entity/Permission'
 import Project from './entity/Project'
 import Role from './entity/Role'
 import Task from './entity/Task'
+import OperatorAccess from './entity/OperatorAccess'
+import AccessPolicy from './entity/AccessPolicies'
+import AccessTokens from './entity/AccessTokens'
+import Me from './entity/Me'
+import Access from './entity/Access'
+import ADIOrder from './entity/ADIOrder'
+import ADIOrderEvent from './entity/ADIOrderEvent'
+import Account from './entity/Account'
+import CommissionState from './entity/CommissionState'
+import Domain from './entity/Domain'
+import Place from './entity/Place'
+import PurchaseOrder from './entity/PurchaseOrder'
+import ReactorLog from './entity/ReactorLog'
+import ReactorSchedule from './entity/ReactorSchedule'
+import ReactorScript from './entity/ReactorScript'
+import Redirection from './entity/Redirection'
+import Redirector from './entity/Redirector'
+import ShipmentNotice from './entity/ShipmentNotice'
+import ShortDomain from './entity/ShortDomain'
+import File from './entity/File'
 
 export default {
-  Product,
-  Thng,
-  Collection,
-  Property,
+  Access,
+  AccessPolicy,
+  AccessTokens,
+  Account,
   Action,
   ActionType,
+  ADIOrder,
+  ADIOrderEvent,
   Application,
-  User,
   Batch,
+  Collection,
+  CommissionState,
+  Domain,
+  File,
   Location,
+  Me,
+  OperatorAccess,
   Permission,
+  Place,
+  Product,
   Project,
+  Property,
+  PurchaseOrder,
   Role,
-  Task
+  ReactorLog,
+  ReactorSchedule,
+  ReactorScript,
+  Redirection,
+  Redirector,
+  ShipmentNotice,
+  ShortDomain,
+  Task,
+  Thng,
+  User
 }

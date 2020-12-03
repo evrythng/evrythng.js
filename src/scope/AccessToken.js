@@ -9,21 +9,17 @@ import ActionType from '../entity/ActionType'
 import Project from '../entity/Project'
 import PurchaseOrder from '../entity/PurchaseOrder'
 import Redirector from '../entity/Redirector'
-import Role from '../entity/Role'
-import Rule from '../entity/Rule'
 import ShipmentNotice from '../entity/ShipmentNotice'
-import User from '../entity/User'
-import Batch from '../entity/Batch'
 import Place from '../entity/Place'
 import File from '../entity/File'
 import OpeatorAccess from '../entity/OperatorAccess'
 import AccessPolicy from '../entity/AccessPolicy'
 import AccessTokens from '../entity/AccessToken'
 import Me from '../entity/Me'
-import Access from '../entity/Access'
 import ADIOrderEvent from '../entity/ADIOrderEvent'
-import Application from '../entity/Application'
 import CommissionState from '../entity/CommissionState'
+import Access from '../entity/Access'
+import Application from '../entity/Application'
 import Domain from '../entity/Domain'
 import Property from '../entity/Property'
 import ReactorLog from '../entity/ReactorLog'
@@ -32,28 +28,26 @@ import ReactorScript from '../entity/ReactorScript'
 import Redirection from '../entity/Redirection'
 import ShortDomain from '../entity/ShortDomain'
 import { mixinResources } from '../util/mixin'
-import symbols from '../symbols'
 
 /**
- * Mixin with all the top-level Operator resources.
+ * Mixin with all AccessTokenR resources.
  *
  * @mixin
  */
-const OperatorAccess = mixinResources([
+const AccessTokenResources = mixinResources([
   Access, // LR
   AccessPolicy, // CRUDL
   AccessTokens, // CL
   Account, // LRU
   Action, // CRLD
-  ActionType, // CRULD
+  ActionType, // CRLD
   ADIOrder, // CRL
   ADIOrderEvent, // CRL
   Application, // CRUDL
-  Batch, // CRUD
   Collection, // CRUDL
   CommissionState, // R
   Domain, // L
-  File, // CRUD
+  File, // RC
   Me, // R
   OpeatorAccess, // CRUDL
   Place, // CRUDL
@@ -66,24 +60,21 @@ const OperatorAccess = mixinResources([
   ReactorScript, // RU
   Redirection, // CRUD
   Redirector, // RUD
-  Role, // CRUD
-  Rule,
   ShipmentNotice, // CRUDL
   ShortDomain, // L
-  Thng, // CRUDL
-  User // R
+  Thng // CRUDL
 ])
 
 /**
- * Operator is the Scope with highest permissions that can manage the account
+ * AccessToken is the Scope for v2 api version with permissions that can manage the account
  * resources. Should be used with caution in server-side code.
  *
  * @extends Scope
- * @mixes OperatorAccess
+ * @mixes AccessTokenResources
  */
-export default class Operator extends OperatorAccess(Scope) {
+export default class AccessToken extends AccessTokenResources(Scope) {
   /**
-   * Creates an instance of Operator.
+   * Creates an instance of AccessToken.
    *
    * @param {string} apiKey - API Key of scope
    * @param {Object} [data={}] - Optional operator data
@@ -91,29 +82,15 @@ export default class Operator extends OperatorAccess(Scope) {
   constructor (apiKey, data = {}) {
     super(apiKey, data)
 
-    this.initPromise = super.readAccess().then((access) => {
-      this.id = access.actor.id
-      this[symbols.path] = this._getPath()
-    })
+    this.initPromise = super.readAccess()
   }
 
   /**
-   * Read the operator's data asynchronously.
+   * Read the access token's data asynchronously.
    *
    * @returns {Promise}
    */
   init () {
     return this.initPromise
-  }
-
-  // PRIVATE
-
-  /**
-   * Return operator access endpoint.
-   *
-   * @return {string}
-   */
-  _getPath () {
-    return '/access'
   }
 }
