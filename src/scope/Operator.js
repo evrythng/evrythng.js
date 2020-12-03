@@ -91,10 +91,13 @@ export default class Operator extends OperatorAccess(Scope) {
   constructor (apiKey, data = {}) {
     super(apiKey, data)
 
-    this.initPromise = super.readAccess().then((access) => {
-      this.id = access.actor.id
-      this[symbols.path] = this._getPath()
-    })
+    this.initPromise = super
+      .readAccess()
+      .then((access) => {
+        this.id = access.actor.id
+        this[symbols.path] = this._getPath()
+      })
+      .then(() => this.read())
   }
 
   /**
@@ -125,11 +128,11 @@ export default class Operator extends OperatorAccess(Scope) {
   // PRIVATE
 
   /**
-   * Return operator access endpoint.
+   * Return operator endpoint.
    *
    * @return {string}
    */
   _getPath () {
-    return '/access'
+    return `/operators/${this.id}`
   }
 }
