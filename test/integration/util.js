@@ -29,7 +29,7 @@ const setupForApiVersion1 = async (apiUrl) => {
   mockApi(apiUrl)
     .get('/access')
     .reply(200, { actor: { id: 'operatorId' } })
-  mockApi().get('/operators/operatorId').reply(200, {
+  mockApi(apiUrl).get('/operators/operatorId').reply(200, {
     id: 'operatorId',
     createdAt: 1471862430968,
     updatedAt: 1607002260749,
@@ -112,6 +112,14 @@ const setupForApiVersion2 = async (apiUrl) => {
   mockApi(apiUrl)
     .get('/access')
     .reply(200, { actor: { id: 'operatorId' } })
+  mockApi(apiUrl).get('/operators/operatorId').reply(200, {
+    id: 'operatorId',
+    createdAt: 1471862430968,
+    updatedAt: 1607002260749,
+    email: 'test.user@evrythng.com',
+    firstName: 'Test',
+    lastName: 'User'
+  })
   const operator = new Operator(OPERATOR_API_KEY)
 
   const accessTokenApiKey = 'accessTokenApiKey'

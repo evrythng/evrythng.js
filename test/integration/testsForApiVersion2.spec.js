@@ -10,7 +10,7 @@ describe('evrythng.js for apiVersion = 2', function () {
     await setupForApiVersion2(settings.apiUrl)
   })
 
-  describe('as Operator', () => {
+  describe(`as Operator for ${settings.apiVersion}`, () => {
     console.log(settings)
     const scope = 'operator'
     require('./entity/accessPolicies.spec')(scope, settings)
@@ -44,7 +44,7 @@ describe('evrythng.js for apiVersion = 2', function () {
     require('./entity/shortDomains.spec')(scope, settings.apiUrl)
     require('./entity/thngs.spec')(scope, settings.apiUrl)
   })
-  describe('as Access Token', () => {
+  describe(`as Access Token for ${settings.apiVersion}`, () => {
     const scope = 'accessToken'
     require('./entity/accessPolicies.spec')(scope, settings)
     require('./entity/accessTokens.spec')(scope, settings)
@@ -77,11 +77,11 @@ describe('evrythng.js for apiVersion = 2', function () {
     require('./entity/shortDomains.spec')(scope, settings.apiUrl)
     require('./entity/thngs.spec')(scope, settings.apiUrl)
   })
-  describe('as Operator', () => {
+  describe(`as Operator for ${settings.apiVersion}`, () => {
     require('./scope/operator.spec')(settings.apiUrl)
   })
 
-  describe('Misc', () => {
+  describe(`Misc for ${settings.apiVersion}`, () => {
     const scope = 'operator'
     require('./misc/api.spec')(settings)
     require('./misc/find.spec')(scope, settings.apiUrl)
