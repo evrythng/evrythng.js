@@ -23,6 +23,7 @@ const setup = async () => {
     .get('/access')
     .reply(200, { actor: { id: 'operatorId' } })
   const operator = new Operator(OPERATOR_API_KEY)
+  await operator.init()
 
   const projectPayload = { name: 'Test Project' }
   mockApi().post('/projects', projectPayload).reply(201, { name: 'Test Project', id: 'projectId' })

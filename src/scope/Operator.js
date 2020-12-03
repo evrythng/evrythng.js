@@ -106,6 +106,22 @@ export default class Operator extends OperatorAccess(Scope) {
     return this.initPromise
   }
 
+  /**
+   * Update the self-same Operator's data.
+   *
+   * @param {object} data - Update payload, such as { customFields }
+   */
+  update (data) {
+    const opts = {
+      method: 'put',
+      url: `/operators/${this.id}`,
+      apiKey: this.apiKey,
+      data
+    }
+
+    return this._request(opts)
+  }
+
   // PRIVATE
 
   /**
