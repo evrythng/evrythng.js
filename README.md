@@ -58,7 +58,7 @@ import * as evrythng from 'evrythng';
 Or use a simple script tag to load it from the CDN.
 
 ```html
-<script src="https://d10ka0m22z5ju5.cloudfront.net/js/evrythng/6.0/evrythng-6.0.js"></script>
+<script src="https://d10ka0m22z5ju5.cloudfront.net/js/evrythng/6.0.0/evrythng-6.0.0.js"></script>
 ```
 
 Then use in a browser `script` tag using the `evrythng` global variable:
