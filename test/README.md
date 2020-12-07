@@ -1,6 +1,6 @@
 # Presetup
 
-2. Run `npm run build` or `npm run duild-dev` in the main `evrythng.js` repository.
+2. Run `npm run build` or `npm run build-dev` in the main `evrythng.js` repository.
 3. `npm i`
 
 # Unit tests

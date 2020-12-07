@@ -6,34 +6,42 @@ import settings from './settings'
  * @param {Object} customSettings - Custom settings
  * @returns {Object} new
  */
-export default function setup (customSettings) {
-  if (customSettings.apiUrl) {
-    settings.apiUrl = customSettings.apiUrl
-  } else if (customSettings.apiVersion == 2 || !customSettings.apiVersion) {
-    if (customSettings.region === 'us' || !customSettings.region) {
-      customSettings.apiUrl = 'https://api.us.evrythng.io/v2'
-    } else if (customSettings.region === 'eu') {
-      customSettings.apiUrl = 'https://api.eu.evrythng.io/v2'
-    } else {
-      throw new Error(
-        `Region ${customSettings.region} does not exist, please use region "us" or "eu"`
-      )
-    }
-  } else if (customSettings.apiVersion == 1) {
-    if (customSettings.region === 'us' || !customSettings.region) {
-      customSettings.apiUrl = 'https://api.evrythng.com'
-    } else if (customSettings.region === 'eu') {
-      customSettings.apiUrl = 'https://api-eu.evrythng.com'
-    } else {
-      throw new Error(
-        `Region ${customSettings.region} does not exist, please use region "us" or "eu".`
-      )
-    }
-  } else {
-    throw new Error(
-      `ApiVersion ${customSettings.apiVersion} does not exist, please use apiVersion "1" or "2"`
-    )
+
+/** Allowed API versions */
+const VERSIONS = [1, 2]
+/** Allowed API regions */
+const REGIONS = ['us', 'eu']
+/** Map of API URLs by version and region */
+const API_MAP = {
+  2: {
+    us: 'https://api.us.evrythng.io/v2',
+    eu: 'https://api.eu.evrythng.io/v2'
+  },
+  1: {
+    us: 'https://api.evrythng.com',
+    eu: 'https://api-eu.evrythng.com'
+  }
+}
+
+export default function setup (newSettings = {}) {
+  const { apiUrl, apiVersion = 2, region = 'us' } = newSettings
+
+  // Validate settings
+  if (newSettings.apiVersion === undefined) {
+    newSettings.apiVersion = 2
+  }
+  if (newSettings.region === undefined) {
+    newSettings.region = 'us'
+  }
+  if (!VERSIONS.includes(apiVersion)) {
+    throw new Error(`Invalid apiVersion: ${apiVersion}. Choose from ${VERSIONS.join(', ')}`)
+  }
+  if (!REGIONS.includes(region)) {
+    throw new Error(`Invalid region: ${region}. Choose from ${REGIONS.join(', ')}`)
   }
 
-  return Object.assign(settings, customSettings)
+  // Set the API URL and region
+  newSettings.apiUrl = apiUrl || API_MAP[apiVersion][region]
+
+  return Object.assign(settings, newSettings)
 }

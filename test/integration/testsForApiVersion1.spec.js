@@ -3,108 +3,109 @@ const evrythng = require('../../dist/evrythng.node')
 
 describe('evrythng.js for apiVersion = 1', function () {
   let settings = evrythng.setup({ apiVersion: 1, geolocation: false })
+  const { apiUrl, apiVersion } = settings
 
   before(async () => {
     settings = await evrythng.setup({ apiVersion: 1, geolocation: false })
-    await setupForApiVersion1(settings.apiUrl)
+    await setupForApiVersion1(apiUrl)
   })
 
-  describe(`as Application for ${settings.apiVersion}`, () => {
-    require('./entity/user.spec')('application', settings.apiUrl)
+  describe(`as Application for API ${apiVersion}`, () => {
+    require('./entity/user.spec')('application', apiUrl)
   })
 
-  describe(`as anonymous Application User for ${settings.apiVersion}`, () => {
-    const scope = 'anonUser'
-    require('./entity/actions.spec')(scope, settings.apiUrl)
-    require('./entity/actionTypes.spec')(scope, settings.apiUrl)
-    require('./entity/collections.spec')(scope, settings.apiUrl)
-    require('./entity/commissionState.spec')(scope, settings.apiUrl)
-    require('./entity/places.spec')(scope, settings.apiUrl)
-    require('./entity/products.spec')(scope, settings.apiUrl)
-    require('./entity/properties.spec')(scope, 'product', settings.apiUrl)
-    require('./entity/properties.spec')(scope, 'thng', settings.apiUrl)
-    require('./entity/purchaseOrders.spec')(scope, settings.apiUrl)
-    require('./entity/roles.spec')(scope, settings.apiUrl)
-    require('./entity/thngs.spec')(scope, settings.apiUrl)
+  describe(`as anonymous Application User for API ${apiVersion}`, () => {
+    const scopeType = 'anonUser'
+    require('./entity/actions.spec')(scopeType, apiUrl)
+    require('./entity/actionTypes.spec')(scopeType, apiUrl)
+    require('./entity/collections.spec')(scopeType, apiUrl)
+    require('./entity/commissionState.spec')(scopeType, apiUrl)
+    require('./entity/places.spec')(scopeType, apiUrl)
+    require('./entity/products.spec')(scopeType, apiUrl)
+    require('./entity/properties.spec')(scopeType, 'product', apiUrl)
+    require('./entity/properties.spec')(scopeType, 'thng', apiUrl)
+    require('./entity/purchaseOrders.spec')(scopeType, apiUrl)
+    require('./entity/roles.spec')(scopeType, apiUrl)
+    require('./entity/thngs.spec')(scopeType, apiUrl)
   })
 
-  describe(`as Trusted Application for ${settings.apiVersion}`, () => {
-    const scope = 'trustedApplication'
-    require('./entity/actions.spec')(scope, settings.apiUrl)
-    require('./entity/actionTypes.spec')(scope, settings.apiUrl)
-    require('./entity/collections.spec')(scope, settings.apiUrl)
-    require('./entity/commissionState.spec')(scope, settings.apiUrl)
-    require('./entity/places.spec')(scope, settings.apiUrl)
-    require('./entity/products.spec')(scope, settings.apiUrl)
-    require('./entity/properties.spec')(scope, 'product', settings.apiUrl)
-    require('./entity/properties.spec')(scope, 'thng', settings.apiUrl)
-    require('./entity/purchaseOrders.spec')(scope, settings.apiUrl)
-    require('./entity/thngs.spec')(scope, settings.apiUrl)
+  describe(`as Trusted Application for API ${apiVersion}`, () => {
+    const scopeType = 'trustedApplication'
+    require('./entity/actions.spec')(scopeType, apiUrl)
+    require('./entity/actionTypes.spec')(scopeType, apiUrl)
+    require('./entity/collections.spec')(scopeType, apiUrl)
+    require('./entity/commissionState.spec')(scopeType, apiUrl)
+    require('./entity/places.spec')(scopeType, apiUrl)
+    require('./entity/products.spec')(scopeType, apiUrl)
+    require('./entity/properties.spec')(scopeType, 'product', apiUrl)
+    require('./entity/properties.spec')(scopeType, 'thng', apiUrl)
+    require('./entity/purchaseOrders.spec')(scopeType, apiUrl)
+    require('./entity/thngs.spec')(scopeType, apiUrl)
   })
 
-  describe(`as Operator for ${settings.apiVersion}`, () => {
-    const scope = 'operator'
-    require('./entity/accesses.spec')(scope, settings.apiUrl)
-    require('./entity/accountRedirector.spec')(scope, settings.apiUrl)
-    require('./entity/accounts.spec')(scope, settings.apiUrl)
-    require('./entity/actions.spec')(scope, settings.apiUrl)
-    require('./entity/actionTypes.spec')(scope, settings.apiUrl)
-    require('./entity/adiOrders.spec')(scope, settings.apiUrl)
-    require('./entity/adiOrderEvents.spec')(scope, settings.apiUrl)
-    require('./entity/applicationRedirector.spec')(scope, settings.apiUrl)
-    require('./entity/applications.spec')(scope, settings.apiUrl)
-    require('./entity/batches.spec')(scope, settings)
-    require('./entity/collections.spec')(scope, settings.apiUrl)
-    require('./entity/commissionState.spec')(scope, settings.apiUrl)
-    require('./entity/domains.spec')(scope, settings.apiUrl)
-    require('./entity/files.spec')(scope, settings.apiUrl)
-    require('./entity/locations.spec')(scope, settings.apiUrl)
-    require('./entity/me.spec')(scope, settings)
-    require('./entity/permissions.spec')(scope, settings.apiUrl)
-    require('./entity/permissions.spec')('userInApp', settings.apiUrl)
-    require('./entity/places.spec')(scope, settings.apiUrl)
-    require('./entity/products.spec')(scope, settings.apiUrl)
-    require('./entity/projects.spec')(scope, settings.apiUrl)
-    require('./entity/properties.spec')(scope, 'product', settings.apiUrl)
-    require('./entity/properties.spec')(scope, 'thng', settings.apiUrl)
-    require('./entity/purchaseOrders.spec')(scope, settings.apiUrl)
-    require('./entity/reactor.spec')(scope, settings.apiUrl)
-    require('./entity/redirection.spec')(scope, 'product', settings.apiUrl)
-    require('./entity/redirection.spec')(scope, 'thng', settings.apiUrl)
-    require('./entity/roles.spec')(scope, settings.apiUrl)
-    require('./entity/rules.spec')(scope, settings.apiUrl)
-    require('./entity/secretKey.spec')(scope, settings.apiUrl)
-    require('./entity/shipmentNotice.spec')(scope, settings.apiUrl)
-    require('./entity/shortDomains.spec')(scope, settings.apiUrl)
-    require('./entity/tasks.spec')(scope, settings.apiUrl)
-    require('./entity/thngs.spec')(scope, settings.apiUrl)
-    require('./entity/user.spec')(scope, settings.apiUrl)
+  describe(`as Operator for API ${apiVersion}`, () => {
+    const scopeType = 'operator'
+    require('./entity/accesses.spec')(scopeType, apiUrl)
+    require('./entity/accountRedirector.spec')(scopeType, apiUrl)
+    require('./entity/accounts.spec')(scopeType, apiUrl)
+    require('./entity/actions.spec')(scopeType, apiUrl)
+    require('./entity/actionTypes.spec')(scopeType, apiUrl)
+    require('./entity/adiOrders.spec')(scopeType, apiUrl)
+    require('./entity/adiOrderEvents.spec')(scopeType, apiUrl)
+    require('./entity/applicationRedirector.spec')(scopeType, apiUrl)
+    require('./entity/applications.spec')(scopeType, apiUrl)
+    require('./entity/batches.spec')(scopeType, settings)
+    require('./entity/collections.spec')(scopeType, apiUrl)
+    require('./entity/commissionState.spec')(scopeType, apiUrl)
+    require('./entity/domains.spec')(scopeType, apiUrl)
+    require('./entity/files.spec')(scopeType, apiUrl)
+    require('./entity/locations.spec')(scopeType, apiUrl)
+    require('./entity/me.spec')(scopeType, settings)
+    require('./entity/permissions.spec')(scopeType, apiUrl)
+    require('./entity/permissions.spec')('userInApp', apiUrl)
+    require('./entity/places.spec')(scopeType, apiUrl)
+    require('./entity/products.spec')(scopeType, apiUrl)
+    require('./entity/projects.spec')(scopeType, apiUrl)
+    require('./entity/properties.spec')(scopeType, 'product', apiUrl)
+    require('./entity/properties.spec')(scopeType, 'thng', apiUrl)
+    require('./entity/purchaseOrders.spec')(scopeType, apiUrl)
+    require('./entity/reactor.spec')(scopeType, apiUrl)
+    require('./entity/redirection.spec')(scopeType, 'product', apiUrl)
+    require('./entity/redirection.spec')(scopeType, 'thng', apiUrl)
+    require('./entity/roles.spec')(scopeType, apiUrl)
+    require('./entity/rules.spec')(scopeType, apiUrl)
+    require('./entity/secretKey.spec')(scopeType, apiUrl)
+    require('./entity/shipmentNotice.spec')(scopeType, apiUrl)
+    require('./entity/shortDomains.spec')(scopeType, apiUrl)
+    require('./entity/tasks.spec')(scopeType, apiUrl)
+    require('./entity/thngs.spec')(scopeType, apiUrl)
+    require('./entity/user.spec')(scopeType, apiUrl)
   })
 
-  describe(`as Device for ${settings.apiVersion}`, () => {
-    const scope = 'device'
-    require('./scope/device.spec')(scope, settings.apiUrl)
+  describe(`as Device for API ${apiVersion}`, () => {
+    const scopeType = 'device'
+    require('./scope/device.spec')(scopeType, apiUrl)
   })
 
-  describe(`as ActionAppfor ${settings.apiVersion}`, () => {
-    require('./scope/actionApp.spec')(settings.apiUrl)
+  describe(`as ActionAppfor API ${apiVersion}`, () => {
+    require('./scope/actionApp.spec')(apiUrl)
   })
 
-  describe('as Operator', () => {
-    require('./scope/operator.spec')(settings.apiUrl)
+  describe(`as Operator for API ${apiVersion}`, () => {
+    require('./scope/operator.spec')(apiUrl)
   })
 
-  describe(`Misc for ${settings.apiVersion}`, () => {
-    const scope = 'operator'
-    require('./misc/alias.spec')(scope, settings.apiUrl)
+  describe(`Misc for API ${apiVersion}`, () => {
+    const scopeType = 'operator'
+    require('./misc/alias.spec')(scopeType, apiUrl)
     require('./misc/api.spec')(settings)
-    require('./misc/find.spec')(scope, settings.apiUrl)
-    require('./misc/pages.spec')(scope, settings.apiUrl)
-    require('./misc/paramSetters.spec')(scope, settings.apiUrl)
-    require('./misc/rescope.spec')(scope, settings.apiUrl)
-    require('./misc/stream.spec')(scope, settings.apiUrl)
-    require('./misc/streamPages.spec')(scope, settings.apiUrl)
-    require('./misc/upsert.spec')(scope, settings.apiUrl)
-    require('./misc/use.spec')(scope, settings.apiUrl)
+    require('./misc/find.spec')(scopeType, apiUrl)
+    require('./misc/pages.spec')(scopeType, apiUrl)
+    require('./misc/paramSetters.spec')(scopeType, apiUrl)
+    require('./misc/rescope.spec')(scopeType, apiUrl)
+    require('./misc/stream.spec')(scopeType, apiUrl)
+    require('./misc/streamPages.spec')(scopeType, apiUrl)
+    require('./misc/upsert.spec')(scopeType, apiUrl)
+    require('./misc/use.spec')(scopeType, apiUrl)
   })
 })

@@ -14,7 +14,7 @@ import Place from '../entity/Place'
 import File from '../entity/File'
 import OpeatorAccess from '../entity/OperatorAccess'
 import AccessPolicy from '../entity/AccessPolicy'
-import AccessTokens from '../entity/AccessToken'
+import AccessTokenEntity from '../entity/AccessToken'
 import Me from '../entity/Me'
 import ADIOrderEvent from '../entity/ADIOrderEvent'
 import CommissionState from '../entity/CommissionState'
@@ -30,44 +30,44 @@ import ShortDomain from '../entity/ShortDomain'
 import { mixinResources } from '../util/mixin'
 
 /**
- * Mixin with all AccessTokenR resources.
+ * Mixin with all AccessToken resources.
  *
  * @mixin
  */
 const AccessTokenResources = mixinResources([
-  Access, // LR
-  AccessPolicy, // CRUDL
-  AccessTokens, // CL
-  Account, // LRU
-  Action, // CRLD
-  ActionType, // CRLD
-  ADIOrder, // CRL
-  ADIOrderEvent, // CRL
-  Application, // CRUDL
-  Collection, // CRUDL
-  CommissionState, // R
-  Domain, // L
-  File, // RC
-  Me, // R
-  OpeatorAccess, // CRUDL
-  Place, // CRUDL
-  Product, // CRUDL
-  Project, // CRUDL
-  Property, // CRUDL
-  PurchaseOrder, // CRUDL
-  ReactorLog, // RD
-  ReactorSchedule, // CRUD
-  ReactorScript, // RU
-  Redirection, // CRUD
-  Redirector, // RUD
-  ShipmentNotice, // CRUDL
-  ShortDomain, // L
-  Thng // CRUDL
+  Access,
+  AccessPolicy,
+  AccessTokenEntity,
+  Account,
+  Action,
+  ActionType,
+  ADIOrder,
+  ADIOrderEvent,
+  Application,
+  Collection,
+  CommissionState,
+  Domain,
+  File,
+  Me,
+  OpeatorAccess,
+  Place,
+  Product,
+  Project,
+  Property,
+  PurchaseOrder,
+  ReactorLog,
+  ReactorSchedule,
+  ReactorScript,
+  Redirection,
+  Redirector,
+  ShipmentNotice,
+  ShortDomain,
+  Thng
 ])
 
 /**
- * AccessToken is the Scope for v2 api version with permissions that can manage the account
- * resources. Should be used with caution in server-side code.
+ * AccessToken is a Scope type for the v2 API with the potential to manage any account resources, depending on the API key's
+ * permissions. It represents an API access for a specific purpose, instead of a type of Actor, such as an Operator.
  *
  * @extends Scope
  * @mixes AccessTokenResources
@@ -77,7 +77,7 @@ export default class AccessToken extends AccessTokenResources(Scope) {
    * Creates an instance of AccessToken.
    *
    * @param {string} apiKey - API Key of scope
-   * @param {Object} [data={}] - Optional operator data
+   * @param {Object} [data={}] - Optional data
    */
   constructor (apiKey, data = {}) {
     super(apiKey, data)

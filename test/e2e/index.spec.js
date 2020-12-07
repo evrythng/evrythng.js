@@ -9,6 +9,7 @@ describe('e2e tests for apiVersion=2', () => {
     before(async () => {
       evrythng.setup({ apiKey: OPERATOR_API_KEY })
       operator = new evrythng.Operator(OPERATOR_API_KEY)
+      await operator.init()
     })
     it('should create and read access policy', async () => {
       const data = await policyData()
@@ -59,7 +60,7 @@ describe('e2e tests for apiVersion=2', () => {
     })
   })
   describe('as AccessToken', () => {
-    let accessToken
+    let accessToken, adminAccountPolicy
     before(async function () {
       this.timeout(10000)
       evrythng.setup({ apiKey: OPERATOR_API_KEY })
@@ -69,13 +70,14 @@ describe('e2e tests for apiVersion=2', () => {
         .accessPolicy()
         .setFilter('name=evt:accountAdmin')
         .read()
-      const adminAccountPolicy = findAdminAccountPolicy[0].id
+      adminAccountPolicy = findAdminAccountPolicy[0].id
 
       const data = accessTokenData(adminAccountPolicy)
-      const createdAccessToken = await operator.accessTokens().create(data)
+      const createdAccessToken = await operator.accessToken().create(data)
 
       const accessTokenApiKey = createdAccessToken.apiKey
       accessToken = new evrythng.AccessToken(accessTokenApiKey)
+      await accessToken.init()
     })
     it('create access policy', async () => {
       const data = await policyData()
@@ -88,6 +90,11 @@ describe('e2e tests for apiVersion=2', () => {
       const data = thngData()
       const thng = await accessToken.thng().create(data)
       assert.deepInclude(thng, data, 'Can not create thng')
+    })
+    it('create access token', async () => {
+      const data = accessTokenData(adminAccountPolicy)
+      const createdAccessToken = await accessToken.accessToken().create(data)
+      assert.deepInclude(createdAccessToken, data, 'Can not create access token')
     })
   })
 })

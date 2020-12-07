@@ -8,17 +8,17 @@ const path = '/accessTokens'
  *
  * @extends Entity
  */
-export default class AccessTokens extends Entity {
+export default class AccessToken extends Entity {
   /**
    * Return simple resource factory for Access Tokens.
    *
    * @static
-   * @return {{accessTokens: Function}}
+   * @return {{accessToken: Function}}
    */
   static resourceFactory () {
     return {
-      accessTokens (id) {
-        return Resource.factoryFor(AccessTokens, path).call(this, id)
+      accessToken (id) {
+        return Resource.factoryFor(AccessToken, path).call(this, id)
       }
     }
   }

@@ -1,6 +1,6 @@
 import Access from './Access'
 import Domain from './Domain'
-import OpeatorAccess from './OperatorAccess'
+import OperatorAccess from './OperatorAccess'
 import Entity from './Entity'
 import ShortDomain from './ShortDomain'
 import Resource from '../resource/Resource'
@@ -11,7 +11,7 @@ const AccountResources = mixinResources([
   Domain, // R
   ShortDomain, // R
   Access, // RU
-  OpeatorAccess // CRUD,
+  OperatorAccess // CRUD,
 ])
 
 /**

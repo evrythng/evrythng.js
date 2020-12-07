@@ -25,13 +25,14 @@ export function failure (callback) {
       throw new Error(`No error message available, err was: ${JSON.stringify(err)}`)
     }
 
+    // If a Fetch API response
     if (typeof err.ok !== 'undefined' && !err.ok) {
       err = await err.text()
     }
     try {
       err = JSON.parse(err)
     } catch (e) {
-      // display not json text for error
+      // The error text is not JSON
     }
 
     // Throw a native Error to play nicer with error handling/retry libraries
