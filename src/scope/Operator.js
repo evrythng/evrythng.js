@@ -18,7 +18,7 @@ import Place from '../entity/Place'
 import File from '../entity/File'
 import OpeatorAccess from '../entity/OperatorAccess'
 import AccessPolicy from '../entity/AccessPolicy'
-import AccessTokens from '../entity/AccessToken'
+import AccessToken from '../entity/AccessToken'
 import Me from '../entity/Me'
 import Access from '../entity/Access'
 import { mixinResources } from '../util/mixin'
@@ -32,7 +32,7 @@ import symbols from '../symbols'
 const OperatorAccess = mixinResources([
   Access, // LR
   AccessPolicy, // CRUDL
-  AccessTokens, // CL
+  AccessToken, // CL
   Account, // LRU
   Action, // CRLD
   ActionType, // CRULD
