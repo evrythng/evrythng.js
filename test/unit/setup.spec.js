@@ -10,7 +10,6 @@ describe('unit tests for setup.js', () => {
   })
   it('should use custom apiUrl', async () => {
     const settings = setup({ apiUrl: 'google.com' })
-
     expect(settings.apiVersion).to.be.equal(2)
     expect(settings.apiUrl).to.be.equal('google.com')
     expect(settings.region).to.be.equal('us')
@@ -27,31 +26,31 @@ describe('unit tests for setup.js', () => {
     expect(settings.apiUrl).to.be.equal('google.com')
     expect(settings.region).to.be.equal('eu')
   })
-  it('should set apiURl based on apiVersion:2  and region:eu', async () => {
+  it('should set apiUrl based on apiVersion:2  and region:eu', async () => {
     const settings = setup({ apiVersion: 2, region: 'eu' })
     expect(settings.apiVersion).to.be.equal(2)
     expect(settings.apiUrl).to.be.equal('https://api.eu.evrythng.io/v2')
     expect(settings.region).to.be.equal('eu')
   })
-  it('should set apiURl based on apiVersion:2  and region:us', async () => {
+  it('should set apiUrl based on apiVersion:2  and region:us', async () => {
     const settings = setup({ apiVersion: 2, region: 'us' })
     expect(settings.apiVersion).to.be.equal(2)
     expect(settings.apiUrl).to.be.equal('https://api.us.evrythng.io/v2')
     expect(settings.region).to.be.equal('us')
   })
-  it('should set apiURl based on default apiVersion and region:eu', async () => {
+  it('should set apiUrl based on default apiVersion and region:eu', async () => {
     const settings = await setup({ region: 'eu' })
     expect(settings.apiVersion).to.be.equal(2)
     expect(settings.apiUrl).to.be.equal('https://api.eu.evrythng.io/v2')
     expect(settings.region).to.be.equal('eu')
   })
-  it('should set apiURl based on apiVersion:1 and region:eu', async () => {
+  it('should set apiUrl based on apiVersion:1 and region:eu', async () => {
     const settings = setup({ apiVersion: 1, region: 'eu' })
     expect(settings.apiVersion).to.be.equal(1)
     expect(settings.apiUrl).to.be.equal('https://api-eu.evrythng.com')
     expect(settings.region).to.be.equal('eu')
   })
-  it('should set apiURl based on apiVersion:1 and region:us', async () => {
+  it('should set apiUrl based on apiVersion:1 and region:us', async () => {
     const settings = setup({ apiVersion: 1, region: 'us' })
     expect(settings.apiVersion).to.be.equal(1)
     expect(settings.apiUrl).to.be.equal('https://api.evrythng.com')
@@ -77,6 +76,7 @@ describe('unit tests for setup.js', () => {
   })
   it('should set up default apiVersion if apiVersion is undefined', async () => {
     const settings = await setup({ apiVersion: undefined })
+    console.log(settings)
     expect(settings.apiVersion).to.be.equal(2)
     expect(settings.apiUrl).to.be.equal('https://api.us.evrythng.io/v2')
     expect(settings.region).to.be.equal('us')
@@ -98,6 +98,7 @@ describe('unit tests for setup.js', () => {
   })
   it('should set up default region if region is undefined', async () => {
     const settings = setup({ region: undefined })
+    console.log(settings)
     expect(settings.apiVersion).to.be.equal(2)
     expect(settings.apiUrl).to.be.equal('https://api.us.evrythng.io/v2')
     expect(settings.region).to.be.equal('us')

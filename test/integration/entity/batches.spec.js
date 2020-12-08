@@ -4,7 +4,6 @@ const { getScope, mockApi } = require('../util')
 module.exports = (scopeType, settings) => {
   describe('Batches', () => {
     let scope, api
-    let caughtError = false
 
     before(() => {
       scope = getScope(scopeType)
@@ -53,6 +52,7 @@ module.exports = (scopeType, settings) => {
     }
     if (settings.apiVersion == 2) {
       it('should NOT create a batch', async () => {
+        let caughtError = false
         const payload = { name: 'Test Batch' }
         try {
           api.post('/batches', payload).reply(403, { status: 403 })
@@ -65,8 +65,9 @@ module.exports = (scopeType, settings) => {
       })
 
       it('should NOT read all batches', async () => {
+        let caughtError = false
         try {
-          api.get('/batches').reply(200, [{ id: 'batchId' }])
+          api.get('/batches').reply(403, { status: 403 })
           await scope.batch().read()
         } catch (err) {
           caughtError = true
@@ -76,8 +77,9 @@ module.exports = (scopeType, settings) => {
       })
 
       it('should NOT read a batch', async () => {
+        let caughtError = false
         try {
-          api.get('/batches/batchId').reply(200, { id: 'batchId' })
+          api.get('/batches/batchId').reply(403, { status: 403 })
           await scope.batch('batchId').read()
         } catch (err) {
           caughtError = true
@@ -87,9 +89,10 @@ module.exports = (scopeType, settings) => {
       })
 
       it('should NOT update a batch', async () => {
+        let caughtError = false
         const payload = { tags: ['updated'] }
         try {
-          api.put('/batches/batchId', payload).reply(200, payload)
+          api.put('/batches/batchId', payload).reply(403, { status: 403 })
           await scope.batch('batchId').update(payload)
         } catch (err) {
           caughtError = true
@@ -99,8 +102,9 @@ module.exports = (scopeType, settings) => {
       })
 
       it('should NOT delete a batch', async () => {
+        let caughtError = false
         try {
-          api.delete('/batches/batchId').reply(200)
+          api.delete('/batches/batchId').reply(403)
           await scope.batch('batchId').delete()
         } catch (err) {
           caughtError = true

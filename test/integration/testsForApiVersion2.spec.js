@@ -10,7 +10,7 @@ describe('evrythng.js for apiVersion = 2', function () {
     await setupForApiVersion2(apiUrl)
   })
 
-  describe(`as Operator for API ${apiVersion}`, () => {
+  describe(`as Operator for API v${apiVersion}`, () => {
     console.log(settings)
     const scopeType = 'operator'
     require('./entity/accessPolicies.spec')(scopeType, settings)
@@ -27,7 +27,7 @@ describe('evrythng.js for apiVersion = 2', function () {
     require('./entity/collections.spec')(scopeType, apiUrl)
     require('./entity/commissionState.spec')(scopeType, apiUrl)
     require('./entity/domains.spec')(scopeType, apiUrl)
-    require('./entity/files.spec')(scopeType, settings)
+    require('./entity/files.spec')(scopeType, apiUrl)
     require('./entity/locations.spec')(scopeType, apiUrl)
     require('./entity/me.spec')(scopeType, settings)
     require('./entity/operatorAccesses.spec')(scopeType, settings)
@@ -44,7 +44,7 @@ describe('evrythng.js for apiVersion = 2', function () {
     require('./entity/shortDomains.spec')(scopeType, apiUrl)
     require('./entity/thngs.spec')(scopeType, apiUrl)
   })
-  describe(`as Access Token for API ${apiVersion}`, () => {
+  describe(`as Access Token for API v${apiVersion}`, () => {
     const scopeType = 'accessToken'
     require('./entity/accessPolicies.spec')(scopeType, settings)
     require('./entity/accessTokens.spec')(scopeType, settings)
@@ -60,7 +60,7 @@ describe('evrythng.js for apiVersion = 2', function () {
     require('./entity/collections.spec')(scopeType, apiUrl)
     require('./entity/commissionState.spec')(scopeType, apiUrl)
     require('./entity/domains.spec')(scopeType, apiUrl)
-    require('./entity/files.spec')(scopeType, settings)
+    require('./entity/files.spec')(scopeType, apiUrl)
     require('./entity/locations.spec')(scopeType, apiUrl)
     require('./entity/me.spec')(scopeType, settings)
     require('./entity/operatorAccesses.spec')(scopeType, settings)
@@ -77,11 +77,11 @@ describe('evrythng.js for apiVersion = 2', function () {
     require('./entity/shortDomains.spec')(scopeType, apiUrl)
     require('./entity/thngs.spec')(scopeType, apiUrl)
   })
-  describe(`as Operator for API ${apiVersion}`, () => {
+  describe(`as Operator for API v${apiVersion}`, () => {
     require('./scope/operator.spec')(apiUrl)
   })
 
-  describe(`Misc for API ${apiVersion}`, () => {
+  describe(`Misc for API v${apiVersion}`, () => {
     const scopeType = 'operator'
     require('./misc/api.spec')(settings)
     require('./misc/find.spec')(scopeType, apiUrl)

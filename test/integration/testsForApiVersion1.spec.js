@@ -10,7 +10,7 @@ describe('evrythng.js for apiVersion = 1', function () {
     await setupForApiVersion1(apiUrl)
   })
 
-  describe(`as Application for API ${apiVersion}`, () => {
+  describe(`as Application for API v${apiVersion}`, () => {
     require('./entity/user.spec')('application', apiUrl)
   })
 
@@ -29,7 +29,7 @@ describe('evrythng.js for apiVersion = 1', function () {
     require('./entity/thngs.spec')(scopeType, apiUrl)
   })
 
-  describe(`as Trusted Application for API ${apiVersion}`, () => {
+  describe(`as Trusted Application for API v${apiVersion}`, () => {
     const scopeType = 'trustedApplication'
     require('./entity/actions.spec')(scopeType, apiUrl)
     require('./entity/actionTypes.spec')(scopeType, apiUrl)
@@ -43,7 +43,7 @@ describe('evrythng.js for apiVersion = 1', function () {
     require('./entity/thngs.spec')(scopeType, apiUrl)
   })
 
-  describe(`as Operator for API ${apiVersion}`, () => {
+  describe(`as Operator for API v${apiVersion}`, () => {
     const scopeType = 'operator'
     require('./entity/accesses.spec')(scopeType, apiUrl)
     require('./entity/accountRedirector.spec')(scopeType, apiUrl)
@@ -82,20 +82,20 @@ describe('evrythng.js for apiVersion = 1', function () {
     require('./entity/user.spec')(scopeType, apiUrl)
   })
 
-  describe(`as Device for API ${apiVersion}`, () => {
+  describe(`as Device for API v${apiVersion}`, () => {
     const scopeType = 'device'
     require('./scope/device.spec')(scopeType, apiUrl)
   })
 
-  describe(`as ActionAppfor API ${apiVersion}`, () => {
+  describe(`as ActionAppfor API v${apiVersion}`, () => {
     require('./scope/actionApp.spec')(apiUrl)
   })
 
-  describe(`as Operator for API ${apiVersion}`, () => {
+  describe(`as Operator for API v${apiVersion}`, () => {
     require('./scope/operator.spec')(apiUrl)
   })
 
-  describe(`Misc for API ${apiVersion}`, () => {
+  describe(`Misc for API v${apiVersion}`, () => {
     const scopeType = 'operator'
     require('./misc/alias.spec')(scopeType, apiUrl)
     require('./misc/api.spec')(settings)

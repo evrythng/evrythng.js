@@ -12,21 +12,10 @@ import Redirector from '../entity/Redirector'
 import ShipmentNotice from '../entity/ShipmentNotice'
 import Place from '../entity/Place'
 import File from '../entity/File'
-import OpeatorAccess from '../entity/OperatorAccess'
 import AccessPolicy from '../entity/AccessPolicy'
 import AccessTokenEntity from '../entity/AccessToken'
 import Me from '../entity/Me'
-import ADIOrderEvent from '../entity/ADIOrderEvent'
-import CommissionState from '../entity/CommissionState'
 import Access from '../entity/Access'
-import Application from '../entity/Application'
-import Domain from '../entity/Domain'
-import Property from '../entity/Property'
-import ReactorLog from '../entity/ReactorLog'
-import ReactorSchedule from '../entity/ReactorSchedule'
-import ReactorScript from '../entity/ReactorScript'
-import Redirection from '../entity/Redirection'
-import ShortDomain from '../entity/ShortDomain'
 import { mixinResources } from '../util/mixin'
 
 /**
@@ -42,26 +31,15 @@ const AccessTokenResources = mixinResources([
   Action,
   ActionType,
   ADIOrder,
-  ADIOrderEvent,
-  Application,
   Collection,
-  CommissionState,
-  Domain,
   File,
   Me,
-  OpeatorAccess,
   Place,
   Product,
   Project,
-  Property,
   PurchaseOrder,
-  ReactorLog,
-  ReactorSchedule,
-  ReactorScript,
-  Redirection,
   Redirector,
   ShipmentNotice,
-  ShortDomain,
   Thng
 ])
 

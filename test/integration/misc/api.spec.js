@@ -9,7 +9,6 @@ const _api = (url, method = 'get', data) => api({ url, method, apiKey, data })
 module.exports = (settings) => {
   describe('api', () => {
     let apiMock
-    let caughtError = false
 
     before(async () => {
       apiMock = mockApi(settings.apiUrl)
@@ -60,6 +59,7 @@ module.exports = (settings) => {
     })
 
     it('should throw a native Error', async () => {
+      let caughtError = false
       const payload = { foo: 'bar' }
       apiMock.post('/thngs', payload).reply(404, {
         errors: ['Thng was not found'],

@@ -16,7 +16,6 @@ import User from '../entity/User'
 import Batch from '../entity/Batch'
 import Place from '../entity/Place'
 import File from '../entity/File'
-import OpeatorAccess from '../entity/OperatorAccess'
 import AccessPolicy from '../entity/AccessPolicy'
 import AccessToken from '../entity/AccessToken'
 import Me from '../entity/Me'
@@ -41,7 +40,6 @@ const OperatorAccess = mixinResources([
   Collection, // CRUDL
   File, // CRUD
   Me, // R
-  OpeatorAccess, // CRUDL
   Place, // CRUDL
   Product, // CRUDL
   Project, // CRUDL

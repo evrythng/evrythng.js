@@ -55,7 +55,7 @@ describe('e2e tests for apiVersion=2', () => {
       assert.equal(
         myAccess.permissions,
         adminAccountPolicy.permissions,
-        'Can not get my own access'
+        'Cannot get my own access'
       )
     })
   })
@@ -79,19 +79,19 @@ describe('e2e tests for apiVersion=2', () => {
       accessToken = new evrythng.AccessToken(accessTokenApiKey)
       await accessToken.init()
     })
-    it('create access policy', async () => {
+    it('should create access policy', async () => {
       const data = await policyData()
       const policy = await accessToken.accessPolicy().create(data)
       assert.deepInclude(policy, data, 'Incorrect policy is created')
       const readPolicy = await accessToken.accessPolicy(policy.id).read()
       assert.equal(readPolicy.id, policy.id, `Can not read policy by ${policy.id}`)
     })
-    it('create thng', async () => {
+    it('should create thng', async () => {
       const data = thngData()
       const thng = await accessToken.thng().create(data)
       assert.deepInclude(thng, data, 'Can not create thng')
     })
-    it('create access token', async () => {
+    it('should create access token', async () => {
       const data = accessTokenData(adminAccountPolicy)
       const createdAccessToken = await accessToken.accessToken().create(data)
       assert.deepInclude(createdAccessToken, data, 'Can not create access token')

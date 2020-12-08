@@ -27,12 +27,12 @@ export default function setup (newSettings = {}) {
   const { apiUrl, apiVersion = 2, region = 'us' } = newSettings
 
   // Validate settings
-  if (newSettings.apiVersion === undefined) {
-    newSettings.apiVersion = 2
-  }
-  if (newSettings.region === undefined) {
-    newSettings.region = 'us'
-  }
+  // if (newSettings.apiVersion === undefined) {
+  //   newSettings.apiVersion = 2
+  // }
+  // if (newSettings.region === undefined) {
+  //   newSettings.region = 'us'
+  // }
   if (!VERSIONS.includes(apiVersion)) {
     throw new Error(`Invalid apiVersion: ${apiVersion}. Choose from ${VERSIONS.join(', ')}`)
   }
