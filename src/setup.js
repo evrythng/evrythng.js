@@ -14,7 +14,7 @@ const REGIONS = ['us', 'eu']
 /** Map of API URLs by version and region */
 const API_MAP = {
   2: {
-    us: 'https://api.us.evrythng.io/v2',
+    us: 'https://api.evrythng.io/v2',
     eu: 'https://api.eu.evrythng.io/v2'
   },
   1: {

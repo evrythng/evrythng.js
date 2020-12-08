@@ -31,7 +31,7 @@
  * @type {Settings}
  */
 const defaultSettings = {
-  apiUrl: 'https://api.us.evrythng.io/v2',
+  apiUrl: 'https://api.evrythng.io/v2',
   apiKey: '',
   fullResponse: false,
   geolocation: true,

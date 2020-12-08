@@ -5,7 +5,7 @@ describe('unit tests for setup.js', () => {
   it('should use default settings', async () => {
     const settings = setup({})
     expect(settings.apiVersion).to.be.equal(2)
-    expect(settings.apiUrl).to.be.equal('https://api.us.evrythng.io/v2')
+    expect(settings.apiUrl).to.be.equal('https://api.evrythng.io/v2')
     expect(settings.region).to.be.equal('us')
   })
   it('should use custom apiUrl', async () => {
@@ -35,7 +35,7 @@ describe('unit tests for setup.js', () => {
   it('should set apiUrl based on apiVersion:2  and region:us', async () => {
     const settings = setup({ apiVersion: 2, region: 'us' })
     expect(settings.apiVersion).to.be.equal(2)
-    expect(settings.apiUrl).to.be.equal('https://api.us.evrythng.io/v2')
+    expect(settings.apiUrl).to.be.equal('https://api.evrythng.io/v2')
     expect(settings.region).to.be.equal('us')
   })
   it('should set apiUrl based on default apiVersion and region:eu', async () => {
@@ -78,7 +78,7 @@ describe('unit tests for setup.js', () => {
     const settings = await setup({ apiVersion: undefined })
     console.log(settings)
     expect(settings.apiVersion).to.be.equal(2)
-    expect(settings.apiUrl).to.be.equal('https://api.us.evrythng.io/v2')
+    expect(settings.apiUrl).to.be.equal('https://api.evrythng.io/v2')
     expect(settings.region).to.be.equal('us')
   })
   it('should throw error if region is br', async () => {
@@ -100,7 +100,7 @@ describe('unit tests for setup.js', () => {
     const settings = setup({ region: undefined })
     console.log(settings)
     expect(settings.apiVersion).to.be.equal(2)
-    expect(settings.apiUrl).to.be.equal('https://api.us.evrythng.io/v2')
+    expect(settings.apiUrl).to.be.equal('https://api.evrythng.io/v2')
     expect(settings.region).to.be.equal('us')
   })
 })
