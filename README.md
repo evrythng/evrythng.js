@@ -94,14 +94,14 @@ In a nutshell, `evrythng.js` provides the following scopes. Once a scope is
 created it provides an appropriate API for the resources it can manage
 (see [API](#api) below).
 
-For `apiVersion:2` next scopes are avaliable:
+For `apiVersion:2` these scopes are avaliable:
 
 - `Operator`
-- `AccessToken`
+- `AccessToken`- AccessToken is a Scope type for the v2 API with the potential to manage any account resources, depending on the API key's permissions. It represents an API access for a specific purpose, instead of a type of Actor, such as an Operator.
 
-`Operator` and `AccessToken` scopes can have a different set of permissions, which is defined on [access policy](https://developers.evrythng.com/reference/access-policies-1) and assigned during creation of [operator access](https://developers.evrythng.com/reference/operator-access) and [access token](https://developers.evrythng.com/reference/access-tokens).
+`Operator` and `AccessToken` scopes can have a different set of permissions, which is defined in an [access policy](https://developers.evrythng.com/reference/access-policies) and assigned during creation of [operator access](https://developers.evrythng.com/reference/operator-access) and [access token](https://developers.evrythng.com/reference/access-tokens).
 
-For `apiVersion:1` next scopes are avaliable:
+For `apiVersion:1` these scopes are avaliable:
 
 - `Operator` - Highest level scope that can manage the account structure, all
   its resources and projects, etc.
@@ -182,7 +182,7 @@ application.init().then(() => console.log(application.customFields));
 
 The methods available for each of the above scope types matches the general
 access level defined for each type of
-API Key for [apiVersion:2](https://developers.evrythng.com/docs/api-keys-and-key-permissions-v2-1) or [apiVersion:1](https://developers.evrythng.com/docs/api-scope-and-key-permissions).
+API Key for [apiVersion:2](https://developers.evrythng.com/docs/api-keys-and-key-permissions-v2) or [apiVersion:1](https://developers.evrythng.com/docs/api-scope-and-key-permissions).
 For example - the `Application` scope can read products in its project, but can
 only create `User`s who in turn have higher access to manage resources.
 

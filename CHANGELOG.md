@@ -6,7 +6,7 @@
 
 - **Scopes**: Add `Operator` and `AccessToken` scopes for `apiVersion:2`
 
-- **Access Policies**: Add `accessPolicies()` for access polcies API to Operator and AccessToken scopes for `apiVersion:2`
+- **Access Policies**: Add `accessPolicies()` for access policies API to Operator and AccessToken scopes for `apiVersion:2`
 
 - **Operator Accesses**: Add `operatorAccess()` for operator accesses API to Operator and AccessToken scopes for `apiVersion:2`
 
