@@ -26,13 +26,6 @@ const API_MAP = {
 export default function setup (newSettings = {}) {
   const { apiUrl, apiVersion = 2, region = 'us' } = newSettings
 
-  // Validate settings
-  // if (newSettings.apiVersion === undefined) {
-  //   newSettings.apiVersion = 2
-  // }
-  // if (newSettings.region === undefined) {
-  //   newSettings.region = 'us'
-  // }
   if (!VERSIONS.includes(apiVersion)) {
     throw new Error(`Invalid apiVersion: ${apiVersion}. Choose from ${VERSIONS.join(', ')}`)
   }
@@ -42,6 +35,8 @@ export default function setup (newSettings = {}) {
 
   // Set the API URL and region
   newSettings.apiUrl = apiUrl || API_MAP[apiVersion][region]
+  newSettings.apiVersion = apiVersion
+  newSettings.region = region
 
   return Object.assign(settings, newSettings)
 }

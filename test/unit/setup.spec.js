@@ -76,7 +76,6 @@ describe('unit tests for setup.js', () => {
   })
   it('should set up default apiVersion if apiVersion is undefined', async () => {
     const settings = await setup({ apiVersion: undefined })
-    console.log(settings)
     expect(settings.apiVersion).to.be.equal(2)
     expect(settings.apiUrl).to.be.equal('https://api.evrythng.io/v2')
     expect(settings.region).to.be.equal('us')
@@ -98,7 +97,6 @@ describe('unit tests for setup.js', () => {
   })
   it('should set up default region if region is undefined', async () => {
     const settings = setup({ region: undefined })
-    console.log(settings)
     expect(settings.apiVersion).to.be.equal(2)
     expect(settings.apiUrl).to.be.equal('https://api.evrythng.io/v2')
     expect(settings.region).to.be.equal('us')
