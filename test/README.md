@@ -13,5 +13,5 @@ Run `npm run test`
 
 # e2e
 
-1. Ensure you export all evrironment variables from `e2e/config.js` file
+1. Ensure you export all environment variables from `e2e/config.js` file
 2. `npm run test:e2e`

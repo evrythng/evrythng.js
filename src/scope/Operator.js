@@ -19,7 +19,6 @@ import File from '../entity/File'
 import AccessPolicy from '../entity/AccessPolicy'
 import AccessToken from '../entity/AccessToken'
 import Me from '../entity/Me'
-import Access from '../entity/Access'
 import { mixinResources } from '../util/mixin'
 import symbols from '../symbols'
 
@@ -29,7 +28,6 @@ import symbols from '../symbols'
  * @mixin
  */
 const OperatorAccess = mixinResources([
-  Access, // LR
   AccessPolicy, // CRUDL
   AccessToken, // CL
   Account, // LRU

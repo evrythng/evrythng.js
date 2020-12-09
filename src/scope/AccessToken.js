@@ -15,7 +15,6 @@ import File from '../entity/File'
 import AccessPolicy from '../entity/AccessPolicy'
 import AccessTokenEntity from '../entity/AccessToken'
 import Me from '../entity/Me'
-import Access from '../entity/Access'
 import { mixinResources } from '../util/mixin'
 
 /**
@@ -24,7 +23,6 @@ import { mixinResources } from '../util/mixin'
  * @mixin
  */
 const AccessTokenResources = mixinResources([
-  Access,
   AccessPolicy,
   AccessTokenEntity,
   Account,
