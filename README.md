@@ -101,6 +101,10 @@ For `apiVersion:2` these scopes are avaliable:
 
 `Operator` and `AccessToken` scopes can have a different set of permissions, which is defined in an [access policy](https://developers.evrythng.com/reference/access-policies) and assigned during creation of [operator access](https://developers.evrythng.com/reference/operator-access) and [access token](https://developers.evrythng.com/reference/access-tokens).
 
+```js
+const accessToken = new evrythng.AccessToken(ACCESS_TOKEN_API_KEY);
+```
+
 For `apiVersion:1` these scopes are avaliable:
 
 - `Operator` - Highest level scope that can manage the account structure, all
