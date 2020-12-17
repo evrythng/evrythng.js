@@ -1,23 +1,20 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-module.exports = () => {
+module.exports = (scopeType, url) => {
   describe('Application Redirector', () => {
-    let operator
+    let scope, api
 
     before(async () => {
-      operator = getScope('operator')
+      scope = getScope(scopeType)
+      api = mockApi(url)
     })
 
     it('should read the application Redirector', async () => {
-      mockApi()
+      api
         .get('/projects/projectId/applications/applicationId/redirector')
         .reply(200, { rules: [] })
-      const res = await operator
-        .project('projectId')
-        .application('applicationId')
-        .redirector()
-        .read()
+      const res = await scope.project('projectId').application('applicationId').redirector().read()
 
       expect(res).to.be.an('object')
       expect(res.rules).to.be.an('array')
@@ -27,16 +24,25 @@ module.exports = () => {
       const payload = {
         rules: [{ match: 'thng.name=test' }]
       }
-      mockApi()
-        .put('/projects/projectId/applications/applicationId/redirector')
-        .reply(200, payload)
-      const res = await operator
+      api.put('/projects/projectId/applications/applicationId/redirector').reply(200, payload)
+      const res = await scope
         .project('projectId')
         .application('applicationId')
         .redirector()
         .update(payload)
 
       expect(res.rules).to.deep.equal(payload.rules)
+    })
+
+    it('should delete the application redirector', async () => {
+      api.delete('/projects/projectId/applications/applicationId/redirector').reply(204)
+      const res = await scope
+        .project('projectId')
+        .application('applicationId')
+        .redirector()
+        .delete()
+
+      expect(res).to.not.exist
     })
   })
 }

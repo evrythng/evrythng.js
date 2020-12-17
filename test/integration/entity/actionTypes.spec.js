@@ -1,18 +1,17 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-module.exports = (scopeType) => {
+module.exports = (scopeType, url) => {
   describe('Action Types', () => {
-    let scope
+    let scope, api
 
     before(() => {
       scope = getScope(scopeType)
+      api = mockApi(url)
     })
 
     it('should read all action types', async () => {
-      mockApi()
-        .get('/actions')
-        .reply(200, [{ name: '_CustomType' }])
+      api.get('/actions').reply(200, [{ name: '_CustomType' }])
       const res = await scope.actionType().read()
 
       expect(res).to.be.an('array')
@@ -22,7 +21,7 @@ module.exports = (scopeType) => {
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should create an action type', async () => {
         const payload = { name: '_CustomType' }
-        mockApi().post('/actions', payload).reply(201, { name: '_CustomType' })
+        api.post('/actions', payload).reply(201, { name: '_CustomType' })
         const res = await scope.actionType().create(payload)
 
         expect(res).to.be.an('object')
@@ -30,9 +29,7 @@ module.exports = (scopeType) => {
       })
 
       it('should read an action type', async () => {
-        mockApi()
-          .get('/actions?filter=name%3D_CustomType')
-          .reply(200, [{ name: '_CustomType' }])
+        api.get('/actions?filter=name%3D_CustomType').reply(200, [{ name: '_CustomType' }])
         const res = await scope.actionType('_CustomType').read()
 
         expect(res).to.be.an('object')
@@ -43,7 +40,7 @@ module.exports = (scopeType) => {
     if (scopeType === 'operator') {
       it('should update an action type', async () => {
         const payload = { tags: ['updated'] }
-        mockApi().put('/actions/_CustomType', payload).reply(200, payload)
+        api.put('/actions/_CustomType', payload).reply(200, payload)
         const res = await scope.actionType('_CustomType').update(payload)
 
         expect(res).to.be.an('object')
@@ -53,7 +50,7 @@ module.exports = (scopeType) => {
 
     if (['operator', 'trustedApp'].includes(scopeType)) {
       it('should delete an actionType', async () => {
-        mockApi().delete('/actions/_CustomType').reply(200)
+        api.delete('/actions/_CustomType').reply(200)
         await scope.actionType('_CustomType').delete()
       })
     }

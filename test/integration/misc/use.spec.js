@@ -14,16 +14,17 @@ const TestPlugin = {
   }
 }
 
-module.exports = () => {
+module.exports = (scopeType, url) => {
   describe('use', () => {
-    let operator, thng
+    let scope, api, thng
 
     before(async () => {
-      operator = getScope('operator')
+      scope = getScope(scopeType)
+      api = mockApi(url)
 
       const payload = { name: 'test' }
-      mockApi().post('/thngs', payload).reply(201, payload)
-      thng = await operator.thng().create(payload)
+      api.post('/thngs', payload).reply(201, payload)
+      thng = await scope.thng().create(payload)
     })
 
     it('should not throw when installing a plugin', async () => {
@@ -32,8 +33,8 @@ module.exports = () => {
 
     it('should extend a scope with a new method', async () => {
       expect(evrythng.Operator.prototype.getFoo).to.be.a('function')
-      expect(operator.getFoo).to.be.a('function')
-      expect(operator.getFoo()).to.equal('foo')
+      expect(scope.getFoo).to.be.a('function')
+      expect(scope.getFoo()).to.equal('foo')
     })
 
     it('should expect an entity with a new method', async () => {

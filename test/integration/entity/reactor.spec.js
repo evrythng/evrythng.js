@@ -3,12 +3,12 @@ const { getScope, mockApi } = require('../util')
 
 const SCRIPT = 'function onActionCreated(event) { done(); }'
 
-let operator
+let operator, api
 
 const describeReactorScriptTests = () => {
   it('should update the Reactor script', async () => {
     const payload = { script: SCRIPT }
-    mockApi()
+    api
       .put('/projects/projectId/applications/applicationId/reactor/script', payload)
       .reply(200, payload)
     const res = await operator
@@ -21,7 +21,7 @@ const describeReactorScriptTests = () => {
   })
 
   it('should read the Reactor script status', async () => {
-    mockApi()
+    api
       .get('/projects/projectId/applications/applicationId/reactor/script/status')
       .reply(200, { updating: false })
     const res = await operator
@@ -35,7 +35,7 @@ const describeReactorScriptTests = () => {
   })
 
   it('should read the Reactor script', async () => {
-    mockApi()
+    api
       .get('/projects/projectId/applications/applicationId/reactor/script')
       .reply(200, { type: 'simple' })
     const res = await operator
@@ -56,7 +56,7 @@ const describeReactorScheduleTests = () => {
       cron: '0 0 * * * ?',
       description: 'Example Reactor schedule'
     }
-    mockApi()
+    api
       .post('/projects/projectId/applications/applicationId/reactor/schedules', payload)
       .reply(201, payload)
     const res = await operator
@@ -70,7 +70,7 @@ const describeReactorScheduleTests = () => {
   })
 
   it('should read all Reactor schedules', async () => {
-    mockApi()
+    api
       .get('/projects/projectId/applications/applicationId/reactor/schedules')
       .reply(200, [{ id: 'scheduleId' }])
     const res = await operator
@@ -83,7 +83,7 @@ const describeReactorScheduleTests = () => {
   })
 
   it('should read a single Reactor schedule', async () => {
-    mockApi()
+    api
       .get('/projects/projectId/applications/applicationId/reactor/schedules/scheduleId')
       .reply(200, { id: 'scheduleId' })
     const res = await operator
@@ -97,7 +97,7 @@ const describeReactorScheduleTests = () => {
 
   it('should update a single Reactor schedule', async () => {
     const payload = { enabled: false }
-    mockApi()
+    api
       .put('/projects/projectId/applications/applicationId/reactor/schedules/scheduleId', payload)
       .reply(200, { id: 'scheduleId', enabled: false })
     const res = await operator
@@ -112,21 +112,24 @@ const describeReactorScheduleTests = () => {
   })
 
   it('should delete a single Reactor schedule', async () => {
-    mockApi()
+    api
       .delete('/projects/projectId/applications/applicationId/reactor/schedules/scheduleId')
       .reply(200)
-    await operator
+    const res = await operator
       .project('projectId')
       .application('applicationId')
       .reactorSchedule('scheduleId')
       .delete()
+
+    expect(res).to.not.exist
   })
 }
 
-module.exports = (scopeType) => {
+module.exports = (scopeType, url) => {
   describe('Reactor', () => {
     before(async () => {
-      operator = getScope('operator')
+      operator = getScope(scopeType)
+      api = mockApi(url)
     })
 
     describeReactorScriptTests()

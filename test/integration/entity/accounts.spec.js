@@ -1,27 +1,26 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-module.exports = () => {
+module.exports = (scopeType, url) => {
   describe('Accounts', () => {
-    let operator
+    let scope, api
 
     before(() => {
-      operator = getScope('operator')
+      scope = getScope(scopeType)
+      api = mockApi(url)
     })
 
     it('should read all shared accounts', async () => {
-      mockApi()
-        .get('/accounts')
-        .reply(200, [{ id: 'accountId' }])
-      const res = await operator.sharedAccount().read()
+      api.get('/accounts').reply(200, [{ id: 'accountId' }])
+      const res = await scope.sharedAccount().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
     })
 
     it('should read a shared account', async () => {
-      mockApi().get('/accounts/accountId').reply(200, { id: 'accountId' })
-      const res = await operator.sharedAccount('accountId').read()
+      api.get('/accounts/accountId').reply(200, { id: 'accountId' })
+      const res = await scope.sharedAccount('accountId').read()
 
       expect(res).to.be.an('object')
       expect(res.id).to.be.a('string')
@@ -29,8 +28,8 @@ module.exports = () => {
 
     it('should update a shared account', async () => {
       const payload = { customFields: { env: 'test' } }
-      mockApi().put('/accounts/accountId', payload).reply(200, payload)
-      const res = await operator.sharedAccount('accountId').update(payload)
+      api.put('/accounts/accountId', payload).reply(200, payload)
+      const res = await scope.sharedAccount('accountId').update(payload)
 
       expect(res).to.be.an('object')
       expect(res.customFields).to.deep.equal(payload.customFields)

@@ -58,7 +58,7 @@ import * as evrythng from 'evrythng';
 Or use a simple script tag to load it from the CDN.
 
 ```html
-<script src="https://d10ka0m22z5ju5.cloudfront.net/js/evrythng/5.10.1/evrythng-5.10.1.js"></script>
+<script src="https://d10ka0m22z5ju5.cloudfront.net/js/evrythng/6.0.0/evrythng-6.0.0.js"></script>
 ```
 
 Then use in a browser `script` tag using the `evrythng` global variable:
@@ -92,7 +92,20 @@ resource in an EVRYTHNG account.
 
 In a nutshell, `evrythng.js` provides the following scopes. Once a scope is
 created it provides an appropriate API for the resources it can manage
-(see [API](#api) below):
+(see [API](#api) below).
+
+For `apiVersion:2` these scopes are avaliable:
+
+- `Operator`
+- `AccessToken`- AccessToken is a Scope type for the v2 API with the potential to manage any account resources, depending on the API key's permissions. It represents an API access for a specific purpose, instead of a type of Actor, such as an Operator.
+
+`Operator` and `AccessToken` scopes can have a different set of permissions, which is defined in an [access policy](https://developers.evrythng.com/reference/access-policies) and assigned during creation of [operator access](https://developers.evrythng.com/reference/operator-access) and [access token](https://developers.evrythng.com/reference/access-tokens).
+
+```js
+const accessToken = new evrythng.AccessToken(ACCESS_TOKEN_API_KEY);
+```
+
+For `apiVersion:1` these scopes are avaliable:
 
 - `Operator` - Highest level scope that can manage the account structure, all
   its resources and projects, etc.
@@ -173,7 +186,7 @@ application.init().then(() => console.log(application.customFields));
 
 The methods available for each of the above scope types matches the general
 access level defined for each type of
-[API Key](https://developers.evrythng.com/docs/api-scope-and-key-permissions).
+API Key for [apiVersion:2](https://developers.evrythng.com/docs/api-keys-and-key-permissions-v2) or [apiVersion:1](https://developers.evrythng.com/docs/api-scope-and-key-permissions).
 For example - the `Application` scope can read products in its project, but can
 only create `User`s who in turn have higher access to manage resources.
 

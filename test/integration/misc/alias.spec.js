@@ -2,25 +2,24 @@ const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 const evrythng = require('../../../')
 
-module.exports = () => {
+module.exports = (scopeType, url) => {
   describe('alias', () => {
-    let operator
+    let scope, api
 
     before(() => {
-      operator = getScope('operator')
+      scope = getScope(scopeType)
+      api = mockApi(url)
     })
 
     it("should alias 'product' to 'sku' for Operator scope", async () => {
       evrythng.alias({ product: 'sku' }, 'Operator')
 
-      expect(operator.sku).to.be.a('function')
+      expect(scope.sku).to.be.a('function')
     })
 
     it("should use the alias to read all 'sku's", async () => {
-      mockApi()
-        .get('/products')
-        .reply(200, [{ id: 'productId' }])
-      const skus = await operator.sku().read()
+      api.get('/products').reply(200, [{ id: 'productId' }])
+      const skus = await scope.sku().read()
 
       expect(skus).to.be.an('array')
       expect(skus).to.have.length.gte(0)
@@ -28,16 +27,16 @@ module.exports = () => {
 
     it("should use the alias to create a 'sku'", async () => {
       const payload = { name: 'Example SKU' }
-      mockApi().post('/products', payload).reply(200, { id: 'productId' })
-      const res = await operator.sku().create(payload)
+      api.post('/products', payload).reply(200, { id: 'productId' })
+      const res = await scope.sku().create(payload)
 
       expect(res).to.be.an('object')
       expect(res.id).to.be.a('string')
     })
 
     it("should use the alias to read a 'sku'", async () => {
-      mockApi().get('/products/productId').reply(200, { id: 'productId' })
-      const res = await operator.sku('productId').read()
+      api.get('/products/productId').reply(200, { id: 'productId' })
+      const res = await scope.sku('productId').read()
 
       expect(res).to.be.an('object')
       expect(res.id).to.equal('productId')
@@ -45,16 +44,16 @@ module.exports = () => {
 
     it("should use the alias to update a 'sku'", async () => {
       const payload = { tags: ['updated'] }
-      mockApi().put('/products/productId', payload).reply(200, { id: 'productId' })
-      const res = await operator.sku('productId').update(payload)
+      api.put('/products/productId', payload).reply(200, { id: 'productId' })
+      const res = await scope.sku('productId').update(payload)
 
       expect(res).to.be.an('object')
       expect(res.id).to.equal('productId')
     })
 
     it("should use the alias to delete a 'sku'", async () => {
-      mockApi().delete('/products/productId').reply(200)
-      await operator.sku('productId').delete()
+      api.delete('/products/productId').reply(200)
+      await scope.sku('productId').delete()
     })
   })
 }

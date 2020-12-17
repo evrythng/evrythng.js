@@ -1,6 +1,6 @@
 {
   "name": "evrythng",
-  "version": "5.10.1",
+  "version": "6.0.0",
   "description": "Official Javascript SDK for the EVRYTHNG API.",
   "main": "./dist/evrythng.node.js",
   "scripts": {
@@ -8,9 +8,11 @@
     "format": "./node_modules/.bin/prettier --write '**/*.{js,json,md,yaml,yml}'",
     "build": "webpack --config webpack.config.js --mode production",
     "build-dev": "webpack --config webpack.config.js --mode development",
-    "show-notice": "echo '\n    New to evrythng.js v5? Make sure to read the migration guide:\n    https://developers.evrythng.com/docs/evrythngjs-v500\n'",
+    "show-notice": "echo '\n    New to evrythng.js v6? Make sure to read the migration guide:\n    https://developers.evrythng.com/docs/evrythngjs-v600\n'",
     "postinstall": "npm run --silent show-notice",
-    "test": "mocha test/integration/index.spec.js",
+    "test": "mocha test/integration/**.spec.js",
+    "test:unit": "mocha --require esm test/unit/**.spec.js",
+    "test:e2e": "mocha test/e2e/**.spec.js",
     "prepublishOnly": "npm run build"
   },
   "husky": {
@@ -88,6 +90,7 @@
     "babel-loader": "^8.0.5",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "chance": "^1.1.7",
     "eslint": "^7.14.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",

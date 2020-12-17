@@ -1,16 +1,16 @@
 const { expect } = require('chai')
 const { getScope } = require('../util')
 
-module.exports = () => {
+module.exports = (scopeType, url) => {
   describe('Rules', () => {
-    let operator
+    let scope
 
     before(() => {
-      operator = getScope('operator')
+      scope = getScope(scopeType)
     })
 
     it('should add a rule resource', async () => {
-      expect(operator.rule).to.be.a('function')
+      expect(scope.rule).to.be.a('function')
     })
 
     it('should run a given rule')

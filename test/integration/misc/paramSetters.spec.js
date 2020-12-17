@@ -1,27 +1,26 @@
 const { expect } = require('chai')
 const { getScope, mockApi } = require('../util')
 
-module.exports = () => {
+module.exports = (scopeType, url) => {
   describe('Param Setters', () => {
-    let operator
+    let scope, api
 
     before(async () => {
-      operator = getScope('operator')
+      scope = getScope(scopeType)
+      api = mockApi(url)
     })
 
     it('should set withScopes via setWithScopes', async () => {
-      mockApi()
-        .get('/thngs?withScopes=true')
-        .reply(200, [
-          {
-            name: 'Thng 1',
-            scopes: {
-              project: [],
-              users: ['all']
-            }
+      api.get('/thngs?withScopes=true').reply(200, [
+        {
+          name: 'Thng 1',
+          scopes: {
+            project: [],
+            users: ['all']
           }
-        ])
-      const res = await operator.thng().setWithScopes().read()
+        }
+      ])
+      const res = await scope.thng().setWithScopes().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
@@ -29,15 +28,13 @@ module.exports = () => {
     })
 
     it('should set context via setContext', async () => {
-      mockApi()
-        .get('/actions/all?context=true')
-        .reply(200, [
-          {
-            type: 'scans',
-            context: { countryCode: 'GB' }
-          }
-        ])
-      const res = await operator.action('all').setContext().read()
+      api.get('/actions/all?context=true').reply(200, [
+        {
+          type: 'scans',
+          context: { countryCode: 'GB' }
+        }
+      ])
+      const res = await scope.action('all').setContext().read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
@@ -45,30 +42,24 @@ module.exports = () => {
     })
 
     it('should set perPage via setPerPage', async () => {
-      mockApi()
-        .get('/thngs?perPage=1')
-        .reply(200, [{ name: 'Thng 1' }])
-      const res = await operator.thng().setPerPage(1).read()
+      api.get('/thngs?perPage=1').reply(200, [{ name: 'Thng 1' }])
+      const res = await scope.thng().setPerPage(1).read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length(1)
     })
 
     it('should set project via setProject', async () => {
-      mockApi()
-        .get('/thngs?project=projectId')
-        .reply(200, [{ name: 'Thng 1' }])
-      const res = await operator.thng().setProject('projectId').read()
+      api.get('/thngs?project=projectId').reply(200, [{ name: 'Thng 1' }])
+      const res = await scope.thng().setProject('projectId').read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
     })
 
     it('should set filter via setFilter', async () => {
-      mockApi()
-        .get('/thngs?filter=name%3DTest')
-        .reply(200, [{ name: 'Test' }])
-      const res = await operator.thng().setFilter('name=Test').read()
+      api.get('/thngs?filter=name%3DTest').reply(200, [{ name: 'Test' }])
+      const res = await scope.thng().setFilter('name=Test').read()
 
       expect(res).to.be.an('array')
       expect(res).to.have.length.gte(1)
@@ -76,8 +67,8 @@ module.exports = () => {
 
     it('should set ids via setIds', async () => {
       const payload = [{ id: 'thngId1' }, { id: 'thngId2' }]
-      mockApi().get('/thngs?ids=thngId1%2CthngId2').reply(200, payload)
-      const res = await operator
+      api.get('/thngs?ids=thngId1%2CthngId2').reply(200, payload)
+      const res = await scope
         .thng()
         .setIds(payload.map((p) => p.id))
         .read()
@@ -86,18 +77,16 @@ module.exports = () => {
     })
 
     it('should allow chaining of multiple param setters', async () => {
-      mockApi()
-        .get('/thngs?project=projectId&filter=name%3DTest&perPage=1&withScopes=true')
-        .reply(200, [
-          {
-            name: 'Test',
-            scopes: {
-              project: [],
-              users: ['all']
-            }
+      api.get('/thngs?project=projectId&filter=name%3DTest&perPage=1&withScopes=true').reply(200, [
+        {
+          name: 'Test',
+          scopes: {
+            project: [],
+            users: ['all']
           }
-        ])
-      const res = await operator
+        }
+      ])
+      const res = await scope
         .thng()
         .setProject('projectId')
         .setFilter('name=Test')
