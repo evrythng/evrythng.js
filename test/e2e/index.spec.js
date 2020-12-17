@@ -1,102 +1,100 @@
-const { setup } = require('./util')
-const evrythng = require('../../')
+const evrythng = require('../../dist/evrythng.node')
+const { assert } = require('chai')
+const { OPERATOR_API_KEY, OPERATOR_EMAIL, ACCOUNT_ID } = require('./config')
+const { policyData, operatorAccessData, accessTokenData, thngData } = require('./dataGenerator')
 
-evrythng.setup({ geolocation: false })
-
-process.on('unhandledRejection', console.error)
-
-describe('evrythng.js', () => {
-  before(setup)
-
-  describe('as Application', () => {
-    require('./entity/user.spec')('application')
-  })
-
-  describe('as anonymous Application User', () => {
-    require('./entity/actions.spec')('anonUser')
-    require('./entity/actionTypes.spec')('anonUser')
-    require('./entity/collections.spec')('anonUser')
-    require('./entity/commissionState.spec')('anonUser')
-    require('./entity/places.spec')('anonUser')
-    require('./entity/products.spec')('anonUser')
-    require('./entity/properties.spec')('anonUser', 'product')
-    require('./entity/properties.spec')('anonUser', 'thng')
-    require('./entity/purchaseOrders.spec')('anonUser')
-    require('./entity/roles.spec')('anonUser')
-    require('./entity/thngs.spec')('anonUser')
-  })
-
-  describe('as Trusted Application', () => {
-    require('./entity/actions.spec')('trustedApplication')
-    require('./entity/actionTypes.spec')('trustedApplication')
-    require('./entity/collections.spec')('trustedApplication')
-    require('./entity/commissionState.spec')('trustedApplication')
-    require('./entity/places.spec')('trustedApplication')
-    require('./entity/products.spec')('trustedApplication')
-    require('./entity/properties.spec')('trustedApplication', 'product')
-    require('./entity/properties.spec')('trustedApplication', 'thng')
-    require('./entity/purchaseOrders.spec')('trustedApplication')
-    require('./entity/thngs.spec')('trustedApplication')
-  })
-
+describe('e2e tests for apiVersion=2', () => {
   describe('as Operator', () => {
-    require('./entity/accesses.spec')()
-    require('./entity/accountRedirector.spec')()
-    require('./entity/accounts.spec')()
-    require('./entity/actions.spec')('operator')
-    require('./entity/actionTypes.spec')('operator')
-    require('./entity/adiOrders.spec')()
-    require('./entity/applicationRedirector.spec')()
-    require('./entity/applications.spec')('operator')
-    require('./entity/batches.spec')()
-    require('./entity/commissionState.spec')('operator')
-    require('./entity/collections.spec')('operator')
-    require('./entity/domains.spec')()
-    require('./entity/files.spec')('operator')
-    require('./entity/locations.spec')('operator')
-    require('./entity/permissions.spec')('operator')
-    require('./entity/permissions.spec')('userInApp')
-    require('./entity/places.spec')('operator')
-    require('./entity/products.spec')('operator')
-    require('./entity/projects.spec')()
-    require('./entity/properties.spec')('operator', 'product')
-    require('./entity/properties.spec')('operator', 'thng')
-    require('./entity/purchaseOrders.spec')('operator')
-    require('./entity/reactor.spec')('operator')
-    require('./entity/redirection.spec')('operator', 'product')
-    require('./entity/redirection.spec')('operator', 'thng')
-    require('./entity/roles.spec')('operator')
-    require('./entity/rules.spec')()
-    require('./entity/secretKey.spec')()
-    require('./entity/shipmentNotice.spec')()
-    require('./entity/shortDomains.spec')()
-    require('./entity/tasks.spec')()
-    require('./entity/thngs.spec')('operator')
-    require('./entity/user.spec')('operator')
+    let operator
+    before(async () => {
+      evrythng.setup({ apiKey: OPERATOR_API_KEY })
+      operator = new evrythng.Operator(OPERATOR_API_KEY)
+      await operator.init()
+    })
+    it('should create and read access policy', async () => {
+      const data = await policyData()
+      const policy = await operator.accessPolicy().create(data)
+      assert.deepInclude(policy, data, 'Incorrect policy is created')
+      const readPolicy = await operator.accessPolicy(policy.id).read()
+      assert.equal(readPolicy.id, policy.id, `Can not read policy by ${policy.id}`)
+    })
+    it('should create operator access and read it', async function test () {
+      this.timeout(10000)
+      const findAdminAccountPolicy = await operator
+        .accessPolicy()
+        .setFilter('name=evt:accountAdmin')
+        .read()
+      const adminAccountPolicy = findAdminAccountPolicy[0].id
+      const operatorData = await operatorAccessData(OPERATOR_EMAIL, adminAccountPolicy)
+      const createdOperarorAccess = await operator
+        .sharedAccount(ACCOUNT_ID)
+        .operatorAccess()
+        .create(operatorData)
+      assert.deepInclude(
+        createdOperarorAccess,
+        operatorData,
+        'Incorrect operatorAccess is created'
+      )
+      const readOperatorAccess = await operator
+        .sharedAccount(ACCOUNT_ID)
+        .operatorAccess(createdOperarorAccess.id)
+        .read()
+      assert.equal(
+        readOperatorAccess.id,
+        createdOperarorAccess.id,
+        `Can not read operator access by ${createdOperarorAccess.id}`
+      )
+    })
+    it('should get your own access', async function () {
+      const findAdminAccountPolicy = await operator
+        .accessPolicy()
+        .setFilter('name=evt:accountAdmin')
+        .read()
+      const adminAccountPolicy = findAdminAccountPolicy[0].id
+      const myAccess = await operator.me().read()
+      assert.equal(
+        myAccess.permissions,
+        adminAccountPolicy.permissions,
+        'Cannot get my own access'
+      )
+    })
   })
+  describe('as AccessToken', () => {
+    let accessToken, adminAccountPolicy
+    before(async function () {
+      this.timeout(10000)
+      evrythng.setup({ apiKey: OPERATOR_API_KEY })
+      const operator = new evrythng.Operator(OPERATOR_API_KEY)
 
-  describe('as Device', () => {
-    require('./scope/device.spec')()
-  })
+      const findAdminAccountPolicy = await operator
+        .accessPolicy()
+        .setFilter('name=evt:accountAdmin')
+        .read()
+      adminAccountPolicy = findAdminAccountPolicy[0].id
 
-  describe('as ActionApp', () => {
-    require('./scope/actionApp.spec')()
-  })
+      const data = accessTokenData(adminAccountPolicy)
+      const createdAccessToken = await operator.accessToken().create(data)
 
-  describe('as Operator', () => {
-    require('./scope/operator.spec')()
-  })
-
-  describe('Misc', () => {
-    require('./misc/alias.spec')()
-    require('./misc/api.spec')('operator')
-    require('./misc/find.spec')()
-    require('./misc/pages.spec')('operator')
-    require('./misc/paramSetters.spec')()
-    require('./misc/rescope.spec')()
-    require('./misc/stream.spec')()
-    require('./misc/streamPages.spec')()
-    require('./misc/upsert.spec')()
-    require('./misc/use.spec')()
+      const accessTokenApiKey = createdAccessToken.apiKey
+      accessToken = new evrythng.AccessToken(accessTokenApiKey)
+      await accessToken.init()
+    })
+    it('should create access policy', async () => {
+      const data = await policyData()
+      const policy = await accessToken.accessPolicy().create(data)
+      assert.deepInclude(policy, data, 'Incorrect policy is created')
+      const readPolicy = await accessToken.accessPolicy(policy.id).read()
+      assert.equal(readPolicy.id, policy.id, `Can not read policy by ${policy.id}`)
+    })
+    it('should create thng', async () => {
+      const data = thngData()
+      const thng = await accessToken.thng().create(data)
+      assert.deepInclude(thng, data, 'Can not create thng')
+    })
+    it('should create access token', async () => {
+      const data = accessTokenData(adminAccountPolicy)
+      const createdAccessToken = await accessToken.accessToken().create(data)
+      assert.deepInclude(createdAccessToken, data, 'Can not create access token')
+    })
   })
 })

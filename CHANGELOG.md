@@ -1,3 +1,19 @@
+# v6.0.0 (08-12-2020)
+
+## Features
+
+- **Setup**: Add `apiVersion:2` as default and add URL configuration based on apiVersion and region
+
+- **Scopes**: Add `Operator` and `AccessToken` scopes for `apiVersion:2`
+
+- **Access Policies**: Add `accessPolicies()` for access policies API to Operator and AccessToken scopes for `apiVersion:2`
+
+- **Operator Accesses**: Add `operatorAccess()` for operator accesses API to Operator and AccessToken scopes for `apiVersion:2`
+
+- **Me**: Add `me()` for me API to Operator and AccessToken scopes for `apiVersion:2`
+
+- **Access Tokens**: Add `accessToken()` for access tokens API to Operator and AccessToken scopes for `apiVersion:2`
+
 # v5.9.0 (1-7-2020)
 
 ## Features
