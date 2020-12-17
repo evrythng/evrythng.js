@@ -78,6 +78,15 @@ dependency of this project should take care of this for you.
 
 When using Node.js, version 10 and above is required.
 
+This version of evrythng.js defaults to version 2 of the API (https://developers.evrythng.com/reference/enterprise-api-introduction-v2). To use version 1 of the API: 
+
+```js
+evrythng.setup({
+  apiVersion : 1
+});
+```
+
+
 ## Scopes
 
 There are several types of
