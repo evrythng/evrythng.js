@@ -6,6 +6,7 @@ export { default as alias } from './alias'
 export { default as use } from './use'
 
 // Scopes
+export { default as AccessToken } from './scope/AccessToken'
 export { default as Operator } from './scope/Operator'
 export { default as ActionApp } from './scope/ActionApp'
 export { default as Application } from './scope/Application'

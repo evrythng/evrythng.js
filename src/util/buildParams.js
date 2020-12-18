@@ -39,9 +39,7 @@ function buildParam (useEncoding) {
  * @returns {Function}
  */
 function uriEncoder (useEncoding) {
-  return (value) => useEncoding
-    ? encodeURIComponent(value)
-    : escapeSpecials(value)
+  return (value) => (useEncoding ? encodeURIComponent(value) : escapeSpecials(value))
 }
 
 /**

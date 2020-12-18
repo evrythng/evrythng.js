@@ -1,7 +1,6 @@
 import Entity from './Entity'
 import Resource from '../resource/Resource'
 import Scope from '../scope/Scope'
-import isString from 'lodash-es/isString'
 
 const path = '/permissions'
 

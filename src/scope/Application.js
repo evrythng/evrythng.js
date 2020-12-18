@@ -46,8 +46,9 @@ export default class Application extends ApplicationAccess(Scope) {
   constructor (apiKey, data = {}) {
     super(apiKey, data)
 
-    this.initPromise = super.readAccess()
-      .then(access => {
+    this.initPromise = super
+      .readAccess()
+      .then((access) => {
         this.id = access.actor.id
         this.project = access.project
         this[symbols.path] = this._getPath()

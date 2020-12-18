@@ -23,17 +23,14 @@ export default class AppUser extends Entity {
   static resourceFactory () {
     return {
       appUser (id) {
-        return Object.assign(
-          Resource.factoryFor(AppUser, path).call(this, id),
-          {
-            create (...args) {
-              return createAppUser.call(this, ...args)
-            },
-            validate (...args) {
-              return validate.call(this, ...args)
-            }
+        return Object.assign(Resource.factoryFor(AppUser, path).call(this, id), {
+          create (...args) {
+            return createAppUser.call(this, ...args)
+          },
+          validate (...args) {
+            return validate.call(this, ...args)
           }
-        )
+        })
       }
     }
   }
@@ -129,5 +126,7 @@ function createAnonymousUser () {
     },
     data: {},
     apiKey: this.scope.apiKey
-  }).then(access => new User(access.evrythngApiKey, Object.assign(access, { type: 'anonymous' })))
+  }).then(
+    (access) => new User(access.evrythngApiKey, Object.assign(access, { type: 'anonymous' }))
+  )
 }

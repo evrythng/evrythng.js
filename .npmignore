@@ -7,3 +7,4 @@ examples
 report
 .idea
 *.html
+.vscode

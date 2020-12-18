@@ -16,6 +16,9 @@ import User from '../entity/User'
 import Batch from '../entity/Batch'
 import Place from '../entity/Place'
 import File from '../entity/File'
+import AccessPolicy from '../entity/AccessPolicy'
+import AccessToken from '../entity/AccessToken'
+import Me from '../entity/Me'
 import { mixinResources } from '../util/mixin'
 import symbols from '../symbols'
 
@@ -25,23 +28,26 @@ import symbols from '../symbols'
  * @mixin
  */
 const OperatorAccess = mixinResources([
-  Account, // RU
-  ADIOrder,  // CR
-  Product, // CRUD
-  Thng, // CRUD
-  Collection, // CRUD
-  Action, // CR
-  ActionType, // CRUD
-  Project, // CRUD
-  PurchaseOrder, // CRUD
-  Redirector, // RU
+  AccessPolicy, // CRUDL
+  AccessToken, // CL
+  Account, // LRU
+  Action, // CRLD
+  ActionType, // CRULD
+  ADIOrder, // CRL
+  Batch, // CRUD
+  Collection, // CRUDL
+  File, // CRUD
+  Me, // R
+  Place, // CRUDL
+  Product, // CRUDL
+  Project, // CRUDL
+  PurchaseOrder, // CRUDL
+  Redirector, // RUD
   Role, // CRUD
   Rule,
-  ShipmentNotice, // CRUD
-  User, // R
-  Batch, // CRUD
-  Place, // CRUD
-  File // CRUD
+  ShipmentNotice, // CRUDL
+  Thng, // CRUDL
+  User // R
 ])
 
 /**
@@ -61,8 +67,9 @@ export default class Operator extends OperatorAccess(Scope) {
   constructor (apiKey, data = {}) {
     super(apiKey, data)
 
-    this.initPromise = super.readAccess()
-      .then(access => {
+    this.initPromise = super
+      .readAccess()
+      .then((access) => {
         this.id = access.actor.id
         this[symbols.path] = this._getPath()
       })

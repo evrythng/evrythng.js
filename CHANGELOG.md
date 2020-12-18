@@ -1,3 +1,19 @@
+# v6.0.0 (08-12-2020)
+
+## Features
+
+- **Setup**: Add `apiVersion:2` as default and add URL configuration based on apiVersion and region
+
+- **Scopes**: Add `Operator` and `AccessToken` scopes for `apiVersion:2`
+
+- **Access Policies**: Add `accessPolicies()` for access policies API to Operator and AccessToken scopes for `apiVersion:2`
+
+- **Operator Accesses**: Add `operatorAccess()` for operator accesses API to Operator and AccessToken scopes for `apiVersion:2`
+
+- **Me**: Add `me()` for me API to Operator and AccessToken scopes for `apiVersion:2`
+
+- **Access Tokens**: Add `accessToken()` for access tokens API to Operator and AccessToken scopes for `apiVersion:2`
+
 # v5.9.0 (1-7-2020)
 
 ## Features
@@ -12,18 +28,15 @@
 
 - **ActionApp**: All `getAnonymousUser()` to allow usage of the managed anonymous Application User.
 
-
 ## Fixes
 
 - **ActionApp**: Fix bug preventing use of built-in action types.
-
 
 # v5.7.1 (14-1-2020)
 
 ## Features
 
 - **Pagination**: Add `streamPages()` to all resources to allow asynchronously streaming pages of resources.
-
 
 # v5.6.0 (27-9-2019)
 
@@ -33,18 +46,15 @@
 
 - **Shipment Notices**: Add `shipmentNotice()` and `shipmentNotice().container()` for shipment notices API to Operator scope.
 
-
 ## Fixes
 
 - **Scopes**: Prevent scopes from reading access twice when using `init()`.
-
 
 # v5.5.0 (29-8-2019)
 
 ## Features
 
 - **ADI Orders**: Added `adiOrder()` resources to Operator scope for creating and reading ADI Orders. Also includes `event()` for creating ADI Order events.
-
 
 # v5.4.0 (7-8-2019)
 
@@ -53,11 +63,9 @@
 - **redirections**:`redirection()` resource now allows nominating the `shortDomain` in that call, and no longer requires some templating (`{shortId}`/`{productId}`) as part of the URL submitted.
 - **redirections**: `settings` now includes `defaultShortDomain` to allow setting the default short domain used for `redirection()` requests.
 
-
 ## Fixes
 
 - **api**: Better handle parts of the API that return non-standard empty response bodies.
-
 
 # v5.3.0 (29-7-2019)
 
@@ -67,12 +75,10 @@
 - **files**: Add `upload()` method for files to upload file data.
 - **upsert**: `upsert()` can now be performed by `name` in addition to an identifier object where a resource supports filtering by `name`.
 
-
 ## Fixes
 
 - **param setters**: Add missing `setIds()` param setter.
 - **permissions**: Support referring to permission by name, such as `permission('global_read')`
-
 
 # v5.1.0 (30-5-2019)
 
@@ -80,12 +86,11 @@
 
 - **plugins**: Added the `use()` method in order to support plugins. See `src/use.js` for API details.
 
-
 # v5.0.0 (23-5-2019)
 
 ## Breaking Changes
 
-> If you are updating from a previous version, please see the 
+> If you are updating from a previous version, please see the
 > [Migration Guide](https://developers.evrythng.com/docs/evrythngjs-v500).
 
 - **evrythng-extended.js**: `evrythng-extended.js` is no longer required as a separate dependency.
@@ -106,7 +111,6 @@
 - **Resource aliases**: The `alias()` method allows simple aliasing of existing resource types to better suit a use-case or environment, such as naming collections 'pallets'.
 - **Parameter setters**: Instead of creating a `params` object, chainable setters such as `setPerPage()` are available on most resources to easily build complex requests.
 - **Resource methods**: The `rescope()`, `upsert()`, and `find()` methods have been added to most resources to allow easier _changing of project/user scopes_, _updating by key else creating_, and _finding by identifiers_ as common operations.
-
 
 # v4.7.2 (11-15-2017)
 
@@ -172,8 +176,8 @@
 
 ## Features
 
-- **Reactor scripts**: Add nested reactor script status 
-resource `app.reactor.script().status()`.
+- **Reactor scripts**: Add nested reactor script status
+  resource `app.reactor.script().status()`.
 
 # v4.0.1 (11-10-2016)
 
@@ -186,17 +190,17 @@ resource `app.reactor.script().status()`.
 
 ## Breaking changes
 
-- **Reactor logs**: Move `app.reactorLog()` resource within the `app.reactor.log()` namespace 
-(only available in **evrythng-extended.js**).
+- **Reactor logs**: Move `app.reactorLog()` resource within the `app.reactor.log()` namespace
+  (only available in **evrythng-extended.js**).
 - **Search**: Global `.search()` has been removed to match API. Use filters instead.
 - **Multimedia**: Multimedia resource has been removed to match API.
 
 ## Features
 
-- **Reactor schedules**: Add Reactor schedules resource in the `app.reactor.schedule()` namespace 
-(only available in **evrythng-extended.js**).
-- **Reactor scripts**: Add Reactor scripts resource in the `app.reactor.script()` namespace 
-(only available in **evrythng-extended.js**).
+- **Reactor schedules**: Add Reactor schedules resource in the `app.reactor.schedule()` namespace
+  (only available in **evrythng-extended.js**).
+- **Reactor scripts**: Add Reactor scripts resource in the `app.reactor.script()` namespace
+  (only available in **evrythng-extended.js**).
 
 # v3.7.0 (16-06-2016)
 
@@ -223,8 +227,8 @@ resource `app.reactor.script().status()`.
 
 ## Features
 
-- **Iterator API**: Async generator `iterator()` added to every Resource, supporting looping 
-through the new pagination links.
+- **Iterator API**: Async generator `iterator()` added to every Resource, supporting looping
+  through the new pagination links.
 - **Utils**: Added `forEachAsync()` utility to loop through async generator values.
 - **Utils**: Added `spawn()` utility to run through generator function.
 
@@ -302,12 +306,12 @@ through the new pagination links.
 ## Features
 
 - **Trusted App**: scope to use with you **Application Secret Key**, mainly used in Reactor scripts
-(only available in **evrythng-extended.js**).
+  (only available in **evrythng-extended.js**).
 
 ## Breaking changes
 
 - **plugins**: `EVT.use()` to install plugin is now synchronous. Callback has been removed. Required dependencies
-now use `$inject` property instead of `requires`.
+  now use `$inject` property instead of `requires`.
 
 # v3.1.2 (25-06-2015)
 

@@ -40,14 +40,11 @@ export default class Location extends Entity {
         // Creates and returns Resource of type Location.
         // Override property resource update to allow empty updates.
         // See `updateLocation()`.
-        return Object.assign(
-          Resource.factoryFor(Location, thngPath + path).call(this),
-          {
-            update (...args) {
-              return updateLocation.call(this, ...args)
-            }
+        return Object.assign(Resource.factoryFor(Location, thngPath + path).call(this), {
+          update (...args) {
+            return updateLocation.call(this, ...args)
           }
-        )
+        })
       }
     }
   }
@@ -61,17 +58,17 @@ export default class Location extends Entity {
  * @return {Promise}
  */
 function updateLocation (...args) {
-  let [data, ...rest] = normalizeArguments(...args)
+  const [data, ...rest] = normalizeArguments(...args)
   const baseUpdate = Resource.prototype.update.bind(this)
   const updatedArgs = () => [data, ...rest]
 
   if (useGeolocation(data)) {
     return getCurrentPosition()
-      .then(position => {
+      .then((position) => {
         data[0] = fillLocation(data[0], position)
         return baseUpdate(...updatedArgs())
       })
-      .catch(err => {
+      .catch((err) => {
         console.info(`Unable to get position: ${err}`)
         return baseUpdate(...updatedArgs())
       })
@@ -92,7 +89,7 @@ function updateLocation (...args) {
  * thng.location().update([<Location>])
  */
 function normalizeArguments (...args) {
-  let firstArg = args[0]
+  const firstArg = args[0]
   if (isPlainObject(firstArg)) {
     args[0] = [firstArg]
   } else if (isUndefined(firstArg) || isFunction(firstArg)) {

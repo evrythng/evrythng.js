@@ -30,7 +30,7 @@ export default function mockApi () {
  *
  * @param {Number} time - Delay time in milliseconds
  */
-const delay = time => new Promise(resolve => setTimeout(resolve, time))
+const delay = (time) => new Promise((resolve) => setTimeout(resolve, time))
 
 /**
  * Init API mock as a whole.
@@ -63,14 +63,8 @@ function prepare () {
   fetchMock.put(apiUrl(paths.application), responses.application.one)
 
   // Validate user
-  fetchMock.post(
-    apiUrl(`${paths.dummy}/${paths.usersAccessValidate}`),
-    responses.ok
-  )
-  fetchMock.post(
-    apiUrl(`${paths.usersAccess}/${paths.usersAccessValidate}`),
-    responses.ok
-  )
+  fetchMock.post(apiUrl(`${paths.dummy}/${paths.usersAccessValidate}`), responses.ok)
+  fetchMock.post(apiUrl(`${paths.usersAccess}/${paths.usersAccessValidate}`), responses.ok)
 }
 
 /**
@@ -90,8 +84,7 @@ function tearDown (done) {
  * @return {Object} - Response
  */
 function validAccess (opts) {
-  if (opts.headers.authorization === apiKey ||
-    opts.headers.authorization === operatorApiKey) {
+  if (opts.headers.authorization === apiKey || opts.headers.authorization === operatorApiKey) {
     return responses.access.operator
   } else if (opts.headers.authorization === appApiKey) {
     return responses.access.application

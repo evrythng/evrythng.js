@@ -3,6 +3,7 @@ import Device from './scope/Device'
 import Operator from './scope/Operator'
 import TrustedApplication from './scope/TrustedApplication'
 import User from './scope/User'
+import AccessToken from './scope/AccessToken'
 
 import Action from './entity/Action'
 import ActionType from './entity/ActionType'
@@ -10,7 +11,7 @@ import ApplicationEntity from './entity/Application'
 import AppUser from './entity/AppUser'
 import Batch from './entity/Batch'
 import Collection from './entity/Collection'
-import Entity from './entity/Entity';
+import Entity from './entity/Entity'
 import File from './entity/File'
 import Location from './entity/Location'
 import Permission from './entity/Permission'
@@ -26,6 +27,20 @@ import Resource from './resource/Resource'
 import Role from './entity/Role'
 import Thng from './entity/Thng'
 import UserEntity from './entity/User'
+import OperatorAccess from './entity/OperatorAccess'
+import AccessPolicy from './entity/AccessPolicy'
+import Me from './entity/Me'
+import AccessTokens from './entity/AccessToken'
+import Account from './entity/Account'
+import Access from './entity/Access'
+import ADIOrder from './entity/ADIOrder'
+import ADIOrderEvent from './entity/ADIOrderEvent'
+import CommissionState from './entity/CommissionState'
+import Domain from './entity/Domain'
+import PurchaseOrder from './entity/PurchaseOrder'
+import ReactorLog from './entity/ReactorLog'
+import ShipmentNotice from './entity/ShipmentNotice'
+import ShortDomain from './entity/ShortDomain'
 
 /**
  * The items that the plugin may access and manipulate to install new functionality.
@@ -34,6 +49,7 @@ import UserEntity from './entity/User'
  */
 const API = {
   scopes: {
+    AccessToken,
     Operator,
     Application,
     TrustedApplication,
@@ -41,25 +57,39 @@ const API = {
     Device
   },
   entities: {
+    Access,
+    AccessPolicy,
+    AccessTokens,
+    Account,
     Action,
     ActionType,
+    ADIOrder,
+    ADIOrderEvent,
     Application: ApplicationEntity,
     AppUser,
     Batch,
     Collection,
+    CommissionState,
+    Domain,
     Entity,
     File,
     Location,
+    Me,
+    OperatorAccess,
     Permission,
     Place,
     Product,
     Project,
     Property,
+    PurchaseOrder,
+    ReactorLog,
     ReactorSchedule,
     ReactorScript,
     Redirection,
     Redirector,
     Role,
+    ShipmentNotice,
+    ShortDomain,
     Thng,
     User: UserEntity
   },
@@ -78,7 +108,7 @@ const API = {
  */
 export default function use (plugin) {
   if (!plugin.install || typeof plugin.install !== 'function') {
-    throw new Error('Plugin must implement an \'install()\' method')
+    throw new Error("Plugin must implement an 'install()' method")
   }
 
   try {

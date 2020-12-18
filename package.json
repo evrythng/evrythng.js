@@ -1,17 +1,64 @@
 {
   "name": "evrythng",
-  "version": "5.10.1",
+  "version": "6.0.0",
   "description": "Official Javascript SDK for the EVRYTHNG API.",
   "main": "./dist/evrythng.node.js",
   "scripts": {
-    "lint": "standard",
+    "lint": "eslint --fix --max-warnings 0 --ext .js .",
+    "format": "./node_modules/.bin/prettier --write '**/*.{js,json,md,yaml,yml}'",
     "build": "webpack --config webpack.config.js --mode production",
     "build-dev": "webpack --config webpack.config.js --mode development",
-    "show-notice": "echo '\n    New to evrythng.js v5? Make sure to read the migration guide:\n    https://developers.evrythng.com/docs/evrythngjs-v500\n'",
+    "show-notice": "echo '\n    New to evrythng.js v6? Make sure to read the migration guide:\n    https://developers.evrythng.com/docs/evrythngjs-v600\n'",
     "postinstall": "npm run --silent show-notice",
-    "test": "mocha test/e2e/index.spec.js",
+    "test": "mocha test/integration/**.spec.js",
+    "test:unit": "mocha --require esm test/unit/**.spec.js",
+    "test:e2e": "mocha test/e2e/**.spec.js",
     "prepublishOnly": "npm run build"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged -p false"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json,md,yaml,yml}": "prettier --write",
+    "*.js": "eslint --fix"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "commonjs": true,
+      "mocha": true
+    },
+    "extends": [
+      "standard"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 12
+    },
+    "rules": {
+      "eqeqeq": [
+        0,
+        "smart"
+      ],
+      "no-unused-expressions": "off",
+      "no-prototype-builtins": "off",
+      "prefer-promise-reject-errors": "off",
+      "operator-linebreak": "off"
+    }
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "reports",
+    "mochawesome-report",
+    ".nyc_output",
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/evrythng/evrythng.js.git"
@@ -43,10 +90,20 @@
     "babel-loader": "^8.0.5",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "chance": "^1.1.7",
+    "eslint": "^7.14.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "esm": "^3.2.25",
     "fetch-mock": "^9.10.7",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.5.2",
     "lodash-es": "^4.17.15",
     "mocha": "^7.2.0",
     "nock": "^11.3.3",
+    "prettier": "^2.2.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   },

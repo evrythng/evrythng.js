@@ -5,9 +5,7 @@ import { mixinResources } from '../util/mixin'
 import isString from 'lodash-es/isString'
 
 const path = '/reactor/script'
-const ReactorScriptResources = mixinResources([
-  Status
-])
+const ReactorScriptResources = mixinResources([Status])
 
 /**
  * Represents a ReactorScript entity object.
@@ -23,8 +21,7 @@ export default class ReactorScript extends ReactorScriptResources(Entity) {
           throw new TypeError('There is no single resource for Reactor Scripts')
         }
 
-        return Resource.factoryFor(ReactorScript, path, ReactorScriptResources)
-          .call(this)
+        return Resource.factoryFor(ReactorScript, path, ReactorScriptResources).call(this)
       }
     }
   }

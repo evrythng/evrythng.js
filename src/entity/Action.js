@@ -41,14 +41,11 @@ export default class Action extends Entity {
         // Creates and returns Resource of type Action.
         // Override property resource create to allow custom value params and
         // fetch the user's geolocation. See `createAction()`.
-        return Object.assign(
-          Resource.factoryFor(Action, relativePath).call(this, id),
-          {
-            create (...args) {
-              return createAction.call(this, context, actionType, ...args)
-            }
+        return Object.assign(Resource.factoryFor(Action, relativePath).call(this, id), {
+          create (...args) {
+            return createAction.call(this, context, actionType, ...args)
           }
-        )
+        })
       }
     }
   }
@@ -65,23 +62,23 @@ export default class Action extends Entity {
  */
 function createAction (caller, actionType, ...args) {
   let [data, ...rest] = normalizeArguments(...args)
-  let [options] = rest
+  const [options] = rest
 
   // Auto-fill action payload with resource type and entity id.
   data = Array.isArray(data)
-    ? data.map(action => fillAction(action, caller, actionType))
-    : data = fillAction(data, caller, actionType)
+    ? data.map((action) => fillAction(action, caller, actionType))
+    : (data = fillAction(data, caller, actionType))
 
   const baseCreate = Resource.prototype.create.bind(this)
   const updatedArgs = () => [data, ...rest]
 
   if (useGeolocation(options)) {
     return getCurrentPosition()
-      .then(position => {
+      .then((position) => {
         data = fillActionLocation(data, position)
         return baseCreate(...updatedArgs())
       })
-      .catch(err => {
+      .catch((err) => {
         console.info(`Unable to get position: ${err}`)
         return baseCreate(...updatedArgs())
       })
@@ -101,7 +98,7 @@ function createAction (caller, actionType, ...args) {
  * product.action().create(<Action>)
  */
 function normalizeArguments (...args) {
-  let firstArg = args[0]
+  const firstArg = args[0]
   if (isUndefined(firstArg) || isFunction(firstArg)) {
     args.unshift({})
   }
@@ -143,8 +140,8 @@ function fillAction (data, caller, actionType) {
 function getIdentifier (caller) {
   return caller instanceof Entity
     ? caller[symbols.actionIdentifier]
-      ? caller[symbols.actionIdentifier]
-      : ''
+        ? caller[symbols.actionIdentifier]
+        : ''
     : ''
 }
 
@@ -156,9 +153,7 @@ function getIdentifier (caller) {
  * @return {boolean}
  */
 function useGeolocation (options) {
-  return options && !isUndefined(options.geolocation)
-    ? options.geolocation
-    : settings.geolocation
+  return options && !isUndefined(options.geolocation) ? options.geolocation : settings.geolocation
 }
 
 /**
