@@ -12,5 +12,8 @@ jobs:
           name: 'Build SDK'
           command: 'npm run build'
       - run:
+          name: 'Audit dependencies'
+          command: 'npm audit'
+      - run:
           name: 'E2E tests'
           command: 'npm test'
