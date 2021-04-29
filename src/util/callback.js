@@ -18,21 +18,32 @@ export function success (callback) {
  * @returns {function} - Response handler function
  */
 export function failure (callback) {
-  return async (err) => {
+  return (err) => {
     if (callback) callback(err)
 
     if (!err) {
       throw new Error(`No error message available, err was: ${JSON.stringify(err)}`)
     }
 
-    // If a Fetch API response
-    if (typeof err.ok !== 'undefined' && !err.ok) {
-      err = await err.text()
+    // Native Error?
+    if (err.name && err.name.includes('Error')) {
+      throw err
     }
-    try {
-      err = JSON.parse(err)
-    } catch (e) {
-      // The error text is not JSON
+
+    // If a Fetch API response, get the body text
+    if (typeof err.ok !== 'undefined' && !err.ok) {
+      // Must use 'then' instead of an async function here, or a client-side
+      // 'catch' will pass a rejected Promise instead of an error.
+      return err.text().then((body) => Promise.reject(body))
+    }
+
+    // If it's text
+    if (typeof err === 'string') {
+      try {
+        err = JSON.parse(err)
+      } catch (e) {
+        // The error text is not JSON
+      }
     }
 
     // Throw a native Error to play nicer with error handling/retry libraries
