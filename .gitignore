@@ -6,5 +6,6 @@ bower_components
 dist
 report
 .idea
+*.iml
 *.DS_Store
 .vscode

@@ -19,6 +19,7 @@ import File from '../entity/File'
 import AccessPolicy from '../entity/AccessPolicy'
 import AccessToken from '../entity/AccessToken'
 import Me from '../entity/Me'
+import ReactorLog from '../entity/ReactorLog'
 import { mixinResources } from '../util/mixin'
 import symbols from '../symbols'
 
@@ -42,6 +43,7 @@ const OperatorAccess = mixinResources([
   Product, // CRUDL
   Project, // CRUDL
   PurchaseOrder, // CRUDL
+  ReactorLog,
   Redirector, // RUD
   Role, // CRUD
   Rule,
