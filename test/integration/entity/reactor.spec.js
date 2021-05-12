@@ -139,7 +139,6 @@ const describeReactorLogsTests = () => {
     const res = await scope.reactorLog().create(payload)
 
     expect(res).to.be.an('array')
-    expect(res.cron).to.equal([])
   })
 }
 

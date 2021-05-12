@@ -52,6 +52,13 @@ const setupForApiVersion1 = async (apiUrl) => {
       actor: { id: 'applicationId' },
       project: 'projectId'
     })
+  mockApi(apiUrl)
+    .get('/access')
+    .reply(200, {
+      actor: { id: 'applicationId' },
+      project: 'projectId'
+    })
+  mockApi(apiUrl).get('/applications/me').reply(200, { id: 'applicationId' })
   mockApi(apiUrl).get('/applications/me').reply(200, { id: 'applicationId' })
   const trustedApplication = new TrustedApplication('secretApiKey')
   await trustedApplication.init()
