@@ -8,6 +8,7 @@ import ReactorSchedule from '../entity/ReactorSchedule'
 import ReactorLog from '../entity/ReactorLog'
 import { mixinResources } from '../util/mixin'
 import api from '../api'
+import symbols from '../symbols'
 import isPlainObject from 'lodash-es/isPlainObject'
 
 /**
@@ -55,8 +56,15 @@ export default class TrustedApplication extends ApplicationAccess(Application) {
   constructor (apiKey, data = {}) {
     super(apiKey, data)
 
-    // Operation is the same as for Application scope.
-    this.initPromise = super.init()
+    this.initPromise = super
+      .readAccess()
+      .then((access) => {
+        this.id = access.actor.id
+        this.project = access.project
+        this.app = access.actor.id
+        this[symbols.path] = this._getPath()
+      })
+      .then(() => this.read())
   }
 
   /**

@@ -40,6 +40,7 @@ describe('evrythng.js for apiVersion = 1', function () {
     require('./entity/properties.spec')(scopeType, 'product', apiUrl)
     require('./entity/properties.spec')(scopeType, 'thng', apiUrl)
     require('./entity/purchaseOrders.spec')(scopeType, apiUrl)
+    require('./entity/reactor.spec')(scopeType, apiUrl)
     require('./entity/thngs.spec')(scopeType, apiUrl)
   })
 
