@@ -3,7 +3,7 @@ const { getScope, mockApi } = require('../util')
 
 const SCRIPT = 'function onActionCreated(event) { done(); }'
 
-let operator, api
+let scope, api
 
 const describeReactorScriptTests = () => {
   it('should update the Reactor script', async () => {
@@ -11,7 +11,7 @@ const describeReactorScriptTests = () => {
     api
       .put('/projects/projectId/applications/applicationId/reactor/script', payload)
       .reply(200, payload)
-    const res = await operator
+    const res = await scope
       .project('projectId')
       .application('applicationId')
       .reactorScript()
@@ -24,7 +24,7 @@ const describeReactorScriptTests = () => {
     api
       .get('/projects/projectId/applications/applicationId/reactor/script/status')
       .reply(200, { updating: false })
-    const res = await operator
+    const res = await scope
       .project('projectId')
       .application('applicationId')
       .reactorScript()
@@ -38,7 +38,7 @@ const describeReactorScriptTests = () => {
     api
       .get('/projects/projectId/applications/applicationId/reactor/script')
       .reply(200, { type: 'simple' })
-    const res = await operator
+    const res = await scope
       .project('projectId')
       .application('applicationId')
       .reactorScript()
@@ -59,7 +59,7 @@ const describeReactorScheduleTests = () => {
     api
       .post('/projects/projectId/applications/applicationId/reactor/schedules', payload)
       .reply(201, payload)
-    const res = await operator
+    const res = await scope
       .project('projectId')
       .application('applicationId')
       .reactorSchedule()
@@ -73,7 +73,7 @@ const describeReactorScheduleTests = () => {
     api
       .get('/projects/projectId/applications/applicationId/reactor/schedules')
       .reply(200, [{ id: 'scheduleId' }])
-    const res = await operator
+    const res = await scope
       .project('projectId')
       .application('applicationId')
       .reactorSchedule()
@@ -86,7 +86,7 @@ const describeReactorScheduleTests = () => {
     api
       .get('/projects/projectId/applications/applicationId/reactor/schedules/scheduleId')
       .reply(200, { id: 'scheduleId' })
-    const res = await operator
+    const res = await scope
       .project('projectId')
       .application('applicationId')
       .reactorSchedule('scheduleId')
@@ -100,7 +100,7 @@ const describeReactorScheduleTests = () => {
     api
       .put('/projects/projectId/applications/applicationId/reactor/schedules/scheduleId', payload)
       .reply(200, { id: 'scheduleId', enabled: false })
-    const res = await operator
+    const res = await scope
       .project('projectId')
       .application('applicationId')
       .reactorSchedule('scheduleId')
@@ -115,7 +115,7 @@ const describeReactorScheduleTests = () => {
     api
       .delete('/projects/projectId/applications/applicationId/reactor/schedules/scheduleId')
       .reply(200)
-    const res = await operator
+    const res = await scope
       .project('projectId')
       .application('applicationId')
       .reactorSchedule('scheduleId')
@@ -125,14 +125,37 @@ const describeReactorScheduleTests = () => {
   })
 }
 
+const describeReactorLogsTests = () => {
+  it('should create new Reactor logs', async () => {
+    const payload = [
+      {
+        message: 'This is a test log message',
+        logLevel: 'info'
+      }
+    ]
+    api
+      .post('/projects/projectId/applications/applicationId/reactor/logs/bulk', payload)
+      .reply(201, [])
+    const res = await scope.reactorLog().create(payload)
+
+    expect(res).to.be.an('array')
+  })
+}
+
 module.exports = (scopeType, url) => {
   describe('Reactor', () => {
     before(async () => {
-      operator = getScope(scopeType)
+      scope = getScope(scopeType)
       api = mockApi(url)
     })
 
-    describeReactorScriptTests()
-    describeReactorScheduleTests()
+    if (scopeType === 'operator') {
+      describeReactorScriptTests()
+      describeReactorScheduleTests()
+    }
+
+    if (scopeType === 'trustedApplication') {
+      describeReactorLogsTests()
+    }
   })
 }

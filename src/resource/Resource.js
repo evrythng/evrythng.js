@@ -252,7 +252,7 @@ export default class Resource {
       throw new TypeError('Create method must have payload.')
     }
     const req = {
-      url: this.path,
+      url: options && options.url ? options.url : this.path,
       data,
       method: 'post'
     }

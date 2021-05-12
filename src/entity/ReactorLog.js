@@ -1,9 +1,5 @@
 import Entity from './Entity'
 import Resource from '../resource/Resource'
-import Scope from '../scope/Scope'
-import symbols from '../symbols'
-import isUndefined from 'lodash-es/isUndefined'
-import isFunction from 'lodash-es/isFunction'
 import isString from 'lodash-es/isString'
 
 const path = '/reactor/logs'
@@ -22,7 +18,8 @@ export default class ReactorLog extends Entity {
           throw new TypeError('There is no single resource for Reactor Logs')
         }
 
-        const appPath = this instanceof Scope ? this[symbols.path] : ''
+        // Find the path to this application
+        const appPath = `/projects/${this.project}/applications/${this.app}`
 
         return Object.assign(Resource.factoryFor(ReactorLog, appPath + path).call(this, id), {
           create (...args) {
@@ -37,19 +34,15 @@ export default class ReactorLog extends Entity {
 /**
  * Use bulk endpoint when creating array of logs.
  *
- * @param {Object} data - Log payload.
- * @param {Array} rest - Rest of arguments.
+ * @param {Object} data - Logs payload.
+ * @param {Object} options - Optional request options.
  * @return {Promise}
  */
-function createLogs (data, ...rest) {
-  if (Array.isArray(data)) {
-    let [options] = rest
-    if (isUndefined(options) || isFunction(options)) {
-      options = {}
-      rest.unshift(options)
-    }
-    options.url = `${this.path}/bulk`
-  }
+function createLogs (data, options = {}) {
+  const logs = Array.isArray(data) ? data : [data]
 
-  return Resource.prototype.create.call(this, data, ...rest)
+  // Change URL for bulk creation
+  options.url = `${this.path}/bulk`
+
+  return Resource.prototype.create.call(this, logs, options)
 }

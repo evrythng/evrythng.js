@@ -11,7 +11,6 @@ describe('evrythng.js for apiVersion = 2', function () {
   })
 
   describe(`as Operator for API v${apiVersion}`, () => {
-    console.log(settings)
     const scopeType = 'operator'
     require('./entity/accessPolicies.spec')(scopeType, settings)
     require('./entity/accessTokens.spec')(scopeType, settings)

@@ -15,5 +15,5 @@ jobs:
           name: 'Audit dependencies'
           command: 'npm audit'
       - run:
-          name: 'E2E tests'
+          name: 'Run tests'
           command: 'npm test'

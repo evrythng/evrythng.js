@@ -3,7 +3,6 @@ const {
   Application,
   TrustedApplication,
   Device,
-  api,
   AccessToken
 } = require('../../dist/evrythng.node')
 const nock = require('nock')
@@ -38,39 +37,31 @@ const setupForApiVersion1 = async (apiUrl) => {
     lastName: 'User'
   })
   const operator = new Operator(OPERATOR_API_KEY)
+  await operator.init()
 
-  const projectPayload = { name: 'Test Project' }
-  mockApi(apiUrl)
-    .post('/projects', projectPayload)
-    .reply(201, { name: 'Test Project', id: 'projectId' })
-  const appProject = await operator.project().create(projectPayload)
-
-  const appPayload = { name: 'Test App', socialNetworks: {} }
-  mockApi(apiUrl).post('/projects/projectId/applications', appPayload).reply(201, {
-    name: 'Test App',
-    socialNetworks: {},
-    id: 'applicationId',
-    appApiKey: 'appApiKey'
-  })
-  const appResource = await operator.project(appProject.id).application().create(appPayload)
   mockApi(apiUrl)
     .get('/access')
     .reply(200, { actor: { id: 'applicationId' } })
   mockApi(apiUrl).get('/applications/me').reply(200, { id: 'applicationId' })
-  const application = new Application(appResource.appApiKey)
+  const application = new Application('appApiKey')
+  await application.init()
 
   mockApi(apiUrl)
-    .get('/projects/projectId/applications/applicationId/secretKey')
-    .reply(200, { secretApiKey: 'secretApiKey' })
-  const { secretApiKey } = await api({
-    url: '/projects/projectId/applications/applicationId/secretKey',
-    apiKey: operator.apiKey
-  })
+    .get('/access')
+    .reply(200, {
+      actor: { id: 'applicationId' },
+      project: 'projectId'
+    })
   mockApi(apiUrl)
     .get('/access')
-    .reply(200, { actor: { id: 'applicationId' } })
+    .reply(200, {
+      actor: { id: 'applicationId' },
+      project: 'projectId'
+    })
   mockApi(apiUrl).get('/applications/me').reply(200, { id: 'applicationId' })
-  const trustedApplication = new TrustedApplication(secretApiKey)
+  mockApi(apiUrl).get('/applications/me').reply(200, { id: 'applicationId' })
+  const trustedApplication = new TrustedApplication('secretApiKey')
+  await trustedApplication.init()
 
   mockApi(apiUrl)
     .post('/auth/evrythng/users?anonymous=true')
@@ -80,23 +71,14 @@ const setupForApiVersion1 = async (apiUrl) => {
     .reply(200, { actor: { id: 'evrythngUser' } })
   mockApi(apiUrl).get('/users/evrythngUser').reply(200, { id: 'evrythngUser' })
   const anonUser = await application.appUser().create({ anonymous: true })
+  await anonUser.init()
 
-  mockApi(apiUrl).post('/thngs').reply(201, { id: 'deviceThngId' })
-  const deviceThng = await operator.thng().create({ name: 'Test Device' })
-  mockApi(apiUrl)
-    .post('/auth/evrythng/thngs', { thngId: 'deviceThngId' })
-    .reply(201, { thngId: 'deviceThngId', thngApiKey: 'thngApiKey' })
-  const { thngApiKey } = await api({
-    url: '/auth/evrythng/thngs',
-    method: 'post',
-    apiKey: operator.apiKey,
-    data: { thngId: deviceThng.id }
-  })
   mockApi(apiUrl)
     .get('/access')
     .reply(200, { actor: { id: 'deviceThngId' } })
   mockApi(apiUrl).get('/thngs/deviceThngId').reply(200, { id: 'deviceThngId' })
-  const device = new Device(thngApiKey)
+  const device = new Device('thngApiKey')
+  await device.init()
 
   scopes = {
     operator,
