@@ -12,16 +12,25 @@ const path = '/reactor/logs'
 export default class ReactorLog extends Entity {
   static resourceFactory () {
     return {
-      reactorLog (id) {
-        // Reactor logs don't have single resource endpoint (e.g.: /logs/:id)
-        if (isString(arguments[0])) {
-          throw new TypeError('There is no single resource for Reactor Logs')
+      /**
+       * ReactorLog Entity resource. If using with Operator, app and project
+       * details are required.
+       *
+       * @param {string} appDetails - projectId and applicationId to use.proj
+       * @returns {Object}
+       */
+      reactorLog (projectId, applicationId) {
+        if (isString(projectId) && !isString(applicationId)) {
+          throw new Error('When using with Operator, projectId and applicationId are required')
         }
 
-        // Find the path to this application
-        const appPath = `/projects/${this.project}/applications/${this.app}`
+        const useProjectId = projectId || this.project
+        const useApplicationId = applicationId || this.app
 
-        return Object.assign(Resource.factoryFor(ReactorLog, appPath + path).call(this, id), {
+        // Find the path to this application
+        const appPath = `/projects/${useProjectId}/applications/${useApplicationId}`
+
+        return Object.assign(Resource.factoryFor(ReactorLog, appPath + path).call(this), {
           create (...args) {
             return createLogs.call(this, ...args)
           }
