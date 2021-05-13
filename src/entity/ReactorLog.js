@@ -16,7 +16,8 @@ export default class ReactorLog extends Entity {
        * ReactorLog Entity resource. If using with Operator, app and project
        * details are required.
        *
-       * @param {string} appDetails - projectId and applicationId to use.proj
+       * @param {string} projectId - Project ID, if using with Operator scope.
+       * @param {string} applicationId - Application ID, if using with Operator scope.
        * @returns {Object}
        */
       reactorLog (projectId, applicationId) {
