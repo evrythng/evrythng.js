@@ -8,6 +8,7 @@ import Action from '../entity/Action'
 import ActionType from '../entity/ActionType'
 import Project from '../entity/Project'
 import PurchaseOrder from '../entity/PurchaseOrder'
+import ReactorLog from '../entity/ReactorLog'
 import Redirector from '../entity/Redirector'
 import Role from '../entity/Role'
 import Rule from '../entity/Rule'
@@ -42,6 +43,7 @@ const OperatorAccess = mixinResources([
   Product, // CRUDL
   Project, // CRUDL
   PurchaseOrder, // CRUDL
+  ReactorLog, // C
   Redirector, // RUD
   Role, // CRUD
   Rule,

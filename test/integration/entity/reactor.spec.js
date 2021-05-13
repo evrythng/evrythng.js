@@ -125,7 +125,7 @@ const describeReactorScheduleTests = () => {
   })
 }
 
-const describeReactorLogsTests = () => {
+const describeReactorLogsTests = (scopeType) => {
   it('should create new Reactor logs', async () => {
     const payload = [
       {
@@ -136,7 +136,13 @@ const describeReactorLogsTests = () => {
     api
       .post('/projects/projectId/applications/applicationId/reactor/logs/bulk', payload)
       .reply(201, [])
-    const res = await scope.reactorLog().create(payload)
+
+    let res
+    if (scopeType === 'operator') {
+      res = await scope.reactorLog('projectId', 'applicationId').create(payload)
+    } else {
+      res = await scope.reactorLog().create(payload)
+    }
 
     expect(res).to.be.an('array')
   })
@@ -152,6 +158,7 @@ module.exports = (scopeType, url) => {
     if (scopeType === 'operator') {
       describeReactorScriptTests()
       describeReactorScheduleTests()
+      describeReactorLogsTests(scopeType)
     }
 
     if (scopeType === 'trustedApplication') {

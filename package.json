@@ -1,6 +1,6 @@
 {
   "name": "evrythng",
-  "version": "6.0.2",
+  "version": "6.0.3",
   "description": "Official Javascript SDK for the EVRYTHNG API.",
   "main": "./dist/evrythng.node.js",
   "scripts": {
