@@ -127,6 +127,13 @@ function makeFetch (options) {
  */
 function handleResponse (options) {
   return async (response) => {
+    const isOk = response.status < 400
+
+    // User requested the full actual response
+    if (options.fullResponse && isOk) {
+      return response
+    }
+
     // Try and decode the body, first as text, then as JSON
     let data
     try {
@@ -137,18 +144,13 @@ function handleResponse (options) {
     }
 
     // Detect fetch or EVRYTHNG errors and throw
-    if (response.status >= 400 || !response.ok || data.errors) {
+    if (!isOk || data.errors) {
       throw data
     }
 
     // Allow responses with no expected body
     if ([202, 204].includes(response.status) || options.method.toLowerCase() === 'delete') {
       return undefined
-    }
-
-    // User requested the full actual response
-    if (options.fullResponse) {
-      return response
     }
 
     // Return the response data
