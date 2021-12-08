@@ -127,8 +127,6 @@ function makeFetch (options) {
  */
 function handleResponse (options) {
   return async (response) => {
-    const isOk = response.status < 400
-
     // User requested the full actual response, will take care of errors themselves
     if (options.fullResponse) {
       return response
@@ -144,7 +142,7 @@ function handleResponse (options) {
     }
 
     // Detect fetch or EVRYTHNG errors and throw
-    if (!isOk || data.errors) {
+    if (response.status >= 400 || data.errors) {
       throw data
     }
 
