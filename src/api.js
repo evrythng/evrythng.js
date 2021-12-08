@@ -129,8 +129,8 @@ function handleResponse (options) {
   return async (response) => {
     const isOk = response.status < 400
 
-    // User requested the full actual response
-    if (options.fullResponse && isOk) {
+    // User requested the full actual response, will take care of errors themselves
+    if (options.fullResponse) {
       return response
     }
 
