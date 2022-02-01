@@ -25,7 +25,7 @@ export default function api (customOptions = {}, callback) {
         .then(applyResponseInterceptors(options))
     })
     .then(success(callback))
-    .catch(failure(callback))
+    .catch((err) => failure(callback)(err))
 }
 
 /**
@@ -133,12 +133,13 @@ function handleResponse (options) {
     }
 
     // Try and decode the body, first as text, then as JSON
-    let data
-    try {
-      data = await response.text()
-      data = JSON.parse(data)
-    } catch (e) {
-      // Non-standard empty body response, allow it
+    let data = await response.text()
+    if (data.length > 0) {
+      try {
+        data = JSON.parse(data)
+      } catch (e) {
+        throw new Error(`Unexpected non-JSON response: ${data}`)
+      }
     }
 
     // Detect fetch or EVRYTHNG errors and throw

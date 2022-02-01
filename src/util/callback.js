@@ -22,7 +22,7 @@ export function failure (callback) {
     if (callback) callback(err)
 
     if (!err) {
-      throw new Error(`No error message available, err was: ${JSON.stringify(err)}`)
+      throw new Error('No error message available, err was:', err)
     }
 
     // Native Error?

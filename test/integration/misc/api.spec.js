@@ -108,5 +108,23 @@ module.exports = (settings) => {
       }
       expect(caughtError).to.be.equal(true)
     })
+
+    it('should throw a native Error when HTML is returned', async () => {
+      let caughtError = false
+      apiMock.get('/thngs/foo').reply(404, '<html><title>Apache Error 500</title></html>')
+
+      try {
+        await _api('/thngs/foo', 'get')
+
+        throw new Error('Error was not raised by api()')
+      } catch (e) {
+        caughtError = true
+        expect(e.message).to.be.a('string')
+        expect(e.message).to.deep.equal(
+          'Unexpected non-JSON response: <html><title>Apache Error 500</title></html>'
+        )
+      }
+      expect(caughtError).to.be.equal(true)
+    })
   })
 }
