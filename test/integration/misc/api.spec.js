@@ -4,7 +4,7 @@ const { mockApi } = require('../util')
 
 const apiKey = process.env.OPERATOR_API_KEY
 
-const _api = (url, method = 'get', data) => api({ url, method, apiKey, data })
+const _api = (url, method = 'get', data, opts) => api({ ...opts, url, method, apiKey, data })
 
 module.exports = (settings) => {
   describe('api', () => {
@@ -58,16 +58,45 @@ module.exports = (settings) => {
       await _api('/thngs/thngId', 'delete')
     })
 
+    it('should return full response for success', async () => {
+      const payload = { name: 'bar' }
+      apiMock.post('/thngs', payload).reply(201, payload)
+
+      const res = await _api('/thngs', 'post', payload, { fullResponse: true })
+      expect(res.status).to.equal(201)
+      expect(res.statusText).to.equal('Created')
+      expect(res.headers).to.not.equal(undefined)
+    })
+
+    it('should return full response for failure', async () => {
+      const payload = { foo: 'bar' }
+      const errObj = {
+        errors: ['thng.name cannot be blank'],
+        moreInfo: 'https://developers.evrythng.com',
+        status: 400
+      }
+      apiMock.post('/thngs', payload).reply(400, errObj)
+
+      const res = await _api('/thngs', 'post', payload, { fullResponse: true })
+      expect(res.status).to.equal(400)
+      expect(res.statusText).to.equal('Bad Request')
+      expect(res.headers).to.not.equal(undefined)
+
+      const json = await res.json()
+      expect(json).to.deep.equal(errObj)
+    })
+
     it('should throw a native Error', async () => {
       let caughtError = false
-      const payload = { foo: 'bar' }
-      apiMock.post('/thngs', payload).reply(404, {
+      const errObj = {
         errors: ['Thng was not found'],
         moreInfo: 'https://developers.evrythng.com',
         status: 404
-      })
+      }
+      apiMock.get('/thngs/foo').reply(404, errObj)
+
       try {
-        await _api('/thngs', 'post', payload)
+        await _api('/thngs/foo', 'get')
 
         throw new Error('Error was not raised by api()')
       } catch (e) {
@@ -75,9 +104,25 @@ module.exports = (settings) => {
         expect(e.message).to.be.a('string')
 
         const json = JSON.parse(e.message)
-        expect(json.errors).to.be.an('array')
-        expect(json.moreInfo).to.be.a('string')
-        expect(json.status).to.be.a('number')
+        expect(json).to.deep.equal(errObj)
+      }
+      expect(caughtError).to.be.equal(true)
+    })
+
+    it('should throw a native Error when HTML is returned', async () => {
+      let caughtError = false
+      apiMock.get('/thngs/foo').reply(404, '<html><title>Apache Error 500</title></html>')
+
+      try {
+        await _api('/thngs/foo', 'get')
+
+        throw new Error('Error was not raised by api()')
+      } catch (e) {
+        caughtError = true
+        expect(e.message).to.be.a('string')
+        expect(e.message).to.deep.equal(
+          'Unexpected non-JSON response: <html><title>Apache Error 500</title></html>'
+        )
       }
       expect(caughtError).to.be.equal(true)
     })

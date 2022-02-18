@@ -22,7 +22,7 @@ export function failure (callback) {
     if (callback) callback(err)
 
     if (!err) {
-      throw new Error(`No error message available, err was: ${JSON.stringify(err)}`)
+      throw new Error('No error message available, err was:', err)
     }
 
     // Native Error?
@@ -37,7 +37,7 @@ export function failure (callback) {
       return err.text().then((body) => Promise.reject(body))
     }
 
-    // If it's text
+    // If it's text instead of an already-parsed JSON object
     if (typeof err === 'string') {
       try {
         err = JSON.parse(err)

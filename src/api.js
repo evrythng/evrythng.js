@@ -25,7 +25,7 @@ export default function api (customOptions = {}, callback) {
         .then(applyResponseInterceptors(options))
     })
     .then(success(callback))
-    .catch(failure(callback))
+    .catch((err) => failure(callback)(err))
 }
 
 /**
@@ -127,27 +127,32 @@ function makeFetch (options) {
  */
 function handleResponse (options) {
   return async (response) => {
-    const res = options.fullResponse
-      ? // Full response requested by user
-        Promise.resolve(response)
-      : response.status === 204 || options.method.toLowerCase() === 'delete'
-        ? // Accepted or DELETE requests have no body
-          Promise.resolve()
-        : // Attempt to decode the response JSON body
-        response.json()
-
-    let data = ''
-    try {
-      data = await res
-    } catch (e) {
-      // Non-standard empty body response, allow it
+    // User requested the full actual response, will take care of errors themselves
+    if (options.fullResponse) {
+      return response
     }
 
-    if (!response.ok) {
-      // If a request we expect to have no response body fails, we are still interested in the error
-      throw typeof data === 'object' ? data : await response.json()
+    // Try and decode the body, first as text, then as JSON
+    let data = await response.text()
+    if (data.length > 0) {
+      try {
+        data = JSON.parse(data)
+      } catch (e) {
+        throw new Error(`Unexpected non-JSON response: ${data}`)
+      }
     }
 
+    // Detect fetch or EVRYTHNG errors and throw
+    if (response.status >= 400 || data.errors) {
+      throw data
+    }
+
+    // Allow responses with no expected body
+    if ([202, 204].includes(response.status) || options.method.toLowerCase() === 'delete') {
+      return undefined
+    }
+
+    // Return the response data
     return data
   }
 }
