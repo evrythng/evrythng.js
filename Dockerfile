@@ -1,14 +1,14 @@
-FROM node:8-alpine
+FROM node:12-alpine
 
 WORKDIR /srv
 COPY . /srv
 
 # Install dependencues
-RUN apk add --no-cache python3
+RUN apk add --no-cache python3 py3-pip
 RUN pip3 install awscli --upgrade --user
-RUN npm i
 
 # Build
+RUN npm ci
 RUN npm run build
 
 # Deploy
