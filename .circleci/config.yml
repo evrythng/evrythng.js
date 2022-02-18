@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: node:10.16-alpine
+      - image: node:12-alpine
     steps:
       - checkout
       - run:
@@ -17,3 +17,6 @@ jobs:
       - run:
           name: 'Run tests'
           command: 'npm test'
+      - run:
+          name: 'Build image'
+          command: 'docker build -t evrythng-js-deploy .'
