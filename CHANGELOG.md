@@ -1,3 +1,9 @@
+# v7.0.0 (01-08-2022)
+
+## Features
+
+- **Node Support**: Bumped default supported Node version to 16, although older versions may still work
+
 # v6.0.0 (08-12-2020)
 
 ## Features
