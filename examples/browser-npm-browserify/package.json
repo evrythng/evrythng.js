@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "license": "Apache-2.0",
   "dependencies": {
-    "browserify": "^16.2.3",
+    "browserify": "^16.5.2",
     "evrythng": "file:../.."
   },
   "scripts": {
